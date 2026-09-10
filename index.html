@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Central web</title>
+</head><body><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;700&display=swap">
+<style>
+  /* Réplica del tema "slate · dark" de gethomepage.dev (Tailwind slate, bg = slate-800) */
+  :root{
+    --s200:226 232 240; --s300:203 213 225; --s400:148 163 184; --s500:100 116 139;
+    --s800:30 41 59; --s900:15 23 42;
+    --emerald:16 185 129; --blue:59 130 246;
+  }
+  *{box-sizing:border-box;border:0 solid}
+  html,body{margin:0;height:100%;background:rgb(var(--s800))}
+  body{font-family:Manrope,Arial,sans-serif;letter-spacing:.1px;-webkit-font-smoothing:antialiased;color:rgb(var(--s200));font-size:16px;line-height:1.5}
+  a{color:inherit;text-decoration:none}
+  ul{list-style:none;margin:0;padding:0}
+  h2{margin:0}
+  svg{display:block}
+
+  /* background: image + linear-gradient(bg/.5) + blur sm · saturate 50 · brightness 50 */
+  #background{position:fixed;inset:-12px;z-index:0;pointer-events:none;
+    background:linear-gradient(rgb(var(--s800)/.65),rgb(var(--s800)/.65)),url("assets/img/hero-vans.jpeg") center/cover no-repeat;
+    filter:blur(4px) saturate(.5) brightness(.45)}
+
+  .container{position:relative;z-index:10;max-width:1536px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+
+  /* headerStyle: underlined */
+  .header{display:flex;flex-wrap:wrap;justify-content:space-between;gap:0 8px;margin:36px 36px 4px;padding-bottom:16px;border-bottom:2px solid rgb(var(--s200)/.5)}
+  .widgets{display:flex;flex-wrap:wrap;gap:0 8px}
+  .widget{display:flex;flex-direction:column;justify-content:center;margin-top:8px;padding:8px 12px;border-radius:6px;background:rgb(255 255 255/.05);
+    box-shadow:0 4px 6px -1px rgb(var(--s900)/.2),0 2px 4px -2px rgb(var(--s900)/.2)}
+  .widget.logo{padding:8px 12px}
+  .logos{display:flex;gap:6px;margin-right:12px}
+  .logos img{width:32px;height:32px;border-radius:50%;object-fit:cover;background:#fff}
+  .greeting{font-size:20px;line-height:28px;margin-right:12px}
+  .datetime{display:flex;align-items:center;justify-content:flex-end;font-size:18px;line-height:28px;font-variant-numeric:tabular-nums}
+
+  /* groups */
+  .groups{display:flex;flex-wrap:wrap;align-items:flex-start;margin:16px 32px 8px}
+  .group{flex:1 1 100%;padding:4px 4px 0}
+  @media (min-width:700px){.group{flex-basis:50%}.bm{flex-basis:25%}}
+  @media (min-width:1100px){.group{flex-basis:25%}.bm{flex-basis:16.6667%}}
+  .ghead{display:flex;width:100%;align-items:center;user-select:none}
+  .ghead svg{flex:none;width:28px;height:28px;margin-right:8px;stroke:rgb(var(--s300))}
+  .ghead h2{font-size:20px;line-height:28px;font-weight:500;color:rgb(var(--s300))}
+  .list{margin-top:12px;display:flex;flex-direction:column}
+
+  /* service card */
+  .card{display:block;position:relative;overflow:clip;margin-bottom:8px;padding:4px;border-radius:6px;font-weight:500;color:rgb(var(--s200));background:rgb(255 255 255/.05);
+    box-shadow:0 4px 6px -1px rgb(var(--s900)/.2),0 2px 4px -2px rgb(var(--s900)/.2);transition:all .15s}
+  .card:hover{background:rgb(255 255 255/.1);color:rgb(var(--s300))}
+  .card .row{display:flex;user-select:none}
+  .icon{flex:none;display:flex;align-items:center;justify-content:center;width:48px}
+  .icon svg{width:32px;height:32px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .txt{flex:1;padding:8px;font-size:14px;line-height:20px;text-align:left}
+  .txt p{margin:0;font-size:12px;line-height:16px;font-weight:300;color:rgb(var(--s300))}
+  .tags{position:absolute;top:0;right:0;display:flex;gap:8px;margin-right:8px;z-index:10}
+  .tag{padding:2px 6px;border-radius:0 0 3px 3px;background:rgb(var(--s900)/.5);font-size:8px;line-height:12px;font-weight:700;text-transform:uppercase;letter-spacing:.02em;color:rgb(255 255 255/.4)}
+  .tag.key{color:rgb(var(--blue)/.8)}
+  .tag.ok{color:rgb(var(--emerald)/.8)}
+  .tag.warn{color:rgb(251 146 60/.8)}
+  .tag.bad{color:rgb(244 63 94/.8)}
+
+  /* bookmarks */
+  .bmk{display:block;width:100%;margin-bottom:12px;border-radius:6px;font-weight:500;color:rgb(var(--s200));background:rgb(255 255 255/.05);
+    box-shadow:0 4px 6px -1px rgb(var(--s900)/.2),0 2px 4px -2px rgb(var(--s900)/.2);transition:all .15s}
+  .bmk:hover{background:rgb(255 255 255/.1);color:rgb(var(--s300))}
+  .bmk .row{display:flex}
+  .abbr{flex:none;display:flex;align-items:center;justify-content:center;width:44px;border-radius:6px 0 0 6px;background:rgb(var(--s900)/.5);font-size:14px;line-height:20px}
+  .bt{flex:1;overflow:hidden;display:flex;align-items:center;justify-content:space-between}
+  .bt .n{padding:8px 0 8px 12px;font-size:12px;line-height:16px;white-space:nowrap}
+  .bt .d{flex-shrink:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:8px;font-size:12px;line-height:16px;color:rgb(var(--s300))}
+
+  footer{margin-top:auto;padding:32px;display:flex;justify-content:flex-end;font-size:12px;line-height:16px;color:rgb(var(--s400))}
+  @media (prefers-reduced-motion:reduce){.card,.bmk{transition:none}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="i-truck"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></g>
+    <g id="i-cash"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></g>
+    <g id="i-box"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96 12 12.01l8.73-5.05"/><line x1="12" y1="22.08" x2="12" y2="12"/></g>
+    <g id="i-chart"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></g>
+    <g id="i-check"><path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></g>
+    <g id="i-card"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></g>
+    <g id="i-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></g>
+    <g id="i-clip"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></g>
+  </defs>
+</svg>
+
+<div id="background"></div>
+<div class="container">
+
+  <div class="header">
+    <div class="widgets">
+      <div class="widget logo"><div style="display:flex;align-items:center">
+        <div class="logos"><img src="assets/img/logo-tiendaperfecta.jpeg" alt="Tienda Perfecta" title="Tienda Perfecta S.A."><img src="assets/img/logo-rambla.jpeg" alt="Rambla de los Lobos" title="Rambla de los Lobos S.A."></div>
+        <span class="greeting">Central web</span></div></div>
+    </div>
+    <div class="widgets">
+      <div class="widget"><div class="datetime" id="dt"></div></div>
+    </div>
+  </div>
+
+  <div class="groups">
+
+    <div class="group">
+      <div class="ghead"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-clip"/></svg><h2>Administración</h2></div>
+      <ul class="list">
+        <li><a class="card" href="https://tiendaperfecta.github.io/caja/" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#10b981"><use href="#i-cash"/></svg></div>
+            <div class="txt"><div>Caja tesorería</div><p>Movimientos de caja</p></div>
+          </div>
+          <div class="tags"><div class="tag key">Con clave</div><div class="tag est">Verificando</div></div>
+        </a></li>
+        <li><a class="card" href="https://transferencias.tienda-perfecta.workers.dev" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#60a5fa"><use href="#i-card"/></svg></div>
+            <div class="txt"><div>Control de transferencias</div><p>Verifica los cobros de cada reparto</p></div>
+          </div>
+          <div class="tags"><div class="tag key">Con clave</div><div class="tag est">Verificando</div></div>
+        </a></li>
+      </ul>
+    </div>
+
+    <div class="group">
+      <div class="ghead"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-box"/></svg><h2>Depósito</h2></div>
+      <ul class="list">
+        <li><a class="card" href="https://deposito.tienda-perfecta.workers.dev" data-fecha="https://deposito.tienda-perfecta.workers.dev/" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#fbbf24"><use href="#i-users"/></svg></div>
+            <div class="txt"><div>Panel de depósito</div><p>Operarios: análisis y rendimientos</p></div>
+          </div>
+          <div class="tags"><div class="tag est">Verificando</div></div>
+        </a></li>
+      </ul>
+    </div>
+
+    <div class="group">
+      <div class="ghead"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-chart"/></svg><h2>Ventas</h2></div>
+      <ul class="list">
+        <li><a class="card" href="https://ventas.tienda-perfecta.workers.dev" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#a78bfa"><use href="#i-chart"/></svg></div>
+            <div class="txt"><div>Panel de ventas</div><p>Ventas, objetivos y proveedores</p></div>
+          </div>
+          <div class="tags"><div class="tag key">Con clave</div><div class="tag est">Verificando</div></div>
+        </a></li>
+      </ul>
+    </div>
+
+    <div class="group">
+      <div class="ghead"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-truck"/></svg><h2>Logística</h2></div>
+      <ul class="list">
+        <li><a class="card" href="https://tiendaperfecta.github.io/fleteros/" data-fecha="https://tiendaperfecta.github.io/fleteros/data.js" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#34d399"><use href="#i-truck"/></svg></div>
+            <div class="txt"><div>Fleteros Tienda Perfecta</div><p>Efectividad de entrega y retorno de cartón</p></div>
+          </div>
+          <div class="tags"><div class="tag est">Verificando</div></div>
+        </a></li>
+      </ul>
+    </div>
+
+    <div class="group bm">
+      <div class="ghead"><h2>Sistemas</h2></div>
+      <ul class="list">
+        <li><a class="bmk" href="https://tiendaperfecta.gescom.online" target="_blank" rel="noreferrer"><div class="row"><div class="abbr">GT</div><div class="bt"><div class="n">Gescom Tienda Perfecta</div><div class="d">tiendaperfecta.gescom.online</div></div></div></a></li>
+        <li><a class="bmk" href="https://app.digipwms.com" target="_blank" rel="noreferrer"><div class="row"><div class="abbr">DG</div><div class="bt"><div class="n">Digip WMS</div><div class="d">app.digipwms.com</div></div></div></a></li>
+      </ul>
+    </div>
+    <div class="group bm">
+      <div class="ghead"><h2>Externos</h2></div>
+      <ul class="list">
+        <li><a class="bmk" href="https://portalcf.cloud.afip.gob.ar/portal/app/" target="_blank" rel="noreferrer"><div class="row"><div class="abbr">AR</div><div class="bt"><div class="n">ARCA</div><div class="d">Mis Comprobantes</div></div></div></a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <footer>Central web</footer>
+</div>
+
+<script>
+  const f = new Intl.DateTimeFormat('es-AR', {weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false});
+  const el = document.getElementById('dt');
+  const tick = () => el.textContent = f.format(new Date());
+  tick(); setInterval(tick, 1000);
+
+  // Estado de cada tarjeta: si el panel publica su fecha de actualización (data-fecha),
+  // verde solo si es de hoy (hora argentina); si no, verde si el sitio responde.
+  const hoy = new Intl.DateTimeFormat('en-CA', {timeZone:'America/Argentina/Buenos_Aires'}).format(new Date());
+  const corto = d => new Date(d + 'T12:00:00').toLocaleDateString('es-AR', {day:'numeric', month:'short'});
+  const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  // Saca la fecha (YYYY-MM-DD) del texto del panel: fleteros "Ultima actualizacion: 2026-09-03",
+  // depósito "generado":"4 de septiembre de 2026"
+  const fechaDe = txt => {
+    const iso = txt.match(/Ultima actualizacion: (\d{4}-\d{2}-\d{2})/);
+    if (iso) return iso[1];
+    const es = txt.match(/"generado":"(\d{1,2}) de (\w+) de (\d{4})"/);
+    return es[3] + '-' + String(MESES.indexOf(es[2]) + 1).padStart(2, '0') + '-' + es[1].padStart(2, '0');
+  };
+  document.querySelectorAll('.card').forEach(async a => {
+    const tag = a.querySelector('.tag.est');
+    try {
+      if (a.dataset.fecha) {
+        const txt = await (await fetch(a.dataset.fecha, {cache:'no-store'})).text();
+        const f = fechaDe(txt);
+        const ok = f === hoy;
+        tag.textContent = ok ? 'Actualizado hoy' : 'Actualizado ' + corto(f);
+        tag.className = 'tag est ' + (ok ? 'ok' : 'warn');
+      } else {
+        await fetch(a.href, {mode:'no-cors', cache:'no-store'});
+        tag.textContent = 'En línea';
+        tag.className = 'tag est ok';
+      }
+    } catch {
+      tag.textContent = 'Sin respuesta';
+      tag.className = 'tag est bad';
+    }
+  });
+</script>
+
+</body></html>
