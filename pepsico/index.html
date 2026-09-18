@@ -1,0 +1,846 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta charset="utf-8">
+<title>Avance PepsiCo TP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f3ec; --panel:#ffffff; --panel-2:#efe9dc; --text:#241f18; --muted:#71695a;
+  --border:#e2d9c6; --accent:#b5651d; --accent-soft:#f1e0c9;
+  --good:#3f7d4f; --good-soft:#e4f0e6; --warn:#b5651d; --warn-soft:#f6e8d5; --bad:#b23b2e; --bad-soft:#f7e2de;
+  --shadow: 0 1px 2px rgba(36,31,24,.06), 0 8px 24px -12px rgba(36,31,24,.18);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#17140f; --panel:#211c15; --panel-2:#282219; --text:#f2ece0; --muted:#a89a86;
+    --border:#3a3122; --accent:#e2a33d; --accent-soft:#3a2c15;
+    --good:#6cbb84; --good-soft:#1e3324; --warn:#e2a33d; --warn-soft:#3a2c15; --bad:#e2695c; --bad-soft:#3a1e1b;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px -14px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#17140f; --panel:#211c15; --panel-2:#282219; --text:#f2ece0; --muted:#a89a86;
+  --border:#3a3122; --accent:#e2a33d; --accent-soft:#3a2c15;
+  --good:#6cbb84; --good-soft:#1e3324; --warn:#e2a33d; --warn-soft:#3a2c15; --bad:#e2695c; --bad-soft:#3a1e1b;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px -14px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:"IBM Plex Sans", system-ui, sans-serif;
+  padding:28px 20px 48px; display:flex; justify-content:center;
+}
+.wrap{width:100%; max-width:1120px}
+.eyebrow{
+  font:600 12px/1 "IBM Plex Mono", monospace; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--accent); margin:0 0 10px;
+}
+h1{
+  font-family:"Fraunces", Georgia, serif; font-weight:600; font-size:clamp(26px,4vw,38px);
+  line-height:1.1; margin:0 0 8px; text-wrap:balance;
+}
+.sub{color:var(--muted); font-size:14.5px; margin:0 0 28px; max-width:65ch}
+.sub b{color:var(--text); font-weight:600}
+
+.kpis{
+  display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:20px;
+}
+@media (max-width:860px){ .kpis{grid-template-columns:repeat(2,1fr)} }
+.kpi{
+  background:var(--panel); border:1px solid var(--border); border-radius:12px;
+  padding:16px 16px 14px; box-shadow:var(--shadow);
+}
+.kpi .label{font:600 11px/1 "IBM Plex Mono",monospace; letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
+.kpi .value{font-family:"Fraunces",serif; font-weight:600; font-size:25px; margin-top:8px; font-variant-numeric:tabular-nums}
+.kpi .unit{font-size:13px; color:var(--muted); font-weight:500; margin-left:3px}
+.kpi.accent{background:linear-gradient(155deg,var(--accent-soft),var(--panel) 65%)}
+
+.segments{
+  display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:28px;
+}
+@media (max-width:640px){ .segments{grid-template-columns:1fr} }
+.seg{
+  background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:16px 18px; box-shadow:var(--shadow);
+}
+.seg-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px}
+.seg-head .name{font-weight:600; font-size:14.5px}
+.seg-head .pct{font:600 18px "Fraunces",serif; font-variant-numeric:tabular-nums}
+.bar-track{height:9px; border-radius:99px; background:var(--panel-2); overflow:visible; position:relative}
+.bar-fill{height:100%; border-radius:99px; background:var(--accent); overflow:hidden}
+.seg-foot{display:flex; justify-content:space-between; margin-top:8px; font-size:12.5px; color:var(--muted); font-family:"IBM Plex Mono",monospace}
+
+.mn-panel{
+  background:var(--panel); border:1px solid var(--border); border-radius:12px;
+  padding:16px 18px; box-shadow:var(--shadow); margin-bottom:28px;
+}
+.mn-head{display:flex; justify-content:space-between; align-items:flex-end; gap:16px; margin-bottom:10px; flex-wrap:wrap}
+.mn-head .name{font-weight:600; font-size:14.5px}
+.mn-head .mn-sub{display:block; color:var(--muted); font-size:12.5px; margin-top:2px}
+.mn-head .pct{font:600 22px "Fraunces",serif; font-variant-numeric:tabular-nums; white-space:nowrap}
+.mn-head .pct .unit{font-size:14px; color:var(--muted); font-weight:500}
+.mn-track{height:11px}
+.mn-fill{background:linear-gradient(90deg,var(--accent),var(--good))}
+.goal-marker{
+  position:absolute; top:-3px; bottom:-3px; width:2px; background:var(--text); opacity:.55;
+}
+.goal-marker::after{
+  content:"meta"; position:absolute; top:-16px; left:50%; transform:translateX(-50%);
+  font:600 10px "IBM Plex Mono",monospace; color:var(--muted); white-space:nowrap;
+}
+.mn-note{color:var(--muted); font-size:12px; line-height:1.6; margin:12px 0 0; max-width:78ch}
+.mn-note code{font-family:"IBM Plex Mono",monospace; background:var(--panel-2); padding:1px 5px; border-radius:4px}
+
+.section-title{
+  font-family:"Fraunces",serif; font-weight:600; font-size:19px; margin:0 0 4px;
+}
+.subsection-title{
+  font-family:"Fraunces",serif; font-weight:600; font-size:15.5px; color:var(--accent);
+  margin:28px 0 4px; text-transform:uppercase; letter-spacing:.03em;
+}
+.section-note{color:var(--muted); font-size:13px; margin:0 0 14px}
+
+.table-scroll{
+  overflow-x:auto; border:1px solid var(--border); border-radius:12px; background:var(--panel);
+  box-shadow:var(--shadow); margin-bottom:28px;
+}
+table{border-collapse:collapse; width:100%; min-width:920px; font-size:13px}
+thead tr.grp th{
+  font:600 11px/1 "IBM Plex Mono",monospace; letter-spacing:.05em; text-transform:uppercase;
+  color:var(--muted); text-align:center; padding:12px 10px 6px; border-bottom:none;
+}
+thead tr.grp th.g-platino{color:var(--accent)}
+thead tr.cols th{
+  font:600 11.5px "IBM Plex Sans"; color:var(--muted); text-align:right; padding:0 10px 10px;
+  border-bottom:1px solid var(--border); white-space:nowrap;
+}
+thead tr.cols th:first-child, thead tr.cols th.name-col{text-align:left}
+tbody td{
+  padding:10px; text-align:right; border-bottom:1px solid var(--border);
+  font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; white-space:nowrap;
+}
+tbody td.name{
+  text-align:left; font-family:"IBM Plex Sans"; font-weight:600; font-variant-numeric:normal;
+}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--panel-2)}
+col.sep{width:14px}
+.cell-avance{display:flex; align-items:center; gap:8px; justify-content:flex-end}
+.mini-bar{width:52px; height:6px; border-radius:99px; background:var(--panel-2); overflow:hidden; flex:none}
+.mini-bar span{display:block; height:100%; border-radius:99px}
+.pill{
+  display:inline-block; padding:2px 8px; border-radius:99px; font:600 11px "IBM Plex Mono",monospace;
+}
+.pill.good{background:var(--good-soft); color:var(--good)}
+.pill.warn{background:var(--warn-soft); color:var(--warn)}
+.pill.bad{background:var(--bad-soft); color:var(--bad)}
+tfoot td{
+  padding:12px 10px; font-weight:700; border-top:2px solid var(--border);
+  font-family:"IBM Plex Mono",monospace; text-align:right;
+}
+tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
+
+.foot-note{color:var(--muted); font-size:12.5px; line-height:1.6; margin-top:8px}
+.foot-note code{font-family:"IBM Plex Mono",monospace; background:var(--panel-2); padding:1px 5px; border-radius:4px}
+
+.clickable{cursor:pointer; text-decoration:underline dotted; text-underline-offset:3px; text-decoration-color:var(--muted)}
+.clickable:hover{color:var(--accent)}
+
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:flex-start;
+  justify-content:center; z-index:100; padding:6vh 16px; overflow-y:auto;
+}
+.modal-overlay.open{display:flex}
+.modal-panel{
+  background:var(--panel); border:1px solid var(--border); border-radius:14px; max-width:920px; width:100%;
+  box-shadow:0 20px 60px -20px rgba(0,0,0,.6); max-height:88vh; display:flex; flex-direction:column;
+}
+.modal-head{
+  display:flex; justify-content:space-between; align-items:flex-start; gap:16px; padding:18px 22px 14px;
+  border-bottom:1px solid var(--border);
+}
+.modal-head h3{font-family:"Fraunces",serif; font-weight:600; font-size:17px; margin:0 0 4px}
+.modal-head p{margin:0; color:var(--muted); font-size:13px}
+.modal-close{
+  background:var(--panel-2); border:1px solid var(--border); color:var(--text); width:30px; height:30px;
+  border-radius:50%; font-size:16px; line-height:1; cursor:pointer; flex:none;
+}
+.modal-close:hover{color:var(--accent)}
+.modal-body{overflow:auto; padding:0 22px 20px}
+.modal-body table{width:100%; border-collapse:collapse; font-size:12.5px}
+.modal-body th{
+  position:sticky; top:0; background:var(--panel); text-align:left; color:var(--muted); font-weight:600;
+  padding:8px 8px; border-bottom:1px solid var(--border); white-space:nowrap;
+}
+.modal-body td{padding:7px 8px; border-bottom:1px solid var(--border); white-space:nowrap}
+.modal-body tr:last-child td{border-bottom:none}
+.modal-count{color:var(--muted); font-size:12.5px; margin:0 0 10px}
+</style>
+
+<div class="wrap">
+  <p class="eyebrow">PepsiCo · Tienda Perfecta · Objetivo TN Septiembre 2026</p>
+  <h1>Avance de venta diario</h1>
+  <p class="sub">
+    Medida en <b>kilogramos</b>. Acumulado del <b>01/09</b> al <b>17/09</b>, con
+    <b>15 de 26</b> días hábiles transcurridos (lunes a sábado). El <b>Avance</b> es
+    contra el objetivo prorrateado a la fecha, no contra el objetivo total del mes.
+    Columna <b>Real</b> = venta del día de la última visita teórica (hoy, 17/09), traída
+    en vivo del reporte <b>Avance de Ventas Pepsico</b> del módulo Objetivos de Gescom.
+  </p>
+
+  <div class="kpis">
+    <div class="kpi accent">
+      <div class="label">Objetivo mes</div>
+      <div class="value">26.000<span class="unit">kg</span></div>
+    </div>
+    <div class="kpi">
+      <div class="label">Acumulado</div>
+      <div class="value">15.155<span class="unit">kg</span></div>
+    </div>
+    <div class="kpi">
+      <div class="label">Avance a la fecha</div>
+      <div class="value">101,0<span class="unit">%</span></div>
+    </div>
+    <div class="kpi">
+      <div class="label">Tendencia cierre</div>
+      <div class="value">26.269<span class="unit">kg</span></div>
+    </div>
+    <div class="kpi">
+      <div class="label">Venta real hoy</div>
+      <div class="value">690<span class="unit">kg</span></div>
+    </div>
+  </div>
+
+  <div class="segments">
+    <div class="seg">
+      <div class="seg-head"><span class="name">Platino + Gold</span><span class="pct">102,4%</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+      <div class="seg-foot"><span>Objetivo 18.000 kg</span><span>Acumulado 10.631 kg</span></div>
+    </div>
+    <div class="seg">
+      <div class="seg-head"><span class="name">Silver &amp; Bronze</span><span class="pct">98,0%</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:98.0%"></div></div>
+      <div class="seg-foot"><span>Objetivo 8.000 kg</span><span>Acumulado 4.525 kg</span></div>
+    </div>
+  </div>
+
+  <div class="mn-panel">
+    <div class="mn-head">
+      <div>
+        <span class="name">Mi Negocio+</span>
+        <span class="mn-sub">venta Pepsico pedida por el canal digital, sin visita de preventa</span>
+      </div>
+      <span class="pct">81,0<span class="unit">%</span></span>
+    </div>
+    <div class="bar-track mn-track">
+      <div class="bar-fill mn-fill" style="width:81.0%"></div>
+      <div class="goal-marker" style="left:85%" title="Compromiso: 85%"></div>
+    </div>
+    <div class="seg-foot">
+      <span>Acumulado 12.278 kg de 15.155 kg Pepsico</span>
+      <span>Compromiso 85% · faltan 4,0 pts</span>
+    </div>
+    <p class="mn-note">
+      Columna <code>AcumuladoMN</code> del mismo reporte <b>Avance de Ventas Pepsico</b> (no hay un
+      objetivo ni reporte separado para Mi Negocio+). % Mi Negocio = AcumuladoMN ÷ Acumulado total.
+    </p>
+  </div>
+
+  <h2 class="section-title">Mi Negocio+ por vendedor</h2>
+  <p class="section-note">Ordenado de menor a mayor % de venta por el canal digital.</p>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr class="cols">
+          <th class="name-col">Vendedor</th>
+          <th>Acum. MN</th><th>Acumulado</th><th>% Mi Negocio</th><th>Avance MN</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-mn"></tbody>
+      <tfoot>
+        <tr>
+          <td class="name">Total PepsiCo</td>
+          <td>12.278</td><td>15.155</td><td>81,0%</td><td>81,9%</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <h2 class="section-title">Por vendedor</h2>
+  <p class="section-note">Ordenado de menor a mayor avance — los que necesitan más empuje primero.</p>
+
+  <div class="table-scroll">
+    <table>
+      <colgroup>
+        <col style="width:190px">
+        <col><col><col>
+        <col class="sep"><col><col><col>
+        <col class="sep"><col><col><col><col><col>
+      </colgroup>
+      <thead>
+        <tr class="grp">
+          <th></th>
+          <th class="g-platino" colspan="3">Platino + Gold</th>
+          <th></th>
+          <th colspan="3">Silver &amp; Bronze</th>
+          <th></th>
+          <th colspan="5">Total vendedor</th>
+        </tr>
+        <tr class="cols">
+          <th class="name-col">Vendedor</th>
+          <th>Objetivo</th><th>Acum.</th><th>Avance</th>
+          <th></th>
+          <th>Objetivo</th><th>Acum.</th><th>Avance</th>
+          <th></th>
+          <th>Objetivo</th><th>Acumulado</th><th>Avance</th><th>Real hoy</th><th>Venta $</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+      <tfoot>
+        <tr>
+          <td class="name">Total PepsiCo</td>
+          <td>18.000</td><td>10.631</td><td>102,4%</td><td></td>
+          <td>8.000</td><td>4.525</td><td>98,0%</td><td></td>
+          <td>26.000</td><td>15.155</td><td>101,0%</td><td>690</td><td>$ 350.977.754</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <h2 class="section-title">Cobertura por marca y vendedor</h2>
+  <p class="section-note">
+    Cobertura = clientes con 3 o más unidades de la marca en el período ÷ universo de clientes del vendedor.
+    Período 01/09-17/09. Color relativo por columna (rojo = más bajo, verde = más alto dentro de esa marca).
+  </p>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr class="cols">
+          <th class="name-col">Vendedor</th>
+          <th>Universo</th>
+          <th>3Ds</th><th>Cheetos</th><th>Doritos</th><th>Lays</th><th>Pehuamar</th>
+          <th>Pep</th><th>Quaker</th><th>Tostitos</th><th>Twistos</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-marcaVend"></tbody>
+      <tfoot id="tfoot-marcaVend"></tfoot>
+    </table>
+  </div>
+
+  <h3 class="subsection-title">Objetivo de cobertura — Septiembre 2026</h3>
+  <p class="section-note">
+    Cobertura total PepsiCo (todos los vendedores) contra el objetivo de Septiembre por marca. Cump. % = Cobertura ÷ Objetivo.
+  </p>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr class="cols">
+          <th class="name-col">Marca</th>
+          <th>Objetivo</th><th>Cobertura</th><th>Cump. %</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-marcaObj"></tbody>
+    </table>
+  </div>
+
+  <p class="foot-note">
+    Fuente: <code>Detallado de ventas extendido Pepsico</code> (campo <code>Marca</code>, <code>CantBase</code> por
+    cliente, <code>FechaComprobante</code> 01/09-17/09, empresas Tienda Perfecta + Pex, proveedor Pepsico de
+    Argentina SRL) cruzado con el universo de clientes por vendedor de <code>Clientes Claude.xlsx</code>. La columna
+    <b>Venta $</b> de la tabla "Por vendedor" sale del mismo export, filtrado por <code>FechaCarga</code> entre el
+    <b>01/09 y el 17/09</b>, sumando <code>ImporteItem</code> tal cual viene en el archivo (los tipos de venta que
+    restan, como devoluciones, ya vienen en negativo). Es el importe facturado, no está prorrateado contra ningún
+    objetivo en $.
+  </p>
+
+  <h2 class="section-title">CCC por segmento</h2>
+  <p class="section-note">
+    CCC = clientes con compra sobre el universo asignado, por segmento de cliente (A/B/C/D). Objetivo total
+    Tienda Perfecta: A 384 · B 337 · C 669 · D 903 (2.293 clientes) — prorrateado por vendedor según su
+    participación de clientes en cada segmento y redondeado a números enteros (por eso la suma de cada
+    segmento cierra exacto contra el objetivo oficial). Cumple = cliente con compra de Pepsico y más de 3
+    unidades entre el 01/09 y el 17/09. Ordenado de menor a mayor avance total. Click en el % de Avance de
+    cada segmento para ver el detalle de los clientes que todavía no compraron.
+  </p>
+
+  <div class="table-scroll">
+    <table>
+      <colgroup>
+        <col style="width:190px">
+        <col><col><col>
+        <col class="sep"><col><col><col>
+        <col class="sep"><col><col><col>
+        <col class="sep"><col><col><col>
+        <col class="sep"><col><col><col>
+      </colgroup>
+      <thead>
+        <tr class="grp">
+          <th></th>
+          <th class="g-platino" colspan="3">Segmento A</th>
+          <th></th>
+          <th colspan="3">Segmento B</th>
+          <th></th>
+          <th colspan="3">Segmento C</th>
+          <th></th>
+          <th colspan="3">Segmento D</th>
+          <th></th>
+          <th colspan="3">Total</th>
+        </tr>
+        <tr class="cols">
+          <th class="name-col">Vendedor</th>
+          <th>Obj.</th><th>Cumple</th><th>Avance</th>
+          <th></th>
+          <th>Obj.</th><th>Cumple</th><th>Avance</th>
+          <th></th>
+          <th>Obj.</th><th>Cumple</th><th>Avance</th>
+          <th></th>
+          <th>Obj.</th><th>Cumple</th><th>Avance</th>
+          <th></th>
+          <th>Obj.</th><th>Cumple</th><th>Avance</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-ccc2"></tbody>
+      <tfoot>
+        <tr>
+          <td class="name">Total PepsiCo</td>
+          <td>384</td><td>381</td><td>99,2%</td><td></td>
+          <td>337</td><td>305</td><td>90,5%</td><td></td>
+          <td>669</td><td>591</td><td>88,3%</td><td></td>
+          <td>903</td><td>602</td><td>66,7%</td><td></td>
+          <td>2.293</td><td>1.879</td><td>81,9%</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <p class="foot-note">
+    Fuente: segmento y vendedor de <code>Clientes Claude.xlsx</code> (base propia, columnas SegmentoClienteCodigo
+    y Vendedor) cruzada con <code>Detallado de ventas extendido Pepsico</code> (unidades por cliente,
+    <code>FechaComprobante</code> 01/09-17/09, empresas Tienda Perfecta + Pex, proveedor Pepsico). El objetivo
+    global (384/337/669/903) es el que confirmaste; el reparto por vendedor es una estimación proporcional, no un
+    objetivo oficial cargado en Gescom.
+  </p>
+
+  <h3 class="subsection-title">No compradores por día de visita</h3>
+  <p class="section-note">
+    Clientes que <b>no</b> llegaron al CCC (compra de Pepsico &gt; 3 unidades en el período), agrupados por el día
+    de la semana de su ruta de preventa. Formato de celda: no compradores / universo de ese día. Ordenado de mayor
+    a menor cantidad de no compradores. Click en cualquier celda (o en el Total) para ver el listado de esos
+    clientes.
+  </p>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr class="cols">
+          <th class="name-col">Vendedor</th>
+          <th>Lunes</th><th>Martes</th><th>Miércoles</th><th>Jueves</th><th>Viernes</th><th>Sábado</th><th>Total</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-nocompra"></tbody>
+      <tfoot>
+        <tr>
+          <td class="name">Total PepsiCo</td>
+          <td>104/467</td><td>118/470</td><td>110/468</td><td>140/483</td><td>132/435</td><td>66/226</td>
+          <td>670/2.249</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <p class="foot-note">
+    El universo por día sale de la ruta de preventa asignada en <code>Clientes Claude.xlsx</code> (el nombre de la
+    ruta empieza con el día, ej. "Viernes V4"). Un cliente sin ruta cargada no entra en esta tabla, por eso el
+    universo total (2.249) es algo menor a los 2.293 del objetivo CCC.
+  </p>
+
+  <h2 class="section-title">Tiendas Perfectas, Combos e Invendible</h2>
+  <p class="section-note">
+    Tiendas Perfectas: % de clientes censados que cumplen el estándar, y puntaje promedio (0-100).
+    Combos e Invendible en kg y en $ del período 01/09 al 17/09.
+  </p>
+
+  <div class="table-scroll">
+    <table>
+      <colgroup>
+        <col style="width:190px">
+        <col><col>
+        <col class="sep"><col><col>
+        <col class="sep"><col><col>
+      </colgroup>
+      <thead>
+        <tr class="grp">
+          <th></th>
+          <th class="g-platino" colspan="2">Tienda Perfecta</th>
+          <th></th>
+          <th colspan="2">Combos</th>
+          <th></th>
+          <th colspan="2">Invendible (Devol. por Canje)</th>
+        </tr>
+        <tr class="cols">
+          <th class="name-col">Vendedor</th>
+          <th>Cumple</th><th>Puntaje</th>
+          <th></th>
+          <th>Kg</th><th>Importe</th>
+          <th></th>
+          <th>Kg</th><th>Importe</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-tp"></tbody>
+    </table>
+  </div>
+
+  <h2 class="section-title">Cobertura por marca</h2>
+  <p class="section-note">Kg vendidos y clientes alcanzados por marca, sobre un universo de 2.544 clientes censados. Ordenado por kg.</p>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr class="cols">
+          <th class="name-col">Marca</th>
+          <th>Kg vendidos</th><th>Clientes</th><th>Cobertura</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-marca"></tbody>
+    </table>
+  </div>
+
+  <p class="foot-note">
+    Fuente: <code>Reportes / Rumbo Pepsico / LATAM (Desde 04-2024) 6.1 Censo Tienda perfecta</code> (2.544 clientes
+    censados) y <code>Exportación / Detallado de ventas extendido Pepsico</code> (45.531 líneas con
+    <code>FechaComprobante</code> entre 01/09 y 17/09, sobre un total exportado de 26/08 al 17/09, empresa Tienda
+    Perfecta) · Invendible = <code>TipoDeVenta = Devolución por Canje</code> · Marca = campo
+    <code>Marca</code> del maestro de artículos, solo para los 9 SKU con marca cargada.
+  </p>
+</div>
+
+<div class="modal-overlay" id="drillModal" onclick="if(event.target===this) closeDrill()">
+  <div class="modal-panel">
+    <div class="modal-head">
+      <div>
+        <h3 id="drillTitle">Clientes</h3>
+        <p id="drillSubtitle"></p>
+      </div>
+      <button class="modal-close" onclick="closeDrill()" aria-label="Cerrar">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-count" id="drillCount"></p>
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th><th>Razón social</th><th>Dirección</th><th>Localidad</th><th>Teléfono</th><th>Segmento</th><th>Día visita</th>
+          </tr>
+        </thead>
+        <tbody id="drillBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+let noCompradoresDetalle = [];
+fetch('no_compradores_detalle.json').then(r => r.json()).then(data => { noCompradoresDetalle = data; }).catch(() => {});
+
+function openDrill(title, subtitle, list) {
+  document.getElementById('drillTitle').textContent = title;
+  document.getElementById('drillSubtitle').textContent = subtitle;
+  document.getElementById('drillCount').textContent = list.length + (list.length === 1 ? ' cliente' : ' clientes');
+  document.getElementById('drillBody').innerHTML = list.map(c => `
+    <tr>
+      <td>${c.codigo}</td><td>${c.razon}</td><td>${c.direccion}</td><td>${c.localidad}</td>
+      <td>${c.telefono || '—'}</td><td>${c.seg}</td><td>${c.dia || '—'}</td>
+    </tr>
+  `).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--muted)">Sin clientes en esta selección</td></tr>';
+  document.getElementById('drillModal').classList.add('open');
+}
+function closeDrill() { document.getElementById('drillModal').classList.remove('open'); }
+
+function drillBySegmento(vendedor, seg) {
+  const list = noCompradoresDetalle.filter(c => c.vendedor === vendedor && c.seg === seg);
+  openDrill(vendedor, `Segmento ${seg} — no llegaron al CCC (Pepsico > 3 unidades, 01/09-17/09)`, list);
+}
+function drillByDia(vendedor, dia) {
+  const list = dia === 'Total'
+    ? noCompradoresDetalle.filter(c => c.vendedor === vendedor)
+    : noCompradoresDetalle.filter(c => c.vendedor === vendedor && c.dia === dia);
+  const sub = dia === 'Total' ? 'Todos los días — no llegaron al CCC' : `Ruta de ${dia} — no llegaron al CCC (Pepsico > 3 unidades, 01/09-17/09)`;
+  openDrill(vendedor, sub, list);
+}
+
+const rows = [
+  {n:"Ludmila Aylen Martinez", p1o:1842.82,p1a:1057.29,p1p:99.45, p2o:1185.19,p2a:503.31,p2p:73.61, to:3028.0,ta:1560.6,tp:89.3,real:85.34, venta:36626190},
+  {n:"Julian Nuñez",            p1o:1772.69,p1a:939.05, p1p:91.82,p2o:957.44, p2a:513.04,p2p:92.88, to:2730.1,ta:1452.1,tp:92.2,real:58.20, venta:33187874},
+  {n:"Maria Noelia Madia",      p1o:1347.05,p1a:739.46, p1p:95.15,p2o:509.50, p2a:254.86,p2p:86.71, to:1856.5,ta:994.3, tp:92.8,real:53.34, venta:23132261},
+  {n:"Agustin Pogorzelski",     p1o:1321.55,p1a:724.31, p1p:95.00,p2o:499.27, p2a:265.84,p2p:92.29, to:1820.8,ta:990.1, tp:94.3,real:59.46, venta:24030535},
+  {n:"Melanie Larrama",         p1o:1309.56,p1a:700.23, p1p:92.68,p2o:659.77, p2a:388.45,p2p:102.05,to:1969.3,ta:1088.7,tp:95.8,real:41.61, venta:23304471},
+  {n:"Ezequiel Hack",           p1o:1382.44,p1a:788.49, p1p:98.86,p2o:637.89, p2a:364.96,p2p:99.17, to:2020.3,ta:1153.5,tp:99.0,real:46.75, venta:27937448},
+  {n:"Camila Martinez",         p1o:1299.88,p1a:794.76, p1p:105.98,p2o:550.79,p2a:300.44,p2p:94.55, to:1850.7,ta:1095.2,tp:102.6,real:42.89, venta:26343753},
+  {n:"Matias Parada",           p1o:1270.48,p1a:761.38, p1p:103.88,p2o:488.19,p2a:284.22,p2p:100.91,to:1758.7,ta:1045.6,tp:103.1,real:36.22, venta:24835020},
+  {n:"Ramiro Rando",            p1o:1670.92,p1a:1021.46,p1p:105.96,p2o:570.34,p2a:341.62,p2p:103.82,to:2241.3,ta:1363.1,tp:105.4,real:43.68, venta:33272229},
+  {n:"Lucas Giayetto",          p1o:1764.64,p1a:1130.29,p1p:111.02,p2o:641.37,p2a:417.83,p2p:112.92,to:2406.0,ta:1548.1,tp:111.5,real:95.67, venta:33644402},
+  {n:"Martinica Rodriguez",     p1o:1423.91,p1a:864.90, p1p:105.29,p2o:674.54,p2a:511.41,p2p:131.41,to:2098.4,ta:1376.3,tp:113.7,real:65.87, venta:31704004},
+  {n:"Nicolas Martinez",        p1o:1594.06,p1a:1109.22,p1p:120.61,p2o:625.71,p2a:378.59,p2p:104.88,to:2219.8,ta:1487.8,tp:116.2,real:61.21, venta:32959567},
+];
+
+const mnRows = [
+  {n:"Ezequiel Hack",           mn:803.0,  acum:1153.5, share:69.6, avanceMn:68.9},
+  {n:"Matias Parada",           mn:733.0,  acum:1045.6, share:70.1, avanceMn:72.2},
+  {n:"Ludmila Aylen Martinez",  mn:1184.9, acum:1560.6, share:75.9, avanceMn:67.8},
+  {n:"Lucas Giayetto",          mn:1231.7, acum:1548.1, share:79.6, avanceMn:88.7},
+  {n:"Camila Martinez",         mn:881.3,  acum:1095.2, share:80.5, avanceMn:82.5},
+  {n:"Agustin Pogorzelski",     mn:798.5,  acum:990.1,  share:80.6, avanceMn:76.0},
+  {n:"Melanie Larrama",         mn:881.1,  acum:1088.7, share:80.9, avanceMn:77.6},
+  {n:"Nicolas Martinez",        mn:1227.2, acum:1487.8, share:82.5, avanceMn:95.8},
+  {n:"Martinica Rodriguez",     mn:1162.5, acum:1376.3, share:84.5, avanceMn:96.0},
+  {n:"Maria Noelia Madia",      mn:872.9,  acum:994.3,  share:87.8, avanceMn:81.5},
+  {n:"Julian Nuñez",            mn:1289.8, acum:1452.1, share:88.8, avanceMn:81.9},
+  {n:"Ramiro Rando",            mn:1211.5, acum:1363.1, share:88.9, avanceMn:93.7},
+];
+
+const marcaVendRows = [
+  {codven:"1",  n:"Maria Noelia Madia",     universo:179, "3Ds":52.5,"Cheetos":48.6,"Doritos":62.6,"Lays":67.0,"Pehuamar":56.4,"Pep":57.0,"Quaker":5.0,"Tostitos":3.9,"Twistos":52.0},
+  {codven:"2",  n:"Julian Nuñez",           universo:188, "3Ds":47.3,"Cheetos":49.5,"Doritos":66.0,"Lays":64.9,"Pehuamar":51.6,"Pep":46.8,"Quaker":5.9,"Tostitos":9.0,"Twistos":45.7},
+  {codven:"3",  n:"Ezequiel Hack",          universo:221, "3Ds":48.0,"Cheetos":46.2,"Doritos":61.5,"Lays":50.7,"Pehuamar":34.8,"Pep":42.1,"Quaker":1.4,"Tostitos":4.5,"Twistos":37.1},
+  {codven:"4",  n:"Lucas Giayetto",         universo:234, "3Ds":44.0,"Cheetos":46.2,"Doritos":62.4,"Lays":48.7,"Pehuamar":41.0,"Pep":48.7,"Quaker":4.3,"Tostitos":4.7,"Twistos":35.9},
+  {codven:"5",  n:"Nicolas Martinez",       universo:211, "3Ds":58.3,"Cheetos":56.9,"Doritos":73.9,"Lays":67.8,"Pehuamar":52.6,"Pep":52.1,"Quaker":6.2,"Tostitos":10.4,"Twistos":52.6},
+  {codven:"6",  n:"Camila Martinez",        universo:217, "3Ds":44.7,"Cheetos":47.9,"Doritos":66.4,"Lays":66.8,"Pehuamar":57.1,"Pep":47.9,"Quaker":2.3,"Tostitos":6.9,"Twistos":47.9},
+  {codven:"7",  n:"Ramiro Rando",           universo:224, "3Ds":50.4,"Cheetos":51.8,"Doritos":69.6,"Lays":62.9,"Pehuamar":44.6,"Pep":58.0,"Quaker":3.6,"Tostitos":4.9,"Twistos":39.3},
+  {codven:"8",  n:"Martinica Rodriguez",    universo:253, "3Ds":42.3,"Cheetos":35.6,"Doritos":64.0,"Lays":48.6,"Pehuamar":41.1,"Pep":38.3,"Quaker":2.4,"Tostitos":2.0,"Twistos":41.5},
+  {codven:"9",  n:"Ludmila Aylen Martinez", universo:203, "3Ds":51.7,"Cheetos":51.7,"Doritos":65.0,"Lays":58.6,"Pehuamar":55.2,"Pep":48.3,"Quaker":4.4,"Tostitos":10.3,"Twistos":42.4},
+  {codven:"10", n:"Matias Parada",          universo:215, "3Ds":42.8,"Cheetos":50.7,"Doritos":64.2,"Lays":57.7,"Pehuamar":34.4,"Pep":52.6,"Quaker":3.3,"Tostitos":7.4,"Twistos":43.7},
+  {codven:"11", n:"Melanie Larrama",        universo:201, "3Ds":47.8,"Cheetos":49.8,"Doritos":64.2,"Lays":65.7,"Pehuamar":54.7,"Pep":43.8,"Quaker":1.5,"Tostitos":6.5,"Twistos":43.8},
+  {codven:"12", n:"Agustin Pogorzelski",    universo:203, "3Ds":50.7,"Cheetos":53.2,"Doritos":68.0,"Lays":60.1,"Pehuamar":47.8,"Pep":44.3,"Quaker":2.5,"Tostitos":8.4,"Twistos":49.3},
+];
+const MARCA_COLS = ["3Ds","Cheetos","Doritos","Lays","Pehuamar","Pep","Quaker","Tostitos","Twistos"];
+const marcaVendTotal = {universo: marcaVendRows.reduce((s,r)=>s+r.universo,0)};
+MARCA_COLS.forEach(m => {
+  marcaVendTotal[m] = Math.round(marcaVendRows.reduce((s,r)=>s+r[m]*r.universo,0) / marcaVendTotal.universo * 10) / 10;
+});
+const marcaObjRows = [
+  {marca:"3Ds",      obj:72.98},
+  {marca:"Cheetos",  obj:70.79},
+  {marca:"Doritos",  obj:87.31},
+  {marca:"Lays",     obj:81.46},
+  {marca:"Pehuamar", obj:53.51},
+  {marca:"Pep",      obj:58.57},
+  {marca:"Quaker",   obj:6.23},
+  {marca:"Tostitos", obj:14.02},
+  {marca:"Twistos",  obj:54.71},
+];
+marcaObjRows.forEach(r => {
+  r.cob = marcaVendTotal[r.marca];
+  r.cump = r.obj ? r.cob / r.obj * 100 : 0;
+});
+
+function heatColor(v, min, max){
+  const t = max > min ? (v - min) / (max - min) : 0.5;
+  const hue = Math.round(t * 120);
+  return {bg:`hsl(${hue},70%,88%)`, fg:`hsl(${hue},65%,28%)`};
+}
+
+const tpRows = [
+  {n:"Maria Noelia Madia",     cumple:51, universo:179, punt:83.4, comboKg:4.208,  comboImp:96000.14,   invKg:27.506, invImp:867500.51},
+  {n:"Julian Nuñez",           cumple:31, universo:189, punt:72.0, comboKg:66.322, comboImp:1508216.69, invKg:32.776, invImp:1005516.59},
+  {n:"Ezequiel Hack",          cumple:76, universo:221, punt:82.6, comboKg:126.299,comboImp:2801218.21, invKg:18.413, invImp:509340.96},
+  {n:"Lucas Giayetto",         cumple:49, universo:232, punt:78.5, comboKg:44.703, comboImp:660001.39,  invKg:32.765, invImp:785143.01},
+  {n:"Nicolas Martinez",       cumple:79, universo:211, punt:84.7, comboKg:74.946, comboImp:1545644.92, invKg:18.151, invImp:513643.05},
+  {n:"Camila Martinez",        cumple:53, universo:214, punt:82.0, comboKg:57.274, comboImp:961501.81,  invKg:19.959, invImp:553973.52},
+  {n:"Ramiro Rando",           cumple:65, universo:223, punt:79.9, comboKg:21.126, comboImp:393000.68,  invKg:43.790, invImp:1291095.62},
+  {n:"Martinica Rodriguez",    cumple:63, universo:252, punt:79.2, comboKg:0,      comboImp:0,          invKg:19.890, invImp:586188.62},
+  {n:"Ludmila Aylen Martinez", cumple:59, universo:203, punt:83.7, comboKg:40.616, comboImp:741001.41,  invKg:14.049, invImp:418214.77},
+  {n:"Matias Parada",          cumple:51, universo:214, punt:70.4, comboKg:8.416,  comboImp:192000.28,  invKg:29.644, invImp:802857.94},
+  {n:"Melanie Larrama",        cumple:50, universo:201, punt:59.2, comboKg:7.909,  comboImp:130500.24,  invKg:25.773, invImp:745929.24},
+  {n:"Agustin Pogorzelski",    cumple:65, universo:203, punt:83.0, comboKg:40.714, comboImp:841001.39,  invKg:21.878, invImp:679786.11},
+];
+
+const marcaRows = [
+  {marca:"PEHUAMAR", kg:3865.2, clientes:1352},
+  {marca:"Doritos",  kg:2836.3, clientes:1773},
+  {marca:"Lays",     kg:2718.7, clientes:1653},
+  {marca:"TWISTOS",  kg:1206.7, clientes:1255},
+  {marca:"Cheetos",  kg:1113.5, clientes:1493},
+  {marca:"PEP",      kg:1043.6, clientes:1329},
+  {marca:"3Ds",      kg:955.1,  clientes:1441},
+  {marca:"QUAKER",   kg:271.5,  clientes:142},
+  {marca:"TOSTITOS", kg:134.3,  clientes:247},
+];
+const UNIVERSO_CLIENTES = 2544;
+
+function fmt(n, d=0){ return n.toLocaleString('es-AR', {minimumFractionDigits:d, maximumFractionDigits:d}); }
+function tier(p){ return p>=100 ? 'good' : p>=90 ? 'warn' : 'bad'; }
+function tierShare(p){ return p>=85 ? 'good' : p>=75 ? 'warn' : 'bad'; }
+function tierPunt(p){ return p>=80 ? 'good' : p>=70 ? 'warn' : 'bad'; }
+
+const tbodyTp = document.getElementById('tbody-tp');
+tbodyTp.innerHTML = tpRows.map(r => `
+  <tr>
+    <td class="name">${r.n}</td>
+    <td>${r.cumple}/${r.universo} <span class="pill ${tierShare(r.cumple/r.universo*100)}">${fmt(r.cumple/r.universo*100,1)}%</span></td>
+    <td><span class="pill ${tierPunt(r.punt)}">${fmt(r.punt,1)}</span></td>
+    <td></td>
+    <td>${fmt(r.comboKg,1)}</td><td>${fmt(r.comboImp)}</td>
+    <td></td>
+    <td>${fmt(r.invKg,1)}</td><td>${fmt(r.invImp)}</td>
+  </tr>
+`).join('');
+
+const tbodyMarca = document.getElementById('tbody-marca');
+tbodyMarca.innerHTML = marcaRows.map(r => `
+  <tr>
+    <td class="name">${r.marca}</td>
+    <td>${fmt(r.kg,1)}</td>
+    <td>${fmt(r.clientes)}</td>
+    <td>${fmt(r.clientes/UNIVERSO_CLIENTES*100,1)}%</td>
+  </tr>
+`).join('');
+
+const marcaColMinMax = {};
+MARCA_COLS.forEach(m => {
+  const vals = marcaVendRows.map(r => r[m]);
+  marcaColMinMax[m] = {min: Math.min(...vals), max: Math.max(...vals)};
+});
+function heatCell(m, v){
+  const {min,max} = marcaColMinMax[m];
+  const {bg,fg} = heatColor(v, min, max);
+  return `<td style="background:${bg};color:${fg};font-weight:600">${fmt(v,1)}%</td>`;
+}
+const tbodyMarcaObj = document.getElementById('tbody-marcaObj');
+tbodyMarcaObj.innerHTML = marcaObjRows.map(r => `
+  <tr>
+    <td class="name">${r.marca}</td>
+    <td>${fmt(r.obj,1)}%</td>
+    <td>${fmt(r.cob,1)}%</td>
+    <td><span class="pill ${tier(r.cump)}">${fmt(r.cump,1)}%</span></td>
+  </tr>
+`).join('');
+
+const tbodyMarcaVend = document.getElementById('tbody-marcaVend');
+tbodyMarcaVend.innerHTML = marcaVendRows.map(r => `
+  <tr>
+    <td class="name">${r.codven} - ${r.n}</td>
+    <td>${fmt(r.universo)}</td>
+    ${MARCA_COLS.map(m => heatCell(m, r[m])).join('')}
+  </tr>
+`).join('');
+const tfootMarcaVend = document.getElementById('tfoot-marcaVend');
+tfootMarcaVend.innerHTML = `
+  <tr>
+    <td class="name">Total PepsiCo</td>
+    <td>${fmt(marcaVendTotal.universo)}</td>
+    ${MARCA_COLS.map(m => `<td>${fmt(marcaVendTotal[m],1)}%</td>`).join('')}
+  </tr>
+`;
+
+const ccc2Rows = [
+  {n:"Ezequiel Hack",           ao:26,ac:25,bo:25,bc:21,co:54,cc:44,do_:92,dc:58},
+  {n:"Martinica Rodriguez",     ao:26,ac:27,bo:23,bc:20,co:58,cc:51,do_:115,dc:69},
+  {n:"Lucas Giayetto",          ao:41,ac:37,bo:32,bc:28,co:44,cc:41,do_:92,dc:54},
+  {n:"Ludmila Aylen Martinez",  ao:39,ac:39,bo:24,bc:22,co:58,cc:40,do_:63,dc:44},
+  {n:"Matias Parada",           ao:31,ac:30,bo:16,bc:15,co:58,cc:51,do_:86,dc:55},
+  {n:"Julian Nuñez",            ao:37,ac:37,bo:20,bc:19,co:50,cc:46,do_:63,dc:39},
+  {n:"Melanie Larrama",         ao:25,ac:24,bo:33,bc:27,co:59,cc:54,do_:65,dc:46},
+  {n:"Agustin Pogorzelski",     ao:25,ac:26,bo:27,bc:24,co:59,cc:55,do_:71,dc:46},
+  {n:"Camila Martinez",         ao:26,ac:24,bo:32,bc:32,co:71,cc:64,do_:68,dc:52},
+  {n:"Ramiro Rando",            ao:42,ac:43,bo:41,bc:38,co:47,cc:45,do_:73,dc:52},
+  {n:"Maria Noelia Madia",      ao:30,ac:31,bo:32,bc:27,co:55,cc:49,do_:47,dc:37},
+  {n:"Nicolas Martinez",        ao:36,ac:38,bo:32,bc:32,co:56,cc:51,do_:68,dc:50},
+];
+function segAvance(o,c){ return o ? c/o*100 : 0; }
+ccc2Rows.forEach(r => {
+  r.aAv = segAvance(r.ao,r.ac); r.bAv = segAvance(r.bo,r.bc); r.cAv = segAvance(r.co,r.cc); r.dAv = segAvance(r.do_,r.dc);
+  r.totObj = r.ao+r.bo+r.co+r.do_; r.totCumple = r.ac+r.bc+r.cc+r.dc;
+  r.totAv = segAvance(r.totObj, r.totCumple);
+});
+ccc2Rows.sort((a,b) => a.totAv - b.totAv);
+
+const tbodyCcc2 = document.getElementById('tbody-ccc2');
+tbodyCcc2.innerHTML = ccc2Rows.map(r => `
+  <tr>
+    <td class="name">${r.n}</td>
+    <td>${fmt(r.ao)}</td><td>${fmt(r.ac)}</td><td class="clickable" onclick="drillBySegmento('${r.n}','A')"><span class="pill ${tier(r.aAv)}">${fmt(r.aAv,1)}%</span></td>
+    <td></td>
+    <td>${fmt(r.bo)}</td><td>${fmt(r.bc)}</td><td class="clickable" onclick="drillBySegmento('${r.n}','B')"><span class="pill ${tier(r.bAv)}">${fmt(r.bAv,1)}%</span></td>
+    <td></td>
+    <td>${fmt(r.co)}</td><td>${fmt(r.cc)}</td><td class="clickable" onclick="drillBySegmento('${r.n}','C')"><span class="pill ${tier(r.cAv)}">${fmt(r.cAv,1)}%</span></td>
+    <td></td>
+    <td>${fmt(r.do_)}</td><td>${fmt(r.dc)}</td><td class="clickable" onclick="drillBySegmento('${r.n}','D')"><span class="pill ${tier(r.dAv)}">${fmt(r.dAv,1)}%</span></td>
+    <td></td>
+    <td>${fmt(r.totObj)}</td><td>${fmt(r.totCumple)}</td><td><span class="pill ${tier(r.totAv)}">${fmt(r.totAv,1)}%</span></td>
+  </tr>
+`).join('');
+
+const noCompraRows = [
+  {n:"Martinica Rodriguez",     lu:[11,43], ma:[16,50], mi:[14,47], ju:[17,42], vi:[15,36], sa:[13,35], totNc:86,  totU:253},
+  {n:"Lucas Giayetto",          lu:[8,32],  ma:[15,43], mi:[11,41], ju:[11,37], vi:[20,55], sa:[9,26],  totNc:74,  totU:234},
+  {n:"Ezequiel Hack",           lu:[12,42], ma:[17,42], mi:[10,49], ju:[17,41], vi:[12,33], sa:[5,14],  totNc:73,  totU:221},
+  {n:"Matias Parada",           lu:[12,45], ma:[11,42], mi:[13,42], ju:[16,42], vi:[7,23],  sa:[5,21],  totNc:64,  totU:215},
+  {n:"Ludmila Aylen Martinez",  lu:[13,40], ma:[9,37],  mi:[9,42],  ju:[9,29],  vi:[7,34],  sa:[11,21], totNc:58,  totU:203},
+  {n:"Agustin Pogorzelski",     lu:[3,32],  ma:[11,33], mi:[16,46], ju:[9,43],  vi:[11,35], sa:[2,14],  totNc:52,  totU:203},
+  {n:"Melanie Larrama",         lu:[9,39],  ma:[6,37],  mi:[6,22],  ju:[13,43], vi:[10,37], sa:[6,23],  totNc:50,  totU:201},
+  {n:"Julian Nuñez",            lu:[6,37],  ma:[7,39],  mi:[7,35],  ju:[11,38], vi:[11,29], sa:[5,10],  totNc:47,  totU:188},
+  {n:"Ramiro Rando",            lu:[9,34],  ma:[8,38],  mi:[3,40],  ju:[10,51], vi:[13,42], sa:[3,19],  totNc:46,  totU:224},
+  {n:"Camila Martinez",         lu:[8,44],  ma:[9,42],  mi:[4,34],  ju:[16,52], vi:[8,36],  sa:[0,9],   totNc:45,  totU:217},
+  {n:"Nicolas Martinez",        lu:[7,40],  ma:[5,39],  mi:[10,37], ju:[6,36],  vi:[7,37],  sa:[5,22],  totNc:40,  totU:211},
+  {n:"Maria Noelia Madia",      lu:[6,39],  ma:[4,28],  mi:[7,33],  ju:[5,29],  vi:[11,38], sa:[2,12],  totNc:35,  totU:179},
+];
+function tierNoCompra(p){ return p<=20 ? 'good' : p<=28 ? 'warn' : 'bad'; }
+function fmtCell([nc,u]){ return `${nc}/${u}`; }
+
+const tbodyNc = document.getElementById('tbody-nocompra');
+tbodyNc.innerHTML = noCompraRows.map(r => {
+  const pct = r.totU ? r.totNc/r.totU*100 : 0;
+  return `
+  <tr>
+    <td class="name">${r.n}</td>
+    <td class="clickable" onclick="drillByDia('${r.n}','Lunes')">${fmtCell(r.lu)}</td>
+    <td class="clickable" onclick="drillByDia('${r.n}','Martes')">${fmtCell(r.ma)}</td>
+    <td class="clickable" onclick="drillByDia('${r.n}','Miercoles')">${fmtCell(r.mi)}</td>
+    <td class="clickable" onclick="drillByDia('${r.n}','Jueves')">${fmtCell(r.ju)}</td>
+    <td class="clickable" onclick="drillByDia('${r.n}','Viernes')">${fmtCell(r.vi)}</td>
+    <td class="clickable" onclick="drillByDia('${r.n}','Sabado')">${fmtCell(r.sa)}</td>
+    <td class="clickable" onclick="drillByDia('${r.n}','Total')"><span class="pill ${tierNoCompra(pct)}">${r.totNc}/${r.totU}</span></td>
+  </tr>
+`;}).join('');
+
+const tbodyMn = document.getElementById('tbody-mn');
+tbodyMn.innerHTML = mnRows.map(r => `
+  <tr>
+    <td class="name">${r.n}</td>
+    <td>${fmt(r.mn)}</td><td>${fmt(r.acum)}</td>
+    <td>
+      <div class="cell-avance">
+        <span class="mini-bar"><span style="width:${Math.min(r.share,100)}%; background:var(--${tierShare(r.share)})"></span></span>
+        ${fmt(r.share,1)}%
+      </div>
+    </td>
+    <td><span class="pill ${tier(r.avanceMn)}">${fmt(r.avanceMn,1)}%</span></td>
+  </tr>
+`).join('');
+
+const tbody = document.getElementById('tbody');
+tbody.innerHTML = rows.map(r => `
+  <tr>
+    <td class="name">${r.n}</td>
+    <td>${fmt(r.p1o)}</td><td>${fmt(r.p1a)}</td>
+    <td><span class="pill ${tier(r.p1p)}">${fmt(r.p1p,1)}%</span></td>
+    <td></td>
+    <td>${fmt(r.p2o)}</td><td>${fmt(r.p2a)}</td>
+    <td><span class="pill ${tier(r.p2p)}">${fmt(r.p2p,1)}%</span></td>
+    <td></td>
+    <td>${fmt(r.to)}</td><td>${fmt(r.ta)}</td>
+    <td>
+      <div class="cell-avance">
+        <span class="mini-bar"><span style="width:${Math.min(r.tp,100)}%; background:var(--${tier(r.tp)==='good'?'good':tier(r.tp)==='warn'?'warn':'bad'})"></span></span>
+        ${fmt(r.tp,1)}%
+      </div>
+    </td>
+    <td>${fmt(r.real,1)}</td>
+    <td>$ ${fmt(r.venta)}</td>
+  </tr>
+`).join('');
+</script>
+
+</body></html>
