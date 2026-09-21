@@ -1,10 +1,14 @@
 {
- "generatedAt": "2026-09-21T15:01:31-03:00",
+ "generatedAt": "2026-09-21T15:02:56-03:00",
  "date": "2026-09-21",
  "errors": [
-  "orders360: No se pudo extraer el token de Orders360 tras el login.",
-  "gps: 'str' object has no attribute 'get'"
+  "orders360: No se pudo extraer el token de Orders360 tras el login (quedo en https://www.axum.com.ar/tiendaperfecta/login.aspx). Si Axum cambio el login, cargar el JWT a mano en el secret AXUM_TOKEN."
  ],
+ "formatoGps": {
+  "visitados": "'['",
+  "km": null
+ },
  "ordersOk": false,
- "gpsOk": false
+ "gpsOk": true,
+ "sample": true
 }
