@@ -1,12 +1,13 @@
 {
- "generatedAt": "2026-09-21T15:02:56-03:00",
+ "generatedAt": "2026-09-21T15:04:47-03:00",
  "date": "2026-09-21",
  "errors": [
-  "orders360: No se pudo extraer el token de Orders360 tras el login (quedo en https://www.axum.com.ar/tiendaperfecta/login.aspx). Si Axum cambio el login, cargar el JWT a mano en el secret AXUM_TOKEN."
+  "orders360: Axum rechazo el usuario/contrasena (la pagina responde 'Login Incorrecto'). Revisar los secrets AXUM_ORDERS_USER y AXUM_ORDERS_PASS."
  ],
  "formatoGps": {
-  "visitados": "'['",
-  "km": null
+  "visitados": "{'sellerID': '7', 'visitedClient': '3576'}",
+  "km": null,
+  "visitadosTotal": 258
  },
  "ordersOk": false,
  "gpsOk": true,
