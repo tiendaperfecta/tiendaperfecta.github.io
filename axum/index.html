@@ -152,10 +152,16 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
   document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
   t.classList.add('active');
   $('#p-'+t.dataset.t).classList.add('active');
-  if(t.dataset.t==='mapa' && window._map) setTimeout(()=>window._map.invalidateSize(),50);
+  // El mapa se crea con la pestana oculta, asi que Leaflet mide 0x0 y queda
+  // con un tile suelto y el zoom al maximo. Al mostrarlo hay que remedirlo y
+  // volver a encuadrar.
+  if(t.dataset.t==='mapa' && window._map) setTimeout(()=>{
+    window._map.invalidateSize();
+    if(mapPts.length) window._map.fitBounds(mapPts,{padding:[40,40],maxZoom:14});
+  },60);
 });
 
-let map;
+let map, mapPts = [];
 function initMap(positions){
   const sellers = (positions && positions.sellers) || [];
   $('#map-count').textContent = sellers.length + ' vendedores';
@@ -170,6 +176,7 @@ function initMap(positions){
     m.bindPopup(`<b>Vendedor ${s.idVendedor||'?'}</b><br>${s.hora||''}`);
     pts.push([s.lat,s.lng]);
   }
+  mapPts = pts;
   if(pts.length) map.fitBounds(pts,{padding:[40,40],maxZoom:14});
 }
 
