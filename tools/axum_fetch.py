@@ -83,6 +83,10 @@ class Orders360:
         self.s.headers.update({"User-Agent": "Mozilla/5.0"})
         # Un JWT cargado a mano (secret AXUM_TOKEN) gana: es el salvavidas si
         # Axum vuelve a cambiar la pantalla de login.
+        # Si el JWT quedo pegado en el secret del usuario (pasa), tomarlo como
+        # token: es explicito, en vez de depender de que el login lo devuelva.
+        if not token.strip() and user.strip().startswith("eyJ"):
+            token = user
         self.token = token.strip() or self._get_token(user, pwd)
 
     def _get_token(self, user, pwd):
@@ -195,6 +199,34 @@ class Gps:
             return [], "%s: %s" % (type(e).__name__, e)
 
 
+def _as_rows(data):
+    """Lista de dicts a partir de lo que conteste Axum. Aguanta: JSON
+    serializado adentro de un string, envoltorios tipo {"data": [...]}, y
+    listas cuyos items son a su vez strings con JSON."""
+    if isinstance(data, str):
+        try:
+            data = json.loads(data)
+        except ValueError:
+            return []
+    if isinstance(data, dict):
+        for k in ("data", "items", "rows", "result", "orders", "d"):
+            if isinstance(data.get(k), list):
+                data = data[k]
+                break
+    if not isinstance(data, list):
+        return []
+    filas = []
+    for x in data:
+        if isinstance(x, str):
+            try:
+                x = json.loads(x)
+            except ValueError:
+                continue
+        if isinstance(x, dict):
+            filas.append(x)
+    return filas
+
+
 # --------------------------------------------------------------------------- #
 # Parseo de las respuestas del GPS
 # --------------------------------------------------------------------------- #
@@ -268,7 +300,13 @@ def build():
     try:
         o = Orders360(env("AXUM_ORDERS_USER"), env("AXUM_ORDERS_PASS"),
                       env("AXUM_TOKEN", "AXUM_ORDERS_TOKEN"))
-        orders = o.orders(today, today)
+        crudo = o.orders(today, today)
+        orders = _as_rows(crudo)
+        meta["formatoOrders"] = {
+            "tipo": type(crudo).__name__,
+            "muestra": repr(crudo[0] if isinstance(crudo, list) and crudo else crudo)[:200],
+            "pedidos": len(orders),
+        }
         summary["orders"] = len(orders)
         summary["totalGross"] = round(sum((x.get("total") or 0) for x in orders), 2)
         summary["totalNet"] = round(sum((x.get("totalNetPrice") or 0) for x in orders), 2)
