@@ -101,6 +101,11 @@ class Orders360:
         m = (re.search(r"token=([A-Za-z0-9_\-\.]+)", r.url) or
              re.search(r"token=([A-Za-z0-9_\-\.]+)", r.text) or
              re.search(r"(eyJ[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+)", r.text))
+        if re.search(r"Incorrecto", r.text, re.I):
+            raise RuntimeError(
+                "Axum rechazo el usuario/contrasena (la pagina responde 'Login "
+                "Incorrecto'). Revisar los secrets AXUM_ORDERS_USER y "
+                "AXUM_ORDERS_PASS.")
         if not m:
             raise RuntimeError(
                 "No se pudo extraer el token de Orders360 tras el login (quedo en "
@@ -154,7 +159,15 @@ class Gps:
                         timeout=60)
         r.raise_for_status()
         d = r.json()
-        return d["d"] if isinstance(d, dict) and "d" in d else d
+        d = d["d"] if isinstance(d, dict) and "d" in d else d
+        # Varios metodos no devuelven la lista: devuelven el JSON serializado
+        # adentro de un string. Sin esto, iterarlo recorre caracteres sueltos.
+        if isinstance(d, str):
+            try:
+                d = json.loads(d)
+            except ValueError:
+                pass
+        return d
 
     def last_positions(self):
         out = []
@@ -302,6 +315,7 @@ def build():
         meta["formatoGps"] = {
             "visitados": repr(visitados[0])[:120] if visitados else None,
             "km": repr(km[0])[:120] if km else None,
+            "visitadosTotal": len(visitados) if hasattr(visitados, "__len__") else None,
         }
         by = defaultdict(lambda: {"visited": 0, "km": None})
         detalle = []
