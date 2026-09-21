@@ -1,1 +1,13 @@
 original-ppp.html
+
+# Documentación interna de la API + placeholders de credenciales: NO publicar
+axum-api/
+
+# Python
+__pycache__/
+*.pyc
+
+# Credenciales locales (por si quedan sueltas)
+token.txt
+gps_credentials.txt
+*.secret

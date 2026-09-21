@@ -1,0 +1,19 @@
+{
+ "date": "2026-09-21",
+ "sample": true,
+ "totalGross": 491572,
+ "totalNet": 406257,
+ "orders": 2,
+ "bySeller": [
+  {"sellerId": "4", "name": "Vendedor 4", "orders": 1, "total": 271643},
+  {"sellerId": "7", "name": "Vendedor 7", "orders": 1, "total": 219929}
+ ],
+ "byChannel": [
+  {"channel": "TRADITIONAL_TRADE_D", "orders": 1, "total": 271643},
+  {"channel": "PROXIMITY_A", "orders": 1, "total": 219929}
+ ],
+ "topClients": [
+  {"clientId": "307", "name": "CAMACHO FLORES JAIME", "orders": 1, "total": 271643},
+  {"clientId": "2475", "name": "PLACE SILVINA ALEJANDRA", "orders": 1, "total": 219929}
+ ]
+}

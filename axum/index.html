@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel Axum · Tienda Perfecta</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;700&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  :root{
+    --s200:226 232 240; --s300:203 213 225; --s400:148 163 184;
+    --s700:51 65 85; --s800:30 41 59; --s900:15 23 42;
+    --emerald:16 185 129; --blue:59 130 246; --violet:167 139 250; --pink:244 114 182; --amber:251 191 36;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:rgb(var(--s800))}
+  body{font-family:Manrope,Arial,sans-serif;color:rgb(var(--s200));font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  h1,h2,h3{margin:0;font-weight:600}
+  .wrap{max-width:1400px;margin:0 auto;padding:24px 20px 60px}
+  header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;
+    padding-bottom:14px;margin-bottom:16px;border-bottom:2px solid rgb(var(--s200)/.4)}
+  header h1{font-size:24px}
+  header .meta{font-size:13px;color:rgb(var(--s400));font-variant-numeric:tabular-nums}
+  .home{font-size:13px;color:rgb(var(--s400))}
+  .home:hover{color:rgb(var(--s200))}
+
+  .tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+  .tab{padding:8px 16px;border-radius:8px;background:rgb(255 255 255/.05);color:rgb(var(--s300));
+    cursor:pointer;font-weight:500;font-size:14px;user-select:none;transition:.15s}
+  .tab:hover{background:rgb(255 255 255/.1)}
+  .tab.active{background:rgb(var(--emerald)/.9);color:rgb(var(--s900))}
+
+  .panel{display:none} .panel.active{display:block}
+
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:18px}
+  .kpi{background:rgb(255 255 255/.05);border-radius:10px;padding:16px 18px;
+    box-shadow:0 4px 6px -1px rgb(var(--s900)/.25)}
+  .kpi .lbl{font-size:12px;color:rgb(var(--s400));text-transform:uppercase;letter-spacing:.6px}
+  .kpi .val{font-size:26px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums}
+  .kpi .sub{font-size:12px;color:rgb(var(--s400));margin-top:2px}
+
+  .grid2{display:grid;grid-template-columns:1fr;gap:16px}
+  @media(min-width:900px){.grid2{grid-template-columns:1fr 1fr}}
+
+  .card{background:rgb(255 255 255/.05);border-radius:10px;padding:16px 18px;
+    box-shadow:0 4px 6px -1px rgb(var(--s900)/.25)}
+  .card h3{font-size:15px;color:rgb(var(--s300));margin-bottom:12px}
+
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:7px 8px;border-bottom:1px solid rgb(var(--s200)/.08)}
+  th{color:rgb(var(--s400));font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  tbody tr:hover{background:rgb(255 255 255/.04)}
+
+  .bar{height:6px;border-radius:3px;background:rgb(var(--emerald)/.8);margin-top:4px}
+
+  #map{height:560px;border-radius:10px;overflow:hidden}
+  .leaflet-popup-content{font-family:Manrope,Arial,sans-serif}
+
+  .empty{color:rgb(var(--s400));font-size:13px;padding:8px 0}
+  .badge{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px;background:rgb(var(--amber)/.15);color:rgb(var(--amber))}
+  .err{background:rgb(244 63 94/.12);color:#fda4af;border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Panel Axum</h1>
+      <a class="home" href="../">← volver a Central web</a>
+    </div>
+    <div class="meta" id="meta">cargando…</div>
+  </header>
+
+  <div id="errbox"></div>
+
+  <div class="tabs">
+    <div class="tab active" data-t="ventas">Ventas</div>
+    <div class="tab" data-t="mapa">Mapa vendedores</div>
+    <div class="tab" data-t="visitas">Visitas y cobertura</div>
+    <div class="tab" data-t="cruce">Cruce ventas + GPS</div>
+  </div>
+
+  <!-- VENTAS -->
+  <section class="panel active" id="p-ventas">
+    <div class="kpis" id="k-ventas"></div>
+    <div class="grid2">
+      <div class="card"><h3>Por vendedor</h3><div id="t-seller"></div></div>
+      <div class="card"><h3>Por canal</h3><div id="t-channel"></div></div>
+    </div>
+    <div class="card" style="margin-top:16px"><h3>Top clientes</h3><div id="t-clients"></div></div>
+  </section>
+
+  <!-- MAPA -->
+  <section class="panel" id="p-mapa">
+    <div class="card"><h3>Última posición de vendedores <span id="map-count" class="badge"></span></h3>
+      <div id="map"></div>
+    </div>
+  </section>
+
+  <!-- VISITAS -->
+  <section class="panel" id="p-visitas">
+    <div class="kpis" id="k-visitas"></div>
+    <div class="card"><h3>Clientes visitados y km por vendedor</h3><div id="t-visits"></div></div>
+  </section>
+
+  <!-- CRUCE -->
+  <section class="panel" id="p-cruce">
+    <div class="card">
+      <h3>Ventas vs. actividad GPS por vendedor</h3>
+      <p class="empty" id="cross-note"></p>
+      <div id="t-cross"></div>
+    </div>
+  </section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const fmtMoney = n => (n==null?'—':'$'+Number(n).toLocaleString('es-AR',{maximumFractionDigits:0}));
+const fmtNum = n => (n==null?'—':Number(n).toLocaleString('es-AR'));
+
+async function loadJSON(name){
+  try{ const r = await fetch('data/'+name+'?v='+Date.now()); if(!r.ok) throw 0; return await r.json(); }
+  catch(e){ return null; }
+}
+
+function table(cols, rows, opts={}){
+  if(!rows || !rows.length) return '<div class="empty">Sin datos.</div>';
+  const max = opts.barCol!=null ? Math.max(...rows.map(r=>Number(r[opts.barCol])||0)) : 0;
+  let h = '<table><thead><tr>' + cols.map(c=>`<th class="${c.num?'num':''}">${c.label}</th>`).join('') + '</tr></thead><tbody>';
+  for(const r of rows){
+    h += '<tr>' + cols.map(c=>{
+      let v = r[c.key];
+      if(c.fmt) v = c.fmt(v);
+      let cell = `<td class="${c.num?'num':''}">${v??'—'}`;
+      if(opts.barCol!=null && c.key===opts.barCol && max>0){
+        cell += `<div class="bar" style="width:${(Number(r[c.key])||0)/max*100}%"></div>`;
+      }
+      return cell + '</td>';
+    }).join('') + '</tr>';
+  }
+  return h + '</tbody></table>';
+}
+
+function kpi(lbl,val,sub){ return `<div class="kpi"><div class="lbl">${lbl}</div><div class="val">${val}</div>${sub?`<div class="sub">${sub}</div>`:''}</div>`; }
+
+// Tabs
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  $('#p-'+t.dataset.t).classList.add('active');
+  if(t.dataset.t==='mapa' && window._map) setTimeout(()=>window._map.invalidateSize(),50);
+});
+
+let map;
+function initMap(positions){
+  const sellers = (positions && positions.sellers) || [];
+  $('#map-count').textContent = sellers.length + ' vendedores';
+  map = L.map('map',{scrollWheelZoom:true}).setView([-38.0055,-57.5426], 12); // Mar del Plata
+  window._map = map;
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {maxZoom:19, attribution:'© OpenStreetMap'}).addTo(map);
+  const pts = [];
+  for(const s of sellers){
+    if(s.lat==null||s.lng==null) continue;
+    const m = L.marker([s.lat,s.lng]).addTo(map);
+    m.bindPopup(`<b>Vendedor ${s.idVendedor||'?'}</b><br>${s.hora||''}`);
+    pts.push([s.lat,s.lng]);
+  }
+  if(pts.length) map.fitBounds(pts,{padding:[40,40],maxZoom:14});
+}
+
+(async function(){
+  const [summary, positions, visits, cross, meta] = await Promise.all(
+    ['summary.json','positions.json','visits.json','cross.json','meta.json'].map(loadJSON));
+
+  // meta / errores
+  if(meta){
+    $('#meta').textContent = 'Datos del ' + (meta.date||'—') + ' · actualizado ' +
+      (meta.generatedAt? new Date(meta.generatedAt).toLocaleString('es-AR'):'—');
+    if(meta.errors && meta.errors.length){
+      $('#errbox').innerHTML = '<div class="err">⚠ Algunos datos no se pudieron actualizar: '
+        + meta.errors.join(' · ') + '</div>';
+    }
+  } else {
+    $('#meta').textContent = 'Sin data/meta.json (¿ya corrió la GitHub Action?)';
+  }
+
+  // VENTAS
+  if(summary){
+    $('#k-ventas').innerHTML =
+      kpi('Facturación (bruto)', fmtMoney(summary.totalGross)) +
+      kpi('Neto', fmtMoney(summary.totalNet)) +
+      kpi('Pedidos', fmtNum(summary.orders)) +
+      kpi('Vendedores activos', fmtNum((summary.bySeller||[]).length));
+    $('#t-seller').innerHTML = table(
+      [{key:'name',label:'Vendedor'},{key:'orders',label:'Pedidos',num:true,fmt:fmtNum},
+       {key:'total',label:'Total',num:true,fmt:fmtMoney}],
+      summary.bySeller, {barCol:'total'});
+    $('#t-channel').innerHTML = table(
+      [{key:'channel',label:'Canal'},{key:'orders',label:'Pedidos',num:true,fmt:fmtNum},
+       {key:'total',label:'Total',num:true,fmt:fmtMoney}],
+      summary.byChannel, {barCol:'total'});
+    $('#t-clients').innerHTML = table(
+      [{key:'name',label:'Cliente'},{key:'orders',label:'Pedidos',num:true,fmt:fmtNum},
+       {key:'total',label:'Total',num:true,fmt:fmtMoney}],
+      summary.topClients, {barCol:'total'});
+  }
+
+  // MAPA
+  initMap(positions);
+
+  // VISITAS
+  if(visits){
+    const totalVis = (visits.detail||[]).length;
+    const vend = new Set((visits.bySeller||[]).map(r=>r.sellerId)).size;
+    $('#k-visitas').innerHTML =
+      kpi('Visitas hoy', fmtNum(totalVis)) +
+      kpi('Vendedores en calle', fmtNum(vend));
+    $('#t-visits').innerHTML = table(
+      [{key:'sellerId',label:'Vendedor'},{key:'visited',label:'Clientes visitados',num:true,fmt:fmtNum},
+       {key:'km',label:'Km recorridos',num:true,fmt:v=>v==null?'—':fmtNum(v)}],
+      visits.bySeller, {barCol:'visited'});
+  }
+
+  // CRUCE
+  if(cross){
+    $('#cross-note').textContent = cross.note||'';
+    $('#t-cross').innerHTML = table(
+      [{key:'name',label:'Vendedor'},{key:'orders',label:'Pedidos',num:true,fmt:fmtNum},
+       {key:'total',label:'Facturación',num:true,fmt:fmtMoney},
+       {key:'visited',label:'Visitas',num:true,fmt:fmtNum},
+       {key:'km',label:'Km',num:true,fmt:v=>v==null?'—':fmtNum(v)}],
+      cross.rows, {barCol:'total'});
+  }
+})();
+</script>
+</body>
+</html>

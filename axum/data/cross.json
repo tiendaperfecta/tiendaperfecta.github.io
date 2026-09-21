@@ -1,0 +1,10 @@
+{
+ "date": "2026-09-21",
+ "sample": true,
+ "note": "Datos de ejemplo. Join por id de vendedor; puede requerir mapeo si los ids de Orders360 y GPS no coinciden.",
+ "rows": [
+  {"sellerId": "7", "name": "Vendedor 7", "orders": 1, "total": 219929, "visited": 3, "km": 18},
+  {"sellerId": "4", "name": "Vendedor 4", "orders": 1, "total": 271643, "visited": 0, "km": null},
+  {"sellerId": "1", "name": "", "orders": 0, "total": 0, "visited": 1, "km": 9}
+ ]
+}
