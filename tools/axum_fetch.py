@@ -117,17 +117,38 @@ class Orders360:
                 "AXUM_TOKEN." % r.url)
         return m.group(1)
 
-    def orders(self, date_since, date_until, take=1000):
+    def orders(self, date_since, date_until, skip=0, take=100):
         r = self.s.post(
             f"{ORDERS_API}/api/Orders",
             params={"entity": "orders", "dateSince": date_since, "dateUntil": date_until},
             headers={"Authorization": f"Bearer {self.token}",
                      "Content-Type": "application/json", "Accept": "application/json"},
-            data=json.dumps({"filter": None, "skip": 0, "take": take, "sort": None}),
+            data=json.dumps({"filter": None, "skip": skip, "take": take, "sort": None}),
             timeout=90,
         )
         r.raise_for_status()
         return r.json()
+
+    def orders_all(self, date_since, date_until, page=100):
+        """Todos los pedidos del rango. La API responde {"total": N, "data":[...]}
+        y entrega de a 20 aunque se pida mas, asi que hay que paginar: sin esto
+        el panel sumaba los primeros 20 y mostraba una facturacion falsa.
+        Devuelve (filas, total_declarado)."""
+        filas, skip, total = [], 0, None
+        while True:
+            crudo = self.orders(date_since, date_until, skip=skip, take=page)
+            if total is None and isinstance(crudo, dict):
+                total = crudo.get("total")
+            lote = _as_rows(crudo)
+            if not lote:
+                break
+            filas.extend(lote)
+            skip += len(lote)
+            if total is not None and skip >= total:
+                break
+            if skip > 20000:      # cinturon por si `total` viene mal
+                break
+        return filas, total
 
 
 # --------------------------------------------------------------------------- #
@@ -300,13 +321,12 @@ def build():
     try:
         o = Orders360(env("AXUM_ORDERS_USER"), env("AXUM_ORDERS_PASS"),
                       env("AXUM_TOKEN", "AXUM_ORDERS_TOKEN"))
-        crudo = o.orders(today, today)
-        orders = _as_rows(crudo)
-        meta["formatoOrders"] = {
-            "tipo": type(crudo).__name__,
-            "muestra": repr(crudo[0] if isinstance(crudo, list) and crudo else crudo)[:200],
-            "pedidos": len(orders),
-        }
+        orders, total_api = o.orders_all(today, today)
+        meta["pedidos"] = {"traidos": len(orders), "totalSegunApi": total_api}
+        if total_api is not None and len(orders) != total_api:
+            meta["errors"].append(
+                "orders360: se trajeron %d de %d pedidos que declara la API."
+                % (len(orders), total_api))
         summary["orders"] = len(orders)
         summary["totalGross"] = round(sum((x.get("total") or 0) for x in orders), 2)
         summary["totalNet"] = round(sum((x.get("totalNetPrice") or 0) for x in orders), 2)
