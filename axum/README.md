@@ -6,10 +6,11 @@ Tablero que combina datos de **Axum Orders360** (ventas/pedidos) y **Axum GPS**
 ## Cómo funciona
 
 ```
-GitHub Action (cada 30 min)  →  tools/axum_fetch.py  →  axum/data/*.json  →  index.html (GitHub Pages)
+GitHub Action (cada 1 h)  →  tools/axum_fetch.py  →  axum/data/*.json  →  index.html (GitHub Pages)
 ```
 
-1. Una GitHub Action programada corre `tools/axum_fetch.py`.
+1. Una GitHub Action corre `tools/axum_fetch.py` **cada 1 hora, de 8 a 21 hs**
+   (hora argentina), todos los dias. Tambien se puede disparar a mano.
 2. El script se loguea en ambos sistemas de Axum, baja los datos y escribe los JSON
    en `axum/data/`.
 3. Si algo cambió, commitea los JSON. El panel estático (esta carpeta) los lee.

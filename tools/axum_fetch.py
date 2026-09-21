@@ -29,6 +29,11 @@ import requests
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "axum" / "data"
 
+# La Action corre en UTC. Sin esto, las corridas de 21:00 y 22:00 hora argentina
+# (00:00 y 01:00 UTC) pedirian los datos del dia siguiente y pisarian las ventas
+# del dia con un resumen vacio. Argentina no usa horario de verano desde 2009.
+ART = dt.timezone(dt.timedelta(hours=-3))
+
 ORDERS_LOGIN = "https://www.axum.com.ar/tiendaperfecta/login.aspx"
 ORDERS_API = "https://masuno-order360.axumweb.com"
 GPS_BASE = "https://gps.axumvm.com.ar"
@@ -165,14 +170,18 @@ def write_json(name, data):
 
 def build():
     OUT.mkdir(parents=True, exist_ok=True)
-    today = dt.date.today().isoformat()
-    now = dt.datetime.now().isoformat(timespec="seconds")
+    ahora = dt.datetime.now(ART)
+    today = ahora.date().isoformat()
+    now = ahora.isoformat(timespec="seconds")
     meta = {"generatedAt": now, "date": today, "errors": []}
     orders_ok = gps_ok = False
 
     # Si no hay credenciales de ningún sistema, no tocamos nada (deja los datos de
     # ejemplo / última corrida buena intactos). Útil antes de cargar los secrets.
     if not (env("AXUM_ORDERS_USER") or env("GPS_USER")):
+        print("::warning title=Axum::Faltan los secrets "
+              "(AXUM_ORDERS_USER/PASS, GPS_USER/PASS). El panel sigue mostrando "
+              "los datos de ejemplo.")
         print("Sin credenciales configuradas; no se modifican los datos.", file=sys.stderr)
         return
 

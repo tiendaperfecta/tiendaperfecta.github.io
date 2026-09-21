@@ -181,8 +181,12 @@ function initMap(positions){
   if(meta){
     $('#meta').textContent = 'Datos del ' + (meta.date||'—') + ' · actualizado ' +
       (meta.generatedAt? new Date(meta.generatedAt).toLocaleString('es-AR'):'—');
+    if(meta.sample){
+      $('#errbox').innerHTML = '<div class="err">⚠ Estos son <b>datos de ejemplo</b>. '
+        + 'El panel se actualiza solo una vez que esten cargados los secrets de Axum en GitHub.</div>';
+    }
     if(meta.errors && meta.errors.length){
-      $('#errbox').innerHTML = '<div class="err">⚠ Algunos datos no se pudieron actualizar: '
+      $('#errbox').innerHTML += '<div class="err">⚠ Algunos datos no se pudieron actualizar: '
         + meta.errors.join(' · ') + '</div>';
     }
   } else {
