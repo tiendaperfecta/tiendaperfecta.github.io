@@ -348,7 +348,8 @@ def build():
             by_client[cid]["name"] = x.get("clientName") or ""
 
         summary["bySeller"] = sorted(
-            [{"sellerId": k, "name": v["name"], "orders": v["orders"], "total": round(v["total"], 2)}
+            [{"sellerId": k, "name": v["name"] or ("Vendedor " + k),
+              "orders": v["orders"], "total": round(v["total"], 2)}
              for k, v in by_seller.items()], key=lambda r: -r["total"])
         summary["byChannel"] = sorted(
             [{"channel": k, "orders": v["orders"], "total": round(v["total"], 2)}
@@ -409,11 +410,12 @@ def build():
                          "Orders360 y GPS no coinciden."}
         sales_by = {r["sellerId"]: r for r in summary["bySeller"]}
         gps_by = {r["sellerId"]: r for r in visits["bySeller"]}
-        for sid in sorted(set(sales_by) | set(gps_by)):
+        for sid in sorted(set(sales_by) | set(gps_by),
+                          key=lambda i: -(sales_by.get(i, {}).get("total") or 0)):
             s = sales_by.get(sid, {})
             gp = gps_by.get(sid, {})
             cross["rows"].append({
-                "sellerId": sid, "name": s.get("name", ""),
+                "sellerId": sid, "name": s.get("name") or ("Vendedor " + sid),
                 "orders": s.get("orders", 0), "total": s.get("total", 0),
                 "visited": gp.get("visited", 0), "km": gp.get("km"),
             })
