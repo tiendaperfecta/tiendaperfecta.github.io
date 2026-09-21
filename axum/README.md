@@ -49,6 +49,23 @@ set GPS_USER=TIENDAPERFECTAgps  &  set GPS_PASS=...
 python tools/axum_fetch.py
 ```
 
+## Aprendido con datos reales (21/09/2026)
+
+- **Login de Orders360:** los campos del form se llaman `ctl03$UserName` /
+  `ctl03$Password` (WebForms les pone prefijo). El script los lee del HTML.
+  Si Axum rechaza las credenciales, la pagina responde *"Login Incorrecto"* y
+  eso queda escrito en `meta.json`.
+- **Salvavidas:** si el login deja de funcionar, se puede cargar el JWT a mano
+  en un secret `AXUM_TOKEN` (se obtiene entrando al panel y copiando lo que
+  sigue a `token=` en la URL). Tiene prioridad sobre el login automatico.
+- **El GPS devuelve JSON adentro de un string.** `soloClientesVisitados` no
+  devuelve una lista: devuelve un string con el JSON. Hay que `json.loads`
+  la respuesta o se termina iterando caracteres sueltos.
+- **Km:** `dailySellerTravelledKmReport` responde OK pero vacio durante el dia.
+  La columna "Km" queda en `—` hasta confirmar si el reporte se arma al cierre.
+- `meta.json` guarda en `formatoGps` una muestra cruda del formato real, para
+  no tener que volver a descubrirlo.
+
 ## Pendiente / a revisar
 
 - **Mapeo de id de vendedor:** el "cruce ventas + GPS" une por id de vendedor. Si el
