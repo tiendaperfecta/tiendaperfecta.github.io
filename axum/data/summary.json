@@ -1,20 +1,32 @@
 {
  "date": "2026-09-21",
- "totalNet": 37302726.86,
- "totalGross": 45136299.71,
- "orders": 420,
+ "totalNet": 38319778.0,
+ "totalGross": 46366931.61,
+ "orders": 439,
  "bySeller": [
   {
    "sellerId": "8",
    "name": "Vendedor 8",
-   "orders": 40,
-   "total": 5361933.25
+   "orders": 46,
+   "total": 5661291.39
   },
   {
    "sellerId": "5",
    "name": "Vendedor 5",
    "orders": 25,
    "total": 5184533.68
+  },
+  {
+   "sellerId": "9",
+   "name": "Vendedor 9",
+   "orders": 39,
+   "total": 4213041.0
+  },
+  {
+   "sellerId": "2",
+   "name": "Vendedor 2",
+   "orders": 40,
+   "total": 4138437.15
   },
   {
    "sellerId": "3",
@@ -29,22 +41,10 @@
    "total": 4038900.66
   },
   {
-   "sellerId": "2",
-   "name": "Vendedor 2",
-   "orders": 39,
-   "total": 3946365.49
-  },
-  {
-   "sellerId": "9",
-   "name": "Vendedor 9",
-   "orders": 32,
-   "total": 3819767.83
-  },
-  {
    "sellerId": "6",
    "name": "Vendedor 6",
-   "orders": 45,
-   "total": 3770135.78
+   "orders": 49,
+   "total": 3971850.29
   },
   {
    "sellerId": "10",
@@ -79,8 +79,8 @@
   {
    "sellerId": "20",
    "name": "Vendedor 20",
-   "orders": 23,
-   "total": 0.0
+   "orders": 24,
+   "total": 144214.44
   }
  ],
  "byChannel": [
@@ -91,23 +91,28 @@
   },
   {
    "channel": "TRADITIONAL TRADE_C",
-   "orders": 86,
-   "total": 7603387.99
+   "orders": 91,
+   "total": 7987256.19
   },
   {
    "channel": "TRADITIONAL TRADE_B",
-   "orders": 70,
-   "total": 7102962.81
+   "orders": 71,
+   "total": 7295034.47
   },
   {
    "channel": "TRADITIONAL TRADE_D",
-   "orders": 74,
-   "total": 4571782.92
+   "orders": 82,
+   "total": 5015637.57
   },
   {
    "channel": "PROXIMITY_A",
    "orders": 4,
    "total": 720215.95
+  },
+  {
+   "channel": "PROXIMITY_C",
+   "orders": 7,
+   "total": 580819.45
   },
   {
    "channel": "Mayorista_D",
@@ -120,19 +125,14 @@
    "total": 513031.0
   },
   {
-   "channel": "PROXIMITY_C",
-   "orders": 6,
-   "total": 511560.77
-  },
-  {
    "channel": "AWAY FROM HOME_B",
    "orders": 4,
    "total": 473000.13
   },
   {
    "channel": "AWAY FROM HOME_C",
-   "orders": 7,
-   "total": 276606.83
+   "orders": 8,
+   "total": 306606.89
   },
   {
    "channel": "Mayorista_C",
@@ -146,8 +146,8 @@
   },
   {
    "channel": "PROXIMITY_D",
-   "orders": 2,
-   "total": 146212.16
+   "orders": 3,
+   "total": 211135.91
   },
   {
    "channel": "PROXIMITY_B",
@@ -160,9 +160,14 @@
    "total": 39428.48
   },
   {
-   "channel": "AWAY FROM HOME_D",
+   "channel": "LIMPIEZA_C",
    "orders": 1,
-   "total": 14857.15
+   "total": 35012.03
+  },
+  {
+   "channel": "AWAY FROM HOME_D",
+   "orders": 2,
+   "total": 26500.03
   },
   {
    "channel": "s/canal",
