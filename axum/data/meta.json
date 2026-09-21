@@ -1,16 +1,18 @@
 {
- "generatedAt": "2026-09-21T15:16:10-03:00",
+ "generatedAt": "2026-09-21T15:18:00-03:00",
  "date": "2026-09-21",
- "errors": [
-  "orders360: 'str' object has no attribute 'get'"
- ],
+ "errors": [],
+ "formatoOrders": {
+  "tipo": "dict",
+  "muestra": "{'total': 414, 'aggregates': None, 'errors': None, 'group': None, 'data': [{'id': 98310738, 'orderDate': '2026-09-21T04:31:37', 'erpLastModified': '', 'organizationCode': 'tiendaperfecta', 'originOrde",
+  "pedidos": 20
+ },
  "formatoGps": {
   "visitados": "{'sellerID': '7', 'visitedClient': '3576'}",
   "km": null,
   "visitadosTotal": 263,
   "kmError": null
  },
- "ordersOk": false,
- "gpsOk": true,
- "sample": true
+ "ordersOk": true,
+ "gpsOk": true
 }

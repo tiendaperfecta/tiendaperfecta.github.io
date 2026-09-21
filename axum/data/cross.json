@@ -1,10 +1,94 @@
 {
  "date": "2026-09-21",
- "sample": true,
- "note": "Datos de ejemplo. Join por id de vendedor; puede requerir mapeo si los ids de Orders360 y GPS no coinciden.",
  "rows": [
-  {"sellerId": "7", "name": "Vendedor 7", "orders": 1, "total": 219929, "visited": 3, "km": 18},
-  {"sellerId": "4", "name": "Vendedor 4", "orders": 1, "total": 271643, "visited": 0, "km": null},
-  {"sellerId": "1", "name": "", "orders": 0, "total": 0, "visited": 1, "km": 9}
- ]
+  {
+   "sellerId": "1",
+   "name": "",
+   "orders": 0,
+   "total": 0,
+   "visited": 53,
+   "km": null
+  },
+  {
+   "sellerId": "10",
+   "name": "",
+   "orders": 0,
+   "total": 0,
+   "visited": 48,
+   "km": null
+  },
+  {
+   "sellerId": "11",
+   "name": "",
+   "orders": 0,
+   "total": 0,
+   "visited": 24,
+   "km": null
+  },
+  {
+   "sellerId": "12",
+   "name": "Azul Martinez",
+   "orders": 1,
+   "total": 35499.97,
+   "visited": 39,
+   "km": null
+  },
+  {
+   "sellerId": "2",
+   "name": "",
+   "orders": 3,
+   "total": 99649.53,
+   "visited": 0,
+   "km": null
+  },
+  {
+   "sellerId": "3",
+   "name": "",
+   "orders": 1,
+   "total": 26640.87,
+   "visited": 0,
+   "km": null
+  },
+  {
+   "sellerId": "4",
+   "name": "",
+   "orders": 3,
+   "total": 462857.63,
+   "visited": 21,
+   "km": null
+  },
+  {
+   "sellerId": "5",
+   "name": "",
+   "orders": 0,
+   "total": 0,
+   "visited": 22,
+   "km": null
+  },
+  {
+   "sellerId": "6",
+   "name": "",
+   "orders": 1,
+   "total": 24564.06,
+   "visited": 4,
+   "km": null
+  },
+  {
+   "sellerId": "7",
+   "name": "",
+   "orders": 4,
+   "total": 394897.38,
+   "visited": 52,
+   "km": null
+  },
+  {
+   "sellerId": "8",
+   "name": "",
+   "orders": 7,
+   "total": 1278938.25,
+   "visited": 0,
+   "km": null
+  }
+ ],
+ "note": "Join por id de vendedor; puede requerir mapeo si los ids de Orders360 y GPS no coinciden."
 }

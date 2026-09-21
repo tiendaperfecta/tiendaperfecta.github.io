@@ -1,19 +1,180 @@
 {
  "date": "2026-09-21",
- "sample": true,
- "totalGross": 491572,
- "totalNet": 406257,
- "orders": 2,
+ "totalNet": 1919874.12,
+ "totalGross": 2323047.7,
+ "orders": 20,
  "bySeller": [
-  {"sellerId": "4", "name": "Vendedor 4", "orders": 1, "total": 271643},
-  {"sellerId": "7", "name": "Vendedor 7", "orders": 1, "total": 219929}
+  {
+   "sellerId": "8",
+   "name": "",
+   "orders": 7,
+   "total": 1278938.25
+  },
+  {
+   "sellerId": "4",
+   "name": "",
+   "orders": 3,
+   "total": 462857.63
+  },
+  {
+   "sellerId": "7",
+   "name": "",
+   "orders": 4,
+   "total": 394897.38
+  },
+  {
+   "sellerId": "2",
+   "name": "",
+   "orders": 3,
+   "total": 99649.53
+  },
+  {
+   "sellerId": "12",
+   "name": "Azul Martinez",
+   "orders": 1,
+   "total": 35499.97
+  },
+  {
+   "sellerId": "3",
+   "name": "",
+   "orders": 1,
+   "total": 26640.87
+  },
+  {
+   "sellerId": "6",
+   "name": "",
+   "orders": 1,
+   "total": 24564.06
+  }
  ],
  "byChannel": [
-  {"channel": "TRADITIONAL_TRADE_D", "orders": 1, "total": 271643},
-  {"channel": "PROXIMITY_A", "orders": 1, "total": 219929}
+  {
+   "channel": "TRADITIONAL TRADE_A",
+   "orders": 9,
+   "total": 1113209.69
+  },
+  {
+   "channel": "TRADITIONAL TRADE_B",
+   "orders": 3,
+   "total": 500954.41
+  },
+  {
+   "channel": "TRADITIONAL TRADE_D",
+   "orders": 3,
+   "total": 305909.69
+  },
+  {
+   "channel": "PROXIMITY_A",
+   "orders": 1,
+   "total": 219928.72
+  },
+  {
+   "channel": "TRADITIONAL TRADE_C",
+   "orders": 3,
+   "total": 104045.15
+  },
+  {
+   "channel": "Mayorista_D",
+   "orders": 1,
+   "total": 79000.04
+  }
  ],
  "topClients": [
-  {"clientId": "307", "name": "CAMACHO FLORES JAIME", "orders": 1, "total": 271643},
-  {"clientId": "2475", "name": "PLACE SILVINA ALEJANDRA", "orders": 1, "total": 219929}
+  {
+   "clientId": "192",
+   "name": "KEES MARTIN ANDRES (Kiosco/Maxikiosco_A)",
+   "orders": 3,
+   "total": 610385.74
+  },
+  {
+   "clientId": "186",
+   "name": "SUPER LICHARDI S.R.L. (Autoservicio Tradicional_B)",
+   "orders": 1,
+   "total": 447714.53
+  },
+  {
+   "clientId": "307",
+   "name": "CAMACHO FLORES JAIME (Autoservicio Tradicional_D)",
+   "orders": 1,
+   "total": 271643.25
+  },
+  {
+   "clientId": "2475",
+   "name": "PLACE SILVINA ALEJANDRA (Estacion de Servicio - NO OFICIALES_A)",
+   "orders": 1,
+   "total": 219928.72
+  },
+  {
+   "clientId": "3682",
+   "name": "PATRICIA ALEJANDRA ESCUDERO (Almacen/Despensa_A)",
+   "orders": 1,
+   "total": 186571.55
+  },
+  {
+   "clientId": "976",
+   "name": "Fiore María Cecilia  (Almacen/Despensa_A)",
+   "orders": 1,
+   "total": 111714.35
+  },
+  {
+   "clientId": "2157",
+   "name": "ROMINA ANAHI RODRIGUEZ (Almacen/Despensa_A)",
+   "orders": 1,
+   "total": 79500.03
+  },
+  {
+   "clientId": "1087",
+   "name": "CREMONA SA (Mayoristas_D)",
+   "orders": 1,
+   "total": 79000.04
+  },
+  {
+   "clientId": "4785",
+   "name": "CHOCOCHIA S. A. (Kiosco/Maxikiosco_C)",
+   "orders": 2,
+   "total": 70973.71
+  },
+  {
+   "clientId": "2250",
+   "name": "FERQUIN S.A. (Kiosco/Maxikiosco_A)",
+   "orders": 1,
+   "total": 62897.18
+  },
+  {
+   "clientId": "3079",
+   "name": "KIOSMDQ (Kiosco/Maxikiosco_A)",
+   "orders": 1,
+   "total": 35499.97
+  },
+  {
+   "clientId": "3661",
+   "name": "MANUEL HORACIO MENDIOLA (Kiosco/Maxikiosco_D)",
+   "orders": 2,
+   "total": 34266.44
+  },
+  {
+   "clientId": "2839",
+   "name": "NESTOR MARCELO LUNGHI (Fiambreria_C)",
+   "orders": 1,
+   "total": 33071.44
+  },
+  {
+   "clientId": "3097",
+   "name": "CHOCOCHIA S. A. (Kiosco/Maxikiosco_B)",
+   "orders": 1,
+   "total": 28675.81
+  },
+  {
+   "clientId": "2457",
+   "name": "NICADELO SA (Kiosco/Maxikiosco_A)",
+   "orders": 1,
+   "total": 26640.87
+  },
+  {
+   "clientId": "1391",
+   "name": "PAZ HECTOR OSVALDO (Almacen/Despensa_B)",
+   "orders": 1,
+   "total": 24564.06
+  }
  ]
 }
