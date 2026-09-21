@@ -47,6 +47,30 @@ def _hidden(html, name):
     return m.group(1) if m else ""
 
 
+def _form_fields(html):
+    """Todos los <input> del form, name -> value. WebForms prefija los names
+    segun donde este el control (ctl03$UserName, ctl00$cph$UserName, ...), asi
+    que hay que leerlos de la pagina en vez de escribirlos a mano."""
+    fields = {}
+    for tag in re.findall(r"<input[^>]*>", html, re.I):
+        name = re.search(r'name="([^"]*)"', tag)
+        if not name:
+            continue
+        val = re.search(r'value="([^"]*)"', tag)
+        fields[name.group(1)] = val.group(1) if val else ""
+    return fields
+
+
+def _set_field(fields, sufijo, valor):
+    """Completa el campo cuyo name termina en `sufijo`, sin importar el prefijo."""
+    for k in fields:
+        if k.lower().endswith(sufijo.lower()):
+            fields[k] = valor
+            return k
+    fields[sufijo] = valor      # ultimo recurso: sin prefijo
+    return sufijo
+
+
 # --------------------------------------------------------------------------- #
 # Orders360
 # --------------------------------------------------------------------------- #
@@ -54,30 +78,34 @@ class Orders360:
     """Se loguea en el WebForms de tiendaperfecta y extrae el JWT del redirect,
     luego usa la API REST masuno-order360."""
 
-    def __init__(self, user, pwd):
+    def __init__(self, user, pwd, token=""):
         self.s = requests.Session()
         self.s.headers.update({"User-Agent": "Mozilla/5.0"})
-        self.token = self._get_token(user, pwd)
+        # Un JWT cargado a mano (secret AXUM_TOKEN) gana: es el salvavidas si
+        # Axum vuelve a cambiar la pantalla de login.
+        self.token = token.strip() or self._get_token(user, pwd)
 
     def _get_token(self, user, pwd):
         r = self.s.get(ORDERS_LOGIN, timeout=30)
         r.raise_for_status()
         html = r.text
-        data = {
-            "__VIEWSTATE": _hidden(html, "__VIEWSTATE"),
-            "__VIEWSTATEGENERATOR": _hidden(html, "__VIEWSTATEGENERATOR"),
-            "__EVENTVALIDATION": _hidden(html, "__EVENTVALIDATION"),
-            "UserName": user,
-            "Password": pwd,
-            "Button1": "Ingresar",
-        }
+        # Los campos se llaman ctl03$UserName / ctl03$Password (el prefijo lo pone
+        # WebForms segun donde este el control), asi que se leen del HTML.
+        data = _form_fields(html)
+        _set_field(data, "UserName", user)
+        _set_field(data, "Password", pwd)
         r = self.s.post(ORDERS_LOGIN, data=data, timeout=30, allow_redirects=True)
         r.raise_for_status()
-        # El token aparece en la URL final o en un window.location del cuerpo.
-        m = re.search(r"token=([A-Za-z0-9_\-\.]+)", r.url) or \
-            re.search(r"token=([A-Za-z0-9_\-\.]+)", r.text)
+        # El token viene en la URL final, en un window.location del cuerpo, o
+        # suelto como JWT (arranca con eyJ).
+        m = (re.search(r"token=([A-Za-z0-9_\-\.]+)", r.url) or
+             re.search(r"token=([A-Za-z0-9_\-\.]+)", r.text) or
+             re.search(r"(eyJ[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+)", r.text))
         if not m:
-            raise RuntimeError("No se pudo extraer el token de Orders360 tras el login.")
+            raise RuntimeError(
+                "No se pudo extraer el token de Orders360 tras el login (quedo en "
+                "%s). Si Axum cambio el login, cargar el JWT a mano en el secret "
+                "AXUM_TOKEN." % r.url)
         return m.group(1)
 
     def orders(self, date_since, date_until, take=1000):
@@ -154,6 +182,40 @@ class Gps:
 
 
 # --------------------------------------------------------------------------- #
+# Parseo de las respuestas del GPS
+# --------------------------------------------------------------------------- #
+# La doc dice que soloClientesVisitados devuelve [{sellerID, visitedClient}],
+# pero en la corrida real devolvio strings (como lastPositions, que es CSV).
+# Aceptamos las dos formas en vez de apostar a una.
+def _parse_visita(v):
+    if isinstance(v, dict):
+        sid = v.get("sellerID") or v.get("sellerId") or v.get("Item1") or ""
+        cli = v.get("visitedClient") or v.get("Item2") or ""
+    else:
+        partes = [x.strip() for x in str(v).split(",")]
+        # Con un solo campo no se sabe de que vendedor es la visita: queda sin
+        # asignar en vez de inventar un vendedor con el id del cliente.
+        sid = partes[0] if len(partes) >= 2 else ""
+        cli = partes[1] if len(partes) >= 2 else partes[0]
+    return str(sid), str(cli)
+
+
+def _parse_km(row):
+    if isinstance(row, dict):
+        sid = row.get("sellerID") or row.get("sellerId") or row.get("Item1") or ""
+        val = row.get("km") or row.get("Item2")
+    else:
+        partes = [x.strip() for x in str(row).split(",")]
+        sid = partes[0] if partes else ""
+        val = partes[1] if len(partes) >= 2 else None
+    try:
+        val = round(float(val), 1) if val not in (None, "") else None
+    except (TypeError, ValueError):
+        val = None
+    return str(sid), val
+
+
+# --------------------------------------------------------------------------- #
 # Construcción de los JSON del panel
 # --------------------------------------------------------------------------- #
 def env(*names):
@@ -178,7 +240,7 @@ def build():
 
     # Si no hay credenciales de ningún sistema, no tocamos nada (deja los datos de
     # ejemplo / última corrida buena intactos). Útil antes de cargar los secrets.
-    if not (env("AXUM_ORDERS_USER") or env("GPS_USER")):
+    if not (env("AXUM_ORDERS_USER") or env("AXUM_TOKEN") or env("GPS_USER")):
         print("::warning title=Axum::Faltan los secrets "
               "(AXUM_ORDERS_USER/PASS, GPS_USER/PASS). El panel sigue mostrando "
               "los datos de ejemplo.")
@@ -190,7 +252,8 @@ def build():
                "bySeller": [], "byChannel": [], "topClients": []}
     orders = []
     try:
-        o = Orders360(env("AXUM_ORDERS_USER"), env("AXUM_ORDERS_PASS"))
+        o = Orders360(env("AXUM_ORDERS_USER"), env("AXUM_ORDERS_PASS"),
+                      env("AXUM_TOKEN", "AXUM_ORDERS_TOKEN"))
         orders = o.orders(today, today)
         summary["orders"] = len(orders)
         summary["totalGross"] = round(sum((x.get("total") or 0) for x in orders), 2)
@@ -232,22 +295,27 @@ def build():
         g = Gps(env("GPS_USER"), env("GPS_PASS"))
         positions["sellers"] = g.last_positions()
 
-        visitados = g.visitados_hoy(today)   # [{sellerID, visitedClient}]
+        visitados = g.visitados_hoy(today)
         km = g.km_hoy(today)
-        visits["detail"] = visitados
+        # Muestra cruda del primer item: deja asentado el formato real que
+        # devuelve Axum, sin tener que adivinarlo de nuevo.
+        meta["formatoGps"] = {
+            "visitados": repr(visitados[0])[:120] if visitados else None,
+            "km": repr(km[0])[:120] if km else None,
+        }
         by = defaultdict(lambda: {"visited": 0, "km": None})
+        detalle = []
         for v in visitados:
-            sid = str(v.get("sellerID") or v.get("Item1") or "")
+            sid, cli = _parse_visita(v)
+            detalle.append({"sellerId": sid, "client": cli})
             by[sid]["visited"] += 1
-        # km: estructura variable; se intenta mapear por id si viene como dict
-        if isinstance(km, list):
-            for row in km:
-                if isinstance(row, dict):
-                    sid = str(row.get("sellerID") or row.get("Item1") or "")
-                    val = row.get("km") or row.get("Item2")
-                    if sid:
-                        by[sid]["km"] = val
-        visits["bySeller"] = [{"sellerId": k, **v} for k, v in by.items()]
+        visits["detail"] = detalle
+        for row in (km if isinstance(km, list) else []):
+            sid, val = _parse_km(row)
+            if sid:
+                by[sid]["km"] = val
+        visits["bySeller"] = sorted(({"sellerId": k, **v} for k, v in by.items()),
+                                    key=lambda r: -r["visited"])
         gps_ok = True
     except Exception as e:
         meta["errors"].append(f"gps: {e}")
@@ -279,6 +347,15 @@ def build():
 
     meta["ordersOk"] = orders_ok
     meta["gpsOk"] = gps_ok
+    # Si una fuente fallo, su JSON anterior (el de ejemplo) sigue publicado.
+    # Que el panel lo siga diciendo en vez de hacerlo pasar por dato real.
+    for f in ("summary.json", "positions.json", "visits.json", "cross.json"):
+        try:
+            if json.loads((OUT / f).read_text(encoding="utf-8")).get("sample") is True:
+                meta["sample"] = True
+                break
+        except Exception:
+            pass
     write_json("meta.json", meta)
     print("OK", meta)
     if meta["errors"]:
