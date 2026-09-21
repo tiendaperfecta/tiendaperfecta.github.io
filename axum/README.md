@@ -68,9 +68,10 @@ python tools/axum_fetch.py
 
 ## Pendiente / a revisar
 
-- **Mapeo de id de vendedor:** el "cruce ventas + GPS" une por id de vendedor. Si el
-  `sellerId` de Orders360 no es el mismo número que el id del GPS, hay que agregar una
-  tabla de equivalencias en `axum_fetch.py`. Con datos reales se verifica en un minuto.
+- ~~Mapeo de id de vendedor~~ **verificado 21/09/2026: los ids coinciden.** El
+  `sellerId` de Orders360 y el id del GPS son el mismo número, no hace falta
+  tabla de equivalencias. (Cuidado: en `lastPositions` el id está en el campo 3,
+  no en el 5 como decía la doc.)
 - **Nombres de vendedores en GPS:** hoy el mapa/visitas muestran el id. Si querés el
   nombre, se puede sumar una llamada al listado de vendedores del GPS.
 - Documentación técnica completa de ambas APIs: ver la carpeta de trabajo `axum-api/`

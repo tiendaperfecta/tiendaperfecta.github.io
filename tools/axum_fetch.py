@@ -203,8 +203,12 @@ class Gps:
                 lat, lng = float(p[0]), float(p[1])
             except ValueError:
                 continue
-            out.append({"idVendedor": p[4], "lat": lat, "lng": lng,
-                        "estado": p[2], "hora": p[3]})
+            # Formato real: lat,lng,idVendedor,hora,<etiqueta>,,
+            # (el README-GPS decia lat,lng,estado,hora,idVendedor: esta al reves.
+            # Con el orden viejo los ids salian 90, 1997, "nnn"; con este dan
+            # 1..12, que son los mismos vendedores que facturan y visitan.)
+            out.append({"idVendedor": p[2], "lat": lat, "lng": lng,
+                        "hora": p[3], "etiqueta": p[4]})
         return out
 
     def visitados_hoy(self, fecha):
