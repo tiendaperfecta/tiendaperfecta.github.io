@@ -196,7 +196,8 @@ class Gps:
 
     def last_positions(self):
         out = []
-        for s in self.call("lastPositions"):
+        self.crudo_posiciones = self.call("lastPositions")
+        for s in self.crudo_posiciones:
             p = (str(s).split(",") + [""] * 7)[:7]
             try:
                 lat, lng = float(p[0]), float(p[1])
@@ -373,6 +374,7 @@ def build():
         # Muestra cruda del primer item: deja asentado el formato real que
         # devuelve Axum, sin tener que adivinarlo de nuevo.
         meta["formatoGps"] = {
+            "posicion": repr(getattr(g, "crudo_posiciones", [None])[0])[:160],
             "visitados": repr(visitados[0])[:120] if visitados else None,
             "km": repr(km[0])[:120] if km else None,
             "visitadosTotal": len(visitados) if hasattr(visitados, "__len__") else None,
