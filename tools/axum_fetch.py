@@ -188,10 +188,11 @@ class Gps:
             return []
 
     def km_hoy(self, fecha):
+        """(filas, error). Los km son un extra: si fallan, el resto igual sale."""
         try:
-            return self.call("dailySellerTravelledKmReport", fecha=fecha) or []
-        except Exception:
-            return []
+            return self.call("dailySellerTravelledKmReport", fecha=fecha) or [], ""
+        except Exception as e:
+            return [], "%s: %s" % (type(e).__name__, e)
 
 
 # --------------------------------------------------------------------------- #
@@ -309,13 +310,14 @@ def build():
         positions["sellers"] = g.last_positions()
 
         visitados = g.visitados_hoy(today)
-        km = g.km_hoy(today)
+        km, km_error = g.km_hoy(today)
         # Muestra cruda del primer item: deja asentado el formato real que
         # devuelve Axum, sin tener que adivinarlo de nuevo.
         meta["formatoGps"] = {
             "visitados": repr(visitados[0])[:120] if visitados else None,
             "km": repr(km[0])[:120] if km else None,
             "visitadosTotal": len(visitados) if hasattr(visitados, "__len__") else None,
+            "kmError": km_error or None,
         }
         by = defaultdict(lambda: {"visited": 0, "km": None})
         detalle = []
