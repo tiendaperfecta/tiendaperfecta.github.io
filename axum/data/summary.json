@@ -1,8 +1,8 @@
 {
  "date": "2026-09-22",
- "totalNet": 14164883.25,
- "totalGross": 17139508.66,
- "orders": 186,
+ "totalNet": 14689864.29,
+ "totalGross": 17774735.72,
+ "orders": 192,
  "bySeller": [
   {
    "sellerId": "9",
@@ -11,28 +11,28 @@
    "total": 2884394.04
   },
   {
+   "sellerId": "7",
+   "name": "Vendedor 7",
+   "orders": 16,
+   "total": 2412551.24
+  },
+  {
    "sellerId": "8",
    "name": "Vendedor 8",
    "orders": 23,
    "total": 2353869.92
   },
   {
-   "sellerId": "7",
-   "name": "Vendedor 7",
-   "orders": 13,
-   "total": 2052324.35
+   "sellerId": "11",
+   "name": "Vendedor 11",
+   "orders": 22,
+   "total": 1614788.94
   },
   {
    "sellerId": "3",
    "name": "Vendedor 3",
    "orders": 11,
    "total": 1517738.82
-  },
-  {
-   "sellerId": "11",
-   "name": "Vendedor 11",
-   "orders": 21,
-   "total": 1371717.35
   },
   {
    "sellerId": "4",
@@ -43,8 +43,8 @@
   {
    "sellerId": "6",
    "name": "Vendedor 6",
-   "orders": 17,
-   "total": 1027183.85
+   "orders": 18,
+   "total": 1032112.41
   },
   {
    "sellerId": "5",
@@ -71,33 +71,33 @@
    "total": 775491.41
   },
   {
+   "sellerId": "12",
+   "name": "Vendedor 12",
+   "orders": 8,
+   "total": 703910.69
+  },
+  {
    "sellerId": "1",
    "name": "Vendedor 1",
    "orders": 10,
    "total": 701588.71
-  },
-  {
-   "sellerId": "12",
-   "name": "Vendedor 12",
-   "orders": 7,
-   "total": 676910.68
   }
  ],
  "byChannel": [
   {
    "channel": "TRADITIONAL TRADE_A",
-   "orders": 42,
-   "total": 7529609.97
+   "orders": 45,
+   "total": 7955123.53
   },
   {
    "channel": "TRADITIONAL TRADE_C",
-   "orders": 56,
-   "total": 3688674.3
+   "orders": 57,
+   "total": 3715674.31
   },
   {
    "channel": "TRADITIONAL TRADE_B",
-   "orders": 28,
-   "total": 3087081.74
+   "orders": 30,
+   "total": 3269795.22
   },
   {
    "channel": "TRADITIONAL TRADE_D",
@@ -172,14 +172,20 @@
   {
    "clientId": "207",
    "name": "RUFRADAVIL S.R.L (Autoservicio Tradicional_A)",
-   "orders": 1,
-   "total": 498928.97
+   "orders": 2,
+   "total": 552413.85
   },
   {
    "clientId": "2163",
    "name": "NI ZHENGWANG (Autoservicio Tradicional_B)",
    "orders": 3,
    "total": 480135.98
+  },
+  {
+   "clientId": "4874",
+   "name": "CARINA ALEJANDRA CARRERES (Autoservicio Tradicional_B)",
+   "orders": 2,
+   "total": 479499.46
   },
   {
    "clientId": "3836",
@@ -216,12 +222,6 @@
    "name": "JERIBATZ CARNICO SRL (Almacen/Despensa_A)",
    "orders": 1,
    "total": 309643.06
-  },
-  {
-   "clientId": "4874",
-   "name": "CARINA ALEJANDRA CARRERES (Autoservicio Tradicional_B)",
-   "orders": 1,
-   "total": 301714.53
   },
   {
    "clientId": "563",
@@ -266,10 +266,10 @@
    "total": 244714.38
   },
   {
-   "clientId": "3431",
-   "name": "JULIAN ANTONINI (Kiosco/Maxikiosco_A)",
-   "orders": 2,
-   "total": 235858.3
+   "clientId": "2168",
+   "name": "EQUIVAR SANTIAGO LUCAS  (Almacen/Despensa_A)",
+   "orders": 1,
+   "total": 243071.59
   }
  ]
 }
