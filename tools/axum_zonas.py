@@ -82,23 +82,39 @@ def parsear_recorrido(filas, hora):
     return out
 
 
-def jornada(gps, sid, fecha, hora):
-    """(entrada, salida, zonas_usadas, puntos, puntos_dentro) de la zona de hoy.
-    Si el vendedor no tiene zona para hoy se usan todas sus zonas."""
+def _en_alguna(punto, zonas):
+    return any(dentro(punto, z["poligono"]) for z in zonas)
+
+
+def jornada(gps, sid, fecha, hora, cartera=None):
+    """Entrada y salida de la zona del dia, mas una validacion: que porcentaje
+    de la cartera del vendedor cae dentro de esas zonas. Si ese porcentaje es
+    bajo, las zonas que devolvio Axum no son las de este vendedor y la hora de
+    entrada no significa nada."""
     zonas = parsear(gps.zonas(sid))
     hoy = dia_de(fecha)
     del_dia = [z for z in zonas if z["nombre"] == hoy]
     usar = del_dia or zonas
+    out = {"entrada": None, "salida": None, "zonas": [z["nombre"] for z in usar],
+           "puntos": 0, "puntosEnZona": 0, "zonasTotales": len(zonas),
+           "carteraEnZona": None, "esDelDia": bool(del_dia)}
     if not usar:
-        return None, None, [], 0, 0
+        return out
+
+    # Validacion: los clientes del vendedor deberian caer dentro de sus zonas.
+    if cartera:
+        coords = [(c["lat"], c["lng"]) for c in cartera.values()
+                  if c.get("lat") is not None]
+        if coords:
+            dentro_cartera = sum(1 for c in coords if _en_alguna(c, zonas))
+            out["carteraEnZona"] = round(dentro_cartera * 100.0 / len(coords), 1)
 
     track = parsear_recorrido(gps.recorrido(sid, fecha), hora)
-    entrada = salida = None
-    adentro = 0
+    out["puntos"] = len(track)
     for momento, lat, lng in track:
-        if any(dentro((lat, lng), z["poligono"]) for z in usar):
-            adentro += 1
-            if entrada is None:
-                entrada = momento
-            salida = momento
-    return entrada, salida, [z["nombre"] for z in usar], len(track), adentro
+        if _en_alguna((lat, lng), usar):
+            out["puntosEnZona"] += 1
+            if out["entrada"] is None:
+                out["entrada"] = momento
+            out["salida"] = momento
+    return out

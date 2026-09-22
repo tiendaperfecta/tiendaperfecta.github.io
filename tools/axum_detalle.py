@@ -234,13 +234,10 @@ def construir(gps, fecha, orders, escribir, meta, ahora=None):
     zona_de = {}
     for sid in sellers:
         try:
-            entra, sale, nombres, puntos, adentro = axum_zonas.jornada(
-                gps, sid, fecha, _hora)
-            zona_de[sid] = {"entrada": entra, "salida": sale, "zonas": nombres,
-                            "puntos": puntos, "puntosEnZona": adentro}
+            zona_de[sid] = axum_zonas.jornada(
+                gps, sid, fecha, _hora, cartera_por_vendedor.get(sid))
         except Exception as e:
-            zona_de[sid] = {"entrada": None, "salida": None, "zonas": [],
-                            "puntos": 0, "puntosEnZona": 0}
+            zona_de[sid] = {}
             avisos.append("zona %s: %s" % (sid, e))
 
     # ---- estadisticas y alertas de jornada --------------------------------
@@ -265,6 +262,8 @@ def construir(gps, fecha, orders, escribir, meta, ahora=None):
             "salidaZona": _hhmm(z.get("salida")),
             "zonaDelDia": ", ".join(z.get("zonas") or []) or None,
             "puntosEnZona": z.get("puntosEnZona", 0),
+            "carteraEnZona": z.get("carteraEnZona"),
+            "zonasTotales": z.get("zonasTotales", 0),
             "visitas": r["visitas"],
             "minutosTotal": round(r["minutos"], 1),
             "minutosPromedio": round(r["minutos"] / r["visitas"], 1) if r["visitas"] else 0,
