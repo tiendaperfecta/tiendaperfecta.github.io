@@ -120,6 +120,22 @@ def _llamar(gps, metodo, params, con_username=True):
     return _muestra(d["d"] if isinstance(d, dict) and "d" in d else d)
 
 
+def _llamar_crudo(gps, metodo, params, con_username=True):
+    cuerpo = dict(params)
+    if con_username:
+        cuerpo.setdefault("userName", gps.user)
+    r = gps.s.post("%s/LocationService.asmx/%s" % (BASE, metodo),
+                   data=json.dumps(cuerpo),
+                   headers={"Content-Type": "application/json",
+                            "Accept": "application/json"}, timeout=90)
+    r.raise_for_status()
+    d = r.json()
+    d = d["d"] if isinstance(d, dict) and "d" in d else d
+    if isinstance(d, str):
+        d = json.loads(d)
+    return d
+
+
 def correr(gps, fecha, sellers):
     """gps: instancia de Gps (ya logueada). Devuelve el informe completo."""
     import datetime as dt
@@ -131,34 +147,32 @@ def correr(gps, fecha, sellers):
     dia_dotnet = (hoy.weekday() + 1) % 7          # lunes=1 ... domingo=0
     dia_iso = hoy.isoweekday()                    # lunes=1 ... domingo=7
 
+    # Camion de referencia: lo saca de lastTruckPositions (mismo CSV que los
+    # vendedores, el id va en el campo 3).
+    try:
+        crudo_camiones = _llamar_crudo(gps, "lastTruckPositions", {})
+        camion = str(crudo_camiones[0]).split(",")[2] if crudo_camiones else "1"
+    except Exception:
+        crudo_camiones, camion = [], "1"
+    informe["camiones"] = [str(c) for c in crudo_camiones][:10]
+    informe["camionProbado"] = camion
+
     pruebas = [
-        # --- tiempos y linea de tiempo ---
-        ("FindClientesVisitadosConTimestamp", {"_dia": fecha}, True),
-        ("FindClientesVisitados", {"_dia": fecha}, True),
+        # --- el metodo clave: paso / no paso / cuanto tiempo ---
         ("pasoPoprPDVAt", {"aDate": fecha}, True),
-        ("timeTableForUser", {"username": gps.user}, False),
-        # --- cobertura y tiempo de venta (metodos propios de Axum) ---
-        ("coberturaVendedor", {"distriName": gps.user, "month": hoy.month, "year": hoy.year}, False),
-        ("coberturaVendedor2", {"distriName": "tiendaperfecta", "month": hoy.month, "year": hoy.year}, False),
-        ("timeToSellVendedor", {"distriName": gps.user, "month": hoy.month, "year": hoy.year}, False),
-        ("timeToSellVendedor2", {"distriName": "tiendaperfecta", "month": hoy.month, "year": hoy.year}, False),
-        # --- cartera y frecuencia (para saber a quien NO paso) ---
-        ("frecuenciaByVendedorDia", {"sellerId": uno, "numeroDeDia": dia_dotnet}, True),
-        ("frecuenciaByVendedorDia2", {"sellerId": uno, "numeroDeDia": dia_iso}, True),
-        ("allClientsPositionByVendedor", {"idVendedor": uno}, True),
-        ("clients", {}, True),
-        ("vendedoresId", {"username": gps.user}, False),
-        # --- km (el reporte diario viene vacio) ---
-        ("kmRecorridosCtrl", {"sellerId": uno, "aDate": fecha}, True),
-        ("travelledDistanceAt", {"aDate": fecha}, True),
         # --- LDR / choferes ---
-        ("lastTruckPositions", {}, True),
-        ("lastReparto", {}, True),
-        ("lastActivityReparto", {}, True),
-        ("cantidadDeClientesVisitadosPorCamion", {"fechaDeRepartoAsString": fecha}, True),
-        ("distanciaRecorridaPorCamionesEnFecha", {"fechaDeRepartoAsString": fecha}, True),
-        ("allTrucksOilStatus", {}, True),
-        ("allFullClientsByTruck", {}, True),
+        ("travelledDistanceForTruckAt", {"aTruckCode": camion, "aDate": fecha}, True),
+        ("eventsAtDateAndTruck", {"fechaDeRepartoAsString": fecha, "truckId": camion}, True),
+        ("allClientsByTruck", {"idCamion": camion}, True),
+        ("serviceExpenseAmountByTruckCurrentMonth", {}, True),
+        ("timeTableForUserAndTruckID", {"username": gps.user, "truckId": camion}, False),
+        ("newAllTrucksOilStatus", {}, True),
+        ("kmRecorridosAt", {"truckCode": camion, "aDate": fecha}, False),
+        ("FindLocationsOfVendedorIdEnDia", {"idVendedor": camion, "dia": fecha}, True),
+        # --- cartera y km por vendedor, para el resto del tablero ---
+        ("kmRecorridosCtrl", {"sellerId": uno, "aDate": fecha}, True),
+        ("vendedoresClientsTimeoff", {}, True),
+        ("clientQuantityWithOrdersAndOrdersQuantity", {}, True),
     ]
     resultados = {}
     for metodo, params, con_user in pruebas:
@@ -169,5 +183,24 @@ def correr(gps, fecha, sellers):
         except Exception as e:
             resultados[etiqueta] = {"error": "%s: %s" % (type(e).__name__, str(e)[:160])}
     informe["pruebas"] = resultados
+
+    # Resumen del metodo clave: cuantas filas, cuantas con visito=SI/NO, que
+    # forma tienen los tiempos, y cuantos clientes distintos aparecen.
+    try:
+        filas = _llamar_crudo(gps, "pasoPoprPDVAt", {"aDate": fecha})
+        si = [f for f in filas if str(f.get("visito", "")).upper() == "SI"]
+        no = [f for f in filas if str(f.get("visito", "")).upper() == "NO"]
+        informe["pasoPorPDV"] = {
+            "filas": len(filas),
+            "visitoSI": len(si),
+            "visitoNO": len(no),
+            "vendedores": sorted({str(f.get("sellerId")) for f in filas}),
+            "clientesDistintos": len({str(f.get("clientId")) for f in filas}),
+            "ejemploSI": si[0] if si else None,
+            "ejemploNO": no[0] if no else None,
+            "tiemposSI": [f.get("tiempo") for f in si[:12]],
+        }
+    except Exception as e:
+        informe["pasoPorPDV"] = {"error": "%s: %s" % (type(e).__name__, str(e)[:160])}
     informe["diasProbados"] = {"dotnet": dia_dotnet, "iso": dia_iso}
     return informe
