@@ -1,14 +1,20 @@
 {
  "date": "2026-09-22",
- "totalNet": 12846745.17,
- "totalGross": 15544561.58,
- "orders": 171,
+ "totalNet": 13525465.44,
+ "totalGross": 16365813.11,
+ "orders": 178,
  "bySeller": [
   {
    "sellerId": "9",
    "name": "Vendedor 9",
-   "orders": 17,
-   "total": 2786138.83
+   "orders": 18,
+   "total": 2829541.4
+  },
+  {
+   "sellerId": "7",
+   "name": "Vendedor 7",
+   "orders": 13,
+   "total": 2052324.35
   },
   {
    "sellerId": "8",
@@ -17,22 +23,16 @@
    "total": 1919492.45
   },
   {
-   "sellerId": "7",
-   "name": "Vendedor 7",
-   "orders": 12,
-   "total": 1553395.39
-  },
-  {
    "sellerId": "3",
    "name": "Vendedor 3",
-   "orders": 9,
-   "total": 1365667.17
+   "orders": 11,
+   "total": 1517738.82
   },
   {
    "sellerId": "11",
    "name": "Vendedor 11",
-   "orders": 20,
-   "total": 1282503.02
+   "orders": 21,
+   "total": 1371717.35
   },
   {
    "sellerId": "6",
@@ -41,16 +41,16 @@
    "total": 1027183.85
   },
   {
+   "sellerId": "5",
+   "name": "Vendedor 5",
+   "orders": 13,
+   "total": 977100.53
+  },
+  {
    "sellerId": "2",
    "name": "Vendedor 2",
    "orders": 13,
    "total": 951378.17
-  },
-  {
-   "sellerId": "5",
-   "name": "Vendedor 5",
-   "orders": 11,
-   "total": 939466.53
   },
   {
    "sellerId": "4",
@@ -86,13 +86,13 @@
  "byChannel": [
   {
    "channel": "TRADITIONAL TRADE_A",
-   "orders": 38,
-   "total": 6801135.41
+   "orders": 41,
+   "total": 7455038.59
   },
   {
    "channel": "TRADITIONAL TRADE_C",
-   "orders": 51,
-   "total": 3259169.63
+   "orders": 54,
+   "total": 3386017.96
   },
   {
    "channel": "TRADITIONAL TRADE_B",
@@ -101,8 +101,8 @@
   },
   {
    "channel": "TRADITIONAL TRADE_D",
-   "orders": 24,
-   "total": 1439209.35
+   "orders": 25,
+   "total": 1479709.37
   },
   {
    "channel": "Mayorista_B",
@@ -168,6 +168,12 @@
    "name": "NI YOUYONG  (Autoservicio Tradicional_A)",
    "orders": 3,
    "total": 622031.11
+  },
+  {
+   "clientId": "207",
+   "name": "RUFRADAVIL S.R.L (Autoservicio Tradicional_A)",
+   "orders": 1,
+   "total": 498928.97
   },
   {
    "clientId": "2163",
@@ -264,12 +270,6 @@
    "name": "Daniel Oscar Galvan (Almacen/Despensa_A)",
    "orders": 2,
    "total": 233276.77
-  },
-  {
-   "clientId": "1366",
-   "name": "CORREA DIEGO RAFAEL (Autoservicio Tradicional_C)",
-   "orders": 1,
-   "total": 226642.97
   }
  ]
 }
