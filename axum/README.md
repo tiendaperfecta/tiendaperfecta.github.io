@@ -49,6 +49,38 @@ set GPS_USER=TIENDAPERFECTAgps  &  set GPS_PASS=...
 python tools/axum_fetch.py
 ```
 
+## Tres fuentes
+
+| Fuente | Qué aporta |
+|---|---|
+| **Axum GPS** | por dónde pasó el vendedor, cuánto tiempo estuvo, posiciones, camiones |
+| **Axum Orders360** | pedidos y facturación |
+| **GesCom** | quién es cada cliente, **dónde está de verdad**, y a quién le tocaba visitar cada día |
+
+> La geolocalización y la cartera de Axum **no se usan**: sus coordenadas no son
+> confiables y no tiene cargadas las frecuencias. GesCom devuelve el 100% de los
+> clientes con coordenada y la ruta de preventa por día (`rutasPreventa`), así que
+> las zonas se **dibujan** con los clientes reales y la cobertura se mide contra
+> lo que al vendedor le tocaba hacer ese día.
+
+### Refresco del maestro de GesCom
+
+`tools/gescom.py` regenera `clientes.json`, `rutas.json` y `zonas.json` en cada
+corrida **si** están cargados estos secrets; si no, quedan los archivos ya
+commiteados (que funcionan igual, solo que congelados):
+
+`GESCOM_REALM` · `GESCOM_CLIENT_ID` · `GESCOM_USERNAME` · `GESCOM_PASSWORD`
+
+Son los mismos que usa el Panel de Fleteros.
+
+## Histórico
+
+Cada día se publica entero como `dia-<fecha>.json`, y `dias.json` es el índice.
+El panel tiene un selector de día que alimenta Tiempos, Clientes y Zonas. Los
+días que falten se completan de a tres por corrida hasta cubrir 30 días hacia
+atrás (el histórico de km y de entrada a zona no se reconstruye: son muchas
+llamadas y Axum no las conserva bien).
+
 ## Qué muestra cada pestaña
 
 | Pestaña | Datos | Fuente |
@@ -58,7 +90,8 @@ python tools/axum_fetch.py
 | Visitas y cobertura | visitas y km del día | `soloClientesVisitados` |
 | Cruce ventas + GPS | facturación vs. actividad | ambos |
 | **Tiempos y jornada** | minutos por visita, primera/última, km, línea de tiempo, alertas | `pasoPoprPDVAt`, `FindClientesVisitadosConTimestamp`, `kmRecorridosCtrl` |
-| **Clientes del día** | pasó / no pasó / le vendió / le vendió sin pasar, cobertura | `pasoPoprPDVAt` + `allClientsPositionByVendedor` + Orders360 |
+| **Clientes del día** | pasó / no pasó / le vendió / le vendió sin pasar, con fecha y hora de la venta, y cumplimiento de la ruta | `pasoPoprPDVAt` + GesCom + Orders360 |
+| **Zonas y ruta** | la zona dibujada con los clientes, visitados en verde y pendientes en rojo | GesCom |
 | **LDR** | choferes: repartos, entregas, efectividad, cartones y ranking del mes + camiones en el mapa | [Panel de Fleteros](https://tiendaperfecta.github.io/fleteros/) (API GesCom) + `lastTruckPositions` |
 
 ### Zonas: qué se pudo y qué no (22/09/2026)
