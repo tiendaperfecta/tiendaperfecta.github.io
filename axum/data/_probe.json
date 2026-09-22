@@ -10,110 +10,114 @@
   "5",
   "4"
  ],
+ "camiones": [
+  "-38.0001315,-57.5870558,4,11:07 AM,115,,",
+  "-37.9940241,-57.5482181,1,11:08 AM,114,,",
+  "-37.9287416,-57.5490039,10,10:56 AM,825,,",
+  "-37.9838126,-57.5569493,11,11:08 AM,114,,",
+  "-37.941668,-57.7755902,7,11:08 AM,114,,",
+  "-37.944744,-57.5699507,5,11:08 AM,90,,",
+  "-37.9975898,-57.5431204,3,11:09 AM,27,,",
+  "-37.9917333,-57.56887,12,11:08 AM,114,,"
+ ],
+ "camionProbado": "4",
  "pruebas": {
-  "FindClientesVisitadosConTimestamp": {
-   "tipo": "list",
-   "filas": 130,
-   "item": "\"1581,9/22/2026 8:10:15 AM\""
-  },
-  "FindClientesVisitados": {
-   "tipo": "list",
-   "filas": 130,
-   "item": "\"1581\""
-  },
   "pasoPoprPDVAt": {
    "tipo": "str->list",
-   "filas": 130,
+   "filas": 132,
    "item": "{\"sellerId\": \"1\", \"clientId\": \"11\", \"tiempo\": \"0:0\", \"visito\": \"NO\", \"horario\": \"22/09/2026 09:31:00\"}"
   },
-  "timeTableForUser": {
-   "tipo": "str->list",
-   "filas": 0,
-   "item": null
-  },
-  "coberturaVendedor": {
+  "travelledDistanceForTruckAt": {
    "error": "HTTP 500"
   },
-  "coberturaVendedor2 (variante)": {
+  "eventsAtDateAndTruck": {
+   "tipo": "list",
+   "filas": 0,
+   "item": null
+  },
+  "allClientsByTruck": {
+   "tipo": "list",
+   "filas": 0,
+   "item": null
+  },
+  "serviceExpenseAmountByTruckCurrentMonth": {
+   "tipo": "str->dict",
+   "claves": [],
+   "muestra": "{}"
+  },
+  "timeTableForUserAndTruckID": {
    "tipo": "str->list",
    "filas": 0,
    "item": null
   },
-  "timeToSellVendedor": {
+  "newAllTrucksOilStatus": {
+   "tipo": "str->dict",
+   "claves": [],
+   "muestra": "{}"
+  },
+  "kmRecorridosAt": {
    "error": "HTTP 500"
   },
-  "timeToSellVendedor2 (variante)": {
-   "tipo": "str->list",
-   "filas": 0,
-   "item": null
-  },
-  "frecuenciaByVendedorDia": {
-   "tipo": "str->list",
-   "filas": 0,
-   "item": null
-  },
-  "frecuenciaByVendedorDia2 (variante)": {
-   "tipo": "str->list",
-   "filas": 0,
-   "item": null
-  },
-  "allClientsPositionByVendedor": {
+  "FindLocationsOfVendedorIdEnDia": {
    "tipo": "list",
-   "filas": 214,
-   "item": "\"1016,-37.966283,-57.553787,TOLABA CHOQUE WILSON GABRIEL (Almacen/Despensa_D),TRADITIONAL TRADE_D,Carlos Tejedor 1670 (TRADITIONAL TRADE_D),110\""
-  },
-  "clients": {
-   "tipo": "str->list",
-   "filas": 2665,
-   "item": "{\"Item1\": \"1\", \"Item2\": \"-38.0365766;-57.7120964\"}"
-  },
-  "vendedoresId": {
-   "tipo": "list",
-   "filas": 18,
-   "item": "\"31\""
+   "filas": 2582,
+   "item": "\"-38.0072315,-57.5448663,4,9/22/2026 8:06:41 AM,\""
   },
   "kmRecorridosCtrl": {
    "tipo": "str->str",
    "valor": "16"
   },
-  "travelledDistanceAt": {
-   "tipo": "str->dict",
-   "claves": [],
-   "muestra": "{}"
-  },
-  "lastTruckPositions": {
-   "tipo": "list",
+  "vendedoresClientsTimeoff": {
+   "tipo": "str->list",
    "filas": 8,
-   "item": "\"-37.9838263,-57.5569413,11,11:06 AM,131,,\""
+   "item": "{\"sellerID\": \"7\", \"visitedClientsCount\": 20, \"timeoff\": 12, \"clientsIDs\": [\"1581\", \"274\", \"214\", \"3485\", \"195\", \"1335\", \"198\", \"199\", \"2658\", \"200\", \"3763\", \"312\", \"2782\", \"250\", \"1851\", \"1464\", \"206\", \"208\", \"207\", \"210\"]}"
   },
-  "lastReparto": {
-   "tipo": "str->dict",
-   "claves": [],
-   "muestra": "{}"
-  },
-  "lastActivityReparto": {
+  "clientQuantityWithOrdersAndOrdersQuantity": {
    "error": "HTTP 500"
-  },
-  "cantidadDeClientesVisitadosPorCamion": {
-   "tipo": "str->list",
-   "filas": 0,
-   "item": null
-  },
-  "distanciaRecorridaPorCamionesEnFecha": {
-   "tipo": "str->list",
-   "filas": 0,
-   "item": null
-  },
-  "allTrucksOilStatus": {
-   "tipo": "str->dict",
-   "claves": [],
-   "muestra": "{}"
-  },
-  "allFullClientsByTruck": {
-   "tipo": "str->dict",
-   "claves": [],
-   "muestra": "{}"
   }
+ },
+ "pasoPorPDV": {
+  "filas": 132,
+  "visitoSI": 122,
+  "visitoNO": 10,
+  "vendedores": [
+   "1",
+   "10",
+   "11",
+   "12",
+   "4",
+   "5",
+   "7"
+  ],
+  "clientesDistintos": 132,
+  "ejemploSI": {
+   "sellerId": "1",
+   "clientId": "1123",
+   "tiempo": "7:55",
+   "visito": "SI",
+   "horario": "22/09/2026 09:36:24"
+  },
+  "ejemploNO": {
+   "sellerId": "1",
+   "clientId": "11",
+   "tiempo": "0:0",
+   "visito": "NO",
+   "horario": "22/09/2026 09:31:00"
+  },
+  "tiemposSI": [
+   "7:55",
+   "0:46",
+   "3:36",
+   "0:20",
+   "6:52",
+   "0:8",
+   "0:54",
+   "0:18",
+   "0:48",
+   "7:48",
+   "23:33",
+   "0:2"
+  ]
  },
  "diasProbados": {
   "dotnet": 2,

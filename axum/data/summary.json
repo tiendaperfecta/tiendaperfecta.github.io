@@ -1,26 +1,26 @@
 {
  "date": "2026-09-22",
- "totalNet": 13608818.36,
- "totalGross": 16466670.14,
- "orders": 180,
+ "totalNet": 14164883.25,
+ "totalGross": 17139508.66,
+ "orders": 186,
  "bySeller": [
   {
    "sellerId": "9",
    "name": "Vendedor 9",
-   "orders": 19,
-   "total": 2855827.05
+   "orders": 20,
+   "total": 2884394.04
+  },
+  {
+   "sellerId": "8",
+   "name": "Vendedor 8",
+   "orders": 23,
+   "total": 2353869.92
   },
   {
    "sellerId": "7",
    "name": "Vendedor 7",
    "orders": 13,
    "total": 2052324.35
-  },
-  {
-   "sellerId": "8",
-   "name": "Vendedor 8",
-   "orders": 19,
-   "total": 1994063.83
   },
   {
    "sellerId": "3",
@@ -33,6 +33,12 @@
    "name": "Vendedor 11",
    "orders": 21,
    "total": 1371717.35
+  },
+  {
+   "sellerId": "4",
+   "name": "Vendedor 4",
+   "orders": 10,
+   "total": 1071739.14
   },
   {
    "sellerId": "6",
@@ -51,12 +57,6 @@
    "name": "Vendedor 2",
    "orders": 13,
    "total": 951378.17
-  },
-  {
-   "sellerId": "4",
-   "name": "Vendedor 4",
-   "orders": 9,
-   "total": 787273.69
   },
   {
    "sellerId": "20",
@@ -91,18 +91,18 @@
   },
   {
    "channel": "TRADITIONAL TRADE_C",
-   "orders": 54,
-   "total": 3386017.96
+   "orders": 56,
+   "total": 3688674.3
   },
   {
    "channel": "TRADITIONAL TRADE_B",
-   "orders": 27,
-   "total": 3058514.75
+   "orders": 28,
+   "total": 3087081.74
   },
   {
    "channel": "TRADITIONAL TRADE_D",
-   "orders": 25,
-   "total": 1479709.37
+   "orders": 27,
+   "total": 1762331.59
   },
   {
    "channel": "Mayorista_B",
@@ -113,6 +113,11 @@
    "channel": "AWAY FROM HOME_B",
    "orders": 4,
    "total": 195567.87
+  },
+  {
+   "channel": "AWAY FROM HOME_C",
+   "orders": 4,
+   "total": 145660.93
   },
   {
    "channel": "Large Format_B",
@@ -128,11 +133,6 @@
    "channel": "Mayorista_C",
    "orders": 1,
    "total": 96785.69
-  },
-  {
-   "channel": "AWAY FROM HOME_C",
-   "orders": 3,
-   "total": 86667.96
   },
   {
    "channel": "PROXIMITY_D",
@@ -236,6 +236,18 @@
    "total": 289501.33
   },
   {
+   "clientId": "1265",
+   "name": "XIAOQIANG CHEN (Autoservicio Tradicional_C)",
+   "orders": 1,
+   "total": 284465.44
+  },
+  {
+   "clientId": "1615",
+   "name": "Sraiber Federico (Almacen/Despensa_D)",
+   "orders": 2,
+   "total": 282622.22
+  },
+  {
    "clientId": "2411",
    "name": "NICADELO SA (Kiosco/Maxikiosco_A)",
    "orders": 2,
@@ -258,18 +270,6 @@
    "name": "JULIAN ANTONINI (Kiosco/Maxikiosco_A)",
    "orders": 2,
    "total": 235858.3
-  },
-  {
-   "clientId": "1108",
-   "name": "JIANG QING (Autoservicio Tradicional_C)",
-   "orders": 3,
-   "total": 235223.71
-  },
-  {
-   "clientId": "1720",
-   "name": "Daniel Oscar Galvan (Almacen/Despensa_A)",
-   "orders": 2,
-   "total": 233276.77
   }
  ]
 }
