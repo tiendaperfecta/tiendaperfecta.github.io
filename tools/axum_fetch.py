@@ -474,7 +474,7 @@ def build():
     if gps_ok:
         try:
             import axum_detalle
-            axum_detalle.construir(g, today, orders, write_json, meta)
+            axum_detalle.construir(g, today, orders, write_json, meta, ahora)
         except Exception as e:
             meta["errors"].append("detalle: %s: %s" % (type(e).__name__, e))
 

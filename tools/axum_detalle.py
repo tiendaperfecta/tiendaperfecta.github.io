@@ -81,10 +81,13 @@ def _cartera(filas):
 # --------------------------------------------------------------------------- #
 # Construccion
 # --------------------------------------------------------------------------- #
-def construir(gps, fecha, orders, escribir, meta):
+def construir(gps, fecha, orders, escribir, meta, ahora=None):
     """gps: instancia de Gps ya logueada. orders: pedidos de Orders360 de hoy.
-    escribir: funcion write_json(nombre, data). meta: dict para dejar avisos."""
+    escribir: funcion write_json(nombre, data). meta: dict para dejar avisos.
+    ahora: momento de la corrida, para no juzgar una jornada sin terminar."""
     avisos = []
+    ahora = ahora or dt.datetime.now()
+    jornada_cerrada = ahora.time() >= HORA_SALIDA
 
     # ---- pedidos del dia por cliente (para el cruce paso / vendio) ---------
     pedidos = defaultdict(lambda: {"pedidos": 0, "monto": 0.0, "sellerId": ""})
@@ -226,7 +229,10 @@ def construir(gps, fecha, orders, escribir, meta):
         r = por_vendedor[sid]
         primera, ultima = r["primera"], r["ultima"]
         tarde = bool(primera and primera.time() > HORA_LLEGADA)
-        temprano = bool(ultima and ultima.time() < HORA_SALIDA)
+        # Antes de la hora de corte no se puede decir que alguien "se fue
+        # temprano": la jornada sigue. Sin esto, a las 11 AM la alerta salta
+        # para todos.
+        temprano = bool(jornada_cerrada and ultima and ultima.time() < HORA_SALIDA)
         stats.append({
             "sellerId": sid,
             "visitas": r["visitas"],
@@ -246,6 +252,7 @@ def construir(gps, fecha, orders, escribir, meta):
         "date": fecha,
         "umbrales": {"llegada": HORA_LLEGADA.strftime("%H:%M"),
                      "salida": HORA_SALIDA.strftime("%H:%M")},
+        "jornadaCerrada": jornada_cerrada,
         "bySeller": stats,
         "timeline": dict(linea),
     })
@@ -261,6 +268,9 @@ def construir(gps, fecha, orders, escribir, meta):
         visitados = paso_por[sid] & set(cart)
         faltan = [cid for cid in cart if cid not in visitados]
         cob.append({
+            # Ojo: la cartera es el total asignado al vendedor, no la ruta del
+            # dia. Axum no tiene cargadas las frecuencias (frecuenciaByVendedorDia
+            # responde vacio), asi que no hay forma de saber a quien le tocaba hoy.
             "sellerId": sid, "cartera": len(cart), "visitados": len(visitados),
             "noVisitados": len(faltan),
             "pct": round(len(visitados) * 100.0 / len(cart), 1) if cart else None,

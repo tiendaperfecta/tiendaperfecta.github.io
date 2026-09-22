@@ -61,6 +61,25 @@
   .empty{color:rgb(var(--s400));font-size:13px;padding:8px 0}
   .badge{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px;background:rgb(var(--amber)/.15);color:rgb(var(--amber))}
   .err{background:rgb(244 63 94/.12);color:#fda4af;border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:14px}
+  .badge.warn{background:rgb(251 146 60/.18);color:#fdba74}
+  .badge.bad{background:rgb(244 63 94/.15);color:#fda4af}
+  .badge.ok{background:rgb(var(--emerald)/.15);color:#6ee7b7}
+
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+  .chip{padding:5px 12px;border-radius:99px;background:rgb(255 255 255/.06);color:rgb(var(--s300));
+    cursor:pointer;font-size:12px;user-select:none;transition:.15s}
+  .chip:hover{background:rgb(255 255 255/.12)}
+  .chip.active{background:rgb(var(--emerald)/.85);color:rgb(var(--s900));font-weight:600}
+  select{background:rgb(var(--s700));color:rgb(var(--s200));border:1px solid rgb(var(--s200)/.15);
+    border-radius:6px;padding:4px 10px;font:inherit;font-size:13px}
+
+  .tl{list-style:none;margin:0;padding:0;max-height:520px;overflow:auto}
+  .tl li{display:flex;gap:14px;align-items:baseline;padding:7px 2px;border-bottom:1px solid rgb(var(--s200)/.08)}
+  .tl .h{font-variant-numeric:tabular-nums;color:rgb(var(--emerald));min-width:46px;font-weight:600;font-size:13px}
+  .tl .n{font-size:13px}
+  .scroll{max-height:560px;overflow:auto}
+  #map-ldr{height:520px;border-radius:10px;overflow:hidden}
+  .nota{color:rgb(var(--s400));font-size:12px;margin-top:10px;line-height:1.5}
 </style>
 </head>
 <body>
@@ -80,6 +99,9 @@
     <div class="tab" data-t="mapa">Mapa vendedores</div>
     <div class="tab" data-t="visitas">Visitas y cobertura</div>
     <div class="tab" data-t="cruce">Cruce ventas + GPS</div>
+    <div class="tab" data-t="tiempos">Tiempos y jornada</div>
+    <div class="tab" data-t="clientes">Clientes del día</div>
+    <div class="tab" data-t="ldr">LDR</div>
   </div>
 
   <!-- VENTAS -->
@@ -113,6 +135,50 @@
       <div id="t-cross"></div>
     </div>
   </section>
+
+  <!-- TIEMPOS -->
+  <section class="panel" id="p-tiempos">
+    <div class="kpis" id="k-tiempos"></div>
+    <div class="card">
+      <h3>Jornada por vendedor <span class="badge" id="tiempos-estado"></span></h3>
+      <div id="t-tiempos"></div>
+      <p class="nota" id="tiempos-nota"></p>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>Línea de tiempo del día &nbsp;<select id="sel-timeline"></select></h3>
+      <div id="t-timeline"></div>
+    </div>
+  </section>
+
+  <!-- CLIENTES -->
+  <section class="panel" id="p-clientes">
+    <div class="kpis" id="k-clientes"></div>
+    <div class="card">
+      <h3>Detalle por cliente</h3>
+      <div class="chips" id="f-estado"></div>
+      <div class="scroll" id="t-pdv"></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>Cobertura sobre la cartera</h3>
+      <div id="t-cobertura"></div>
+      <p class="nota">La cartera es el total de clientes asignados al vendedor, no la ruta
+        del día: Axum no tiene cargadas las frecuencias, así que no hay forma de saber a
+        quién le tocaba hoy. Sirve para comparar vendedores entre sí, no como meta diaria.</p>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>Clientes a los que no pasó &nbsp;<select id="sel-novis"></select></h3>
+      <div class="scroll" id="t-novis"></div>
+    </div>
+  </section>
+
+  <!-- LDR -->
+  <section class="panel" id="p-ldr">
+    <div class="card">
+      <h3>Camiones <span id="ldr-count" class="badge"></span></h3>
+      <div id="map-ldr"></div>
+      <p class="nota" id="ldr-nota"></p>
+    </div>
+  </section>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -120,6 +186,7 @@
 const $ = s => document.querySelector(s);
 const fmtMoney = n => (n==null?'—':'$'+Number(n).toLocaleString('es-AR',{maximumFractionDigits:0}));
 const fmtNum = n => (n==null?'—':Number(n).toLocaleString('es-AR'));
+const fmtMin = n => (n==null?'—':Number(n).toLocaleString('es-AR',{maximumFractionDigits:1})+' min');
 
 async function loadJSON(name){
   try{ const r = await fetch('data/'+name+'?v='+Date.now()); if(!r.ok) throw 0; return await r.json(); }
@@ -152,37 +219,35 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
   document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
   t.classList.add('active');
   $('#p-'+t.dataset.t).classList.add('active');
-  // El mapa se crea con la pestana oculta, asi que Leaflet mide 0x0 y queda
-  // con un tile suelto y el zoom al maximo. Al mostrarlo hay que remedirlo y
-  // volver a encuadrar.
-  if(t.dataset.t==='mapa' && window._map) setTimeout(()=>{
-    window._map.invalidateSize();
-    if(mapPts.length) window._map.fitBounds(mapPts,{padding:[40,40],maxZoom:14});
+  // Los mapas se crean con la pestana oculta, asi que Leaflet mide 0x0 y
+  // quedan con un tile suelto y el zoom al maximo. Al mostrarlos hay que
+  // remedirlos y volver a encuadrar.
+  const m = mapas[t.dataset.t];
+  if(m) setTimeout(()=>{
+    m.map.invalidateSize();
+    if(m.pts.length) m.map.fitBounds(m.pts,{padding:[40,40],maxZoom:14});
   },60);
 });
 
-let map, mapPts = [];
-function initMap(positions){
-  const sellers = (positions && positions.sellers) || [];
-  $('#map-count').textContent = sellers.length + ' vendedores';
-  map = L.map('map',{scrollWheelZoom:true}).setView([-38.0055,-57.5426], 12); // Mar del Plata
-  window._map = map;
+const mapas = {};
+function crearMapa(tab, divId, puntos){
+  const map = L.map(divId,{scrollWheelZoom:true}).setView([-38.0055,-57.5426], 12); // Mar del Plata
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     {maxZoom:19, attribution:'© OpenStreetMap'}).addTo(map);
   const pts = [];
-  for(const s of sellers){
-    if(s.lat==null||s.lng==null) continue;
-    const m = L.marker([s.lat,s.lng]).addTo(map);
-    m.bindPopup(`<b>Vendedor ${s.idVendedor||'?'}</b><br>${s.hora||''}`);
-    pts.push([s.lat,s.lng]);
+  for(const p of puntos){
+    if(p.lat==null||p.lng==null) continue;
+    L.marker([p.lat,p.lng]).addTo(map).bindPopup(p.popup||'');
+    pts.push([p.lat,p.lng]);
   }
-  mapPts = pts;
+  mapas[tab] = {map, pts};
   if(pts.length) map.fitBounds(pts,{padding:[40,40],maxZoom:14});
 }
 
 (async function(){
-  const [summary, positions, visits, cross, meta] = await Promise.all(
-    ['summary.json','positions.json','visits.json','cross.json','meta.json'].map(loadJSON));
+  const [summary, positions, visits, cross, meta, pdv, tiempos, cobertura, ldr] =
+    await Promise.all(['summary.json','positions.json','visits.json','cross.json',
+      'meta.json','pdv.json','tiempos.json','cobertura.json','ldr.json'].map(loadJSON));
 
   // meta / errores
   if(meta){
@@ -222,7 +287,10 @@ function initMap(positions){
   }
 
   // MAPA
-  initMap(positions);
+  const vend = (positions && positions.sellers) || [];
+  $('#map-count').textContent = vend.length + ' vendedores';
+  crearMapa('mapa','map', vend.map(s=>({lat:s.lat, lng:s.lng,
+    popup:`<b>Vendedor ${s.idVendedor||'?'}</b><br>${s.hora||''}`})));
 
   // VISITAS
   if(visits){
@@ -247,6 +315,116 @@ function initMap(positions){
        {key:'km',label:'Km',num:true,fmt:v=>v==null?'—':fmtNum(v)}],
       cross.rows, {barCol:'total'});
   }
+
+  // ---------- TIEMPOS Y JORNADA ----------
+  if(tiempos){
+    const rows = tiempos.bySeller||[];
+    const visitas = rows.reduce((a,r)=>a+(r.visitas||0),0);
+    const minutos = rows.reduce((a,r)=>a+(r.minutosTotal||0),0);
+    const tarde = rows.filter(r=>r.llegoTarde).length;
+    const temprano = rows.filter(r=>r.salioTemprano).length;
+    const u = tiempos.umbrales||{};
+    $('#k-tiempos').innerHTML =
+      kpi('Visitas registradas', fmtNum(visitas)) +
+      kpi('Tiempo total en clientes', fmtMin(minutos)) +
+      kpi('Promedio por visita', visitas? fmtMin(minutos/visitas):'—') +
+      kpi('Llegó tarde / salió temprano', `${tarde} / ${temprano}`,
+          `umbrales ${u.llegada||'—'} y ${u.salida||'—'}`);
+    const est = $('#tiempos-estado');
+    est.textContent = tiempos.jornadaCerrada? 'jornada cerrada':'jornada en curso';
+    est.className = 'badge ' + (tiempos.jornadaCerrada?'ok':'warn');
+    $('#tiempos-nota').textContent = tiempos.jornadaCerrada? '' :
+      'La alerta de salida temprana recién se evalúa después de las ' + (u.salida||'') + '.';
+    $('#t-tiempos').innerHTML = table([
+      {key:'sellerId',label:'Vendedor',fmt:v=>'Vendedor '+v},
+      {key:'visitas',label:'Visitas',num:true,fmt:fmtNum},
+      {key:'minutosTotal',label:'Tiempo total',num:true,fmt:fmtMin},
+      {key:'minutosPromedio',label:'Prom. x visita',num:true,fmt:fmtMin},
+      {key:'primera',label:'Primera',num:true,fmt:v=>v||'—'},
+      {key:'ultima',label:'Última',num:true,fmt:v=>v||'—'},
+      {key:'km',label:'Km',num:true,fmt:v=>v==null?'—':fmtNum(v)},
+      {key:'pedidos',label:'Pedidos',num:true,fmt:fmtNum},
+      {key:'alertas',label:'Alertas'}
+    ], rows.map(r=>({...r, alertas:
+      ((r.llegoTarde?'<span class="badge warn">llegó tarde</span> ':'') +
+       (r.salioTemprano?'<span class="badge bad">salió temprano</span>':''))
+      || '<span class="badge ok">en hora</span>'})), {barCol:'visitas'});
+
+    const tl = tiempos.timeline||{};
+    const idsTL = Object.keys(tl).filter(k=>k).sort((a,b)=>a-b);
+    $('#sel-timeline').innerHTML = idsTL.map(i=>
+      `<option value="${i}">Vendedor ${i} (${tl[i].length})</option>`).join('');
+    const pintarTL = ()=>{
+      const items = tl[$('#sel-timeline').value]||[];
+      $('#t-timeline').innerHTML = items.length
+        ? '<ul class="tl">'+items.map(x=>
+            `<li><span class="h">${x.hora}</span><span class="n">${x.nombre}</span></li>`).join('')+'</ul>'
+        : '<div class="empty">Sin visitas registradas.</div>';
+    };
+    $('#sel-timeline').onchange = pintarTL; pintarTL();
+  }
+
+  // ---------- CLIENTES DEL DÍA ----------
+  const etiquetas = {vendio:'Pasó y le vendió', paso_sin_vender:'Pasó sin venderle',
+    vendio_sin_pasar:'Le vendió sin pasar', sin_visita:'Pasó cerca sin registrar'};
+  if(pdv){
+    const R = pdv.resumen||{};
+    $('#k-clientes').innerHTML =
+      kpi('Pasó y le vendió', fmtNum(R.vendio||0)) +
+      kpi('Pasó sin venderle', fmtNum(R.paso_sin_vender||0)) +
+      kpi('Le vendió sin pasar', fmtNum(R.vendio_sin_pasar||0), 'pedido cargado sin visita física') +
+      kpi('Pasó cerca sin registrar', fmtNum(R.sin_visita||0));
+    let filtro = 'todos';
+    const pintarPdv = ()=>{
+      const filas = (pdv.rows||[]).filter(r=>filtro==='todos'||r.estado===filtro);
+      $('#t-pdv').innerHTML = table([
+        {key:'sellerId',label:'Vend.',fmt:v=>'V'+v},
+        {key:'nombre',label:'Cliente'},
+        {key:'canal',label:'Canal'},
+        {key:'hora',label:'Hora',num:true,fmt:v=>v||'—'},
+        {key:'minutos',label:'Tiempo',num:true,fmt:v=>v?fmtMin(v):'—'},
+        {key:'monto',label:'Vendido',num:true,fmt:v=>v?fmtMoney(v):'—'},
+        {key:'estado',label:'Situación',fmt:v=>
+          `<span class="badge ${v==='vendio'?'ok':v==='vendio_sin_pasar'?'bad':'warn'}">${etiquetas[v]||v}</span>`}
+      ], filas);
+    };
+    $('#f-estado').innerHTML = ['todos'].concat(Object.keys(etiquetas)).map(k=>
+      `<div class="chip${k==='todos'?' active':''}" data-f="${k}">`+
+      (k==='todos'? 'Todos ('+(pdv.rows||[]).length+')' : etiquetas[k]+' ('+(R[k]||0)+')')+
+      `</div>`).join('');
+    $('#f-estado').querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
+      $('#f-estado').querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
+      c.classList.add('active'); filtro = c.dataset.f; pintarPdv();
+    });
+    pintarPdv();
+  }
+
+  if(cobertura){
+    $('#t-cobertura').innerHTML = table([
+      {key:'sellerId',label:'Vendedor',fmt:v=>'Vendedor '+v},
+      {key:'cartera',label:'Cartera',num:true,fmt:fmtNum},
+      {key:'visitados',label:'Visitados hoy',num:true,fmt:fmtNum},
+      {key:'noVisitados',label:'Sin pasar',num:true,fmt:fmtNum},
+      {key:'pct',label:'% cubierto',num:true,fmt:v=>v==null?'—':v+'%'}
+    ], cobertura.bySeller, {barCol:'visitados'});
+    const nv = cobertura.noVisitados||{};
+    const idsNV = Object.keys(nv).sort((a,b)=>a-b);
+    $('#sel-novis').innerHTML = idsNV.map(i=>
+      `<option value="${i}">Vendedor ${i} (${nv[i].length})</option>`).join('');
+    const pintarNV = ()=>{
+      $('#t-novis').innerHTML = table(
+        [{key:'clientId',label:'ID'},{key:'nombre',label:'Cliente'},{key:'canal',label:'Canal'}],
+        nv[$('#sel-novis').value]||[]);
+    };
+    $('#sel-novis').onchange = pintarNV; pintarNV();
+  }
+
+  // ---------- LDR ----------
+  const camiones = (ldr && ldr.camiones) || [];
+  $('#ldr-count').textContent = camiones.length + ' camiones';
+  $('#ldr-nota').textContent = (ldr && ldr.nota) || '';
+  crearMapa('ldr','map-ldr', camiones.map(c=>({lat:c.lat, lng:c.lng,
+    popup:`<b>Camión ${c.id||'?'}</b><br>${c.hora||''}`})));
 })();
 </script>
 </body>

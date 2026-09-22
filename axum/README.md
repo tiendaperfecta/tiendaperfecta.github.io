@@ -49,6 +49,37 @@ set GPS_USER=TIENDAPERFECTAgps  &  set GPS_PASS=...
 python tools/axum_fetch.py
 ```
 
+## Qué muestra cada pestaña
+
+| Pestaña | Datos | Fuente |
+|---|---|---|
+| Ventas | facturación, pedidos, canales, top clientes | Orders360 |
+| Mapa vendedores | última posición | `lastPositions` |
+| Visitas y cobertura | visitas y km del día | `soloClientesVisitados` |
+| Cruce ventas + GPS | facturación vs. actividad | ambos |
+| **Tiempos y jornada** | minutos por visita, primera/última, km, línea de tiempo, alertas | `pasoPoprPDVAt`, `FindClientesVisitadosConTimestamp`, `kmRecorridosCtrl` |
+| **Clientes del día** | pasó / no pasó / le vendió / le vendió sin pasar, cobertura | `pasoPoprPDVAt` + `allClientsPositionByVendedor` + Orders360 |
+| **LDR** | posición de los camiones | `lastTruckPositions` |
+
+### Métodos del GPS verificados (22/09/2026)
+
+Funcionan: `pasoPoprPDVAt(aDate)` → `{sellerId, clientId, tiempo "mm:ss", visito
+"SI/NO", horario}` · `FindClientesVisitadosConTimestamp(_dia)` → `"clientId,fecha hora"` ·
+`allClientsPositionByVendedor(idVendedor)` → CSV `id,lat,lng,NOMBRE (rubro),canal,dirección` ·
+`kmRecorridosCtrl(sellerId, aDate)` · `lastTruckPositions`.
+
+**No funcionan en este sistema** (probados, no es un bug nuestro):
+`reporteTiempoEnPDVDiario` y `reporteTiempoEnPDVDiarioBySeller` responden **HTTP 500**;
+`coberturaVendedor`, `timeToSellVendedor`, `frecuenciaByVendedorDia`, `trucks`,
+`allZonasReparto`, `cantidadDeClientesVisitadosPorCamion`,
+`distanciaRecorridaPorCamionesEnFecha`, `allTrucksOilStatus` y `eventsAtDateAndTruck`
+devuelven **vacío**. Por eso los tiempos y la cobertura se calculan acá desde los
+datos crudos, y la pestaña LDR solo puede mostrar posiciones.
+
+> Ojo con la **cartera**: es el total de clientes del vendedor, no la ruta del día.
+> Como las frecuencias no están cargadas en Axum, no hay forma de saber a quién le
+> tocaba visitar hoy. El % de cobertura sirve para comparar vendedores, no como meta.
+
 ## Aprendido con datos reales (21/09/2026)
 
 - **Login de Orders360:** los campos del form se llaman `ctl03$UserName` /
