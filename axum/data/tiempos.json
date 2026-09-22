@@ -7,10 +7,24 @@
  "jornadaCerrada": false,
  "bySeller": [
   {
+   "sellerId": "10",
+   "visitas": 25,
+   "minutosTotal": 114.5,
+   "minutosPromedio": 4.6,
+   "pedidos": 4,
+   "monto": 775491.41,
+   "pasoSinVender": 24,
+   "primera": "09:08",
+   "ultima": "11:23",
+   "km": 18.0,
+   "llegoTarde": true,
+   "salioTemprano": false
+  },
+  {
    "sellerId": "11",
    "visitas": 25,
-   "minutosTotal": 91.4,
-   "minutosPromedio": 3.7,
+   "minutosTotal": 99.4,
+   "minutosPromedio": 4.0,
    "pedidos": 23,
    "monto": 1641934.54,
    "pasoSinVender": 14,
@@ -21,27 +35,27 @@
    "salioTemprano": false
   },
   {
-   "sellerId": "10",
-   "visitas": 23,
-   "minutosTotal": 89.7,
-   "minutosPromedio": 3.9,
-   "pedidos": 4,
-   "monto": 775491.41,
-   "pasoSinVender": 22,
-   "primera": "09:08",
-   "ultima": "10:42",
-   "km": 16.0,
+   "sellerId": "12",
+   "visitas": 20,
+   "minutosTotal": 94.7,
+   "minutosPromedio": 4.7,
+   "pedidos": 9,
+   "monto": 767339.24,
+   "pasoSinVender": 13,
+   "primera": "09:19",
+   "ultima": "11:25",
+   "km": 8.0,
    "llegoTarde": true,
    "salioTemprano": false
   },
   {
    "sellerId": "1",
    "visitas": 19,
-   "minutosTotal": 88.5,
-   "minutosPromedio": 4.7,
-   "pedidos": 11,
-   "monto": 829088.81,
-   "pasoSinVender": 11,
+   "minutosTotal": 96.5,
+   "minutosPromedio": 5.1,
+   "pedidos": 12,
+   "monto": 1029446.13,
+   "pasoSinVender": 10,
    "primera": "09:31",
    "ultima": "11:13",
    "km": 39.0,
@@ -49,40 +63,26 @@
    "salioTemprano": false
   },
   {
-   "sellerId": "12",
-   "visitas": 19,
-   "minutosTotal": 87.5,
-   "minutosPromedio": 4.6,
-   "pedidos": 8,
-   "monto": 703910.69,
-   "pasoSinVender": 13,
-   "primera": "09:19",
-   "ultima": "11:16",
-   "km": 8.0,
-   "llegoTarde": true,
-   "salioTemprano": false
-  },
-  {
    "sellerId": "7",
-   "visitas": 18,
-   "minutosTotal": 124.6,
-   "minutosPromedio": 6.9,
+   "visitas": 19,
+   "minutosTotal": 126.8,
+   "minutosPromedio": 6.7,
    "pedidos": 16,
    "monto": 2412551.24,
-   "pasoSinVender": 9,
+   "pasoSinVender": 10,
    "primera": "08:10",
-   "ultima": "11:14",
-   "km": 37.0,
+   "ultima": "11:24",
+   "km": 38.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
   {
    "sellerId": "5",
    "visitas": 14,
-   "minutosTotal": 87.9,
-   "minutosPromedio": 6.3,
-   "pedidos": 14,
-   "monto": 1011886.25,
+   "minutosTotal": 95.9,
+   "minutosPromedio": 6.9,
+   "pedidos": 15,
+   "monto": 1226314.94,
    "pasoSinVender": 6,
    "primera": "09:12",
    "ultima": "11:15",
@@ -92,14 +92,14 @@
   },
   {
    "sellerId": "4",
-   "visitas": 8,
-   "minutosTotal": 40.8,
-   "minutosPromedio": 5.1,
+   "visitas": 11,
+   "minutosTotal": 45.9,
+   "minutosPromedio": 4.2,
    "pedidos": 13,
    "monto": 1713381.94,
-   "pasoSinVender": 3,
+   "pasoSinVender": 6,
    "primera": "09:57",
-   "ultima": "11:06",
+   "ultima": "11:25",
    "km": 13.0,
    "llegoTarde": true,
    "salioTemprano": false
@@ -179,8 +179,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 20,
-   "monto": 2884394.04,
+   "pedidos": 21,
+   "monto": 3331452.84,
    "pasoSinVender": 0,
    "primera": null,
    "ultima": null,
@@ -295,6 +295,11 @@
     "hora": "11:14",
     "clientId": "213",
     "nombre": "PEDRO ALBERTO MARTIN"
+   },
+   {
+    "hora": "11:19",
+    "clientId": "1135",
+    "nombre": "GABRIEL OMAR RIOS"
    }
   ],
   "11": [
@@ -559,6 +564,16 @@
     "hora": "10:42",
     "clientId": "3357",
     "nombre": "DIZ LUCAS GONZALO"
+   },
+   {
+    "hora": "10:59",
+    "clientId": "4904",
+    "nombre": "ELIANA CAROL IROS LEVRINO"
+   },
+   {
+    "hora": "11:23",
+    "clientId": "2944",
+    "nombre": "Viviana Monica Hernandez"
    }
   ],
   "5": [
@@ -738,6 +753,11 @@
     "hora": "11:16",
     "clientId": "1466",
     "nombre": "LODOLA CARLOS JESUS"
+   },
+   {
+    "hora": "11:25",
+    "clientId": "1062",
+    "nombre": "BATTISTESSA KARINA"
    }
   ],
   "1": [
@@ -882,6 +902,21 @@
     "hora": "11:06",
     "clientId": "3053",
     "nombre": "KARINA EDITH OLMO"
+   },
+   {
+    "hora": "11:18",
+    "clientId": "3161",
+    "nombre": "MARIA JOSE GARCIA"
+   },
+   {
+    "hora": "11:21",
+    "clientId": "112",
+    "nombre": "ENRIQUE GUILLERMO LEYES"
+   },
+   {
+    "hora": "11:25",
+    "clientId": "3142",
+    "nombre": "LIDIA SUSANA CORRADO"
    }
   ]
  }
