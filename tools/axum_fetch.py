@@ -398,6 +398,16 @@ def build():
         visits["bySeller"] = sorted(({"sellerId": k, **v} for k, v in by.items()),
                                     key=lambda r: -r["visited"])
         gps_ok = True
+
+        # Exploracion puntual del sistema (ver tools/axum_probe.py). Corre solo
+        # si existe el marcador tools/probe.on, y nunca hace fallar el refresco.
+        if (ROOT / "tools" / "probe.on").exists():
+            try:
+                import axum_probe
+                ids = [r["sellerId"] for r in visits["bySeller"] if r["sellerId"]]
+                write_json("_probe.json", axum_probe.correr(g, today, ids))
+            except Exception as e:
+                meta["errors"].append("probe: %s: %s" % (type(e).__name__, e))
     except Exception as e:
         meta["errors"].append(f"gps: {e}")
 
