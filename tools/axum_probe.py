@@ -158,21 +158,14 @@ def correr(gps, fecha, sellers):
     informe["camionProbado"] = camion
 
     pruebas = [
-        # --- el metodo clave: paso / no paso / cuanto tiempo ---
-        ("pasoPoprPDVAt", {"aDate": fecha}, True),
-        # --- LDR / choferes ---
-        ("travelledDistanceForTruckAt", {"aTruckCode": camion, "aDate": fecha}, True),
-        ("eventsAtDateAndTruck", {"fechaDeRepartoAsString": fecha, "truckId": camion}, True),
-        ("allClientsByTruck", {"idCamion": camion}, True),
-        ("serviceExpenseAmountByTruckCurrentMonth", {}, True),
-        ("timeTableForUserAndTruckID", {"username": gps.user, "truckId": camion}, False),
-        ("newAllTrucksOilStatus", {}, True),
-        ("kmRecorridosAt", {"truckCode": camion, "aDate": fecha}, False),
-        ("FindLocationsOfVendedorIdEnDia", {"idVendedor": camion, "dia": fecha}, True),
-        # --- cartera y km por vendedor, para el resto del tablero ---
-        ("kmRecorridosCtrl", {"sellerId": uno, "aDate": fecha}, True),
-        ("vendedoresClientsTimeoff", {}, True),
-        ("clientQuantityWithOrdersAndOrdersQuantity", {}, True),
+        # --- zonas del vendedor, para detectar la entrada a la zona ---
+        ("allZonasByVendedor", {"codigoVendedor": uno}, True),
+        ("allZoneByVendedor", {"codigoVendedor": uno}, True),
+        ("allClientsZonaByVendedor", {"idVendedor": uno}, True),
+        ("allZonasFacturacion", {}, True),
+        ("allZonasPOIByVendedor", {"codigoVendedor": uno}, True),
+        # --- recorrido con hora, para cruzar contra la zona ---
+        ("FindLocationsOfVendedorIdEnDia", {"idVendedor": uno, "dia": fecha}, True),
     ]
     resultados = {}
     for metodo, params, con_user in pruebas:
