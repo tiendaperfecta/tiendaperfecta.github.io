@@ -1,5 +1,11 @@
 {
  "date": "2026-09-22",
+ "diaSemana": "martes",
+ "jornadaCerrada": false,
+ "umbrales": {
+  "llegada": "09:00",
+  "salida": "14:00"
+ },
  "rows": [
   {
    "fecha": "2026-09-22",
@@ -5173,5 +5179,3466 @@
   "paso_sin_vender": 88,
   "sin_visita": 11,
   "vendio_sin_pasar": 116
+ },
+ "bySeller": [
+  {
+   "sellerId": "11",
+   "vendedor": "Melanie Larrama",
+   "inicioJornada": "08:59",
+   "finJornada": "12:00",
+   "entradaZona": "10:25",
+   "salidaZona": "12:00",
+   "zonaConfiable": true,
+   "primera": "08:59",
+   "ultima": "11:55",
+   "visitas": 29,
+   "minutosTotal": 128.8,
+   "minutosPromedio": 4.4,
+   "pedidos": 26,
+   "monto": 2069624.46,
+   "pasoSinVender": 16,
+   "km": 7.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
+   "sellerId": "1",
+   "vendedor": "Maria Noelia Madia",
+   "inicioJornada": "09:31",
+   "finJornada": "11:59",
+   "entradaZona": "09:31",
+   "salidaZona": "11:59",
+   "zonaConfiable": true,
+   "primera": "09:31",
+   "ultima": "11:55",
+   "visitas": 27,
+   "minutosTotal": 116.0,
+   "minutosPromedio": 4.3,
+   "pedidos": 17,
+   "monto": 1339520.61,
+   "pasoSinVender": 12,
+   "km": 41.0,
+   "llegoTarde": true,
+   "salioTemprano": false
+  },
+  {
+   "sellerId": "10",
+   "vendedor": "Matias Parada",
+   "inicioJornada": "09:08",
+   "finJornada": "11:34",
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": "09:08",
+   "ultima": "11:34",
+   "visitas": 27,
+   "minutosTotal": 139.9,
+   "minutosPromedio": 5.2,
+   "pedidos": 9,
+   "monto": 1173970.87,
+   "pasoSinVender": 21,
+   "km": 21.0,
+   "llegoTarde": true,
+   "salioTemprano": false
+  },
+  {
+   "sellerId": "12",
+   "vendedor": "Agustin Pogorzelski",
+   "inicioJornada": "09:16",
+   "finJornada": "11:57",
+   "entradaZona": "09:16",
+   "salidaZona": "09:16",
+   "zonaConfiable": true,
+   "primera": "09:19",
+   "ultima": "11:57",
+   "visitas": 25,
+   "minutosTotal": 123.6,
+   "minutosPromedio": 4.9,
+   "pedidos": 13,
+   "monto": 1035767.85,
+   "pasoSinVender": 15,
+   "km": 9.0,
+   "llegoTarde": true,
+   "salioTemprano": false
+  },
+  {
+   "sellerId": "7",
+   "vendedor": "Ramiro Rando",
+   "inicioJornada": "08:10",
+   "finJornada": "11:50",
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": "08:10",
+   "ultima": "11:50",
+   "visitas": 22,
+   "minutosTotal": 139.2,
+   "minutosPromedio": 6.3,
+   "pedidos": 18,
+   "monto": 2560737.68,
+   "pasoSinVender": 12,
+   "km": 52.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
+   "sellerId": "5",
+   "vendedor": "Nicolas Martinez",
+   "inicioJornada": "08:55",
+   "finJornada": "11:49",
+   "entradaZona": "08:55",
+   "salidaZona": "09:00",
+   "zonaConfiable": true,
+   "primera": "09:12",
+   "ultima": "11:49",
+   "visitas": 19,
+   "minutosTotal": 121.7,
+   "minutosPromedio": 6.4,
+   "pedidos": 18,
+   "monto": 1377886.21,
+   "pasoSinVender": 8,
+   "km": 33.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "inicioJornada": "10:01",
+   "finJornada": "11:31",
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": "10:01",
+   "ultima": "11:31",
+   "visitas": 11,
+   "minutosTotal": 49.6,
+   "minutosPromedio": 4.5,
+   "pedidos": 19,
+   "monto": 2682877.85,
+   "pasoSinVender": 4,
+   "km": 15.0,
+   "llegoTarde": true,
+   "salioTemprano": false
+  },
+  {
+   "sellerId": "2",
+   "vendedor": "Julian NuÃ±ez",
+   "inicioJornada": null,
+   "finJornada": null,
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": null,
+   "ultima": null,
+   "visitas": 0,
+   "minutosTotal": 0.0,
+   "minutosPromedio": 0,
+   "pedidos": 19,
+   "monto": 1638183.13,
+   "pasoSinVender": 0,
+   "km": 0.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
+   "sellerId": "20",
+   "vendedor": "Deposito",
+   "inicioJornada": null,
+   "finJornada": null,
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": null,
+   "ultima": null,
+   "visitas": 0,
+   "minutosTotal": 0.0,
+   "minutosPromedio": 0,
+   "pedidos": 25,
+   "monto": 358499.86,
+   "pasoSinVender": 0,
+   "km": 0.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
+   "sellerId": "3",
+   "vendedor": "Ezequiel Hack",
+   "inicioJornada": null,
+   "finJornada": null,
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": null,
+   "ultima": null,
+   "visitas": 0,
+   "minutosTotal": 0.0,
+   "minutosPromedio": 0,
+   "pedidos": 15,
+   "monto": 1830810.33,
+   "pasoSinVender": 0,
+   "km": 9.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
+   "sellerId": "30",
+   "vendedor": "Agostina Gauna",
+   "inicioJornada": null,
+   "finJornada": null,
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": null,
+   "ultima": null,
+   "visitas": 0,
+   "minutosTotal": 0.0,
+   "minutosPromedio": 0,
+   "pedidos": 0,
+   "monto": 0.0,
+   "pasoSinVender": 0,
+   "km": 0.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
+   "sellerId": "31",
+   "vendedor": "FLOR",
+   "inicioJornada": null,
+   "finJornada": null,
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": null,
+   "ultima": null,
+   "visitas": 0,
+   "minutosTotal": 0.0,
+   "minutosPromedio": 0,
+   "pedidos": 0,
+   "monto": 0.0,
+   "pasoSinVender": 0,
+   "km": 0.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
+   "sellerId": "33",
+   "vendedor": "Jonathan Capetola",
+   "inicioJornada": null,
+   "finJornada": null,
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": null,
+   "ultima": null,
+   "visitas": 0,
+   "minutosTotal": 0.0,
+   "minutosPromedio": 0,
+   "pedidos": 0,
+   "monto": 0.0,
+   "pasoSinVender": 0,
+   "km": 0.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
+   "sellerId": "6",
+   "vendedor": "Camila Martinez",
+   "inicioJornada": null,
+   "finJornada": null,
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": null,
+   "ultima": null,
+   "visitas": 0,
+   "minutosTotal": 0.0,
+   "minutosPromedio": 0,
+   "pedidos": 23,
+   "monto": 1258420.84,
+   "pasoSinVender": 0,
+   "km": 0.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
+   "sellerId": "8",
+   "vendedor": "Martinica Rodriguez",
+   "inicioJornada": null,
+   "finJornada": null,
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": null,
+   "ultima": null,
+   "visitas": 0,
+   "minutosTotal": 0.0,
+   "minutosPromedio": 0,
+   "pedidos": 24,
+   "monto": 2520298.58,
+   "pasoSinVender": 0,
+   "km": 0.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
+   "sellerId": "80",
+   "vendedor": "a",
+   "inicioJornada": null,
+   "finJornada": null,
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": null,
+   "ultima": null,
+   "visitas": 0,
+   "minutosTotal": 0.0,
+   "minutosPromedio": 0,
+   "pedidos": 0,
+   "monto": 0.0,
+   "pasoSinVender": 0,
+   "km": 0.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
+   "sellerId": "9",
+   "vendedor": "Ludmila Aylen Martinez",
+   "inicioJornada": null,
+   "finJornada": null,
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": null,
+   "ultima": null,
+   "visitas": 0,
+   "minutosTotal": 0.0,
+   "minutosPromedio": 0,
+   "pedidos": 22,
+   "monto": 3454952.94,
+   "pasoSinVender": 0,
+   "km": 0.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  }
+ ],
+ "timeline": {
+  "7": [
+   {
+    "hora": "08:10",
+    "clientId": "1581",
+    "nombre": "GUSTAVO FABIAN BERNAL"
+   },
+   {
+    "hora": "08:31",
+    "clientId": "274",
+    "nombre": "CARLOS OMAR ROSALES"
+   },
+   {
+    "hora": "08:37",
+    "clientId": "214",
+    "nombre": "SULLIVAN SERGIO AGUSTIN Y SULLIVAN MARIA SOLEDAD S"
+   },
+   {
+    "hora": "08:46",
+    "clientId": "3485",
+    "nombre": "JERIBATZ CARNICO SRL"
+   },
+   {
+    "hora": "09:00",
+    "clientId": "195",
+    "nombre": "PATRICIA BEATRIZ FARIAS"
+   },
+   {
+    "hora": "09:02",
+    "clientId": "1335",
+    "nombre": "MARCELA ANDREA PERALTA"
+   },
+   {
+    "hora": "09:02",
+    "clientId": "198",
+    "nombre": "MONICA RAQUEL SANTUCHO"
+   },
+   {
+    "hora": "09:07",
+    "clientId": "199",
+    "nombre": "ZHANG CHAOPING"
+   },
+   {
+    "hora": "09:28",
+    "clientId": "2658",
+    "nombre": "VICTOR ANGEL GONZALEZ"
+   },
+   {
+    "hora": "09:28",
+    "clientId": "200",
+    "nombre": "VALERIA ROSANA PATIÑO"
+   },
+   {
+    "hora": "09:29",
+    "clientId": "3763",
+    "nombre": "JOSE LUIS OROPEZA ACEBEY"
+   },
+   {
+    "hora": "09:49",
+    "clientId": "312",
+    "nombre": "ALBA DANIELA URIBARRI"
+   },
+   {
+    "hora": "09:56",
+    "clientId": "2782",
+    "nombre": "FERNANDEZ ANGELICA DEL CARMEN"
+   },
+   {
+    "hora": "09:56",
+    "clientId": "250",
+    "nombre": "IRAHOLA JOANNA"
+   },
+   {
+    "hora": "09:57",
+    "clientId": "1851",
+    "nombre": "Solange huertas"
+   },
+   {
+    "hora": "09:58",
+    "clientId": "1464",
+    "nombre": "Jeribatz cárnico srl"
+   },
+   {
+    "hora": "10:18",
+    "clientId": "206",
+    "nombre": "ANTONIO ALFARO"
+   },
+   {
+    "hora": "10:35",
+    "clientId": "208",
+    "nombre": "SOFIA GLADYS SALINAS"
+   },
+   {
+    "hora": "10:48",
+    "clientId": "207",
+    "nombre": "RUFRADAVIL S.R.L"
+   },
+   {
+    "hora": "11:03",
+    "clientId": "210",
+    "nombre": "Alfaro iraola Michel Darío"
+   },
+   {
+    "hora": "11:14",
+    "clientId": "213",
+    "nombre": "PEDRO ALBERTO MARTIN"
+   },
+   {
+    "hora": "11:19",
+    "clientId": "1135",
+    "nombre": "GABRIEL OMAR RIOS"
+   },
+   {
+    "hora": "11:29",
+    "clientId": "69",
+    "nombre": "EZEQUIEL LUCIANO RICART"
+   },
+   {
+    "hora": "11:38",
+    "clientId": "197",
+    "nombre": "MATHIEUR JOEL CARLOS"
+   },
+   {
+    "hora": "11:39",
+    "clientId": "215",
+    "nombre": "VERONICA ELIZABETH FLORES"
+   }
+  ],
+  "11": [
+   {
+    "hora": "08:59",
+    "clientId": "2033",
+    "nombre": "ARISTEO SRL"
+   },
+   {
+    "hora": "09:01",
+    "clientId": "1894",
+    "nombre": "SAILOR CHIPS SANTA CLARA S.A"
+   },
+   {
+    "hora": "09:02",
+    "clientId": "1796",
+    "nombre": "Fruticel touch s.r.l"
+   },
+   {
+    "hora": "09:05",
+    "clientId": "1086",
+    "nombre": "CREMONA SA"
+   },
+   {
+    "hora": "09:08",
+    "clientId": "1027",
+    "nombre": "Yan Wei"
+   },
+   {
+    "hora": "09:27",
+    "clientId": "1840",
+    "nombre": "TAMER FERNANDEZ GONZALO"
+   },
+   {
+    "hora": "09:31",
+    "clientId": "3926",
+    "nombre": "DIEGO ESTEBAN VILLAR"
+   },
+   {
+    "hora": "09:33",
+    "clientId": "280",
+    "nombre": "ROBERTO MANUEL STRASSERA"
+   },
+   {
+    "hora": "09:36",
+    "clientId": "726",
+    "nombre": "DAMBARMA SRL"
+   },
+   {
+    "hora": "09:36",
+    "clientId": "3156",
+    "nombre": "SERGIO GUSTAVO PROSPERO"
+   },
+   {
+    "hora": "09:40",
+    "clientId": "1653",
+    "nombre": "EZEQUIEL ALVAREZ MONKE"
+   },
+   {
+    "hora": "09:53",
+    "clientId": "1828",
+    "nombre": "BULACIO CINTIA PAOLA"
+   },
+   {
+    "hora": "09:56",
+    "clientId": "3431",
+    "nombre": "JULIAN ANTONINI"
+   },
+   {
+    "hora": "10:04",
+    "clientId": "1841",
+    "nombre": "TARETTO ESTELA ROSA"
+   },
+   {
+    "hora": "10:09",
+    "clientId": "1266",
+    "nombre": "MANSILLA HUGO"
+   },
+   {
+    "hora": "10:23",
+    "clientId": "1886",
+    "nombre": "URQUIZA ALMACEN DE BARRIO"
+   },
+   {
+    "hora": "10:24",
+    "clientId": "2977",
+    "nombre": "GONZALO BARCALA"
+   },
+   {
+    "hora": "10:25",
+    "clientId": "472",
+    "nombre": "JUAN EDUARDO CERCENZI"
+   },
+   {
+    "hora": "10:29",
+    "clientId": "1784",
+    "nombre": "APM CARNES SRL"
+   },
+   {
+    "hora": "10:31",
+    "clientId": "1781",
+    "nombre": "CHAJAMAR"
+   },
+   {
+    "hora": "10:38",
+    "clientId": "1225",
+    "nombre": "SARANDON ROBERTO"
+   },
+   {
+    "hora": "10:40",
+    "clientId": "3024",
+    "nombre": "MARIA ESTER CONTARINO"
+   },
+   {
+    "hora": "10:44",
+    "clientId": "2168",
+    "nombre": "EQUIVAR SANTIAGO LUCAS"
+   },
+   {
+    "hora": "10:45",
+    "clientId": "2110",
+    "nombre": "RODRIGUEZ CRISTIAN JUAN ALBERT"
+   },
+   {
+    "hora": "11:14",
+    "clientId": "1112",
+    "nombre": "XU XIUZHEN"
+   },
+   {
+    "hora": "11:48",
+    "clientId": "4241",
+    "nombre": "OPERADORA SAN JUAN S.A."
+   },
+   {
+    "hora": "11:52",
+    "clientId": "2549",
+    "nombre": "MAURICIO HORACIO GOMENZA"
+   },
+   {
+    "hora": "11:53",
+    "clientId": "1526",
+    "nombre": "MUCCI LEOPOLDO NAHUEL"
+   },
+   {
+    "hora": "11:55",
+    "clientId": "836",
+    "nombre": "ITALO NICOLAS GRAZIOSO"
+   }
+  ],
+  "10": [
+   {
+    "hora": "09:08",
+    "clientId": "1871",
+    "nombre": "GONZALEZ VIRGINIA CAROLINA"
+   },
+   {
+    "hora": "09:08",
+    "clientId": "1016",
+    "nombre": "TOLABA CHOQUE WILSON GABRIEL"
+   },
+   {
+    "hora": "09:08",
+    "clientId": "1312",
+    "nombre": "MANDAGARAN MATTA JOSE"
+   },
+   {
+    "hora": "09:08",
+    "clientId": "3317",
+    "nombre": "LEANDRO MAXIMILIANO ZUBIRIA"
+   },
+   {
+    "hora": "09:08",
+    "clientId": "1317",
+    "nombre": "VAZQUEZ GUADALUPE CECILIA"
+   },
+   {
+    "hora": "09:09",
+    "clientId": "3760",
+    "nombre": "NICADELO SA"
+   },
+   {
+    "hora": "09:09",
+    "clientId": "2022",
+    "nombre": "ANTONIO DI MEGLIO"
+   },
+   {
+    "hora": "09:09",
+    "clientId": "1936",
+    "nombre": "HERNANDEZ SEBASTIAN PABLO"
+   },
+   {
+    "hora": "09:10",
+    "clientId": "2443",
+    "nombre": "AMELIA CAROLINA ROSELLI"
+   },
+   {
+    "hora": "09:10",
+    "clientId": "1943",
+    "nombre": "GREGSAL GROUP SRL"
+   },
+   {
+    "hora": "09:10",
+    "clientId": "40",
+    "nombre": "PAÑALERA UNIVERSAL"
+   },
+   {
+    "hora": "09:10",
+    "clientId": "1457",
+    "nombre": "ESTEBAN GERMAN ALESSANDRINI"
+   },
+   {
+    "hora": "09:10",
+    "clientId": "3550",
+    "nombre": "ORELLANA JOSE LUIS"
+   },
+   {
+    "hora": "09:11",
+    "clientId": "3781",
+    "nombre": "Salcedo Fernando"
+   },
+   {
+    "hora": "09:11",
+    "clientId": "2355",
+    "nombre": "KAWSAY AYLLU S.A"
+   },
+   {
+    "hora": "09:11",
+    "clientId": "320",
+    "nombre": "BRANDO SOCIEDAD ANONIMA"
+   },
+   {
+    "hora": "09:11",
+    "clientId": "989",
+    "nombre": "Iron servicios sa"
+   },
+   {
+    "hora": "09:59",
+    "clientId": "4256",
+    "nombre": "JOEL JULIAN PAGLIONE"
+   },
+   {
+    "hora": "09:59",
+    "clientId": "94",
+    "nombre": "MARTINEZ JUAN PABLO Y BARRIOS MARTIN SOCIEDAD LEY"
+   },
+   {
+    "hora": "09:59",
+    "clientId": "2681",
+    "nombre": "MARINE GONZALEZ URQUIZA"
+   },
+   {
+    "hora": "10:01",
+    "clientId": "935",
+    "nombre": "YANXIA YANG"
+   },
+   {
+    "hora": "10:20",
+    "clientId": "4689",
+    "nombre": "GASPAR DÍAZ"
+   },
+   {
+    "hora": "10:42",
+    "clientId": "3357",
+    "nombre": "DIZ LUCAS GONZALO"
+   },
+   {
+    "hora": "10:59",
+    "clientId": "4904",
+    "nombre": "ELIANA CAROL IROS LEVRINO"
+   },
+   {
+    "hora": "11:23",
+    "clientId": "2944",
+    "nombre": "Viviana Monica Hernandez"
+   },
+   {
+    "hora": "11:30",
+    "clientId": "622",
+    "nombre": "Leila Abigail Sánchez"
+   },
+   {
+    "hora": "11:34",
+    "clientId": "789",
+    "nombre": "CAROLINA MARCELA VERBAUVEDE"
+   }
+  ],
+  "": [
+   {
+    "hora": "09:10",
+    "clientId": "4541",
+    "nombre": "CINTIA LORENA DAGANI"
+   },
+   {
+    "hora": "09:10",
+    "clientId": "2661",
+    "nombre": "BRANDO SOCIEDAD ANONIMA"
+   },
+   {
+    "hora": "09:19",
+    "clientId": "4695",
+    "nombre": "RIOS MATIAS ALEJANDRO"
+   },
+   {
+    "hora": "09:31",
+    "clientId": "11",
+    "nombre": "SAMUEL SUBY"
+   },
+   {
+    "hora": "09:58",
+    "clientId": "2926",
+    "nombre": "ROSA CECILIA NUÑEZ PAREDES"
+   },
+   {
+    "hora": "09:59",
+    "clientId": "4935",
+    "nombre": "SERGIO ASKER"
+   },
+   {
+    "hora": "10:31",
+    "clientId": "1470",
+    "nombre": "ZARAGOZA NELIDA ADELA"
+   }
+  ],
+  "5": [
+   {
+    "hora": "09:12",
+    "clientId": "2255",
+    "nombre": "BLANCO MARIA INES"
+   },
+   {
+    "hora": "09:16",
+    "clientId": "2594",
+    "nombre": "NANCY DORA IGLESIAS"
+   },
+   {
+    "hora": "09:18",
+    "clientId": "161",
+    "nombre": "ANDREA INES ALDERETE"
+   },
+   {
+    "hora": "09:28",
+    "clientId": "1442",
+    "nombre": "MULTIDEPORTES BRANDSEN Y DORREGO S A"
+   },
+   {
+    "hora": "09:36",
+    "clientId": "1520",
+    "nombre": "SUPER CONSTITUCION S.A EN FORMACION"
+   },
+   {
+    "hora": "09:42",
+    "clientId": "3441",
+    "nombre": "CASERO AGUSTINA"
+   },
+   {
+    "hora": "09:46",
+    "clientId": "847",
+    "nombre": "LOS PINARES GRANJA Y ROTISERIA SRL"
+   },
+   {
+    "hora": "10:02",
+    "clientId": "1552",
+    "nombre": "Lago alejandro esteban"
+   },
+   {
+    "hora": "10:20",
+    "clientId": "799",
+    "nombre": "SONG CHEN"
+   },
+   {
+    "hora": "10:48",
+    "clientId": "3083",
+    "nombre": "MARTINEZ NAIMID ANUSCH"
+   },
+   {
+    "hora": "10:51",
+    "clientId": "834",
+    "nombre": "MARIA EUGENIA FIGUEROA AGUILAR"
+   },
+   {
+    "hora": "10:55",
+    "clientId": "2784",
+    "nombre": "BRIAN EMMANUEL WAGNER"
+   },
+   {
+    "hora": "11:00",
+    "clientId": "835",
+    "nombre": "PERLA CRISTINA PERALTA"
+   },
+   {
+    "hora": "11:06",
+    "clientId": "961",
+    "nombre": "OPPEDISANO ARTURO MIGUEL"
+   },
+   {
+    "hora": "11:33",
+    "clientId": "3793",
+    "nombre": "RUBEN ALEJANDRO MARTORELL VALLADARES"
+   },
+   {
+    "hora": "11:36",
+    "clientId": "3074",
+    "nombre": "MARIA AMANCAY LEDESMA TORRES"
+   },
+   {
+    "hora": "11:39",
+    "clientId": "3299",
+    "nombre": "Scandali luchetti micaela sol"
+   },
+   {
+    "hora": "11:47",
+    "clientId": "624",
+    "nombre": "ETHEL GRACIELA BLANCO"
+   },
+   {
+    "hora": "11:49",
+    "clientId": "3730",
+    "nombre": "FLY FOOD SA"
+   }
+  ],
+  "12": [
+   {
+    "hora": "09:19",
+    "clientId": "1235",
+    "nombre": "MARTINEZ PABLO ENRIQUE"
+   },
+   {
+    "hora": "09:19",
+    "clientId": "2476",
+    "nombre": "HECTOR OMAR BOMBINO"
+   },
+   {
+    "hora": "09:19",
+    "clientId": "1697",
+    "nombre": "EMILIANO ORLOV"
+   },
+   {
+    "hora": "09:19",
+    "clientId": "1009",
+    "nombre": "XIAO YAN"
+   },
+   {
+    "hora": "09:20",
+    "clientId": "4292",
+    "nombre": "SERGIO ANDRES VENTURA"
+   },
+   {
+    "hora": "09:20",
+    "clientId": "1332",
+    "nombre": "FRUTICEL TOUCH S.R.L."
+   },
+   {
+    "hora": "09:20",
+    "clientId": "1722",
+    "nombre": "RUBEN OSCAR ROMERO"
+   },
+   {
+    "hora": "09:20",
+    "clientId": "1042",
+    "nombre": "CREMONA SA"
+   },
+   {
+    "hora": "09:29",
+    "clientId": "1882",
+    "nombre": "BALLESTEROS SERGIO GABRIEL"
+   },
+   {
+    "hora": "09:34",
+    "clientId": "1334",
+    "nombre": "FRUTICEL TOUCH S.R.L."
+   },
+   {
+    "hora": "09:35",
+    "clientId": "1018",
+    "nombre": "IGLESIAS PAMELA"
+   },
+   {
+    "hora": "09:48",
+    "clientId": "1714",
+    "nombre": "fruticel touch srl"
+   },
+   {
+    "hora": "09:48",
+    "clientId": "1336",
+    "nombre": "MARINO GABRIEL ALEJANDRO"
+   },
+   {
+    "hora": "09:48",
+    "clientId": "4915",
+    "nombre": "Telechea Lucas Leandro"
+   },
+   {
+    "hora": "09:49",
+    "clientId": "1324",
+    "nombre": "Locaba polirrubro S.A"
+   },
+   {
+    "hora": "10:08",
+    "clientId": "610",
+    "nombre": "GABRIELA COLELLO"
+   },
+   {
+    "hora": "10:19",
+    "clientId": "1067",
+    "nombre": "ZHUANG CAIQIANG"
+   },
+   {
+    "hora": "10:41",
+    "clientId": "2047",
+    "nombre": "RAMOS ELBA"
+   },
+   {
+    "hora": "11:16",
+    "clientId": "1466",
+    "nombre": "LODOLA CARLOS JESUS"
+   },
+   {
+    "hora": "11:25",
+    "clientId": "1062",
+    "nombre": "BATTISTESSA KARINA"
+   },
+   {
+    "hora": "11:26",
+    "clientId": "482",
+    "nombre": "BAOHONG HE"
+   },
+   {
+    "hora": "11:46",
+    "clientId": "2342",
+    "nombre": "CANELA DELI MR SRL"
+   },
+   {
+    "hora": "11:46",
+    "clientId": "791",
+    "nombre": "ROMINA GISELE VERA"
+   },
+   {
+    "hora": "11:57",
+    "clientId": "321",
+    "nombre": "STELLA MARIS GARRIDO"
+   },
+   {
+    "hora": "11:57",
+    "clientId": "133",
+    "nombre": "VALERIA FERNANDA SPAGNA"
+   }
+  ],
+  "1": [
+   {
+    "hora": "09:31",
+    "clientId": "3125",
+    "nombre": "ROBERTO EMANUEL VALOR LIZARRAGA"
+   },
+   {
+    "hora": "09:31",
+    "clientId": "2754",
+    "nombre": "KIOSMDQ"
+   },
+   {
+    "hora": "09:33",
+    "clientId": "1762",
+    "nombre": "SUAREZ CRISTINA ALEJANDRA"
+   },
+   {
+    "hora": "09:36",
+    "clientId": "1123",
+    "nombre": "PARRA FERNANDO MATIAS"
+   },
+   {
+    "hora": "09:46",
+    "clientId": "3247",
+    "nombre": "MARIA JOSE CHERU"
+   },
+   {
+    "hora": "09:46",
+    "clientId": "1582",
+    "nombre": "KIOSMDQ"
+   },
+   {
+    "hora": "09:50",
+    "clientId": "3746",
+    "nombre": "FRUTICEL TOUCH S.R.L."
+   },
+   {
+    "hora": "09:52",
+    "clientId": "2632",
+    "nombre": "ZURITA RODOLFO OSCAR"
+   },
+   {
+    "hora": "09:53",
+    "clientId": "2197",
+    "nombre": "ORLANDO NATALIA VERONICA"
+   },
+   {
+    "hora": "09:54",
+    "clientId": "2415",
+    "nombre": "FRUTICEL TOUCH S.R.L."
+   },
+   {
+    "hora": "09:55",
+    "clientId": "275",
+    "nombre": "SQUILLACE RUBEN"
+   },
+   {
+    "hora": "10:03",
+    "clientId": "2411",
+    "nombre": "NICADELO SA"
+   },
+   {
+    "hora": "10:15",
+    "clientId": "2199",
+    "nombre": "SQUILLACE RUBEN"
+   },
+   {
+    "hora": "10:25",
+    "clientId": "1960",
+    "nombre": "FERREIRA PAZ MANUEL"
+   },
+   {
+    "hora": "10:26",
+    "clientId": "4577",
+    "nombre": "RAUL NORBERTO EMILIO"
+   },
+   {
+    "hora": "10:27",
+    "clientId": "2200",
+    "nombre": "THUMM LAURA MARIANA"
+   },
+   {
+    "hora": "10:35",
+    "clientId": "1921",
+    "nombre": "FRANCUCCI MARIA ELENA"
+   },
+   {
+    "hora": "10:46",
+    "clientId": "1962",
+    "nombre": "LA COSTA MDQ MINIMERCADOS"
+   },
+   {
+    "hora": "11:13",
+    "clientId": "715",
+    "nombre": "YAGO LEONEL CORRIZO"
+   },
+   {
+    "hora": "11:29",
+    "clientId": "1189",
+    "nombre": "YAN GUOLE"
+   },
+   {
+    "hora": "11:31",
+    "clientId": "1916",
+    "nombre": "CHRISTENSEN MARTIN FERNANDO"
+   },
+   {
+    "hora": "11:32",
+    "clientId": "4937",
+    "nombre": "STEFANIA ANGELA CARROZZI"
+   },
+   {
+    "hora": "11:36",
+    "clientId": "1361",
+    "nombre": "GUTIERREZ ADRIAN FEDERICO"
+   },
+   {
+    "hora": "11:38",
+    "clientId": "1261",
+    "nombre": "GONZALEZ ROSANA EVA"
+   },
+   {
+    "hora": "11:41",
+    "clientId": "3748",
+    "nombre": "MALDARA S.A."
+   },
+   {
+    "hora": "11:42",
+    "clientId": "1471",
+    "nombre": "Del Prado Marisa Ester"
+   },
+   {
+    "hora": "11:53",
+    "clientId": "1922",
+    "nombre": "SPOSATO ARIEL GUSTAVO"
+   },
+   {
+    "hora": "11:55",
+    "clientId": "893",
+    "nombre": "Rocio De mar"
+   }
+  ],
+  "4": [
+   {
+    "hora": "09:57",
+    "clientId": "1932",
+    "nombre": "BRAIAN EMANUEL FERNANDEZ"
+   },
+   {
+    "hora": "09:58",
+    "clientId": "1473",
+    "nombre": "TELLO ROBERTO DANIEL"
+   },
+   {
+    "hora": "10:09",
+    "clientId": "278",
+    "nombre": "JUAN CARLOS MACHADO"
+   },
+   {
+    "hora": "10:16",
+    "clientId": "783",
+    "nombre": "FABIAN ENRIQUE LATORRE"
+   },
+   {
+    "hora": "10:27",
+    "clientId": "1179",
+    "nombre": "SILVIA TERESITA ALSINA"
+   },
+   {
+    "hora": "10:45",
+    "clientId": "3169",
+    "nombre": "ALEJANDRA NOEMI ZAMORA"
+   },
+   {
+    "hora": "11:04",
+    "clientId": "1752",
+    "nombre": "CLAUDIA ANDREA GONZALEZ"
+   },
+   {
+    "hora": "11:06",
+    "clientId": "3053",
+    "nombre": "KARINA EDITH OLMO"
+   },
+   {
+    "hora": "11:18",
+    "clientId": "3161",
+    "nombre": "MARIA JOSE GARCIA"
+   },
+   {
+    "hora": "11:21",
+    "clientId": "112",
+    "nombre": "ENRIQUE GUILLERMO LEYES"
+   },
+   {
+    "hora": "11:25",
+    "clientId": "3142",
+    "nombre": "LIDIA SUSANA CORRADO"
+   }
+  ]
+ },
+ "cobertura": [
+  {
+   "sellerId": "1",
+   "vendedor": "Maria Noelia Madia",
+   "ruta": 28,
+   "visitadosDeRuta": 23,
+   "pendientes": 5,
+   "fueraDeRuta": 4,
+   "pct": 82.1
+  },
+  {
+   "sellerId": "11",
+   "vendedor": "Melanie Larrama",
+   "ruta": 37,
+   "visitadosDeRuta": 24,
+   "pendientes": 13,
+   "fueraDeRuta": 5,
+   "pct": 64.9
+  },
+  {
+   "sellerId": "7",
+   "vendedor": "Ramiro Rando",
+   "ruta": 38,
+   "visitadosDeRuta": 21,
+   "pendientes": 17,
+   "fueraDeRuta": 1,
+   "pct": 55.3
+  },
+  {
+   "sellerId": "12",
+   "vendedor": "Agustin Pogorzelski",
+   "ruta": 33,
+   "visitadosDeRuta": 18,
+   "pendientes": 15,
+   "fueraDeRuta": 7,
+   "pct": 54.5
+  },
+  {
+   "sellerId": "5",
+   "vendedor": "Nicolas Martinez",
+   "ruta": 39,
+   "visitadosDeRuta": 18,
+   "pendientes": 21,
+   "fueraDeRuta": 1,
+   "pct": 46.2
+  },
+  {
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "ruta": 43,
+   "visitadosDeRuta": 11,
+   "pendientes": 32,
+   "fueraDeRuta": 0,
+   "pct": 25.6
+  },
+  {
+   "sellerId": "10",
+   "vendedor": "Matias Parada",
+   "ruta": 42,
+   "visitadosDeRuta": 7,
+   "pendientes": 35,
+   "fueraDeRuta": 20,
+   "pct": 16.7
+  },
+  {
+   "sellerId": "2",
+   "vendedor": "Julian NuÃ±ez",
+   "ruta": 40,
+   "visitadosDeRuta": 0,
+   "pendientes": 40,
+   "fueraDeRuta": 0,
+   "pct": 0.0
+  },
+  {
+   "sellerId": "20",
+   "vendedor": "Deposito",
+   "ruta": 0,
+   "visitadosDeRuta": 0,
+   "pendientes": 0,
+   "fueraDeRuta": 0,
+   "pct": null
+  },
+  {
+   "sellerId": "3",
+   "vendedor": "Ezequiel Hack",
+   "ruta": 42,
+   "visitadosDeRuta": 0,
+   "pendientes": 42,
+   "fueraDeRuta": 0,
+   "pct": 0.0
+  },
+  {
+   "sellerId": "30",
+   "vendedor": "Agostina Gauna",
+   "ruta": 33,
+   "visitadosDeRuta": 0,
+   "pendientes": 33,
+   "fueraDeRuta": 0,
+   "pct": 0.0
+  },
+  {
+   "sellerId": "31",
+   "vendedor": "FLOR",
+   "ruta": 21,
+   "visitadosDeRuta": 0,
+   "pendientes": 21,
+   "fueraDeRuta": 0,
+   "pct": 0.0
+  },
+  {
+   "sellerId": "33",
+   "vendedor": "Jonathan Capetola",
+   "ruta": 2,
+   "visitadosDeRuta": 0,
+   "pendientes": 2,
+   "fueraDeRuta": 0,
+   "pct": 0.0
+  },
+  {
+   "sellerId": "6",
+   "vendedor": "Camila Martinez",
+   "ruta": 41,
+   "visitadosDeRuta": 0,
+   "pendientes": 41,
+   "fueraDeRuta": 0,
+   "pct": 0.0
+  },
+  {
+   "sellerId": "8",
+   "vendedor": "Martinica Rodriguez",
+   "ruta": 50,
+   "visitadosDeRuta": 0,
+   "pendientes": 50,
+   "fueraDeRuta": 0,
+   "pct": 0.0
+  },
+  {
+   "sellerId": "80",
+   "vendedor": "a",
+   "ruta": 6,
+   "visitadosDeRuta": 0,
+   "pendientes": 6,
+   "fueraDeRuta": 0,
+   "pct": 0.0
+  },
+  {
+   "sellerId": "9",
+   "vendedor": "Ludmila Aylen Martinez",
+   "ruta": 37,
+   "visitadosDeRuta": 0,
+   "pendientes": 37,
+   "fueraDeRuta": 0,
+   "pct": 0.0
+  }
+ ],
+ "pendientes": {
+  "1": [
+   {
+    "clientId": "1360",
+    "nombre": "ODACREMERCADO S.R.L EN FORMACION",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1564",
+    "nombre": "Guillermo Román Gonzalez",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1919",
+    "nombre": "Mainmenu Gastronomía S.A",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1920",
+    "nombre": "MOISES ERICA BEATRIZ",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "893",
+    "nombre": "Rocio De mar",
+    "localidad": "Mar del Plata"
+   }
+  ],
+  "10": [
+   {
+    "clientId": "1353",
+    "nombre": "Canteros Dylan Emiliano",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "1557",
+    "nombre": "DAIANA DE LOS ANGELES HERRERA",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "1706",
+    "nombre": "MARCOS SEBASTIAN RAMUNDO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1854",
+    "nombre": "Marta Lucia Vega",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "1913",
+    "nombre": "VERA MARGARITA ELISABETH",
+    "localidad": "SANTA CLARA DEL MAR"
+   },
+   {
+    "clientId": "1974",
+    "nombre": "CAJAL NAZARENO JESUS",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "1979",
+    "nombre": "CARDONA DORA NOEMÍ",
+    "localidad": "Santa Clara del Mar"
+   },
+   {
+    "clientId": "1985",
+    "nombre": "SOSA ROMINA NATALIA",
+    "localidad": "SANTA ELENA"
+   },
+   {
+    "clientId": "2014",
+    "nombre": "CARDONA DORA NOEMI",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "2597",
+    "nombre": "SERGIO ARIEL REKOFSKI",
+    "localidad": "SANTA CLARA DEL MAR"
+   },
+   {
+    "clientId": "2727",
+    "nombre": "MARQUINEZ Y OJEDA S.A",
+    "localidad": "SANTA CLARA DEL MAR"
+   },
+   {
+    "clientId": "2940",
+    "nombre": "San Cayetano",
+    "localidad": "SANTA ELENA"
+   },
+   {
+    "clientId": "2991",
+    "nombre": "Super Tejedor N 2631 S.r.l.",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3039",
+    "nombre": "OLGA LEONOR DE LA CRUZ",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3044",
+    "nombre": "MARIA DEL CARMEN ALCORTA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3096",
+    "nombre": "MAILEN NATALY LEIS",
+    "localidad": "SANTA CLARA DEL MAR"
+   },
+   {
+    "clientId": "3167",
+    "nombre": "JOSE ARNALDO MEDINA",
+    "localidad": "CAMET"
+   },
+   {
+    "clientId": "3509",
+    "nombre": "DELIA SILVINA ALBORNOZ",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3807",
+    "nombre": "LUCAS ANTONIO IGLESIAS",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4175",
+    "nombre": "RAUL ANDRES LIVIO",
+    "localidad": "MAR DEL PLATA NORTE"
+   },
+   {
+    "clientId": "4974",
+    "nombre": "SEBASTIAN ELIAS BIANCOLIN",
+    "localidad": "SANTA CLARA DEL MAR"
+   },
+   {
+    "clientId": "4994",
+    "nombre": "CENTRAL POLIRUBRO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "607",
+    "nombre": "ARES MARTIN MATIAS",
+    "localidad": "SANTA CLARA DEL MAR"
+   },
+   {
+    "clientId": "609",
+    "nombre": "LORENA SANTILLAN",
+    "localidad": "SANTA ELENA"
+   },
+   {
+    "clientId": "627",
+    "nombre": "PAREDES ATILIO ALFREDO",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "628",
+    "nombre": "ROSA ESTELA ROBLES RODRIGUEZ",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "632",
+    "nombre": "CASTILLO ULADISLAO",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "638",
+    "nombre": "FAUSTO ALBERTO DARGUIBEL",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "641",
+    "nombre": "MANNINI VIVIANA MARISA",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "674",
+    "nombre": "LAS PALMERAS",
+    "localidad": "SANTA CLARA DEL MAR"
+   },
+   {
+    "clientId": "690",
+    "nombre": "Autoservicio abril y Maria",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "692",
+    "nombre": "REKOFSKI SERGIO ARIEL",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "80",
+    "nombre": "CR 88 Santa Clara",
+    "localidad": "SANTA CLARA DEL MAR"
+   },
+   {
+    "clientId": "829",
+    "nombre": "JORGE FLORENCIO OJEDA",
+    "localidad": "SANTA CLARA DEL MAR"
+   },
+   {
+    "clientId": "938",
+    "nombre": "MARIA LAURA SERRAO",
+    "localidad": "CAMET"
+   }
+  ],
+  "11": [
+   {
+    "clientId": "1110",
+    "nombre": "RODRIGUEZ CRISTIAN JUAN ALBERT",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1224",
+    "nombre": "ROUSSELOT GUILLERMO DANIEL",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1398",
+    "nombre": "Gastronomía Moma Mdp SA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1416",
+    "nombre": "VANNELLI MARIA GINA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1451",
+    "nombre": "ESPINOSA FEDERICO MANUEL",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "1829",
+    "nombre": "CAMOIRA CARLOS ALBERTO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1958",
+    "nombre": "Medina Claudio",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2010",
+    "nombre": "Bianca Izurieta cisneros",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "2011",
+    "nombre": "BIANCA IZURIETA CISNEROS",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "3307",
+    "nombre": "CHOCOCHIA S.A.",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3324",
+    "nombre": "Ezequiel Leandro Martinez",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4655",
+    "nombre": "Mónica Mabel Aznar",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "933",
+    "nombre": "ROMINA SOLANGE ARRANZ",
+    "localidad": "MAR DEL PLATA"
+   }
+  ],
+  "12": [
+   {
+    "clientId": "1174",
+    "nombre": "SERVICIOS LUARCA SA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1462",
+    "nombre": "HE WEI",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1926",
+    "nombre": "AXIÓN TRAVEL SOCIEDAD DE RES",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "2041",
+    "nombre": "HERNANDEZ MONICA PATRICIA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2042",
+    "nombre": "ARISTEO SRL",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2135",
+    "nombre": "Benítez mauricio",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2249",
+    "nombre": "CINTIA PATRICIA VIDELA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2812",
+    "nombre": "MARIA FERNANDA NAZAR",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2824",
+    "nombre": "GUIDO GERMAN GONZALEZ MOYANO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2866",
+    "nombre": "MARIA GUADALUPE PAVON",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3106",
+    "nombre": "Marlo Romel García Limaylla",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4184",
+    "nombre": "MARCIANO MARIA ADELINA",
+    "localidad": "MAR DEL PLATA NORTE"
+   },
+   {
+    "clientId": "4442",
+    "nombre": "WALTER SEBASTIAN LAZ",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4465",
+    "nombre": "DANIEL GUSTAVO GARCIA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "846",
+    "nombre": "CRISTINA DE LOS ANGELES FELICES",
+    "localidad": "MAR DEL PLATA"
+   }
+  ],
+  "2": [
+   {
+    "clientId": "1028",
+    "nombre": "ALIENDE MAURICIO JAVIER",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1032",
+    "nombre": "MARTINEZ ARISPE MARCOS DAMIAN",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1033",
+    "nombre": "MATTERA GABRIEL VERONICA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1051",
+    "nombre": "XU HONGHONG",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1108",
+    "nombre": "JIANG QING",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1279",
+    "nombre": "DELSARTE NIDIA ELENA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1282",
+    "nombre": "GONZALEZ DOGLIOTTI MONICA MARI",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1283",
+    "nombre": "LocabaPolirrubros S.A",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1366",
+    "nombre": "CORREA DIEGO RAFAEL",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1368",
+    "nombre": "FERNANDEZ PABLO MARTIN",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1371",
+    "nombre": "GRUPO ADAPTAR S.A",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1372",
+    "nombre": "EL CALAMAR LOCO S.A",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1375",
+    "nombre": "LIZASO MARCOS NAHUEL",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1376",
+    "nombre": "Alejandra Valenzuela",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1379",
+    "nombre": "OSUNA SRL",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1395",
+    "nombre": "CARABAJAL GUSTAVO DAVID",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1508",
+    "nombre": "GALELLA OSCAR ELIAS",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1652",
+    "nombre": "PALAMARA CLAUDIO FABIAN",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1844",
+    "nombre": "CALVINO RICARDO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1847",
+    "nombre": "GUARDAMAGNA ALEJANDRO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1850",
+    "nombre": "NICOLAS BONANNI",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1927",
+    "nombre": "LUCAS MARTIN BRAVO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1928",
+    "nombre": "GOUMARD SRL",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2480",
+    "nombre": "MDP COSTEHER S.A.",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2502",
+    "nombre": "MYRIAM ASTAITA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2519",
+    "nombre": "PRAISOLO S.A.",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2643",
+    "nombre": "DUVAL ST ALMACEN SRL",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2645",
+    "nombre": "ETHEL ANGELICA LAZZARO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2695",
+    "nombre": "NUNOMARKET S.R.L EN FORMACION",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2719",
+    "nombre": "INTEGRACION TURISTICA HOTELERA SA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2735",
+    "nombre": "NICADELO SA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2999",
+    "nombre": "ANIDO CRISTIAN MIGUEL",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3316",
+    "nombre": "ARISTEO S.R.L.",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4279",
+    "nombre": "MARIANO JORGE TEGLI",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4309",
+    "nombre": "AGÜERO AGUSTIN ENZO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4386",
+    "nombre": "CHEGGFIELD SOCIEDAD ANÓNIMA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4567",
+    "nombre": "INNOVACIONES SUREÑAS S.A.S.",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "683",
+    "nombre": "Reynoso Marcelo Gabriel",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "843",
+    "nombre": "JUROMINAN Y ASOCIADOS S.A",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "993",
+    "nombre": "JOSE ALBERTO D AMATO",
+    "localidad": "MAR DEL PLATA"
+   }
+  ],
+  "20": [],
+  "3": [
+   {
+    "clientId": "1132",
+    "nombre": "MONTES MARIA ALEJANDRA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1133",
+    "nombre": "AGUIRRE AGATA AYELEN",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1137",
+    "nombre": "COPPOLA ANTONIO Y VICTORIO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1138",
+    "nombre": "CREMONA SA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1172",
+    "nombre": "Carla Fernández",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "1183",
+    "nombre": "EDISON GAS SA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1690",
+    "nombre": "CANDIA ERID FRANCISCO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1698",
+    "nombre": "MANZANEL DEBORA SOLEDAD",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1699",
+    "nombre": "PAPPARELLA PABLO HORACIO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1786",
+    "nombre": "clemente Néstor rodolfo",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "1863",
+    "nombre": "KECZELI LEONELA FERNANDA",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "2086",
+    "nombre": "DONCAJULU SA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2163",
+    "nombre": "NI ZHENGWANG",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2188",
+    "nombre": "Silvina Paola Pino",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2228",
+    "nombre": "CANDIA GLADYS ZUNILDA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2233",
+    "nombre": "NI YOUYONG",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2243",
+    "nombre": "PISCONTE GUERRERO PERCY JESHEN",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2659",
+    "nombre": "WEI WANG",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2823",
+    "nombre": "ANDREA NOEMI MAO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2861",
+    "nombre": "Mega distribuciones Junqueras S.A",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "287",
+    "nombre": "LEONARDO ARON FICHMAN",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2966",
+    "nombre": "DUARTE LEANDRO MATIAS",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2971",
+    "nombre": "Neisa Lorena Soliz Gómez",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3005",
+    "nombre": "SILVANA LORENA GIBOUDOT",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3303",
+    "nombre": "HECTOR ADRIAN LEITAO VASCO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3466",
+    "nombre": "JULIO MAXIMILIANO GEREZ",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3987",
+    "nombre": "MAX FRUTAS",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "423",
+    "nombre": "AJ FAZZAL SRL",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "4516",
+    "nombre": "NORMA MENDEZ PERDOMO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "488",
+    "nombre": "MIRIAM ANTUNEZ",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "489",
+    "nombre": "FERNANDEZ MARIA VICTORIA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "491",
+    "nombre": "Carlos Rodriguez",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "497",
+    "nombre": "JORGE FILOMENI",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "520",
+    "nombre": "DOMINGO RUFINO ALTERINO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "577",
+    "nombre": "DI SCALA FERNANDO ARIEL",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "612",
+    "nombre": "PASEO DE COMPRAS",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "737",
+    "nombre": "RUBEN DARIO RAGGIO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "743",
+    "nombre": "AGAPE POLIRRUBRO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "752",
+    "nombre": "ARIE SLAVEN",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "757",
+    "nombre": "FERA JUAN",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "778",
+    "nombre": "ALCOBA RODOLFO TEOFILO",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "837",
+    "nombre": "Arevalo María Florencia",
+    "localidad": "Mar del Plata"
+   }
+  ],
+  "30": [
+   {
+    "clientId": "1037",
+    "nombre": "WEI LIJIAO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1047",
+    "nombre": "MONTERO DACIO HILARIO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1150",
+    "nombre": "CAI XIAOQING",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1186",
+    "nombre": "LAPRIMARDEL FULL S.R.L",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1410",
+    "nombre": "Paola Andrea Denegri",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "1746",
+    "nombre": "GRIMALDI JEREMIAS DAVID",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1757",
+    "nombre": "VALDEZ NATALIA GABRIELA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1861",
+    "nombre": "REYES MARIA ROSA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1991",
+    "nombre": "DI NAPOLI PEDRO GABRIEL",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1997",
+    "nombre": "MAJUL VILCHES YAMIL DAMIAN",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "211",
+    "nombre": "Baohua huang",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "2310",
+    "nombre": "ALVAREZ PABLO FRANCISCO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2316",
+    "nombre": "FERNANDEZ GUSTAVO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2318",
+    "nombre": "AINARA YAEL BALDINI",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2319",
+    "nombre": "GAYO FEITO JOSE ENRIQUE",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2330",
+    "nombre": "COMERCIAL FRUTIHORTICOLA DEL NORDESTE SRL",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2563",
+    "nombre": "CARINA GABRIELA PORTA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2586",
+    "nombre": "LUCA MAXIMILIANO SARASINO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2993",
+    "nombre": "PIARAN MAS SRL",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3331",
+    "nombre": "RICARDO CARMELO MINNI",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3901",
+    "nombre": "MANUEL ARONI FARFAN",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3953",
+    "nombre": "JUAN NIVER ROJAS UCHARIMA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3995",
+    "nombre": "MARTIN ALEJANDRO LACOSTA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4034",
+    "nombre": "MARIELA CECILIA RUAU",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "41",
+    "nombre": "GIMENEZ, ROXANA SILVINA",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "4118",
+    "nombre": "FERNANDO DANIEL VIANO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4335",
+    "nombre": "KIOSMDQ",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4350",
+    "nombre": "ADRIANA SELL",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4351",
+    "nombre": "MARIA ISABEL GODOY",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4964",
+    "nombre": "MARIA BELEN GALANES",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "602",
+    "nombre": "CHOCOCHIA S.A.",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "667",
+    "nombre": "FERNANDEZ OSCAR JAIME",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "955",
+    "nombre": "SARCO DANIELA",
+    "localidad": "MAR DEL PLATA"
+   }
+  ],
+  "31": [
+   {
+    "clientId": "1185",
+    "nombre": "JARA LUIS HORACIO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1655",
+    "nombre": "Sofía Renata Martínez",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "1677",
+    "nombre": "Vergara Nicolás",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "1699",
+    "nombre": "PAPPARELLA PABLO HORACIO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2233",
+    "nombre": "NI YOUYONG",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2240",
+    "nombre": "Zheng airu",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2929",
+    "nombre": "LOS CARLITOS",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3466",
+    "nombre": "JULIO MAXIMILIANO GEREZ",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3866",
+    "nombre": "MARGARITA MABEL CUERVO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3921",
+    "nombre": "CAMILA SOLEDAD NAVARRO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3987",
+    "nombre": "MAX FRUTAS",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4000",
+    "nombre": "NATALIA ELIZABETH ALARCON",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "401",
+    "nombre": "JAQUELINE BASILE",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "4041",
+    "nombre": "BETTINA OGAR",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4153",
+    "nombre": "MARIA VICTORIA DI MASSA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4205",
+    "nombre": "JORGE FILOMENI",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4352",
+    "nombre": "MESSINA ROSANA MARCELA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4620",
+    "nombre": "GONEZZA S.A",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4944",
+    "nombre": "MARIA LAURA MIGUEL",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "801",
+    "nombre": "MARIA NATALIA VILLANUEVA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "964",
+    "nombre": "CRISTINA BEATRIZ MORENO",
+    "localidad": "MAR DEL PLATA"
+   }
+  ],
+  "33": [
+   {
+    "clientId": "3324",
+    "nombre": "Ezequiel Leandro Martinez",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4481",
+    "nombre": "el abasto",
+    "localidad": "MIRAMAR"
+   }
+  ],
+  "4": [
+   {
+    "clientId": "1008",
+    "nombre": "CHEN QIANG",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1163",
+    "nombre": "LALLI GLADYS ESTER",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1237",
+    "nombre": "PARADISO MARIO HORACIO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1265",
+    "nombre": "XIAOQIANG CHEN",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "1529",
+    "nombre": "@1991 GROUP",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1718",
+    "nombre": "MARILE MARISA NOELIA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1808",
+    "nombre": "MURRO MATIAS MARTIN",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1881",
+    "nombre": "NICOLAS JUAREZ",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "2116",
+    "nombre": "BARRAGAN JUAN CARLOS",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2177",
+    "nombre": "SALINAS ZAMORANO FACUNDO EMANUEL",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2292",
+    "nombre": "Burcaizea Yamila Micaela",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2304",
+    "nombre": "RUBIO GONZALO JAVIER",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2392",
+    "nombre": "CORRADO LIDIA SUSANA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2495",
+    "nombre": "SUPER NI BENJAMIN S.A. EN FORMACION",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2554",
+    "nombre": "JOSE LUIS MANEIRO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2573",
+    "nombre": "ZAMUDIO JUAN CARLOS",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2576",
+    "nombre": "María Teresa correa",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3351",
+    "nombre": "Iuffrida Claudia Carmen Adelina",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3403",
+    "nombre": "ALAN AGUSTIN FERRANTE",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3886",
+    "nombre": "LOS CHICOS",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3915",
+    "nombre": "DAIANA MAGALYS VASQUEZ",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3967",
+    "nombre": "ROSSI FEDERICO NICOLÁS",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3972",
+    "nombre": "CAIYAN CHEN",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4362",
+    "nombre": "GABRIELA EUGENIA CALLERO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4514",
+    "nombre": "ROBERTO MARCIAL FERNANDEZ",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4713",
+    "nombre": "PABLO SERGIO SEDARES",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "596",
+    "nombre": "HE LIQUIN",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "695",
+    "nombre": "REYES GUILLERMO PABLO Y STAMPELLA MARIA GUILLERMINA S. CAP I SECC IV",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "753",
+    "nombre": "RUBEN OMAR PUCCIA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "754",
+    "nombre": "CARULLO DAIANA SOLANGE",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "770",
+    "nombre": "LAURA ELISABETH LAZZARO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "99",
+    "nombre": "Aimei Mao",
+    "localidad": "MAR DEL PLATA"
+   }
+  ],
+  "5": [
+   {
+    "clientId": "1167",
+    "nombre": "SERVICIOS LUARCA SA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1381",
+    "nombre": "LLANOS LANDEO CAMILA ALDANA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "156",
+    "nombre": "Yulisa Jaquelina Sosa",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "157",
+    "nombre": "FRANCO GABRIEL RIOS",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "1702",
+    "nombre": "CECILIA ISSA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2115",
+    "nombre": "LUIS PAULO TOMAS",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2840",
+    "nombre": "Matías Ruiz",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3147",
+    "nombre": "ALFCAR DELMAR SRL EN FORMACION",
+    "localidad": "SANTA CLARA DEL MAR"
+   },
+   {
+    "clientId": "3333",
+    "nombre": "EMMANUEL OSCAR PALMIERI",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3401",
+    "nombre": "SANDRA LILIANA BANEGAS",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3725",
+    "nombre": "Mario Ezequiel Echeverria",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3755",
+    "nombre": "GRAND NEZ S. A.",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3815",
+    "nombre": "AROHA ARGENTINA S.A.",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3910",
+    "nombre": "JUAN DOMINGO OJEDA",
+    "localidad": "CAMET"
+   },
+   {
+    "clientId": "4294",
+    "nombre": "MARINA TERESA MACIEL",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "473",
+    "nombre": "JORGE OSCAR GARCIA BARROSO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "475",
+    "nombre": "LUCIA ANGELA DE GENNARO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "476",
+    "nombre": "GABRIELA LORENA PAREDES",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "5029",
+    "nombre": "CROSA ALEJANDRO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "696",
+    "nombre": "GUSTAVO ALEJANDRO PUCHETA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "794",
+    "nombre": "Beatriz Paulina Zemborain",
+    "localidad": "MAR DEL PLATA"
+   }
+  ],
+  "6": [
+   {
+    "clientId": "1068",
+    "nombre": "VARGAS JUAN JOSE",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1345",
+    "nombre": "FRESH FOOD MARPLATENSE",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1347",
+    "nombre": "CIGANDA DARIO ANTONIO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1351",
+    "nombre": "MATO MANUEL",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1354",
+    "nombre": "PERUCHENA MARIA VIRGINIA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1357",
+    "nombre": "Deluca Franco Martin",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1359",
+    "nombre": "VELTRI EUGENIO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1385",
+    "nombre": "ARISTEO SRL",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1393",
+    "nombre": "VISONE MONICA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1477",
+    "nombre": "FRUTICEL TOUCH S.R.L.",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1478",
+    "nombre": "GARCIA LETICIA PAULA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1481",
+    "nombre": "NATALIO TURANO MERCEDES GABRIE",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1733",
+    "nombre": "SUSANA ELVIRA NORBERTO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1827",
+    "nombre": "BIOCCA MARCELO ELISEO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1902",
+    "nombre": "CREMONA SA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1905",
+    "nombre": "LA PETTY SEGUNDA GENERACION SA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "1954",
+    "nombre": "PICCINI CARLOS JOSE",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "202",
+    "nombre": "Paula Sofia Roncati",
+    "localidad": "Mar del Plata"
+   },
+   {
+    "clientId": "2057",
+    "nombre": "Visión alimenticia SA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2063",
+    "nombre": "SANTOS CARLOS ADRIAN",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2065",
+    "nombre": "FREXAS FEDERICO ANDRES",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2154",
+    "nombre": "ILINCHETA DARIO HAROLDO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2407",
+    "nombre": "NICADELO SA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2684",
+    "nombre": "MAURICIO ROBERTO AMADO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2965",
+    "nombre": "Maria fernanda zapata alarcon",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3023",
+    "nombre": "KIOSMDQ",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3099",
+    "nombre": "Sr quesos y  fiambres",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3289",
+    "nombre": "Pereyra Rodríguez Patricio",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "335",
+    "nombre": "PONCE KATHERINE PAULINA ELENA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3395",
+    "nombre": "STELLA MARIS LLAMAS",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3409",
+    "nombre": "MARIA JOSE COVELLO",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3477",
+    "nombre": "CAMILA FLORENCIA MANNINI",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3954",
+    "nombre": "Catelani Ernesto Rodolfo",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4346",
+    "nombre": "SANTA RECETA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4436",
+    "nombre": "KIOSMDQ",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4564",
+    "nombre": "JOSE ANIBAL FERNANDEZ",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4608",
+    "nombre": "JUAN IGNACIO ARNALDO",
+    "localidad": "MAR DEL PLATA NORTE"
+   },
+   {
+    "clientId": "4622",
+    "nombre": "XIAXIA YU",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4667",
+    "nombre": "CAMILA BELEN ESCALANTE",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4679",
+    "nombre": "ALEJANDRO ESTEBAN SANTOS",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "886",
+    "nombre": "LORENA YAMILA GALARZA",
+    "localidad": "MAR DEL PLATA"
+   }
+  ],
+  "7": [
+   {
+    "clientId": "1327",
+    "nombre": "EL COYUNCO",
+    "localidad": "SIERRA DE LOS PADRES"
+   },
+   {
+    "clientId": "1851",
+    "nombre": "Solange huertas",
+    "localidad": "SIERRA DE LOS PADRES"
+   },
+   {
+    "clientId": "200",
+    "nombre": "VALERIA ROSANA PATIÑO",
+    "localidad": "LA PEREGRINA"
+   },
+   {
+    "clientId": "2231",
+    "nombre": "Manuel Ernesto Peruzzo",
+    "localidad": "SIERRA DE LOS PADRES"
+   },
+   {
+    "clientId": "251",
+    "nombre": "RODRIGUEZ KARINA JANET",
+    "localidad": "Barrio Santa Paula"
+   },
+   {
+    "clientId": "2618",
+    "nombre": "BRENDA SOFIA RODRIGUEZ",
+    "localidad": "SIERRA DE LOS PADRES"
+   },
+   {
+    "clientId": "2782",
+    "nombre": "FERNANDEZ ANGELICA DEL CARMEN",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2997",
+    "nombre": "E RIO CANDELARIA UNA CUADRA DE COLECTORA",
+    "localidad": "LA PEREGRINA"
+   },
+   {
+    "clientId": "3086",
+    "nombre": "ROXANA LORENA AGUERO",
+    "localidad": "SANTA CLARA DEL MAR"
+   },
+   {
+    "clientId": "3176",
+    "nombre": "ESTERGIDIO DANIEL SOSA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "326",
+    "nombre": "AYELEN BELEN PAREDES",
+    "localidad": "SIERRA DE LOS PADRES"
+   },
+   {
+    "clientId": "3585",
+    "nombre": "Cristian Alfaro Iraola",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "3765",
+    "nombre": "MELISA CRISTINA MARTINEZ",
+    "localidad": "SIERRA DE LOS PADRES"
+   },
+   {
+    "clientId": "4369",
+    "nombre": "SUAREZ LORENA VANESA",
+    "localidad": "Sierra de los Padres"
+   },
+   {
+    "clientId": "4684",
+    "nombre": "Tucker diego arnaldo",
+    "localidad": "Barrio Santa Paula"
+   },
+   {
+    "clientId": "4766",
+    "nombre": "CARLOS ANTONIO MANSILLA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "4874",
+    "nombre": "CARINA ALEJANDRA CARRERES",
+    "localidad": "MAR DEL PLATA"
+   }
+  ],
+  "8": [
+   {
+    "clientId": "1039",
+    "nombre": "Sebastián troglia",
+    "localidad": "Balcarce"
+   },
+   {
+    "clientId": "1053",
+    "nombre": "BlueMarket",
+    "localidad": "Balcarce"
+   },
+   {
+    "clientId": "1061",
+    "nombre": "LUCAS ISAIAS PERALTA",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "1269",
+    "nombre": "Norma Adela Cabral",
+    "localidad": "Balcarce"
+   },
+   {
+    "clientId": "1270",
+    "nombre": "Briz Graciela",
+    "localidad": "Balcarce"
+   },
+   {
+    "clientId": "1290",
+    "nombre": "Wibaux Penélope",
+    "localidad": "Balcarce"
+   },
+   {
+    "clientId": "134",
+    "nombre": "MINGJIE YAN",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "151",
+    "nombre": "ADRIAN  JESUS MAIER",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "1615",
+    "nombre": "Sraiber Federico",
+    "localidad": "Balcarce"
+   },
+   {
+    "clientId": "163",
+    "nombre": "FABIAN OSCAR GIULIANELLI",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "164",
+    "nombre": "GERARDO IGNACIO ECHAIDE",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "165",
+    "nombre": "MAXIMILIANO JESUS JEREZ",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "167",
+    "nombre": "ARREDONDO HÉCTOR OSCAR",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "1685",
+    "nombre": "SANTIAGO COLELLA",
+    "localidad": "Balcarce"
+   },
+   {
+    "clientId": "177",
+    "nombre": "Manganelli Micaela",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "1802",
+    "nombre": "Florencia imas",
+    "localidad": "Balcarce"
+   },
+   {
+    "clientId": "1809",
+    "nombre": "Jeremias De Martino",
+    "localidad": "Balcarce"
+   },
+   {
+    "clientId": "1846",
+    "nombre": "FLORES CAMACHO",
+    "localidad": "Balcarce"
+   },
+   {
+    "clientId": "2001",
+    "nombre": "PAPI PANCHO",
+    "localidad": "Balcarce"
+   },
+   {
+    "clientId": "238",
+    "nombre": "ANDREA FLAVIANA CUPELLO",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "239",
+    "nombre": "TREJO LILIAN",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "2428",
+    "nombre": "SANDRA LORENA SISTERNA",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "252",
+    "nombre": "MARIA INES GUZMAN",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "253",
+    "nombre": "ANTONELLA DE LUCA",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "254",
+    "nombre": "SEBASTIÁN ALEKSEENKO",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "2609",
+    "nombre": "WENG RENLONG",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "2655",
+    "nombre": "DIEGO NICOLAS ARCELUS",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "2656",
+    "nombre": "LYDIA CARMEN YORDANOV",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "2660",
+    "nombre": "Gnc Balcarce S R L",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "2911",
+    "nombre": "MARIA EUGENIA PAEZ",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "3026",
+    "nombre": "BEERZIE MISKUY",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "3255",
+    "nombre": "SIMBOLI JOSE SANTIAGO",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "3292",
+    "nombre": "Pezzente Alejandro",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "3321",
+    "nombre": "MARIA SOL PERRETTA",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "3459",
+    "nombre": "CARLOS ALBERTO BOURDETTE",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "425",
+    "nombre": "Roberto Adrián Jorge",
+    "localidad": "Balcarce"
+   },
+   {
+    "clientId": "4652",
+    "nombre": "MARCOS GASTON ROJO",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "4809",
+    "nombre": "MARIANA MARIBEL DEGRACIA",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "4810",
+    "nombre": "ORLANDO ABEL UGALDE",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "5036",
+    "nombre": "MONICA LILIANA MARTINEZ",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "7600",
+    "nombre": "ANDRES ESTEBAN DI PIETRO",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "7606",
+    "nombre": "SAN ALBERTO BALCARCE S R L",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "7607",
+    "nombre": "SAN ALBERTO BALCARCE S R L",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "7611",
+    "nombre": "JOSE LUIS GUERRA",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "7624",
+    "nombre": "BALASCH DANIEL ANDRES",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "7626",
+    "nombre": "MARTA BEATRIZ PALERMO",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "7653",
+    "nombre": "SERGIO GABRIEL BERENGUER",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "7662",
+    "nombre": "WALTER GUSTAVO AUGUSTO",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "7663",
+    "nombre": "ALEKSANDOR VASILYEVICH ROGOV",
+    "localidad": "BALCARCE"
+   },
+   {
+    "clientId": "7664",
+    "nombre": "CARLOS HUGO CIOCCIO",
+    "localidad": "BALCARCE"
+   }
+  ],
+  "80": [
+   {
+    "clientId": "2021",
+    "nombre": "ALEJANDRO NEGRO SRL",
+    "localidad": "REMEDIOS DE ESCALADA"
+   },
+   {
+    "clientId": "279",
+    "nombre": "INDUMENTARIA PATAGONIX SA",
+    "localidad": "Ciudad Autónoma de Buenos Aires"
+   },
+   {
+    "clientId": "3155",
+    "nombre": "SER AMBIENT SRL",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "456",
+    "nombre": "Patullo Micaela Noemi",
+    "localidad": "Ciudad Autónoma de Buenos Aires"
+   },
+   {
+    "clientId": "4908",
+    "nombre": "GERMAN ORTIZ SA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "5006",
+    "nombre": "ZONA M S.R.L.",
+    "localidad": "CIUDAD AUTONOMA BUENOS AIRES"
+   }
+  ],
+  "9": [
+   {
+    "clientId": "1240",
+    "nombre": "ESTEBAN PABLO SEBASTIAN",
+    "localidad": "Miramar"
+   },
+   {
+    "clientId": "1533",
+    "nombre": "Micaela Álvarez",
+    "localidad": "Miramar"
+   },
+   {
+    "clientId": "1660",
+    "nombre": "tiara quinteros",
+    "localidad": "Miramar"
+   },
+   {
+    "clientId": "1712",
+    "nombre": "SAFFER CLAUDA JIMENA",
+    "localidad": "Miramar"
+   },
+   {
+    "clientId": "1720",
+    "nombre": "Daniel Oscar Galvan",
+    "localidad": "Miramar"
+   },
+   {
+    "clientId": "1835",
+    "nombre": "CLAUDIO ERNESTO WEBB",
+    "localidad": "Miramar"
+   },
+   {
+    "clientId": "2040",
+    "nombre": "Facundo Exequiel ciccola",
+    "localidad": "MIRAMAR"
+   },
+   {
+    "clientId": "2202",
+    "nombre": "Pleiler Ramona Francisca",
+    "localidad": "Miramar"
+   },
+   {
+    "clientId": "2447",
+    "nombre": "LOPEZ ESTEFANIA",
+    "localidad": "MIRAMAR"
+   },
+   {
+    "clientId": "2465",
+    "nombre": "CARDOSO DANIELA",
+    "localidad": "MAR DEL PLATA"
+   },
+   {
+    "clientId": "2466",
+    "nombre": "SAUL ALBERTO RINALDI",
+    "localidad": "MIRAMAR"
+   },
+   {
+    "clientId": "2467",
+    "nombre": "SOFIA MACARENA RIOS",
+    "localidad": "MIRAMAR"
+   },
+   {
+    "clientId": "2561",
+    "nombre": "GLADYS ESTER BARRERA",
+    "localidad": "MIRAMAR"
+   },
+   {
+    "clientId": "3242",
+    "nombre": "EDGARDO EZEQUIEL CORONEL",
+    "localidad": "MIRAMAR"
+   },
+   {
+    "clientId": "3315",
+    "nombre": "ALEJANDRA DANIELA D ACUNTO",
+    "localidad": "MIRAMAR"
+   },
+   {
+    "clientId": "334",
+    "nombre": "PERROTTA GIOVANNI TOMAS",
+    "localidad": "MIRAMAR"
+   },
+   {
+    "clientId": "344",
+    "nombre": "ALEJANDRA MARIELA ERVINI",
+    "localidad": "MIRAMAR"
+   },
+   {
+    "clientId": "347",
+    "nombre": "Matias Joaquín albornoz",
+    "localidad": "MIRAMAR"
+   },
+   {
+    "clientId": "350",
+    "nombre": "FINAMOR ALBA ISABEL",
+    "localidad": "MIRAMAR"
+   },
+   {
+    "clientId": "361",
+    "nombre": "KARINA ANABEL GULLIERMONE",
+    "localidad": "MIRAMAR"
+   },
+   {
+    "clientId": "375",
+    "nombre": "MATIAS LEONARDO HERRERA",
+    "localidad": "MIRAMAR"
+   },
+   {
+    "clientId": "38",
+    "nombre": "BARBARA BARONCINI",
+    "localidad": "MIRAMAR"
+   },
+   {
+    "clientId": "386",
+    "nombre": "LAURA ALEJANDRA SOLEDAD FRANCO",
+    "localidad": "MIRAMAR"
+   },
+   {
+    "clientId": "4481",
+    "nombre": "el abasto",
+    "localidad": "MIRAMAR"
+   },
+   {
+    "clientId": "533",
+    "nombre": "PARRA LUIS SANTIAGO",
+    "localidad": "Miramar"
+   },
+   {
+    "clientId": "556",
+    "nombre": "CLAUDIA DANIELA VELIZ",
+    "localidad": "MIRAMAR"
+   },
+   {
+    "clientId": "562",
+    "nombre": "Martiarena Yamila Pilmayquen",
+    "localidad": "Miramar"
+   },
+   {
+    "clientId": "563",
+    "nombre": "NANCY ESTELA ARIAS",
+    "localidad": "MIRAMAR"
+   },
+   {
+    "clientId": "566",
+    "nombre": "DIEGO ROBERTO BORRELLI",
+    "localidad": "MIRAMAR"
+   },
+   {
+    "clientId": "567",
+    "nombre": "JUANA PRIETO",
+    "localidad": "MIRAMAR"
+   },
+   {
+    "clientId": "644",
+    "nombre": "BUSATO MARIANO IGNACIO",
+    "localidad": "MIRAMAR"
+   },
+   {
+    "clientId": "651",
+    "nombre": "ALEJANDRO ASTRADA RUIZ",
+    "localidad": "MIRAMAR"
+   },
+   {
+    "clientId": "673",
+    "nombre": "Carlos Alberto Pelayes",
+    "localidad": "Miramar"
+   },
+   {
+    "clientId": "844",
+    "nombre": "VERGNIAUD SANTIAGO GERMAN",
+    "localidad": "Miramar"
+   },
+   {
+    "clientId": "88",
+    "nombre": "FEDERICO AGUSTIN FIORENZO",
+    "localidad": "MIRAMAR"
+   },
+   {
+    "clientId": "997",
+    "nombre": "MARIANA PATRICIA CASTELLI",
+    "localidad": "MIRAMAR"
+   },
+   {
+    "clientId": "998",
+    "nombre": "EL ABASTO",
+    "localidad": "MIRAMAR"
+   }
+  ]
+ },
+ "totales": {
+  "visitas": 160,
+  "minutos": 818.8,
+  "pedidos": 248,
+  "monto": 23301551.21
  }
 }
