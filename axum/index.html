@@ -343,19 +343,23 @@ function crearMapa(tab, divId, puntos){
     const est = $('#tiempos-estado');
     est.textContent = tiempos.jornadaCerrada? 'jornada cerrada':'jornada en curso';
     est.className = 'badge ' + (tiempos.jornadaCerrada?'ok':'warn');
-    const zonas = rows.filter(r=>r.zonaDelDia).length;
-    $('#tiempos-nota').textContent =
-      'Entrada y salida son el momento en que el GPS lo ubica dentro de su zona de ' +
-      (tiempos.diaDeZona||'hoy').toLowerCase() + ' (' + zonas + ' de ' + rows.length +
-      ' vendedores tienen zona cargada). ' +
+    const conZona = rows.filter(r=>r.zonaConfiable).length;
+    $('#tiempos-nota').innerHTML =
+      '<b>Arrancó</b> es la primera señal de actividad: entrada a la zona o primera visita, ' +
+      'lo que ocurra antes, y es lo que miran las alertas. ' +
+      '<b>Entró a zona</b> es el momento en que el GPS lo ubica dentro de su zona de ' +
+      (tiempos.diaDeZona||'hoy').toLowerCase() + ': hoy aplica a ' + conZona + ' de ' + rows.length +
+      ' vendedores, porque las zonas por día que tiene cargadas Axum no reflejan dónde ' +
+      'trabaja el resto. ' +
       (tiempos.jornadaCerrada? '' :
        'La alerta de salida temprana recién se evalúa después de las ' + (u.salida||'') + '.');
     $('#t-tiempos').innerHTML = '<div class="scrollx">' + table([
       {key:'vendedor',label:'Vendedor'},
-      {key:'entradaZona',label:'Entró a zona',num:true,fmt:v=>v||'—'},
-      {key:'salidaZona',label:'Salió de zona',num:true,fmt:v=>v||'—'},
+      {key:'inicioJornada',label:'Arrancó',num:true,fmt:v=>v||'—'},
+      {key:'finJornada',label:'Última señal',num:true,fmt:v=>v||'—'},
+      {key:'entradaZona',label:'Entró a zona',num:true,
+        fmt:(v,r)=>v? v : '<span title="el GPS no lo ubicó dentro de su zona del día">—</span>'},
       {key:'primera',label:'1ª visita',num:true,fmt:v=>v||'—'},
-      {key:'ultima',label:'Últ. visita',num:true,fmt:v=>v||'—'},
       {key:'visitas',label:'Visitas',num:true,fmt:fmtNum},
       {key:'minutosTotal',label:'Tiempo total',num:true,fmt:fmtMin},
       {key:'minutosPromedio',label:'Prom.',num:true,fmt:fmtMin},

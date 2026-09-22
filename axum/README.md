@@ -59,7 +59,21 @@ python tools/axum_fetch.py
 | Cruce ventas + GPS | facturación vs. actividad | ambos |
 | **Tiempos y jornada** | minutos por visita, primera/última, km, línea de tiempo, alertas | `pasoPoprPDVAt`, `FindClientesVisitadosConTimestamp`, `kmRecorridosCtrl` |
 | **Clientes del día** | pasó / no pasó / le vendió / le vendió sin pasar, cobertura | `pasoPoprPDVAt` + `allClientsPositionByVendedor` + Orders360 |
-| **LDR** | posición de los camiones | `lastTruckPositions` |
+| **LDR** | choferes: repartos, entregas, efectividad, cartones y ranking del mes + camiones en el mapa | [Panel de Fleteros](https://tiendaperfecta.github.io/fleteros/) (API GesCom) + `lastTruckPositions` |
+
+### Zonas: qué se pudo y qué no (22/09/2026)
+
+Cada vendedor tiene zonas con nombre de día (`allZoneByVendedor` → `LUNES`,
+`MARTES`, …), así que en teoría se puede marcar cuándo entra a la zona que le
+toca. En la práctica **solo funciona para algunos**: se mide qué porcentaje de
+la cartera del vendedor cae dentro de sus zonas (`carteraEnZona`) y da entre
+0% y 97% según el vendedor, y un día normal solo 3 de 13 registran algún punto
+GPS dentro de su zona del día. Las zonas existen y son suyas, pero no reflejan
+dónde trabajan hoy.
+
+Por eso la alerta usa la **primera señal de actividad** (entrada a zona o
+primera visita, la que sea más temprana). Si se usara solo la zona, a alguien
+que arrancó 08:59 se lo marcaría como llegado 10:25.
 
 ### Métodos del GPS verificados (22/09/2026)
 

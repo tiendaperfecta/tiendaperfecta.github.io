@@ -246,10 +246,15 @@ def construir(gps, fecha, orders, escribir, meta, ahora=None):
         r = por_vendedor[sid]
         primera, ultima = r["primera"], r["ultima"]
         z = zona_de.get(sid, {})
-        # La alerta mira la zona; si el vendedor no tiene zona cargada o no hubo
-        # recorrido, cae en la primera/ultima visita.
-        entrada = z.get("entrada") or primera
-        salida = z.get("salida") or ultima
+        # La alerta toma la PRIMERA senal de actividad: entrada a la zona o
+        # primera visita, la que sea mas temprana. Las zonas por dia de Axum no
+        # reflejan donde trabaja la mayoria (hoy solo 3 de 13 vendedores tienen
+        # algun punto dentro de su zona del dia), asi que usarlas solas marcaria
+        # tarde a gente que arranco a horario.
+        marcas_ini = [x for x in (z.get("entrada"), primera) if x]
+        marcas_fin = [x for x in (z.get("salida"), ultima) if x]
+        entrada = min(marcas_ini) if marcas_ini else None
+        salida = max(marcas_fin) if marcas_fin else None
         tarde = bool(entrada and entrada.time() > HORA_LLEGADA)
         # Antes de la hora de corte no se puede decir que alguien "se fue
         # temprano": la jornada sigue. Sin esto, a las 11 AM la alerta salta
@@ -264,6 +269,12 @@ def construir(gps, fecha, orders, escribir, meta, ahora=None):
             "puntosEnZona": z.get("puntosEnZona", 0),
             "carteraEnZona": z.get("carteraEnZona"),
             "zonasTotales": z.get("zonasTotales", 0),
+            # La zona sirve como referencia solo si el GPS lo ubico adentro y
+            # si esa zona contiene buena parte de su cartera.
+            "zonaConfiable": bool(z.get("puntosEnZona") and
+                                  (z.get("carteraEnZona") or 0) >= 30),
+            "inicioJornada": _hhmm(entrada),
+            "finJornada": _hhmm(salida),
             "visitas": r["visitas"],
             "minutosTotal": round(r["minutos"], 1),
             "minutosPromedio": round(r["minutos"] / r["visitas"], 1) if r["visitas"] else 0,
