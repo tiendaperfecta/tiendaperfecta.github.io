@@ -4,20 +4,21 @@
   "llegada": "09:00",
   "salida": "14:00"
  },
+ "jornadaCerrada": false,
  "bySeller": [
   {
    "sellerId": "11",
-   "visitas": 24,
-   "minutosTotal": 88.1,
+   "visitas": 25,
+   "minutosTotal": 91.4,
    "minutosPromedio": 3.7,
-   "pedidos": 22,
-   "monto": 1614788.94,
+   "pedidos": 23,
+   "monto": 1641934.54,
    "pasoSinVender": 14,
    "primera": "08:59",
-   "ultima": "10:53",
-   "km": null,
+   "ultima": "11:14",
+   "km": 7.0,
    "llegoTarde": false,
-   "salioTemprano": true
+   "salioTemprano": false
   },
   {
    "sellerId": "10",
@@ -31,89 +32,89 @@
    "ultima": "10:42",
    "km": 16.0,
    "llegoTarde": true,
-   "salioTemprano": true
+   "salioTemprano": false
   },
   {
    "sellerId": "1",
-   "visitas": 18,
-   "minutosTotal": 84.0,
+   "visitas": 19,
+   "minutosTotal": 88.5,
    "minutosPromedio": 4.7,
-   "pedidos": 10,
-   "monto": 701588.71,
+   "pedidos": 11,
+   "monto": 829088.81,
    "pasoSinVender": 11,
    "primera": "09:31",
-   "ultima": "10:46",
+   "ultima": "11:13",
    "km": 39.0,
    "llegoTarde": true,
-   "salioTemprano": true
+   "salioTemprano": false
   },
   {
    "sellerId": "12",
-   "visitas": 18,
-   "minutosTotal": 82.5,
+   "visitas": 19,
+   "minutosTotal": 87.5,
    "minutosPromedio": 4.6,
    "pedidos": 8,
    "monto": 703910.69,
-   "pasoSinVender": 12,
+   "pasoSinVender": 13,
    "primera": "09:19",
-   "ultima": "10:41",
+   "ultima": "11:16",
    "km": 8.0,
    "llegoTarde": true,
-   "salioTemprano": true
+   "salioTemprano": false
   },
   {
    "sellerId": "7",
-   "visitas": 17,
-   "minutosTotal": 121.3,
-   "minutosPromedio": 7.1,
+   "visitas": 18,
+   "minutosTotal": 124.6,
+   "minutosPromedio": 6.9,
    "pedidos": 16,
    "monto": 2412551.24,
-   "pasoSinVender": 8,
+   "pasoSinVender": 9,
    "primera": "08:10",
-   "ultima": "11:09",
-   "km": 36.0,
+   "ultima": "11:14",
+   "km": 37.0,
    "llegoTarde": false,
-   "salioTemprano": true
+   "salioTemprano": false
   },
   {
    "sellerId": "5",
    "visitas": 14,
-   "minutosTotal": 87.6,
+   "minutosTotal": 87.9,
    "minutosPromedio": 6.3,
-   "pedidos": 12,
-   "monto": 958466.51,
-   "pasoSinVender": 7,
+   "pedidos": 14,
+   "monto": 1011886.25,
+   "pasoSinVender": 6,
    "primera": "09:12",
-   "ultima": "11:06",
-   "km": 28.0,
+   "ultima": "11:15",
+   "km": 29.0,
    "llegoTarde": true,
-   "salioTemprano": true
+   "salioTemprano": false
   },
   {
    "sellerId": "4",
    "visitas": 8,
-   "minutosTotal": 34.8,
-   "minutosPromedio": 4.3,
-   "pedidos": 10,
-   "monto": 1071739.14,
-   "pasoSinVender": 4,
+   "minutosTotal": 40.8,
+   "minutosPromedio": 5.1,
+   "pedidos": 13,
+   "monto": 1713381.94,
+   "pasoSinVender": 3,
    "primera": "09:57",
    "ultima": "11:06",
    "km": 13.0,
    "llegoTarde": true,
-   "salioTemprano": true
+   "salioTemprano": false
   },
   {
    "sellerId": "2",
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 13,
-   "monto": 951378.17,
+   "pedidos": 15,
+   "monto": 1065092.32,
    "pasoSinVender": 0,
    "primera": null,
    "ultima": null,
-   "km": null,
+   "km": 0.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -122,8 +123,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 25,
-   "monto": 796705.7,
+   "pedidos": 22,
+   "monto": 66857.19,
    "pasoSinVender": 0,
    "primera": null,
    "ultima": null,
@@ -136,8 +137,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 11,
-   "monto": 1517738.82,
+   "pedidos": 12,
+   "monto": 1592238.9,
    "pasoSinVender": 0,
    "primera": null,
    "ultima": null,
@@ -289,6 +290,11 @@
     "hora": "11:03",
     "clientId": "210",
     "nombre": "Alfaro iraola Michel DarÃ­o"
+   },
+   {
+    "hora": "11:14",
+    "clientId": "213",
+    "nombre": "PEDRO ALBERTO MARTIN"
    }
   ],
   "11": [
@@ -411,6 +417,11 @@
     "hora": "10:45",
     "clientId": "2110",
     "nombre": "RODRIGUEZ CRISTIAN JUAN ALBERT"
+   },
+   {
+    "hora": "11:14",
+    "clientId": "1112",
+    "nombre": "XU XIUZHEN"
    }
   ],
   "10": [
@@ -722,6 +733,11 @@
     "hora": "10:41",
     "clientId": "2047",
     "nombre": "RAMOS ELBA"
+   },
+   {
+    "hora": "11:16",
+    "clientId": "1466",
+    "nombre": "LODOLA CARLOS JESUS"
    }
   ],
   "1": [
@@ -819,6 +835,11 @@
     "hora": "10:46",
     "clientId": "1962",
     "nombre": "LA COSTA MDQ MINIMERCADOS"
+   },
+   {
+    "hora": "11:13",
+    "clientId": "715",
+    "nombre": "YAGO LEONEL CORRIZO"
    }
   ],
   "4": [

@@ -9,9 +9,9 @@
    "minutos": 25.1,
    "visito": true,
    "hora": "10:46",
-   "pedidos": 0,
-   "monto": 0,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 127500.1,
+   "estado": "vendio"
   },
   {
    "sellerId": "1",
@@ -84,6 +84,18 @@
    "pedidos": 2,
    "monto": 278114.78,
    "estado": "vendio"
+  },
+  {
+   "sellerId": "1",
+   "clientId": "715",
+   "nombre": "YAGO LEONEL CORRIZO",
+   "canal": "TRADITIONAL TRADE_D",
+   "minutos": 4.5,
+   "visito": true,
+   "hora": "11:13",
+   "pedidos": 0,
+   "monto": 0,
+   "estado": "paso_sin_vender"
   },
   {
    "sellerId": "1",
@@ -627,15 +639,27 @@
   },
   {
    "sellerId": "11",
+   "clientId": "1112",
+   "nombre": "XU XIUZHEN",
+   "canal": "TRADITIONAL TRADE_A",
+   "minutos": 3.3,
+   "visito": true,
+   "hora": "11:14",
+   "pedidos": 0,
+   "monto": 0,
+   "estado": "paso_sin_vender"
+  },
+  {
+   "sellerId": "11",
    "clientId": "3024",
    "nombre": "MARIA ESTER CONTARINO",
    "canal": "TRADITIONAL TRADE_C",
    "minutos": 3.3,
    "visito": true,
    "hora": "10:40",
-   "pedidos": 0,
-   "monto": 0,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 27145.6,
+   "estado": "vendio"
   },
   {
    "sellerId": "11",
@@ -942,7 +966,7 @@
    "clientId": "2047",
    "nombre": "RAMOS ELBA",
    "canal": "TRADITIONAL TRADE_C",
-   "minutos": 30.4,
+   "minutos": 33.6,
    "visito": true,
    "hora": "10:41",
    "pedidos": 1,
@@ -1020,6 +1044,18 @@
    "pedidos": 1,
    "monto": 85285.76,
    "estado": "vendio"
+  },
+  {
+   "sellerId": "12",
+   "clientId": "1466",
+   "nombre": "LODOLA CARLOS JESUS",
+   "canal": "TRADITIONAL TRADE_C",
+   "minutos": 1.8,
+   "visito": true,
+   "hora": "11:16",
+   "pedidos": 0,
+   "monto": 0,
+   "estado": "paso_sin_vender"
   },
   {
    "sellerId": "12",
@@ -1298,6 +1334,30 @@
    "estado": "vendio_sin_pasar"
   },
   {
+   "sellerId": "2",
+   "clientId": "2519",
+   "nombre": "PRAISOLO S.A.",
+   "canal": "TRADITIONAL TRADE_D",
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 98142.71,
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "sellerId": "2",
+   "clientId": "1282",
+   "nombre": "GONZALEZ DOGLIOTTI MONICA MARI",
+   "canal": "TRADITIONAL TRADE_D",
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 15571.44,
+   "estado": "vendio_sin_pasar"
+  },
+  {
    "sellerId": "20",
    "clientId": "2719",
    "nombre": "INTEGRACION TURISTICA HOTELERA SA",
@@ -1353,7 +1413,7 @@
    "minutos": 0.0,
    "visito": false,
    "hora": null,
-   "pedidos": 1,
+   "pedidos": 2,
    "monto": 0.0,
    "estado": "vendio_sin_pasar"
   },
@@ -1395,37 +1455,13 @@
   },
   {
    "sellerId": "20",
-   "clientId": "3836",
-   "nombre": "ZHONGBIAO CHEN",
-   "canal": "TRADITIONAL TRADE_A",
-   "minutos": 0.0,
-   "visito": false,
-   "hora": null,
-   "pedidos": 1,
-   "monto": 474428.59,
-   "estado": "vendio_sin_pasar"
-  },
-  {
-   "sellerId": "20",
-   "clientId": "834",
-   "nombre": "MARIA EUGENIA FIGUEROA AGUILAR",
-   "canal": "TRADITIONAL TRADE_C",
-   "minutos": 0.0,
-   "visito": false,
-   "hora": null,
-   "pedidos": 2,
-   "monto": 53419.74,
-   "estado": "vendio_sin_pasar"
-  },
-  {
-   "sellerId": "20",
    "clientId": "1402",
    "nombre": "Cliente 1402",
    "canal": "",
    "minutos": 0.0,
    "visito": false,
    "hora": null,
-   "pedidos": 1,
+   "pedidos": 2,
    "monto": 0.0,
    "estado": "vendio_sin_pasar"
   },
@@ -1475,30 +1511,6 @@
    "hora": null,
    "pedidos": 2,
    "monto": 0.0,
-   "estado": "vendio_sin_pasar"
-  },
-  {
-   "sellerId": "20",
-   "clientId": "1059",
-   "nombre": "BUZON BARROS MATIAS AUGUSTO",
-   "canal": "TRADITIONAL TRADE_B",
-   "minutos": 0.0,
-   "visito": false,
-   "hora": null,
-   "pedidos": 1,
-   "monto": 74500.08,
-   "estado": "vendio_sin_pasar"
-  },
-  {
-   "sellerId": "20",
-   "clientId": "1962",
-   "nombre": "LA COSTA MDQ MINIMERCADOS",
-   "canal": "TRADITIONAL TRADE_A",
-   "minutos": 0.0,
-   "visito": false,
-   "hora": null,
-   "pedidos": 1,
-   "monto": 127500.1,
    "estado": "vendio_sin_pasar"
   },
   {
@@ -1575,6 +1587,18 @@
   },
   {
    "sellerId": "3",
+   "clientId": "1059",
+   "nombre": "BUZON BARROS MATIAS AUGUSTO",
+   "canal": "TRADITIONAL TRADE_B",
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 74500.08,
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "sellerId": "3",
    "clientId": "1863",
    "nombre": "KECZELI LEONELA FERNANDA",
    "canal": "TRADITIONAL TRADE_A",
@@ -1584,6 +1608,18 @@
    "pedidos": 1,
    "monto": 111571.63,
    "estado": "vendio_sin_pasar"
+  },
+  {
+   "sellerId": "4",
+   "clientId": "3053",
+   "nombre": "KARINA EDITH OLMO",
+   "canal": "TRADITIONAL TRADE_C",
+   "minutos": 11.7,
+   "visito": true,
+   "hora": "11:06",
+   "pedidos": 1,
+   "monto": 33499.94,
+   "estado": "vendio"
   },
   {
    "sellerId": "4",
@@ -1608,18 +1644,6 @@
    "pedidos": 1,
    "monto": 32439.59,
    "estado": "vendio"
-  },
-  {
-   "sellerId": "4",
-   "clientId": "3053",
-   "nombre": "KARINA EDITH OLMO",
-   "canal": "TRADITIONAL TRADE_C",
-   "minutos": 5.7,
-   "visito": true,
-   "hora": "11:06",
-   "pedidos": 0,
-   "monto": 0,
-   "estado": "paso_sin_vender"
   },
   {
    "sellerId": "4",
@@ -1719,6 +1743,18 @@
   },
   {
    "sellerId": "4",
+   "clientId": "3836",
+   "nombre": "ZHONGBIAO CHEN",
+   "canal": "TRADITIONAL TRADE_A",
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 474428.59,
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "sellerId": "4",
    "clientId": "1265",
    "nombre": "Cliente 1265",
    "canal": "",
@@ -1727,6 +1763,18 @@
    "hora": null,
    "pedidos": 1,
    "monto": 284465.44,
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "sellerId": "4",
+   "clientId": "438",
+   "nombre": "CANFE S.R.L.",
+   "canal": "TRADITIONAL TRADE_C",
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 133714.27,
    "estado": "vendio_sin_pasar"
   },
   {
@@ -1833,9 +1881,9 @@
    "minutos": 4.1,
    "visito": true,
    "hora": "10:51",
-   "pedidos": 0,
-   "monto": 0,
-   "estado": "paso_sin_vender"
+   "pedidos": 2,
+   "monto": 53419.74,
+   "estado": "vendio"
   },
   {
    "sellerId": "5",
@@ -1854,9 +1902,9 @@
    "clientId": "961",
    "nombre": "OPPEDISANO ARTURO MIGUEL",
    "canal": "TRADITIONAL TRADE_A",
-   "minutos": 2.0,
+   "minutos": 2.3,
    "visito": true,
-   "hora": "11:06",
+   "hora": "11:15",
    "pedidos": 1,
    "monto": 100142.94,
    "estado": "vendio"
@@ -2232,6 +2280,18 @@
    "pedidos": 1,
    "monto": 60785.72,
    "estado": "vendio"
+  },
+  {
+   "sellerId": "7",
+   "clientId": "213",
+   "nombre": "PEDRO ALBERTO MARTIN",
+   "canal": "TRADITIONAL TRADE_D",
+   "minutos": 3.3,
+   "visito": true,
+   "hora": "11:14",
+   "pedidos": 0,
+   "monto": 0,
+   "estado": "paso_sin_vender"
   },
   {
    "sellerId": "7",
@@ -2739,9 +2799,9 @@
   }
  ],
  "resumen": {
+  "vendio": 48,
   "paso_sin_vender": 78,
-  "vendio": 44,
   "sin_visita": 9,
-  "vendio_sin_pasar": 97
+  "vendio_sin_pasar": 98
  }
 }
