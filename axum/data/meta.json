@@ -1,13 +1,18 @@
 {
- "generatedAt": "2026-09-22T08:03:00-03:00",
+ "generatedAt": "2026-09-22T09:01:02-03:00",
  "date": "2026-09-22",
- "errors": [
-  "gps: list index out of range"
- ],
+ "errors": [],
  "pedidos": {
-  "traidos": 12,
-  "totalSegunApi": 12
+  "traidos": 27,
+  "totalSegunApi": 27
+ },
+ "formatoGps": {
+  "posicion": "'-38.0021558666667,-57.5793868166667,4,9:00 AM,66,,'",
+  "visitados": "{'sellerID': '7', 'visitedClient': '274'}",
+  "km": null,
+  "visitadosTotal": 5,
+  "kmError": null
  },
  "ordersOk": true,
- "gpsOk": false
+ "gpsOk": true
 }

@@ -1,20 +1,44 @@
 {
  "date": "2026-09-22",
- "totalNet": 1305313.86,
- "totalGross": 1579429.76,
- "orders": 12,
+ "totalNet": 2551121.8,
+ "totalGross": 3086857.38,
+ "orders": 27,
  "bySeller": [
   {
    "sellerId": "9",
    "name": "Vendedor 9",
-   "orders": 2,
-   "total": 1263143.91
+   "orders": 4,
+   "total": 1501502.16
+  },
+  {
+   "sellerId": "20",
+   "name": "Vendedor 20",
+   "orders": 16,
+   "total": 443428.92
+  },
+  {
+   "sellerId": "12",
+   "name": "Vendedor 12",
+   "orders": 1,
+   "total": 341142.78
   },
   {
    "sellerId": "2",
    "name": "Vendedor 2",
+   "orders": 2,
+   "total": 298497.57
+  },
+  {
+   "sellerId": "1",
+   "name": "Vendedor 1",
    "orders": 1,
-   "total": 226642.97
+   "total": 249857.22
+  },
+  {
+   "sellerId": "8",
+   "name": "Vendedor 8",
+   "orders": 1,
+   "total": 162785.84
   },
   {
    "sellerId": "11",
@@ -27,33 +51,37 @@
    "name": "Vendedor 6",
    "orders": 1,
    "total": 28642.87
-  },
-  {
-   "sellerId": "20",
-   "name": "Vendedor 20",
-   "orders": 7,
-   "total": 0.0
   }
  ],
  "byChannel": [
   {
    "channel": "TRADITIONAL TRADE_A",
-   "orders": 2,
-   "total": 1263143.91
+   "orders": 5,
+   "total": 1866859.5
   },
   {
    "channel": "TRADITIONAL TRADE_C",
+   "orders": 3,
+   "total": 456357.48
+  },
+  {
+   "channel": "Mayorista_B",
    "orders": 1,
-   "total": 226642.97
+   "total": 341142.78
   },
   {
    "channel": "TRADITIONAL TRADE_B",
+   "orders": 3,
+   "total": 283785.83
+  },
+  {
+   "channel": "TRADITIONAL TRADE_D",
    "orders": 2,
-   "total": 89642.89
+   "total": 138711.79
   },
   {
    "channel": "s/canal",
-   "orders": 7,
+   "orders": 13,
    "total": 0.0
   }
  ],
@@ -65,16 +93,70 @@
    "total": 1263143.91
   },
   {
+   "clientId": "1042",
+   "name": "CREMONA SA (Mayoristas_B)",
+   "orders": 1,
+   "total": 341142.78
+  },
+  {
+   "clientId": "3485",
+   "name": "JERIBATZ CARNICO SRL (Almacen/Despensa_A)",
+   "orders": 1,
+   "total": 309643.06
+  },
+  {
+   "clientId": "2411",
+   "name": "NICADELO SA (Kiosco/Maxikiosco_A)",
+   "orders": 1,
+   "total": 249857.22
+  },
+  {
    "clientId": "1366",
    "name": "CORREA DIEGO RAFAEL (Autoservicio Tradicional_C)",
    "orders": 1,
    "total": 226642.97
   },
   {
+   "clientId": "2202",
+   "name": "Pleiler Ramona Francisca (Kiosco/Maxikiosco_B)",
+   "orders": 1,
+   "total": 194142.94
+  },
+  {
+   "clientId": "3292",
+   "name": "Pezzente Alejandro (Autoservicio Tradicional_C)",
+   "orders": 1,
+   "total": 162785.84
+  },
+  {
+   "clientId": "4279",
+   "name": "MARIANO JORGE TEGLI (Almacen/Despensa_D)",
+   "orders": 1,
+   "total": 71854.6
+  },
+  {
+   "clientId": "3725",
+   "name": "Mario Ezequiel Echeverria (Almacen/Despensa_C)",
+   "orders": 1,
+   "total": 66928.67
+  },
+  {
+   "clientId": "2719",
+   "name": "INTEGRACION TURISTICA HOTELERA SA (Kiosco/Maxikiosco_D)",
+   "orders": 1,
+   "total": 66857.19
+  },
+  {
    "clientId": "1526",
    "name": "MUCCI LEOPOLDO NAHUEL (Kiosco/Maxikiosco_B)",
    "orders": 1,
    "total": 61000.02
+  },
+  {
+   "clientId": "375",
+   "name": "MATIAS LEONARDO HERRERA (Autoservicio Tradicional_A)",
+   "orders": 1,
+   "total": 44215.32
   },
   {
    "clientId": "3168",
@@ -103,7 +185,7 @@
   {
    "clientId": "3245",
    "name": "",
-   "orders": 1,
+   "orders": 2,
    "total": 0.0
   },
   {
