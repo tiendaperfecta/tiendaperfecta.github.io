@@ -211,6 +211,39 @@ class Gps:
                         "hora": p[3], "etiqueta": p[4]})
         return out
 
+    def paso_por_pdv(self, fecha):
+        """Una fila por cliente por el que el vendedor paso: cuanto tiempo
+        estuvo, si registro visita y a que hora."""
+        return self.call("pasoPoprPDVAt", aDate=fecha) or []
+
+    def visitas_con_hora(self, fecha):
+        return self.call("FindClientesVisitadosConTimestamp", _dia=fecha) or []
+
+    def cartera(self, id_vendedor):
+        """Clientes asignados al vendedor, con nombre, canal y posicion."""
+        return self.call("allClientsPositionByVendedor", idVendedor=id_vendedor) or []
+
+    def km_vendedor(self, id_vendedor, fecha):
+        """Km del dia. dailySellerTravelledKmReport viene vacio; este responde."""
+        v = self.call("kmRecorridosCtrl", sellerId=id_vendedor, aDate=fecha)
+        try:
+            return round(float(v), 1)
+        except (TypeError, ValueError):
+            return None
+
+    def camiones(self):
+        """Posicion de los camiones (mismo CSV que los vendedores)."""
+        out = []
+        for c in self.call("lastTruckPositions") or []:
+            p = (str(c).split(",") + [""] * 7)[:7]
+            try:
+                lat, lng = float(p[0]), float(p[1])
+            except ValueError:
+                continue
+            out.append({"id": p[2], "lat": lat, "lng": lng,
+                        "hora": p[3], "etiqueta": p[4]})
+        return out
+
     def visitados_hoy(self, fecha):
         try:
             return self.call("soloClientesVisitados", _dia=fecha)
@@ -436,6 +469,14 @@ def build():
                 "visited": gp.get("visited", 0), "km": gp.get("km"),
             })
         write_json("cross.json", cross)
+
+    # ---- Detalle por cliente: tiempos, cobertura y LDR --------------------
+    if gps_ok:
+        try:
+            import axum_detalle
+            axum_detalle.construir(g, today, orders, write_json, meta)
+        except Exception as e:
+            meta["errors"].append("detalle: %s: %s" % (type(e).__name__, e))
 
     meta["ordersOk"] = orders_ok
     meta["gpsOk"] = gps_ok
