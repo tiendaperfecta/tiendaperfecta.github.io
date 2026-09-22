@@ -100,38 +100,74 @@ def pantalla_ldr(sesion):
     }
 
 
+def _llamar(gps, metodo, params, con_username=True):
+    """Llamada cruda. Hace falta porque varios metodos NO declaran userName y
+    agregarselo (como hace Gps.call) los hace responder 500."""
+    cuerpo = dict(params)
+    if con_username:
+        cuerpo.setdefault("userName", gps.user)
+    r = gps.s.post("%s/LocationService.asmx/%s" % (BASE, metodo),
+                   data=json.dumps(cuerpo),
+                   headers={"Content-Type": "application/json",
+                            "Accept": "application/json"},
+                   timeout=90)
+    if r.status_code != 200:
+        return {"error": "HTTP %s" % r.status_code}
+    try:
+        d = r.json()
+    except ValueError:
+        return {"error": "no-json", "valor": r.text[:200]}
+    return _muestra(d["d"] if isinstance(d, dict) and "d" in d else d)
+
+
 def correr(gps, fecha, sellers):
     """gps: instancia de Gps (ya logueada). Devuelve el informe completo."""
-    informe = {"fecha": fecha, "sellersProbados": sellers[:3]}
-    cat = catalogo(gps.s)
-    ls = cat.get("LocationService", {})
-    informe["catalogo"] = {
-        "LocationService": len(ls) if isinstance(ls, dict) else ls,
-        "RuleService": len(cat.get("RuleService", {})),
-    }
-    informe["porTema"] = _por_tema(ls) if isinstance(ls, dict) else {}
-    informe["firmas"] = {n: ls[n] for n in sorted(ls)} if isinstance(ls, dict) else {}
-    informe["pantallaLdr"] = pantalla_ldr(gps.s)
-
+    import datetime as dt
+    hoy = dt.date.fromisoformat(fecha)
     uno = sellers[0] if sellers else "1"
+    informe = {"fecha": fecha, "sellerProbado": uno, "sellers": sellers[:15]}
+
+    # .NET numera los dias con domingo=0; probamos las dos convenciones.
+    dia_dotnet = (hoy.weekday() + 1) % 7          # lunes=1 ... domingo=0
+    dia_iso = hoy.isoweekday()                    # lunes=1 ... domingo=7
+
     pruebas = [
-        ("reporteTiempoEnPDVDiario", {"desde": fecha, "hasta": fecha}),
-        ("reporteTiempoEnPDVDiarioBySeller", {"desde": fecha, "hasta": fecha, "seller": uno}),
-        ("clientesVisitadosAt", {"aDate": fecha, "sellerID": uno}),
-        ("cantidadDeClientesVisitadosPorVendedor", {"fecha": fecha}),
-        ("allClientsByVendedor", {"idVendedor": uno}),
-        ("FindLocationsOfVendedorIdEnDiaFromTo",
-         {"idVendedor": uno, "from": fecha + " 00:00", "to": fecha + " 23:59"}),
-        ("lastEvents", {}),
-        ("allZonasReparto", {}),
-        ("vendedoresConPedidos", {}),
-        ("trucks", {}),
+        # --- tiempos y linea de tiempo ---
+        ("FindClientesVisitadosConTimestamp", {"_dia": fecha}, True),
+        ("FindClientesVisitados", {"_dia": fecha}, True),
+        ("pasoPoprPDVAt", {"aDate": fecha}, True),
+        ("timeTableForUser", {"username": gps.user}, False),
+        # --- cobertura y tiempo de venta (metodos propios de Axum) ---
+        ("coberturaVendedor", {"distriName": gps.user, "month": hoy.month, "year": hoy.year}, False),
+        ("coberturaVendedor2", {"distriName": "tiendaperfecta", "month": hoy.month, "year": hoy.year}, False),
+        ("timeToSellVendedor", {"distriName": gps.user, "month": hoy.month, "year": hoy.year}, False),
+        ("timeToSellVendedor2", {"distriName": "tiendaperfecta", "month": hoy.month, "year": hoy.year}, False),
+        # --- cartera y frecuencia (para saber a quien NO paso) ---
+        ("frecuenciaByVendedorDia", {"sellerId": uno, "numeroDeDia": dia_dotnet}, True),
+        ("frecuenciaByVendedorDia2", {"sellerId": uno, "numeroDeDia": dia_iso}, True),
+        ("allClientsPositionByVendedor", {"idVendedor": uno}, True),
+        ("clients", {}, True),
+        ("vendedoresId", {"username": gps.user}, False),
+        # --- km (el reporte diario viene vacio) ---
+        ("kmRecorridosCtrl", {"sellerId": uno, "aDate": fecha}, True),
+        ("travelledDistanceAt", {"aDate": fecha}, True),
+        # --- LDR / choferes ---
+        ("lastTruckPositions", {}, True),
+        ("lastReparto", {}, True),
+        ("lastActivityReparto", {}, True),
+        ("cantidadDeClientesVisitadosPorCamion", {"fechaDeRepartoAsString": fecha}, True),
+        ("distanciaRecorridaPorCamionesEnFecha", {"fechaDeRepartoAsString": fecha}, True),
+        ("allTrucksOilStatus", {}, True),
+        ("allFullClientsByTruck", {}, True),
     ]
     resultados = {}
-    for metodo, params in pruebas:
+    for metodo, params, con_user in pruebas:
+        real = metodo.rstrip("2")      # los "2" son variantes de parametros
+        etiqueta = metodo + ("" if real == metodo else " (variante)")
         try:
-            resultados[metodo] = _muestra(gps.call(metodo, **params))
+            resultados[etiqueta] = _llamar(gps, real, params, con_user)
         except Exception as e:
-            resultados[metodo] = {"error": "%s: %s" % (type(e).__name__, str(e)[:160])}
+            resultados[etiqueta] = {"error": "%s: %s" % (type(e).__name__, str(e)[:160])}
     informe["pruebas"] = resultados
+    informe["diasProbados"] = {"dotnet": dia_dotnet, "iso": dia_iso}
     return informe
