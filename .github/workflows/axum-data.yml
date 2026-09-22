@@ -33,6 +33,12 @@ jobs:
           AXUM_ORDERS_PASS: ${{ secrets.AXUM_ORDERS_PASS }}
           GPS_USER: ${{ secrets.GPS_USER }}
           GPS_PASS: ${{ secrets.GPS_PASS }}
+          # Maestro de clientes, rutas y zonas. Si faltan, el script sigue con
+          # los archivos ya publicados en vez de fallar.
+          GESCOM_REALM: ${{ secrets.GESCOM_REALM }}
+          GESCOM_CLIENT_ID: ${{ secrets.GESCOM_CLIENT_ID }}
+          GESCOM_USERNAME: ${{ secrets.GESCOM_USERNAME }}
+          GESCOM_PASSWORD: ${{ secrets.GESCOM_PASSWORD }}
         run: python tools/axum_fetch.py
 
       - name: Commit data if changed
