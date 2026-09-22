@@ -81,6 +81,12 @@
   .scrollx{overflow-x:auto}
   #map-ldr{height:520px;border-radius:10px;overflow:hidden}
   .nota{color:rgb(var(--s400));font-size:12px;margin-top:10px;line-height:1.5}
+  .barra-dia{display:none;flex-wrap:wrap;align-items:center;gap:10px;margin:-6px 0 16px}
+  .barra-dia.on{display:flex}
+  .barra-dia label{font-size:12px;color:rgb(var(--s400));text-transform:uppercase;letter-spacing:.6px}
+  .leyenda{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:rgb(var(--s300));margin-top:10px}
+  .leyenda i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+  #map-zonas{height:560px;border-radius:10px;overflow:hidden}
 </style>
 </head>
 <body>
@@ -102,7 +108,15 @@
     <div class="tab" data-t="cruce">Cruce ventas + GPS</div>
     <div class="tab" data-t="tiempos">Tiempos y jornada</div>
     <div class="tab" data-t="clientes">Clientes del día</div>
+    <div class="tab" data-t="zonas">Zonas y ruta</div>
     <div class="tab" data-t="ldr">LDR</div>
+  </div>
+
+  <div class="barra-dia" id="barra-dia">
+    <label for="sel-dia">Día:</label>
+    <select id="sel-dia"></select>
+    <span class="badge" id="dia-resumen"></span>
+    <span class="nota" style="margin:0">aplica a Tiempos, Clientes y Zonas</span>
   </div>
 
   <!-- VENTAS -->
@@ -172,6 +186,25 @@
     </div>
   </section>
 
+  <!-- ZONAS -->
+  <section class="panel" id="p-zonas">
+    <div class="kpis" id="k-zonas"></div>
+    <div class="card">
+      <h3>Zona y ruta &nbsp;<select id="sel-zona-vend"></select>
+        <span class="badge" id="zona-info"></span></h3>
+      <div id="map-zonas"></div>
+      <div class="leyenda">
+        <span><i style="background:#10b981"></i>visitado</span>
+        <span><i style="background:#f43f5e"></i>pendiente de la ruta</span>
+        <span><i style="background:#60a5fa"></i>visitado fuera de ruta</span>
+        <span><i style="background:#fbbf24;border-radius:2px"></i>zona dibujada con los clientes</span>
+      </div>
+      <p class="nota">La zona no es la que tiene cargada Axum: se dibuja con las coordenadas
+        reales de los clientes que le tocan ese día según GesCom (envolvente de los puntos,
+        descartando clientes sueltos a kilómetros del grupo).</p>
+    </div>
+  </section>
+
   <!-- LDR -->
   <section class="panel" id="p-ldr">
     <div class="kpis" id="k-ldr"></div>
@@ -232,6 +265,8 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
   // Los mapas se crean con la pestana oculta, asi que Leaflet mide 0x0 y
   // quedan con un tile suelto y el zoom al maximo. Al mostrarlos hay que
   // remedirlos y volver a encuadrar.
+  document.getElementById('barra-dia').classList.toggle('on',
+    ['tiempos','clientes','zonas'].indexOf(t.dataset.t) >= 0);
   const m = mapas[t.dataset.t];
   if(m) setTimeout(()=>{
     m.map.invalidateSize();
@@ -255,9 +290,10 @@ function crearMapa(tab, divId, puntos){
 }
 
 (async function(){
-  const [summary, positions, visits, cross, meta, pdv, tiempos, cobertura, ldr] =
+  const [summary, positions, visits, cross, meta, dias, zonasGeo, maestro, rutas, ldr] =
     await Promise.all(['summary.json','positions.json','visits.json','cross.json',
-      'meta.json','pdv.json','tiempos.json','cobertura.json','ldr.json'].map(loadJSON));
+      'meta.json','dias.json','zonas.json','clientes.json','rutas.json','ldr.json']
+      .map(loadJSON));
 
   // meta / errores
   if(meta){
@@ -326,54 +362,72 @@ function crearMapa(tab, divId, puntos){
       cross.rows, {barCol:'total'});
   }
 
-  // ---------- TIEMPOS Y JORNADA ----------
-  if(tiempos){
-    const rows = tiempos.bySeller||[];
+  // ---------- DIA SELECCIONADO ----------
+  // Todo el detalle (tiempos, clientes, zonas) sale de dia-<fecha>.json, asi el
+  // historico y el dia de hoy usan exactamente el mismo codigo.
+  const cliCampos = (maestro && maestro.campos) || [];
+  const cliMapa = (maestro && maestro.clientes) || {};
+  const cli = id => {
+    const f = cliMapa[String(id)];
+    if(!f) return null;
+    const g = n => f[cliCampos.indexOf(n)];
+    return {nombre:g('nombre'), lat:g('lat'), lng:g('lng'), localidad:g('localidad')};
+  };
+
+  const listaDias = (dias && dias.dias) || [];
+  $('#sel-dia').innerHTML = listaDias.map((d,i)=>
+    `<option value="${d.fecha}">${d.fecha} · ${d.diaSemana}${i===0?' · hoy':''}</option>`).join('');
+
+  const etiquetas = {vendio:'Pasó y le vendió', paso_sin_vender:'Pasó sin venderle',
+    vendio_sin_pasar:'Le vendió sin pasar', sin_visita:'Pasó cerca sin registrar'};
+  let dia = null, filtroEstado = 'todos';
+
+  function pintarTiempos(){
+    const rows = dia.bySeller||[];
     const visitas = rows.reduce((a,r)=>a+(r.visitas||0),0);
     const minutos = rows.reduce((a,r)=>a+(r.minutosTotal||0),0);
-    const tarde = rows.filter(r=>r.llegoTarde).length;
-    const temprano = rows.filter(r=>r.salioTemprano).length;
-    const u = tiempos.umbrales||{};
+    const u = dia.umbrales||{};
     $('#k-tiempos').innerHTML =
       kpi('Visitas registradas', fmtNum(visitas)) +
       kpi('Tiempo total en clientes', fmtMin(minutos)) +
       kpi('Promedio por visita', visitas? fmtMin(minutos/visitas):'—') +
-      kpi('Llegó tarde / salió temprano', `${tarde} / ${temprano}`,
-          `umbrales ${u.llegada||'—'} y ${u.salida||'—'}`);
+      kpi('Llegó tarde / salió temprano',
+          rows.filter(r=>r.llegoTarde).length + ' / ' + rows.filter(r=>r.salioTemprano).length,
+          'umbrales ' + (u.llegada||'—') + ' y ' + (u.salida||'—'));
     const est = $('#tiempos-estado');
-    est.textContent = tiempos.jornadaCerrada? 'jornada cerrada':'jornada en curso';
-    est.className = 'badge ' + (tiempos.jornadaCerrada?'ok':'warn');
+    est.textContent = dia.jornadaCerrada? 'jornada cerrada':'jornada en curso';
+    est.className = 'badge ' + (dia.jornadaCerrada?'ok':'warn');
     const conZona = rows.filter(r=>r.zonaConfiable).length;
     $('#tiempos-nota').innerHTML =
-      '<b>Arrancó</b> es la primera señal de actividad: entrada a la zona o primera visita, ' +
-      'lo que ocurra antes, y es lo que miran las alertas. ' +
-      '<b>Entró a zona</b> es el momento en que el GPS lo ubica dentro de su zona de ' +
-      (tiempos.diaDeZona||'hoy').toLowerCase() + ': hoy aplica a ' + conZona + ' de ' + rows.length +
-      ' vendedores, porque las zonas por día que tiene cargadas Axum no reflejan dónde ' +
-      'trabaja el resto. ' +
-      (tiempos.jornadaCerrada? '' :
-       'La alerta de salida temprana recién se evalúa después de las ' + (u.salida||'') + '.');
+      '<b>Arrancó</b> es la primera señal de actividad: entrada a la zona de Axum o ' +
+      'primera visita, lo que ocurra antes, y es lo que miran las alertas. ' +
+      '<b>Entró a zona</b> usa los polígonos cargados en Axum, que sirven para ' +
+      conZona + ' de ' + rows.length + ' vendedores; la pestaña Zonas usa en cambio ' +
+      'las coordenadas reales de GesCom. ' +
+      (dia.jornadaCerrada? '' : 'La alerta de salida temprana se evalúa recién pasadas ' +
+        'las ' + (u.salida||'') + '.');
     $('#t-tiempos').innerHTML = '<div class="scrollx">' + table([
       {key:'vendedor',label:'Vendedor'},
       {key:'inicioJornada',label:'Arrancó',num:true,fmt:v=>v||'—'},
       {key:'finJornada',label:'Última señal',num:true,fmt:v=>v||'—'},
-      {key:'entradaZona',label:'Entró a zona',num:true,
-        fmt:(v,r)=>v? v : '<span title="el GPS no lo ubicó dentro de su zona del día">—</span>'},
-      {key:'primera',label:'1ª visita',num:true,fmt:v=>v||'—'},
+      {key:'entradaZona',label:'Entró a zona',num:true,fmt:v=>v||'—'},
       {key:'visitas',label:'Visitas',num:true,fmt:fmtNum},
       {key:'minutosTotal',label:'Tiempo total',num:true,fmt:fmtMin},
       {key:'minutosPromedio',label:'Prom.',num:true,fmt:fmtMin},
       {key:'km',label:'Km',num:true,fmt:v=>v==null?'—':fmtNum(v)},
+      {key:'pedidos',label:'Pedidos',num:true,fmt:fmtNum},
       {key:'alertas',label:'Alertas'}
     ], rows.map(r=>({...r, alertas:
       ((r.llegoTarde?'<span class="badge warn">llegó tarde</span> ':'') +
        (r.salioTemprano?'<span class="badge bad">salió temprano</span>':''))
       || '<span class="badge ok">en hora</span>'})), {barCol:'visitas'}) + '</div>';
 
-    const tl = tiempos.timeline||{};
-    const idsTL = Object.keys(tl).filter(k=>k).sort((a,b)=>a-b);
-    $('#sel-timeline').innerHTML = idsTL.map(i=>
-      `<option value="${i}">Vendedor ${i} (${tl[i].length})</option>`).join('');
+    const tl = dia.timeline||{};
+    const ids = Object.keys(tl).filter(k=>k).sort((a,b)=>a-b);
+    $('#sel-timeline').innerHTML = ids.map(i=>{
+      const v = (rows.find(s=>s.sellerId===i)||{}).vendedor || ('Vendedor '+i);
+      return `<option value="${i}">${v} (${tl[i].length})</option>`;
+    }).join('');
     const pintarTL = ()=>{
       const items = tl[$('#sel-timeline').value]||[];
       $('#t-timeline').innerHTML = items.length
@@ -384,60 +438,133 @@ function crearMapa(tab, divId, puntos){
     $('#sel-timeline').onchange = pintarTL; pintarTL();
   }
 
-  // ---------- CLIENTES DEL DÍA ----------
-  const etiquetas = {vendio:'Pasó y le vendió', paso_sin_vender:'Pasó sin venderle',
-    vendio_sin_pasar:'Le vendió sin pasar', sin_visita:'Pasó cerca sin registrar'};
-  if(pdv){
-    const R = pdv.resumen||{};
+  function pintarTablaPdv(){
+    const filas = (dia.rows||[]).filter(r=>filtroEstado==='todos'||r.estado===filtroEstado);
+    $('#t-pdv').innerHTML = table([
+      {key:'vendedor',label:'Vendedor'},
+      {key:'nombre',label:'Cliente'},
+      {key:'localidad',label:'Localidad'},
+      {key:'enRuta',label:'En ruta',fmt:v=>v?'sí':'no'},
+      {key:'hora',label:'Visita',num:true,fmt:v=>v||'—'},
+      {key:'minutos',label:'Tiempo',num:true,fmt:v=>v?fmtMin(v):'—'},
+      {key:'fechaVenta',label:'Fecha venta',num:true,fmt:v=>v||'—'},
+      {key:'horaVenta',label:'Hora',num:true,fmt:v=>v||'—'},
+      {key:'monto',label:'Vendido',num:true,fmt:v=>v?fmtMoney(v):'—'},
+      {key:'estado',label:'Situación',fmt:v=>
+        '<span class="badge ' + (v==='vendio'?'ok':v==='vendio_sin_pasar'?'bad':'warn') +
+        '">' + (etiquetas[v]||v) + '</span>'}
+    ], filas);
+  }
+
+  function pintarClientes(){
+    const R = dia.resumen||{};
     $('#k-clientes').innerHTML =
       kpi('Pasó y le vendió', fmtNum(R.vendio||0)) +
       kpi('Pasó sin venderle', fmtNum(R.paso_sin_vender||0)) +
       kpi('Le vendió sin pasar', fmtNum(R.vendio_sin_pasar||0), 'pedido cargado sin visita física') +
       kpi('Pasó cerca sin registrar', fmtNum(R.sin_visita||0));
-    let filtro = 'todos';
-    const pintarPdv = ()=>{
-      const filas = (pdv.rows||[]).filter(r=>filtro==='todos'||r.estado===filtro);
-      $('#t-pdv').innerHTML = table([
-        {key:'vendedor',label:'Vendedor'},
-        {key:'nombre',label:'Cliente'},
-        {key:'canal',label:'Canal'},
-        {key:'hora',label:'Hora',num:true,fmt:v=>v||'—'},
-        {key:'minutos',label:'Tiempo',num:true,fmt:v=>v?fmtMin(v):'—'},
-        {key:'monto',label:'Vendido',num:true,fmt:v=>v?fmtMoney(v):'—'},
-        {key:'estado',label:'Situación',fmt:v=>
-          `<span class="badge ${v==='vendio'?'ok':v==='vendio_sin_pasar'?'bad':'warn'}">${etiquetas[v]||v}</span>`}
-      ], filas);
-    };
     $('#f-estado').innerHTML = ['todos'].concat(Object.keys(etiquetas)).map(k=>
-      `<div class="chip${k==='todos'?' active':''}" data-f="${k}">`+
-      (k==='todos'? 'Todos ('+(pdv.rows||[]).length+')' : etiquetas[k]+' ('+(R[k]||0)+')')+
-      `</div>`).join('');
+      '<div class="chip' + (k===filtroEstado?' active':'') + '" data-f="' + k + '">' +
+      (k==='todos'? 'Todos (' + (dia.rows||[]).length + ')'
+                  : etiquetas[k] + ' (' + (R[k]||0) + ')') + '</div>').join('');
     $('#f-estado').querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
       $('#f-estado').querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
-      c.classList.add('active'); filtro = c.dataset.f; pintarPdv();
+      c.classList.add('active'); filtroEstado = c.dataset.f; pintarTablaPdv();
     });
-    pintarPdv();
-  }
+    pintarTablaPdv();
 
-  if(cobertura){
     $('#t-cobertura').innerHTML = table([
       {key:'vendedor',label:'Vendedor'},
-      {key:'cartera',label:'Cartera',num:true,fmt:fmtNum},
-      {key:'visitados',label:'Visitados hoy',num:true,fmt:fmtNum},
-      {key:'noVisitados',label:'Sin pasar',num:true,fmt:fmtNum},
-      {key:'pct',label:'% cubierto',num:true,fmt:v=>v==null?'—':v+'%'}
-    ], cobertura.bySeller, {barCol:'visitados'});
-    const nv = cobertura.noVisitados||{};
-    const idsNV = Object.keys(nv).sort((a,b)=>a-b);
-    $('#sel-novis').innerHTML = idsNV.map(i=>
-      `<option value="${i}">Vendedor ${i} (${nv[i].length})</option>`).join('');
+      {key:'ruta',label:'Le tocaban',num:true,fmt:fmtNum},
+      {key:'visitadosDeRuta',label:'Visitó',num:true,fmt:fmtNum},
+      {key:'pendientes',label:'No pasó',num:true,fmt:fmtNum},
+      {key:'fueraDeRuta',label:'Fuera de ruta',num:true,fmt:fmtNum},
+      {key:'pct',label:'% cumplido',num:true,fmt:v=>v==null?'—':v+'%'}
+    ], dia.cobertura, {barCol:'visitadosDeRuta'});
+
+    const pend = dia.pendientes||{};
+    const ids = Object.keys(pend).filter(k=>pend[k].length).sort((a,b)=>a-b);
+    $('#sel-novis').innerHTML = ids.map(i=>{
+      const v = ((dia.cobertura||[]).find(s=>s.sellerId===i)||{}).vendedor || ('Vendedor '+i);
+      return `<option value="${i}">${v} (${pend[i].length})</option>`;
+    }).join('');
     const pintarNV = ()=>{
       $('#t-novis').innerHTML = table(
-        [{key:'clientId',label:'ID'},{key:'nombre',label:'Cliente'},{key:'canal',label:'Canal'}],
-        nv[$('#sel-novis').value]||[]);
+        [{key:'clientId',label:'ID'},{key:'nombre',label:'Cliente'},
+         {key:'localidad',label:'Localidad'}], pend[$('#sel-novis').value]||[]);
     };
     $('#sel-novis').onchange = pintarNV; pintarNV();
   }
+
+  // ---------- ZONAS ----------
+  let mapaZonas, capaZonas;
+  function pintarZonas(){
+    const conRuta = (dia.cobertura||[]).filter(c=>c.ruta>0);
+    const sel = $('#sel-zona-vend');
+    if(sel.dataset.dia !== dia.date){
+      sel.dataset.dia = dia.date;
+      sel.innerHTML = conRuta.map(c=>
+        `<option value="${c.sellerId}">${c.vendedor} (${c.ruta})</option>`).join('');
+    }
+    const vend = sel.value;
+    const c = conRuta.find(x=>x.sellerId===vend) || {};
+    $('#k-zonas').innerHTML =
+      kpi('Le tocaban', fmtNum(c.ruta||0)) +
+      kpi('Visitó', fmtNum(c.visitadosDeRuta||0)) +
+      kpi('No pasó', fmtNum(c.pendientes||0)) +
+      kpi('Cumplimiento', c.pct==null?'—':c.pct+'%');
+
+    if(!mapaZonas){
+      mapaZonas = L.map('map-zonas',{scrollWheelZoom:true}).setView([-38.0055,-57.5426],12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        {maxZoom:19, attribution:'© OpenStreetMap'}).addTo(mapaZonas);
+      capaZonas = L.layerGroup().addTo(mapaZonas);
+      mapas['zonas'] = {map:mapaZonas, pts:[]};
+    }
+    capaZonas.clearLayers();
+
+    const visitados = new Set((dia.rows||[])
+      .filter(r=>r.sellerId===vend && r.visito).map(r=>r.clientId));
+    const ruta = ((rutas && rutas[dia.diaSemana] && rutas[dia.diaSemana][vend]) || [])
+      .map(x=>String(x.cliente));
+    const enRuta = new Set(ruta);
+    const pts = [];
+    const poner = (id, color, texto)=>{
+      const k = cli(id);
+      if(!k || k.lat==null) return;
+      L.circleMarker([k.lat,k.lng], {radius:6, color:color, weight:2,
+        fillColor:color, fillOpacity:.75}).addTo(capaZonas)
+        .bindPopup('<b>'+k.nombre+'</b><br>'+texto+(k.localidad? '<br>'+k.localidad:''));
+      pts.push([k.lat,k.lng]);
+    };
+    enRuta.forEach(id=> poner(id, visitados.has(id)? '#10b981':'#f43f5e',
+      visitados.has(id)? 'visitado' : 'pendiente de la ruta'));
+    visitados.forEach(id=>{ if(!enRuta.has(id)) poner(id, '#60a5fa', 'visitado fuera de ruta'); });
+
+    const poly = zonasGeo && zonasGeo[vend] && zonasGeo[vend][dia.diaSemana];
+    if(poly){
+      L.polygon(poly.poligono, {color:'#fbbf24', weight:2, fillOpacity:.06}).addTo(capaZonas);
+      poly.poligono.forEach(p=>pts.push(p));
+      $('#zona-info').textContent = poly.clientes + ' clientes' +
+        (poly.descartados? ' · ' + poly.descartados + ' descartados por estar lejos':'');
+    } else {
+      $('#zona-info').textContent = 'sin zona dibujada';
+    }
+    mapas['zonas'].pts = pts;
+    if(pts.length) mapaZonas.fitBounds(pts,{padding:[40,40],maxZoom:15});
+  }
+  $('#sel-zona-vend').onchange = pintarZonas;
+
+  async function cargarDia(fecha){
+    dia = await loadJSON('dia-'+fecha+'.json');
+    const r = listaDias.find(d=>d.fecha===fecha) || {};
+    if(!dia){ $('#dia-resumen').textContent = 'sin datos de ese día'; return; }
+    $('#dia-resumen').textContent = fmtNum(r.visitas||0) + ' visitas · ' +
+      fmtNum(r.pedidos||0) + ' pedidos · ' + fmtMoney(r.monto||0);
+    pintarTiempos(); pintarClientes(); pintarZonas();
+  }
+  $('#sel-dia').onchange = e=>cargarDia(e.target.value);
+  if(listaDias.length) await cargarDia(listaDias[0].fecha);
 
   // ---------- LDR ----------
   const camiones = (ldr && ldr.camiones) || [];

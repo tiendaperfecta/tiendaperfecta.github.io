@@ -343,6 +343,17 @@ def env(*names):
     return ""
 
 
+def read_json(name):
+    """Lee un JSON ya publicado; None si no existe."""
+    f = OUT / name
+    if not f.exists():
+        return None
+    try:
+        return json.loads(f.read_text(encoding="utf-8"))
+    except ValueError:
+        return None
+
+
 def write_json(name, data):
     (OUT / name).write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
 
@@ -482,11 +493,25 @@ def build():
             })
         write_json("cross.json", cross)
 
-    # ---- Detalle por cliente: tiempos, cobertura y LDR --------------------
+    # ---- Maestro de clientes, rutas y zonas (GesCom) ----------------------
+    # Se refresca solo si estan cargados los secrets de GesCom; si no, siguen
+    # valiendo los archivos ya publicados.
+    try:
+        import gescom
+        gescom.refrescar(write_json, meta)
+    except Exception as e:
+        meta["errors"].append("gescom: %s: %s" % (type(e).__name__, e))
+
+    # ---- Detalle por cliente: tiempos, cobertura, historia y LDR ----------
     if gps_ok:
         try:
             import axum_detalle
-            axum_detalle.construir(g, today, orders, write_json, meta, ahora)
+            axum_detalle.construir(
+                g, today, orders, write_json, meta, ahora,
+                maestro=read_json("clientes.json"),
+                rutas=read_json("rutas.json"),
+                orders_de=(lambda f: o.orders_all(f, f)[0]) if orders_ok else None,
+                dias_existentes=(read_json("dias.json") or {}).get("dias", []))
         except Exception as e:
             meta["errors"].append("detalle: %s: %s" % (type(e).__name__, e))
 
