@@ -26,6 +26,8 @@ from collections import defaultdict
 
 import requests
 
+import axum_nombres
+
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "axum" / "data"
 
@@ -244,6 +246,16 @@ class Gps:
                         "hora": p[3], "etiqueta": p[4]})
         return out
 
+    def zonas(self, id_vendedor):
+        """Zonas del vendedor: Axum tiene una por dia de la semana (LUNES,
+        MARTES, ...). Devuelve el literal crudo; lo parsea axum_zonas."""
+        return self.call("allZoneByVendedor", codigoVendedor=id_vendedor)
+
+    def recorrido(self, id_vendedor, fecha):
+        """Todos los puntos GPS del dia, con hora."""
+        return self.call("FindLocationsOfVendedorIdEnDia",
+                         idVendedor=id_vendedor, dia=fecha) or []
+
     def visitados_hoy(self, fecha):
         try:
             return self.call("soloClientesVisitados", _dia=fecha)
@@ -386,7 +398,7 @@ def build():
             by_client[cid]["name"] = x.get("clientName") or ""
 
         summary["bySeller"] = sorted(
-            [{"sellerId": k, "name": v["name"] or ("Vendedor " + k),
+            [{"sellerId": k, "name": v["name"] or axum_nombres.de(k),
               "orders": v["orders"], "total": round(v["total"], 2)}
              for k, v in by_seller.items()], key=lambda r: -r["total"])
         summary["byChannel"] = sorted(
@@ -464,7 +476,7 @@ def build():
             s = sales_by.get(sid, {})
             gp = gps_by.get(sid, {})
             cross["rows"].append({
-                "sellerId": sid, "name": s.get("name") or ("Vendedor " + sid),
+                "sellerId": sid, "name": s.get("name") or axum_nombres.de(sid),
                 "orders": s.get("orders", 0), "total": s.get("total", 0),
                 "visited": gp.get("visited", 0), "km": gp.get("km"),
             })

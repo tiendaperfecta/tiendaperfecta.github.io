@@ -78,6 +78,7 @@
   .tl .h{font-variant-numeric:tabular-nums;color:rgb(var(--emerald));min-width:46px;font-weight:600;font-size:13px}
   .tl .n{font-size:13px}
   .scroll{max-height:560px;overflow:auto}
+  .scrollx{overflow-x:auto}
   #map-ldr{height:520px;border-radius:10px;overflow:hidden}
   .nota{color:rgb(var(--s400));font-size:12px;margin-top:10px;line-height:1.5}
 </style>
@@ -173,8 +174,17 @@
 
   <!-- LDR -->
   <section class="panel" id="p-ldr">
+    <div class="kpis" id="k-ldr"></div>
     <div class="card">
-      <h3>Camiones <span id="ldr-count" class="badge"></span></h3>
+      <h3>Choferes <span id="ldr-fecha" class="badge"></span></h3>
+      <div class="scrollx" id="t-fleteros"></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>Ranking del mes <span id="ldr-mes" class="badge"></span></h3>
+      <div id="t-ranking"></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>Camiones en el mapa <span id="ldr-count" class="badge"></span></h3>
       <div id="map-ldr"></div>
       <p class="nota" id="ldr-nota"></p>
     </div>
@@ -333,22 +343,28 @@ function crearMapa(tab, divId, puntos){
     const est = $('#tiempos-estado');
     est.textContent = tiempos.jornadaCerrada? 'jornada cerrada':'jornada en curso';
     est.className = 'badge ' + (tiempos.jornadaCerrada?'ok':'warn');
-    $('#tiempos-nota').textContent = tiempos.jornadaCerrada? '' :
-      'La alerta de salida temprana recién se evalúa después de las ' + (u.salida||'') + '.';
-    $('#t-tiempos').innerHTML = table([
-      {key:'sellerId',label:'Vendedor',fmt:v=>'Vendedor '+v},
+    const zonas = rows.filter(r=>r.zonaDelDia).length;
+    $('#tiempos-nota').textContent =
+      'Entrada y salida son el momento en que el GPS lo ubica dentro de su zona de ' +
+      (tiempos.diaDeZona||'hoy').toLowerCase() + ' (' + zonas + ' de ' + rows.length +
+      ' vendedores tienen zona cargada). ' +
+      (tiempos.jornadaCerrada? '' :
+       'La alerta de salida temprana recién se evalúa después de las ' + (u.salida||'') + '.');
+    $('#t-tiempos').innerHTML = '<div class="scrollx">' + table([
+      {key:'vendedor',label:'Vendedor'},
+      {key:'entradaZona',label:'Entró a zona',num:true,fmt:v=>v||'—'},
+      {key:'salidaZona',label:'Salió de zona',num:true,fmt:v=>v||'—'},
+      {key:'primera',label:'1ª visita',num:true,fmt:v=>v||'—'},
+      {key:'ultima',label:'Últ. visita',num:true,fmt:v=>v||'—'},
       {key:'visitas',label:'Visitas',num:true,fmt:fmtNum},
       {key:'minutosTotal',label:'Tiempo total',num:true,fmt:fmtMin},
-      {key:'minutosPromedio',label:'Prom. x visita',num:true,fmt:fmtMin},
-      {key:'primera',label:'Primera',num:true,fmt:v=>v||'—'},
-      {key:'ultima',label:'Última',num:true,fmt:v=>v||'—'},
+      {key:'minutosPromedio',label:'Prom.',num:true,fmt:fmtMin},
       {key:'km',label:'Km',num:true,fmt:v=>v==null?'—':fmtNum(v)},
-      {key:'pedidos',label:'Pedidos',num:true,fmt:fmtNum},
       {key:'alertas',label:'Alertas'}
     ], rows.map(r=>({...r, alertas:
       ((r.llegoTarde?'<span class="badge warn">llegó tarde</span> ':'') +
        (r.salioTemprano?'<span class="badge bad">salió temprano</span>':''))
-      || '<span class="badge ok">en hora</span>'})), {barCol:'visitas'});
+      || '<span class="badge ok">en hora</span>'})), {barCol:'visitas'}) + '</div>';
 
     const tl = tiempos.timeline||{};
     const idsTL = Object.keys(tl).filter(k=>k).sort((a,b)=>a-b);
@@ -378,7 +394,7 @@ function crearMapa(tab, divId, puntos){
     const pintarPdv = ()=>{
       const filas = (pdv.rows||[]).filter(r=>filtro==='todos'||r.estado===filtro);
       $('#t-pdv').innerHTML = table([
-        {key:'sellerId',label:'Vend.',fmt:v=>'V'+v},
+        {key:'vendedor',label:'Vendedor'},
         {key:'nombre',label:'Cliente'},
         {key:'canal',label:'Canal'},
         {key:'hora',label:'Hora',num:true,fmt:v=>v||'—'},
@@ -401,7 +417,7 @@ function crearMapa(tab, divId, puntos){
 
   if(cobertura){
     $('#t-cobertura').innerHTML = table([
-      {key:'sellerId',label:'Vendedor',fmt:v=>'Vendedor '+v},
+      {key:'vendedor',label:'Vendedor'},
       {key:'cartera',label:'Cartera',num:true,fmt:fmtNum},
       {key:'visitados',label:'Visitados hoy',num:true,fmt:fmtNum},
       {key:'noVisitados',label:'Sin pasar',num:true,fmt:fmtNum},
@@ -421,8 +437,47 @@ function crearMapa(tab, divId, puntos){
 
   // ---------- LDR ----------
   const camiones = (ldr && ldr.camiones) || [];
+  const fl = (ldr && ldr.fleteros) || null;
+  const mes = (ldr && ldr.mes) || null;
+  if(fl){
+    const T = fl.totales||{};
+    $('#k-ldr').innerHTML =
+      kpi('Entregas realizadas', fmtNum(T.realizadas), 'sobre ' + fmtNum(T.asignadas) + ' asignadas') +
+      kpi('Efectividad del día', T.efectividad==null?'—':T.efectividad+'%') +
+      kpi('Repartos', fmtNum(T.repartos), fmtNum(T.choferes) + ' choferes') +
+      kpi('Efectividad del mes', mes && mes.efGeneral!=null? mes.efGeneral+'%':'—',
+          mes? 'cartón ' + (mes.cartonGeneral!=null? mes.cartonGeneral+'%':'—') : '');
+    const f = $('#ldr-fecha');
+    f.textContent = fl.esDeHoy? 'datos de hoy' : 'últimos datos: ' + fl.fecha;
+    f.className = 'badge ' + (fl.esDeHoy?'ok':'warn');
+    $('#t-fleteros').innerHTML = table([
+      {key:'fletero',label:'Chofer'},
+      {key:'repartos',label:'Repartos',num:true,fmt:fmtNum},
+      {key:'asignadas',label:'Asignadas',num:true,fmt:fmtNum},
+      {key:'realizadas',label:'Realizadas',num:true,fmt:fmtNum},
+      {key:'efectividad',label:'Efectividad',num:true,fmt:v=>v==null?'—':v+'%'},
+      {key:'cartonesARetornar',label:'Cartones a retornar',num:true,fmt:fmtNum},
+      {key:'cartonesRetornados',label:'Retornados',num:true,fmt:fmtNum},
+      {key:'efCartones',label:'% cartón',num:true,fmt:v=>v==null?'—':v+'%'}
+    ], fl.rows, {barCol:'realizadas'});
+  } else {
+    $('#k-ldr').innerHTML = '';
+    $('#t-fleteros').innerHTML = '<div class="empty">' +
+      ((ldr && ldr.error) || 'Sin datos de choferes.') + '</div>';
+  }
+  if(mes){
+    $('#ldr-mes').textContent = mes.clave + (mes.actualizado? ' · al ' + mes.actualizado : '');
+    $('#t-ranking').innerHTML = table([
+      {key:'nombre',label:'Chofer'},
+      {key:'repartos',label:'Repartos',num:true,fmt:fmtNum},
+      {key:'asist',label:'Asistencia',num:true,fmt:v=>v==null?'—':v+'%'},
+      {key:'efE',label:'Efec. entregas',num:true,fmt:v=>v==null?'—':v+'%'},
+      {key:'efC',label:'Efec. cartón',num:true,fmt:v=>v==null?'—':v+'%'}
+    ], mes.ranking, {barCol:'efE'});
+  }
   $('#ldr-count').textContent = camiones.length + ' camiones';
-  $('#ldr-nota').textContent = (ldr && ldr.nota) || '';
+  $('#ldr-nota').textContent = ((ldr && ldr.fuente)? 'Fuente: ' + ldr.fuente + '. ' : '') +
+    ((ldr && ldr.nota) || '');
   crearMapa('ldr','map-ldr', camiones.map(c=>({lat:c.lat, lng:c.lng,
     popup:`<b>Camión ${c.id||'?'}</b><br>${c.hora||''}`})));
 })();

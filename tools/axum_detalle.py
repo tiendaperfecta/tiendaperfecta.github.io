@@ -20,6 +20,9 @@ calcula todo desde los datos crudos.
 import datetime as dt
 from collections import defaultdict
 
+import axum_nombres
+import axum_zonas
+
 # Umbrales de las alertas de jornada (hora argentina).
 HORA_LLEGADA = dt.time(9, 0)
 HORA_SALIDA = dt.time(14, 0)
@@ -146,7 +149,8 @@ def construir(gps, fecha, orders, escribir, meta, ahora=None):
         # El pedido cuenta para este vendedor solo si es suyo.
         propio = ped and (not ped["sellerId"] or ped["sellerId"] == sid)
         filas.append({
-            "sellerId": sid, "clientId": cid, "nombre": nombre_de(cid),
+            "sellerId": sid, "vendedor": axum_nombres.de(sid),
+            "clientId": cid, "nombre": nombre_de(cid),
             "canal": canal_de(cid), "minutos": minutos, "visito": visito,
             "hora": _hhmm(momento),
             "pedidos": ped["pedidos"] if propio else 0,
@@ -176,7 +180,8 @@ def construir(gps, fecha, orders, escribir, meta, ahora=None):
         if (sid, cid) in vistos:
             continue
         filas.append({
-            "sellerId": sid, "clientId": cid, "nombre": nombre_de(cid),
+            "sellerId": sid, "vendedor": axum_nombres.de(sid),
+            "clientId": cid, "nombre": nombre_de(cid),
             "canal": canal_de(cid), "minutos": 0.0, "visito": False, "hora": None,
             "pedidos": ped["pedidos"], "monto": round(ped["monto"], 2),
             "estado": "vendio_sin_pasar",
@@ -223,18 +228,43 @@ def construir(gps, fecha, orders, escribir, meta, ahora=None):
         except Exception:
             kms[sid] = None
 
+    # ---- entrada y salida de la zona que le toca hoy ----------------------
+    # Mas fiel que mirar la primera visita: marca cuando el vendedor realmente
+    # piso su zona, aunque todavia no haya registrado ningun cliente.
+    zona_de = {}
+    for sid in sellers:
+        try:
+            entra, sale, nombres, puntos, adentro = axum_zonas.jornada(
+                gps, sid, fecha, _hora)
+            zona_de[sid] = {"entrada": entra, "salida": sale, "zonas": nombres,
+                            "puntos": puntos, "puntosEnZona": adentro}
+        except Exception as e:
+            zona_de[sid] = {"entrada": None, "salida": None, "zonas": [],
+                            "puntos": 0, "puntosEnZona": 0}
+            avisos.append("zona %s: %s" % (sid, e))
+
     # ---- estadisticas y alertas de jornada --------------------------------
     stats = []
     for sid in sellers:
         r = por_vendedor[sid]
         primera, ultima = r["primera"], r["ultima"]
-        tarde = bool(primera and primera.time() > HORA_LLEGADA)
+        z = zona_de.get(sid, {})
+        # La alerta mira la zona; si el vendedor no tiene zona cargada o no hubo
+        # recorrido, cae en la primera/ultima visita.
+        entrada = z.get("entrada") or primera
+        salida = z.get("salida") or ultima
+        tarde = bool(entrada and entrada.time() > HORA_LLEGADA)
         # Antes de la hora de corte no se puede decir que alguien "se fue
         # temprano": la jornada sigue. Sin esto, a las 11 AM la alerta salta
         # para todos.
-        temprano = bool(jornada_cerrada and ultima and ultima.time() < HORA_SALIDA)
+        temprano = bool(jornada_cerrada and salida and salida.time() < HORA_SALIDA)
         stats.append({
             "sellerId": sid,
+            "vendedor": axum_nombres.de(sid),
+            "entradaZona": _hhmm(z.get("entrada")),
+            "salidaZona": _hhmm(z.get("salida")),
+            "zonaDelDia": ", ".join(z.get("zonas") or []) or None,
+            "puntosEnZona": z.get("puntosEnZona", 0),
             "visitas": r["visitas"],
             "minutosTotal": round(r["minutos"], 1),
             "minutosPromedio": round(r["minutos"] / r["visitas"], 1) if r["visitas"] else 0,
@@ -252,6 +282,7 @@ def construir(gps, fecha, orders, escribir, meta, ahora=None):
         "date": fecha,
         "umbrales": {"llegada": HORA_LLEGADA.strftime("%H:%M"),
                      "salida": HORA_SALIDA.strftime("%H:%M")},
+        "diaDeZona": axum_zonas.dia_de(fecha),
         "jornadaCerrada": jornada_cerrada,
         "bySeller": stats,
         "timeline": dict(linea),
@@ -268,6 +299,7 @@ def construir(gps, fecha, orders, escribir, meta, ahora=None):
         visitados = paso_por[sid] & set(cart)
         faltan = [cid for cid in cart if cid not in visitados]
         cob.append({
+            "vendedor": axum_nombres.de(sid),
             # Ojo: la cartera es el total asignado al vendedor, no la ruta del
             # dia. Axum no tiene cargadas las frecuencias (frecuenciaByVendedorDia
             # responde vacio), asi que no hay forma de saber a quien le tocaba hoy.
@@ -281,16 +313,18 @@ def construir(gps, fecha, orders, escribir, meta, ahora=None):
     escribir("cobertura.json", {"date": fecha, "bySeller": cob,
                                 "noVisitados": no_visitados})
 
-    # ---- LDR: camiones -----------------------------------------------------
+    # ---- LDR: camiones de Axum + choferes del Panel de Fleteros -----------
     try:
         camiones = gps.camiones()
     except Exception as e:
         camiones = []
         avisos.append("camiones: %s" % e)
-    escribir("ldr.json", {"date": fecha, "camiones": camiones,
-                          "nota": "Axum solo expone la posicion de los camiones: "
-                                  "los reportes de reparto, km y eventos por camion "
-                                  "responden vacio o error en este sistema."})
+    import axum_ldr
+    try:
+        escribir("ldr.json", axum_ldr.construir(fecha, camiones))
+    except Exception as e:
+        avisos.append("ldr: %s" % e)
+        escribir("ldr.json", {"date": fecha, "camiones": camiones})
 
     if avisos:
         meta.setdefault("errors", []).extend("detalle: " + a for a in avisos)
