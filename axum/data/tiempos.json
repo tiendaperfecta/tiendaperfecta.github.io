@@ -8,6 +8,26 @@
  },
  "bySeller": [
   {
+   "sellerId": "10",
+   "vendedor": "Matias Parada",
+   "inicioJornada": "09:08",
+   "finJornada": "14:47",
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": "09:08",
+   "ultima": "14:47",
+   "visitas": 47,
+   "minutosTotal": 257.9,
+   "minutosPromedio": 5.5,
+   "pedidos": 25,
+   "monto": 2757600.77,
+   "pasoSinVender": 31,
+   "km": 46.0,
+   "llegoTarde": true,
+   "salioTemprano": false
+  },
+  {
    "sellerId": "11",
    "vendedor": "Melanie Larrama",
    "inicioJornada": "08:59",
@@ -31,41 +51,21 @@
    "sellerId": "1",
    "vendedor": "Maria Noelia Madia",
    "inicioJornada": "09:31",
-   "finJornada": "13:58",
+   "finJornada": "14:26",
    "entradaZona": "09:31",
-   "salidaZona": "13:27",
+   "salidaZona": "14:26",
    "zonaConfiable": true,
    "primera": "09:31",
-   "ultima": "13:58",
-   "visitas": 40,
-   "minutosTotal": 140.0,
-   "minutosPromedio": 3.5,
+   "ultima": "14:25",
+   "visitas": 41,
+   "minutosTotal": 140.1,
+   "minutosPromedio": 3.4,
    "pedidos": 24,
    "monto": 2488826.96,
-   "pasoSinVender": 21,
-   "km": 47.0,
+   "pasoSinVender": 22,
+   "km": 51.0,
    "llegoTarde": true,
-   "salioTemprano": true
-  },
-  {
-   "sellerId": "10",
-   "vendedor": "Matias Parada",
-   "inicioJornada": "09:08",
-   "finJornada": "13:54",
-   "entradaZona": null,
-   "salidaZona": null,
-   "zonaConfiable": false,
-   "primera": "09:08",
-   "ultima": "13:54",
-   "visitas": 40,
-   "minutosTotal": 227.0,
-   "minutosPromedio": 5.7,
-   "pedidos": 16,
-   "monto": 1948949.22,
-   "pasoSinVender": 28,
-   "km": 32.0,
-   "llegoTarde": true,
-   "salioTemprano": true
+   "salioTemprano": false
   },
   {
    "sellerId": "12",
@@ -83,7 +83,7 @@
    "pedidos": 21,
    "monto": 1382595.01,
    "pasoSinVender": 21,
-   "km": 20.0,
+   "km": 21.0,
    "llegoTarde": true,
    "salioTemprano": true
   },
@@ -91,21 +91,21 @@
    "sellerId": "5",
    "vendedor": "Nicolas Martinez",
    "inicioJornada": "08:55",
-   "finJornada": "13:57",
+   "finJornada": "14:05",
    "entradaZona": "08:55",
    "salidaZona": "09:00",
    "zonaConfiable": true,
    "primera": "09:12",
-   "ultima": "13:57",
-   "visitas": 30,
-   "minutosTotal": 213.6,
-   "minutosPromedio": 7.1,
-   "pedidos": 32,
-   "monto": 2462996.97,
+   "ultima": "14:05",
+   "visitas": 31,
+   "minutosTotal": 216.0,
+   "minutosPromedio": 7.0,
+   "pedidos": 33,
+   "monto": 2517211.13,
    "pasoSinVender": 7,
-   "km": 47.0,
+   "km": 69.0,
    "llegoTarde": false,
-   "salioTemprano": true
+   "salioTemprano": false
   },
   {
    "sellerId": "7",
@@ -120,10 +120,10 @@
    "visitas": 26,
    "minutosTotal": 158.6,
    "minutosPromedio": 6.1,
-   "pedidos": 27,
-   "monto": 3671514.0,
+   "pedidos": 29,
+   "monto": 3791890.0,
    "pasoSinVender": 12,
-   "km": 54.0,
+   "km": 71.0,
    "llegoTarde": false,
    "salioTemprano": true
   },
@@ -131,21 +131,21 @@
    "sellerId": "4",
    "vendedor": "Lucas Giayetto",
    "inicioJornada": "10:01",
-   "finJornada": "13:52",
+   "finJornada": "14:51",
    "entradaZona": null,
    "salidaZona": null,
    "zonaConfiable": false,
    "primera": "10:01",
-   "ultima": "13:52",
-   "visitas": 18,
-   "minutosTotal": 116.7,
-   "minutosPromedio": 6.5,
-   "pedidos": 33,
-   "monto": 4396554.82,
-   "pasoSinVender": 8,
-   "km": 19.0,
+   "ultima": "14:51",
+   "visitas": 20,
+   "minutosTotal": 126.8,
+   "minutosPromedio": 6.3,
+   "pedidos": 40,
+   "monto": 5154438.88,
+   "pasoSinVender": 7,
+   "km": 22.0,
    "llegoTarde": true,
-   "salioTemprano": true
+   "salioTemprano": false
   },
   {
    "sellerId": "1176",
@@ -180,8 +180,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 31,
-   "monto": 3511101.17,
+   "pedidos": 36,
+   "monto": 4168236.98,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -300,8 +300,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 41,
-   "monto": 2061901.43,
+   "pedidos": 42,
+   "monto": 2099901.41,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -360,8 +360,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 31,
-   "monto": 4700811.7,
+   "pedidos": 38,
+   "monto": 5589592.71,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -928,6 +928,41 @@
     "hora": "13:54",
     "clientId": "2597",
     "nombre": "SERGIO ARIEL REKOFSKI"
+   },
+   {
+    "hora": "14:11",
+    "clientId": "3096",
+    "nombre": "MAILEN NATALY LEIS"
+   },
+   {
+    "hora": "14:29",
+    "clientId": "674",
+    "nombre": "LAS PALMERAS"
+   },
+   {
+    "hora": "14:30",
+    "clientId": "80",
+    "nombre": "CR 88 Santa Clara"
+   },
+   {
+    "hora": "14:36",
+    "clientId": "469",
+    "nombre": "COLAIZZO DAMARIS CELESTE"
+   },
+   {
+    "hora": "14:46",
+    "clientId": "4175",
+    "nombre": "RAUL ANDRES LIVIO"
+   },
+   {
+    "hora": "14:47",
+    "clientId": "638",
+    "nombre": "FAUSTO ALBERTO DARGUIBEL"
+   },
+   {
+    "hora": "14:47",
+    "clientId": "1706",
+    "nombre": "MARCOS SEBASTIAN RAMUNDO"
    }
   ],
   "": [
@@ -1117,6 +1152,11 @@
     "hora": "13:57",
     "clientId": "1381",
     "nombre": "LLANOS LANDEO CAMILA ALDANA"
+   },
+   {
+    "hora": "14:05",
+    "clientId": "3535",
+    "nombre": "ANALIA CRISTINA VIVAS"
    }
   ],
   "12": [
@@ -1588,6 +1628,16 @@
     "hora": "13:52",
     "clientId": "3915",
     "nombre": "DAIANA MAGALYS VASQUEZ"
+   },
+   {
+    "hora": "14:38",
+    "clientId": "4713",
+    "nombre": "PABLO SERGIO SEDARES"
+   },
+   {
+    "hora": "14:51",
+    "clientId": "3403",
+    "nombre": "ALAN AGUSTIN FERRANTE"
    }
   ]
  }
