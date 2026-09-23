@@ -39,6 +39,14 @@ jobs:
           GESCOM_CLIENT_ID: ${{ secrets.GESCOM_CLIENT_ID }}
           GESCOM_USERNAME: ${{ secrets.GESCOM_USERNAME }}
           GESCOM_PASSWORD: ${{ secrets.GESCOM_PASSWORD }}
+          # Aviso de llegadas tarde: un solo mail por dia. Sin MAIL_USER/PASS
+          # no manda nada, solo deja el aviso armado en axum/data/alerta.json.
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASS: ${{ secrets.MAIL_PASS }}
+          MAIL_PARA: ${{ secrets.MAIL_PARA }}
+          MAIL_SMTP: ${{ secrets.MAIL_SMTP }}
+          MAIL_PUERTO: ${{ secrets.MAIL_PUERTO }}
+          MAIL_HORA: ${{ secrets.MAIL_HORA }}
         run: python tools/axum_fetch.py
 
       - name: Commit data if changed
