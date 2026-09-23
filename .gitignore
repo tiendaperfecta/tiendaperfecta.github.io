@@ -11,3 +11,6 @@ __pycache__/
 token.txt
 gps_credentials.txt
 *.secret
+
+# Cache de OpenStreetMap del constructor de manzanas (se rebaja cuando hace falta)
+tools/_osm_cache/

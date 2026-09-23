@@ -23,6 +23,8 @@ import os
 import json
 import math
 
+from pathlib import Path
+
 import requests
 
 AUTH = "https://auth.gescom.online"
@@ -168,25 +170,13 @@ def _celdas(puntos, mlat, mlng):
     return out
 
 
-def _contorno(celdas):
-    """Anillos del borde de la union de celdas.
-
-    Cada celda aporta sus cuatro lados; los lados que comparten dos celdas
-    vecinas se cancelan, y los que quedan son exactamente el contorno. Despues
-    se hilvanan en anillos cerrados."""
-    lados = {}
-    for i, j in celdas:
-        for a, b in (((i, j), (i + 1, j)), ((i + 1, j), (i + 1, j + 1)),
-                     ((i + 1, j + 1), (i, j + 1)), ((i, j + 1), (i, j))):
-            clave = (a, b) if a < b else (b, a)
-            lados[clave] = lados.get(clave, 0) + 1
-    borde = [k for k, n in lados.items() if n == 1]
-
+def _anillos(lados):
+    """Hilvana lados sueltos en anillos cerrados. `lados` son pares de vertices
+    (cualquier cosa hasheable: celdas de la grilla o indices de nodo)."""
     vecinos = {}
-    for a, b in borde:
+    for a, b in lados:
         vecinos.setdefault(a, []).append(b)
         vecinos.setdefault(b, []).append(a)
-
     usados, anillos = set(), []
     for arranque in list(vecinos):
         if all((arranque, v) in usados or (v, arranque) in usados
@@ -196,9 +186,7 @@ def _contorno(celdas):
         while True:
             siguiente = None
             for v in vecinos[actual]:
-                if v == previo:
-                    continue
-                if (actual, v) in usados or (v, actual) in usados:
+                if v == previo or (actual, v) in usados or (v, actual) in usados:
                     continue
                 siguiente = v
                 break
@@ -209,9 +197,30 @@ def _contorno(celdas):
             if actual == arranque:
                 break
             anillo.append(actual)
-        if len(anillo) >= 4:
+        if len(anillo) >= 3:
             anillos.append(anillo)
     return anillos
+
+
+def _lados_sueltos(figuras):
+    """Lados que pertenecen a una sola figura: el contorno de la union. Los que
+    comparten dos figuras vecinas se cancelan."""
+    cuenta = {}
+    for anillo in figuras:
+        n = len(anillo)
+        for i in range(n):
+            a, b = anillo[i], anillo[(i + 1) % n]
+            if a == b:
+                continue
+            clave = (a, b) if a < b else (b, a)
+            cuenta[clave] = cuenta.get(clave, 0) + 1
+    return [k for k, v in cuenta.items() if v == 1]
+
+
+def _contorno(celdas):
+    """Anillos del borde de la union de celdas de la grilla."""
+    cuadros = [[(i, j), (i + 1, j), (i + 1, j + 1), (i, j + 1)] for i, j in celdas]
+    return _anillos(_lados_sueltos(cuadros))
 
 
 def _simplificar(anillo):
@@ -223,6 +232,70 @@ def _simplificar(anillo):
         if (b[0] - a[0]) * (c[1] - b[1]) != (b[1] - a[1]) * (c[0] - b[0]):
             out.append(b)
     return out or anillo
+
+
+_MANZANAS = None
+
+
+def manzanas():
+    """Manzanas reales de OSM (las arma tools/construir_manzanas.py). Si el
+    archivo no esta, se cae a la grilla de 100 m."""
+    global _MANZANAS
+    if _MANZANAS is None:
+        f = Path(__file__).with_name("manzanas.json")
+        try:
+            _MANZANAS = json.loads(f.read_text(encoding="utf-8"))
+        except Exception:
+            _MANZANAS = {}
+        if _MANZANAS:
+            # indice por celda de 100 m, para encontrar rapido las manzanas de
+            # una zona sin recorrer las 20.000
+            idx = {}
+            for k, (lat, lng) in enumerate(_MANZANAS["centros"]):
+                idx.setdefault((round(lat, 3), round(lng, 3)), []).append(k)
+            _MANZANAS["indice"] = idx
+    return _MANZANAS
+
+
+def zona_por_manzanas(puntos):
+    """Anillos que siguen la linea de las calles: se toma el territorio cerrado
+    (la grilla) y se lo reemplaza por las manzanas de verdad cuyo centro cae
+    adentro. El contorno de esa union son las calles del borde."""
+    datos = manzanas()
+    if not datos:
+        return None
+    mlat, mlng = _proyectar(puntos)
+    celdas = _celdas(puntos, mlat, mlng)
+    if not celdas:
+        return None
+
+    # candidatas: manzanas cuyo centro esta en el area de la zona
+    lats = [j * CELDA_M / mlat for _, j in celdas]
+    lngs = [i * CELDA_M / mlng for i, _ in celdas]
+    elegidas = []
+    vistas = set()
+    for clave, ks in datos["indice"].items():
+        if not (min(lats) - 0.002 <= clave[0] <= max(lats) + 0.002 and
+                min(lngs) - 0.002 <= clave[1] <= max(lngs) + 0.002):
+            continue
+        for k in ks:
+            if k in vistas:
+                continue
+            lat, lng = datos["centros"][k]
+            celda = (int(math.floor(lng * mlng / CELDA_M)),
+                     int(math.floor(lat * mlat / CELDA_M)))
+            if celda in celdas:
+                vistas.add(k)
+                elegidas.append(datos["bloques"][k])
+    if not elegidas:
+        return None
+
+    nodos = datos["nodos"]
+    anillos = []
+    for anillo in _anillos(_lados_sueltos(elegidas)):
+        anillos.append([nodos[i] for i in anillo])
+    anillos.sort(key=len, reverse=True)
+    return anillos or None
 
 
 def zona_por_cuadras(puntos):
@@ -295,7 +368,9 @@ def construir(crudo):
     zonas = {}
     for (vend, dia), pts in puntos_por_zona.items():
         limpio = sin_outliers(pts)
-        anillos = zona_por_cuadras(limpio)
+        # Primero se intenta con las manzanas reales de OSM; si no estan, con la
+        # grilla de 100 m.
+        anillos = zona_por_manzanas(limpio) or zona_por_cuadras(limpio)
         if anillos:
             zonas.setdefault(vend, {})[dia] = {
                 "poligonos": anillos,
