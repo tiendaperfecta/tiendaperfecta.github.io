@@ -322,6 +322,16 @@ function crearMapa(tab, divId, puntos){
       'meta.json','dias.json','zonas.json','clientes.json','rutas.json','ldr.json']
       .map(loadJSON));
 
+  const cliCampos = (maestro && maestro.campos) || [];
+  const cliMapa = (maestro && maestro.clientes) || {};
+  const cli = id => {
+    const f = cliMapa[String(id)];
+    if(!f) return null;
+    const o = {};
+    cliCampos.forEach((c, i) => { o[c] = f[i]; });
+    return o;
+  };
+
   // meta / errores
   if(meta){
     $('#meta').textContent = 'Datos del ' + (meta.date||'—') + ' · actualizado ' +
@@ -398,16 +408,6 @@ function crearMapa(tab, divId, puntos){
   // ---------- DIA SELECCIONADO ----------
   // Todo el detalle (tiempos, clientes, zonas) sale de dia-<fecha>.json, asi el
   // historico y el dia de hoy usan exactamente el mismo codigo.
-  const cliCampos = (maestro && maestro.campos) || [];
-  const cliMapa = (maestro && maestro.clientes) || {};
-  const cli = id => {
-    const f = cliMapa[String(id)];
-    if(!f) return null;
-    const o = {};
-    cliCampos.forEach((c, i) => { o[c] = f[i]; });
-    return o;
-  };
-
   const listaDias = (dias && dias.dias) || [];
   $('#sel-dia').innerHTML = listaDias.map((d,i)=>
     `<option value="${d.fecha}">${d.fecha} · ${d.diaSemana}${i===0?' · hoy':''}</option>`).join('');
