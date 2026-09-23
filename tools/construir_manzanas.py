@@ -36,9 +36,13 @@ CLIENTES = RAIZ / "axum" / "data" / "clientes.json"
 SALIDA = Path(__file__).with_name("manzanas.json")
 CACHE = Path(__file__).with_name("_osm_cache")
 
+# Varios espejos: el principal contesta 504/429 con frecuencia, y los lentos
+# igual sirven porque esto se corre de vez en cuando, no en cada refresco.
 ESPEJOS = ["https://overpass-api.de/api/interpreter",
+           "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+           "https://overpass.openstreetmap.fr/api/interpreter",
            "https://overpass.kumi.systems/api/interpreter",
-           "https://overpass.osm.jp/api/interpreter"]
+           "https://overpass.private.coffee/api/interpreter"]
 
 # Solo calles de verdad: sin veredas, senderos, escaleras ni calles internas de
 # playas de estacionamiento, que parten las manzanas en pedacitos.
@@ -88,7 +92,7 @@ def bajar(mosaico):
         return json.loads(archivo.read_text(encoding="utf-8"))
     consulta = ('[out:json][timeout:180];way["highway"~"^(%s)$"](%.4f,%.4f,%.4f,%.4f);'
                 '(._;>;);out skel qt;' % (TIPOS, s, o, n, e))
-    for intento in range(6):
+    for intento in range(15):
         url = ESPEJOS[intento % len(ESPEJOS)]
         try:
             r = requests.post(url, data=consulta.encode("utf-8"),
@@ -102,7 +106,7 @@ def bajar(mosaico):
             print("    %s -> %s" % (url.split("/")[2], r.status_code))
         except Exception as ex:
             print("    %s -> %s" % (url.split("/")[2], type(ex).__name__))
-        time.sleep(10 + intento * 15)
+        time.sleep(min(8 + intento * 6, 45))
     print("    mosaico sin datos, se sigue")
     return {"elements": []}
 
