@@ -81,6 +81,15 @@
   .scrollx{overflow-x:auto}
   #map-ldr{height:520px;border-radius:10px;overflow:hidden}
   .nota{color:rgb(var(--s400));font-size:12px;margin-top:10px;line-height:1.5}
+  .alerta{border-radius:10px;padding:13px 16px;margin-bottom:14px;font-size:13px;
+    background:rgb(251 146 60/.10);border-left:3px solid rgb(251 146 60)}
+  .alerta.ok{background:rgb(var(--emerald)/.08);border-left-color:rgb(var(--emerald))}
+  .alerta-t{font-weight:700;color:#fdba74;margin-bottom:7px}
+  .alerta.ok .alerta-t{color:#6ee7b7;margin-bottom:0}
+  .alerta-l{margin-top:5px;line-height:1.7}
+  .alerta-l b{color:rgb(var(--s300));font-weight:600}
+  .alerta .hh{font-variant-numeric:tabular-nums;color:#fdba74;font-weight:700}
+  .alerta-n{margin-top:8px;color:rgb(var(--s400));font-size:12px}
   .barra-dia{display:none;flex-wrap:wrap;align-items:center;gap:10px;margin:-6px 0 16px}
   .barra-dia.on{display:flex}
   .barra-dia label{font-size:12px;color:rgb(var(--s400));text-transform:uppercase;letter-spacing:.6px}
@@ -100,6 +109,7 @@
   </header>
 
   <div id="errbox"></div>
+  <div id="alertas"></div>
 
   <div class="tabs">
     <div class="tab active" data-t="ventas">Ventas</div>
@@ -199,9 +209,10 @@
         <span><i style="background:#60a5fa"></i>visitado fuera de ruta</span>
         <span><i style="background:#fbbf24;border-radius:2px"></i>zona dibujada con los clientes</span>
       </div>
-      <p class="nota">La zona no es la que tiene cargada Axum: se dibuja con las coordenadas
-        reales de los clientes que le tocan ese día según GesCom (envolvente de los puntos,
-        descartando clientes sueltos a kilómetros del grupo).</p>
+      <p class="nota">La zona no es la que tiene cargada Axum: se dibuja sobre las manzanas
+        donde están los clientes que le tocan ese día según GesCom, en celdas de 100 m
+        (una cuadra), así el borde cae por la calle y no por la puerta de los comercios.
+        Una ruta repartida en barrios separados da varias áreas, que es lo que realmente es.</p>
     </div>
   </section>
 
@@ -382,6 +393,34 @@ function crearMapa(tab, divId, puntos){
     vendio_sin_pasar:'Le vendió sin pasar', sin_visita:'Pasó cerca sin registrar'};
   let dia = null, filtroEstado = 'todos';
 
+  function pintarAlertas(){
+    const rows = dia.bySeller||[];
+    const u = dia.umbrales||{};
+    const tarde = rows.filter(r=>r.llegoTarde);
+    const temprano = rows.filter(r=>r.salioTemprano);
+    const caja = $('#alertas');
+    if(!tarde.length && !temprano.length){
+      caja.innerHTML = dia.jornadaCerrada
+        ? '<div class="alerta ok"><div class="alerta-t">✓ Sin alertas de jornada ' +
+          'el ' + dia.date + '</div></div>'
+        : '';
+      return;
+    }
+    const lista = rs => rs.map(r =>
+      r.vendedor + ' <span class="hh">' + (r.llegoTarde? (r.inicioJornada||'—')
+                                                       : (r.finJornada||'—')) + '</span>'
+      ).join(' &nbsp;·&nbsp; ');
+    let h = '<div class="alerta"><div class="alerta-t">⚠ Alertas de jornada · ' +
+            dia.date + '</div>';
+    if(tarde.length) h += '<div class="alerta-l"><b>Llegaron después de las ' +
+      (u.llegada||'') + ':</b> ' + lista(tarde) + '</div>';
+    if(temprano.length) h += '<div class="alerta-l"><b>Se fueron antes de las ' +
+      (u.salida||'') + ':</b> ' + lista(temprano) + '</div>';
+    if(!dia.jornadaCerrada) h += '<div class="alerta-n">La salida temprana se ' +
+      'evalúa recién pasadas las ' + (u.salida||'') + '; la jornada sigue en curso.</div>';
+    caja.innerHTML = h + '</div>';
+  }
+
   function pintarTiempos(){
     const rows = dia.bySeller||[];
     const visitas = rows.reduce((a,r)=>a+(r.visitas||0),0);
@@ -542,10 +581,14 @@ function crearMapa(tab, divId, puntos){
     visitados.forEach(id=>{ if(!enRuta.has(id)) poner(id, '#60a5fa', 'visitado fuera de ruta'); });
 
     const poly = zonasGeo && zonasGeo[vend] && zonasGeo[vend][dia.diaSemana];
-    if(poly){
-      L.polygon(poly.poligono, {color:'#fbbf24', weight:2, fillOpacity:.06}).addTo(capaZonas);
-      poly.poligono.forEach(p=>pts.push(p));
-      $('#zona-info').textContent = poly.clientes + ' clientes' +
+    const anillos = poly && (poly.poligonos || (poly.poligono? [poly.poligono] : []));
+    if(anillos && anillos.length){
+      anillos.forEach(r=>{
+        L.polygon(r, {color:'#fbbf24', weight:2, fillOpacity:.07}).addTo(capaZonas);
+        r.forEach(p=>pts.push(p));
+      });
+      $('#zona-info').textContent = poly.clientes + ' clientes · ' +
+        (poly.manzanas!=null? poly.manzanas + ' manzanas' : anillos.length + ' áreas') +
         (poly.descartados? ' · ' + poly.descartados + ' descartados por estar lejos':'');
     } else {
       $('#zona-info').textContent = 'sin zona dibujada';
@@ -561,7 +604,7 @@ function crearMapa(tab, divId, puntos){
     if(!dia){ $('#dia-resumen').textContent = 'sin datos de ese día'; return; }
     $('#dia-resumen').textContent = fmtNum(r.visitas||0) + ' visitas · ' +
       fmtNum(r.pedidos||0) + ' pedidos · ' + fmtMoney(r.monto||0);
-    pintarTiempos(); pintarClientes(); pintarZonas();
+    pintarAlertas(); pintarTiempos(); pintarClientes(); pintarZonas();
   }
   $('#sel-dia').onchange = e=>cargarDia(e.target.value);
   if(listaDias.length) await cargarDia(listaDias[0].fecha);

@@ -8,9 +8,9 @@ vendedor lo visita y que dias. Con eso se arma:
 
     clientes.json  maestro liviano: nombre, coordenada, localidad
     rutas.json     a quien le toca visitar cada vendedor, por dia de la semana
-    zonas.json     el poligono de cada zona, dibujado con los clientes que la
-                   componen (envolvente convexa), en vez de los poligonos
-                   cargados a mano en Axum que ya no reflejan la realidad
+    zonas.json     la zona de cada vendedor por dia, dibujada sobre las
+                   manzanas donde estan sus clientes: el borde cae por la calle,
+                   no por la puerta de los comercios
 
 Credenciales por variables de entorno (GitHub Secrets), nunca en el repo:
 
@@ -62,26 +62,107 @@ def bajar_clientes():
 # --------------------------------------------------------------------------- #
 # Geometria
 # --------------------------------------------------------------------------- #
-def envolvente(puntos):
-    """Envolvente convexa (monotone chain). Devuelve el poligono en orden."""
-    p = sorted(set(puntos))
-    if len(p) <= 2:
-        return p
+# Una cuadra de Mar del Plata mide ~100 m. La zona se arma con celdas de ese
+# tamano: el borde cae entonces por la calle, entre manzanas, y no por la puerta
+# de los clientes como pasaba con la envolvente.
+CELDA_M = 100
+DILATACION = 1          # celdas de halo, para unir clientes de manzanas vecinas
 
-    def cruz(o, a, b):
-        return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
 
-    abajo = []
-    for q in p:
-        while len(abajo) >= 2 and cruz(abajo[-2], abajo[-1], q) <= 0:
-            abajo.pop()
-        abajo.append(q)
-    arriba = []
-    for q in reversed(p):
-        while len(arriba) >= 2 and cruz(arriba[-2], arriba[-1], q) <= 0:
-            arriba.pop()
-        arriba.append(q)
-    return abajo[:-1] + arriba[:-1]
+def _proyectar(puntos):
+    """(lat,lng) -> metros planos, con el centro del grupo como origen."""
+    lat0 = _mediana([p[0] for p in puntos])
+    mlat = 110540.0
+    mlng = 111320.0 * math.cos(math.radians(lat0))
+    return mlat, mlng
+
+
+def _celdas(puntos, mlat, mlng):
+    """Celdas ocupadas, mas su halo."""
+    base = set()
+    for lat, lng in puntos:
+        base.add((int(math.floor(lng * mlng / CELDA_M)),
+                  int(math.floor(lat * mlat / CELDA_M))))
+    if DILATACION <= 0:
+        return base
+    out = set(base)
+    for _ in range(DILATACION):
+        nuevo = set()
+        for i, j in out:
+            nuevo.update({(i + 1, j), (i - 1, j), (i, j + 1), (i, j - 1)})
+        out |= nuevo
+    return out
+
+
+def _contorno(celdas):
+    """Anillos del borde de la union de celdas.
+
+    Cada celda aporta sus cuatro lados; los lados que comparten dos celdas
+    vecinas se cancelan, y los que quedan son exactamente el contorno. Despues
+    se hilvanan en anillos cerrados."""
+    lados = {}
+    for i, j in celdas:
+        for a, b in (((i, j), (i + 1, j)), ((i + 1, j), (i + 1, j + 1)),
+                     ((i + 1, j + 1), (i, j + 1)), ((i, j + 1), (i, j))):
+            clave = (a, b) if a < b else (b, a)
+            lados[clave] = lados.get(clave, 0) + 1
+    borde = [k for k, n in lados.items() if n == 1]
+
+    vecinos = {}
+    for a, b in borde:
+        vecinos.setdefault(a, []).append(b)
+        vecinos.setdefault(b, []).append(a)
+
+    usados, anillos = set(), []
+    for arranque in list(vecinos):
+        if all((arranque, v) in usados or (v, arranque) in usados
+               for v in vecinos[arranque]):
+            continue
+        anillo, actual, previo = [arranque], arranque, None
+        while True:
+            siguiente = None
+            for v in vecinos[actual]:
+                if v == previo:
+                    continue
+                if (actual, v) in usados or (v, actual) in usados:
+                    continue
+                siguiente = v
+                break
+            if siguiente is None:
+                break
+            usados.add((actual, siguiente))
+            previo, actual = actual, siguiente
+            if actual == arranque:
+                break
+            anillo.append(actual)
+        if len(anillo) >= 4:
+            anillos.append(anillo)
+    return anillos
+
+
+def _simplificar(anillo):
+    """Saca los vertices que estan en linea recta entre sus vecinos."""
+    out = []
+    n = len(anillo)
+    for k in range(n):
+        a, b, c = anillo[k - 1], anillo[k], anillo[(k + 1) % n]
+        if (b[0] - a[0]) * (c[1] - b[1]) != (b[1] - a[1]) * (c[0] - b[0]):
+            out.append(b)
+    return out or anillo
+
+
+def zona_por_cuadras(puntos):
+    """Anillos en (lat,lng) que cubren las manzanas donde estan los clientes."""
+    if len(puntos) < 2:
+        return []
+    mlat, mlng = _proyectar(puntos)
+    anillos = []
+    for anillo in _contorno(_celdas(puntos, mlat, mlng)):
+        simple = _simplificar(anillo)
+        anillos.append([[round(j * CELDA_M / mlat, 6), round(i * CELDA_M / mlng, 6)]
+                        for i, j in simple])
+    anillos.sort(key=len, reverse=True)
+    return anillos
 
 
 def _mediana(xs):
@@ -140,12 +221,13 @@ def construir(crudo):
     zonas = {}
     for (vend, dia), pts in puntos_por_zona.items():
         limpio = sin_outliers(pts)
-        poly = envolvente(limpio)
-        if len(poly) >= 3:
+        anillos = zona_por_cuadras(limpio)
+        if anillos:
             zonas.setdefault(vend, {})[dia] = {
-                "poligono": [[round(a, 6), round(b, 6)] for a, b in poly],
+                "poligonos": anillos,
                 "clientes": len(pts),
                 "descartados": len(pts) - len(limpio),
+                "manzanas": len(_celdas(limpio, *_proyectar(limpio))),
             }
     return clientes, rutas, zonas
 
