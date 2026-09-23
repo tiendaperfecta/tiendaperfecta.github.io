@@ -3465,6 +3465,24 @@
   },
   {
    "fecha": "2026-09-23",
+   "sellerId": "2",
+   "vendedor": "Julian NuÃ±ez",
+   "clientId": "1394",
+   "nombre": "CANDY STORE SRL",
+   "localidad": "MAR DEL PLATA",
+   "ramo": "pepsico-7",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 481071.72,
+   "fechaVenta": "2026-09-23",
+   "horaVenta": "14:27",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-23",
    "sellerId": "20",
    "vendedor": "Deposito",
    "clientId": "6",
@@ -7507,8 +7525,8 @@
    "minutos": 0.0,
    "visito": false,
    "hora": null,
-   "pedidos": 1,
-   "monto": 116928.65,
+   "pedidos": 2,
+   "monto": 195990.11,
    "fechaVenta": "2026-09-23",
    "horaVenta": "14:23",
    "estado": "vendio_sin_pasar"
@@ -7518,7 +7536,7 @@
   "vendio": 109,
   "paso_sin_vender": 99,
   "sin_visita": 21,
-  "vendio_sin_pasar": 188
+  "vendio_sin_pasar": 189
  },
  "bySeller": [
   {
@@ -7577,7 +7595,7 @@
    "pedidos": 35,
    "monto": 2121856.86,
    "pasoSinVender": 12,
-   "km": 46.0,
+   "km": 47.0,
    "llegoTarde": true,
    "salioTemprano": true
   },
@@ -7645,9 +7663,9 @@
    "sellerId": "5",
    "vendedor": "Nicolas Martinez",
    "inicioJornada": "09:07",
-   "finJornada": "14:28",
+   "finJornada": "14:30",
    "entradaZona": "13:57",
-   "salidaZona": "14:28",
+   "salidaZona": "14:30",
    "zonaConfiable": true,
    "primera": "09:07",
    "ultima": "12:21",
@@ -7694,8 +7712,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 42,
-   "monto": 3739353.31,
+   "pedidos": 43,
+   "monto": 4220425.03,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -7834,8 +7852,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 35,
-   "monto": 4729185.31,
+   "pedidos": 36,
+   "monto": 4808246.77,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -11163,7 +11181,7 @@
  "totales": {
   "visitas": 208,
   "minutos": 1218.3,
-  "pedidos": 404,
-  "monto": 48666334.81
+  "pedidos": 406,
+  "monto": 49226467.99
  }
 }

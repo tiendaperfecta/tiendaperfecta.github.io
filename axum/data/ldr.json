@@ -2,13 +2,6 @@
  "date": "2026-09-23",
  "camiones": [
   {
-   "id": "1",
-   "lat": -38.0073775,
-   "lng": -57.5596112,
-   "hora": "2:28 PM",
-   "etiqueta": "91"
-  },
-  {
    "id": "6",
    "lat": -38.0044417,
    "lng": -57.5636931,
@@ -16,46 +9,53 @@
    "etiqueta": "nnn"
   },
   {
+   "id": "1",
+   "lat": -38.0065474,
+   "lng": -57.5614306,
+   "hora": "2:32 PM",
+   "etiqueta": "101"
+  },
+  {
    "id": "12",
    "lat": -38.0180816666667,
    "lng": -57.56935,
-   "hora": "2:27 PM",
-   "etiqueta": "95"
+   "hora": "2:29 PM",
+   "etiqueta": "238"
+  },
+  {
+   "id": "7",
+   "lat": -38.0073562,
+   "lng": -57.5382782,
+   "hora": "2:31 PM",
+   "etiqueta": "102"
+  },
+  {
+   "id": "11",
+   "lat": -38.0154517,
+   "lng": -57.5738233,
+   "hora": "2:30 PM",
+   "etiqueta": "220"
+  },
+  {
+   "id": "5",
+   "lat": -37.9864257,
+   "lng": -57.5706208,
+   "hora": "2:30 PM",
+   "etiqueta": "220"
+  },
+  {
+   "id": "4",
+   "lat": -37.999751,
+   "lng": -57.5469481,
+   "hora": "2:29 PM",
+   "etiqueta": "225"
   },
   {
    "id": "10",
    "lat": -37.98541985,
    "lng": -57.57242083,
    "hora": "2:25 PM",
-   "etiqueta": "258"
-  },
-  {
-   "id": "7",
-   "lat": -38.0074254,
-   "lng": -57.5381636,
-   "hora": "2:28 PM",
-   "etiqueta": "92"
-  },
-  {
-   "id": "11",
-   "lat": -38.0154517,
-   "lng": -57.5738233,
-   "hora": "2:28 PM",
-   "etiqueta": "93"
-  },
-  {
-   "id": "4",
-   "lat": -37.9997446,
-   "lng": -57.5469478,
-   "hora": "2:27 PM",
-   "etiqueta": "99"
-  },
-  {
-   "id": "5",
-   "lat": -37.9864266,
-   "lng": -57.5706203,
-   "hora": "2:28 PM",
-   "etiqueta": "92"
+   "etiqueta": "506"
   }
  ],
  "fuente": "Panel de Fleteros (API GesCom) + posiciones de Axum GPS",
@@ -63,6 +63,7 @@
  "fleteros": {
   "fecha": "2026-09-23",
   "esDeHoy": true,
+  "cartonesCargados": false,
   "rows": [
    {
     "fletero": "Alejandro Fabian Maiorano",
