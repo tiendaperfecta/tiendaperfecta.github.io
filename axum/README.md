@@ -138,6 +138,20 @@ orden de ruta, hora y duración de la visita, y el pedido con importe y hora.
 > la ruta 2 abriría el mapa a media provincia. El trazo sigue dibujado, para
 > verlo entero alcanza con alejarse.
 
+## Taxonomía del cliente
+
+GesCom guarda el ramo y el subramo como código (`pepsico-7`, `pepsico-171`); las
+etiquetas legibles están en `get-ramos` y `get-subramos`. Cruzándolos sale la
+misma nomenclatura que usa Axum:
+
+| GesCom | Etiqueta |
+|---|---|
+| `codigoSubramo` + `codigoSegmento` | **Almacen/Despensa_D** ← la taxonomía |
+| `codigoRamo` | **TRADITIONAL TRADE** ← el canal |
+
+Aparece en top clientes, en el detalle del día, en los que no visitó y en la
+ficha del mapa.
+
 ## Alertas de jornada
 
 Cartel arriba de todo, visible en cualquier pestaña, con los nombres y la hora:
@@ -147,6 +161,25 @@ Cartel arriba de todo, visible en cualquier pestaña, con los nombres y la hora:
   pasada esa hora (si no, a las 11 de la mañana los marcaría a todos).
 
 Los umbrales están en `tools/axum_detalle.py` (`HORA_LLEGADA` / `HORA_SALIDA`).
+
+### Aviso por mail
+
+Un **único correo por día** con todos los que llegaron tarde, más los que no
+registraron ninguna señal teniendo ruta asignada. Se manda a partir de las 10:30
+(a las 9:05 el listado saldría incompleto) y el día queda anotado en
+`axum/data/alertas.json` para que el refresco horario no lo repita.
+
+Secrets que hacen falta (sin ellos no manda nada: deja el aviso armado en
+`axum/data/alerta.json`, que el panel igual muestra arriba de todo):
+
+| Secret | Para qué |
+|---|---|
+| `MAIL_USER` | casilla desde la que sale |
+| `MAIL_PASS` | su contraseña de aplicación |
+| `MAIL_PARA` | destinatarios separados por coma |
+| `MAIL_SMTP` | opcional, por defecto `smtp.gmail.com` |
+| `MAIL_PUERTO` | opcional, por defecto `587` |
+| `MAIL_HORA` | opcional, por defecto `10:30` |
 
 ## Histórico
 
