@@ -73,11 +73,40 @@ commiteados (que funcionan igual, solo que congelados):
 
 Son los mismos que usa el Panel de Fleteros.
 
-## Zonas dibujadas por manzana
+## Zonas dibujadas sobre las manzanas reales
 
-La zona de cada vendedor no sale de Axum: se dibuja con los clientes que le
-tocan ese día según GesCom, pero **sobre una grilla de 100 m** (una cuadra de
-Mar del Plata), no uniendo los puntos:
+El límite de cada zona **sigue la traza de las calles**. No es una grilla: son
+las manzanas de verdad de la ciudad.
+
+`tools/construir_manzanas.py` baja las calles de OpenStreetMap y las
+**poligoniza** — los anillos cerrados que las calles forman entre sí *son* las
+manzanas — y deja 15.944 de ellas en `tools/manzanas.json`. Se corre a mano
+cada tanto (las calles no cambian seguido); el refresco horario solo lee ese
+archivo, así que no depende de Overpass ni necesita shapely:
+
+```bash
+pip install requests shapely
+python tools/construir_manzanas.py     # ~20 min, cachea lo que baja
+```
+
+Para armar una zona se toman las manzanas que caen en el territorio del
+vendedor ese día y se unen. Las manzanas se guardan como índices a una tabla de
+nodos, así dos vecinas comparten el borde exacto y **unirlas es cancelar los
+lados repetidos**: lo que queda es el contorno, es decir, las calles del borde.
+
+52 de las 91 zonas quedan con un solo perímetro. Las demás cubren barrios
+realmente separados: la ruta del vendedor 7 los martes se reparte a lo largo de
+52 km entre Mar del Plata, Sierra de los Padres y La Peregrina.
+
+> Overpass (el servidor público de OSM) contesta 504 y 429 seguido. El script
+> usa cinco espejos, cachea cada mosaico y reintenta solo lo que falta, así que
+> se lo puede cortar y retomar.
+
+## ~~Zonas dibujadas por manzana~~ (método anterior, queda de respaldo)
+
+Si `tools/manzanas.json` no está, la zona se dibuja sobre una grilla de 100 m
+alineada al norte. Funciona, pero los escalones cortan las manzanas en diagonal
+porque las calles de Mar del Plata están rotadas:
 
 1. se marcan las celdas donde hay al menos un cliente,
 2. se les suma una celda de halo para unir manzanas vecinas,
