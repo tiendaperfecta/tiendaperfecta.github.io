@@ -584,7 +584,7 @@ function crearMapa(tab, divId, puntos){
     const anillos = poly && (poly.poligonos || (poly.poligono? [poly.poligono] : []));
     if(anillos && anillos.length){
       anillos.forEach(r=>{
-        L.polygon(r, {color:'#fbbf24', weight:2, fillOpacity:.07}).addTo(capaZonas);
+        L.polygon(r, {color:'#fbbf24', weight:3, opacity:.95, fillOpacity:.10}).addTo(capaZonas);
         r.forEach(p=>pts.push(p));
       });
       $('#zona-info').textContent = poly.clientes + ' clientes · ' +

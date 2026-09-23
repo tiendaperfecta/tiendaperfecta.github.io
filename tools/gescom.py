@@ -66,7 +66,9 @@ def bajar_clientes():
 # tamano: el borde cae entonces por la calle, entre manzanas, y no por la puerta
 # de los clientes como pasaba con la envolvente.
 CELDA_M = 100
-DILATACION = 1          # celdas de halo, para unir clientes de manzanas vecinas
+DILATACION = 1          # manzana de halo, para que el borde caiga en la calle
+CIERRE = 8              # une manzanas separadas por menos de ~1,6 km, para que
+                        # la zona quede como un solo perimetro y no como islas
 
 
 def _proyectar(puntos):
@@ -77,20 +79,92 @@ def _proyectar(puntos):
     return mlat, mlng
 
 
+def _vecinas(celda):
+    i, j = celda
+    return [(i + di, j + dj) for di in (-1, 0, 1) for dj in (-1, 0, 1)
+            if (di, dj) != (0, 0)]
+
+
+def _grupos(celdas, alcance):
+    """Separa las manzanas en grupos: dos manzanas son del mismo grupo si estan
+    a menos de `alcance` celdas. Se trabaja grupo por grupo porque una ruta
+    puede ir de Mar del Plata a Sierra de los Padres, y barrer el rectangulo
+    que las contiene a las dos seria recorrer 50 km de campo vacio."""
+    pendientes, grupos = set(celdas), []
+    while pendientes:
+        semilla = pendientes.pop()
+        grupo, pila = {semilla}, [semilla]
+        while pila:
+            i, j = pila.pop()
+            cerca = [c for c in pendientes
+                     if abs(c[0] - i) <= alcance and abs(c[1] - j) <= alcance]
+            for c in cerca:
+                pendientes.discard(c)
+                grupo.add(c)
+                pila.append(c)
+        grupos.append(grupo)
+    return grupos
+
+
+def _dilatar(celdas, r):
+    """Dilatacion de Chebyshev: cada manzana se expande a un cuadrado de radio r."""
+    if r <= 0:
+        return set(celdas)
+    out = set()
+    for i, j in celdas:
+        for di in range(-r, r + 1):
+            for dj in range(-r, r + 1):
+                out.add((i + di, j + dj))
+    return out
+
+
+def _erosionar(celdas, r):
+    """Contraccion: sobrevive la manzana que tiene todo su cuadrado adentro."""
+    if r <= 0:
+        return set(celdas)
+    out = set()
+    for i, j in celdas:
+        if all((i + di, j + dj) in celdas
+               for di in range(-r, r + 1) for dj in range(-r, r + 1)):
+            out.add((i, j))
+    return out
+
+
+def _rellenar_huecos(celdas):
+    """Tapa los patios internos: la zona es un territorio macizo, no un queso
+    gruyere. Se inunda desde afuera; lo vacio que no se moja, es hueco."""
+    if not celdas:
+        return celdas
+    xs = [c[0] for c in celdas]
+    ys = [c[1] for c in celdas]
+    x0, x1 = min(xs) - 1, max(xs) + 1
+    y0, y1 = min(ys) - 1, max(ys) + 1
+    afuera, pila = set(), [(x0, y0)]
+    while pila:
+        c = pila.pop()
+        if c in afuera or c in celdas:
+            continue
+        i, j = c
+        if not (x0 <= i <= x1 and y0 <= j <= y1):
+            continue
+        afuera.add(c)
+        pila.extend([(i + 1, j), (i - 1, j), (i, j + 1), (i, j - 1)])
+    return {(i, j) for i in range(x0, x1 + 1) for j in range(y0, y1 + 1)
+            if (i, j) not in afuera}
+
+
 def _celdas(puntos, mlat, mlng):
-    """Celdas ocupadas, mas su halo."""
+    """Manzanas de la zona, grupo por grupo: las que tienen clientes, cerradas
+    entre si y con los patios tapados, para que cada area quede con un solo
+    perimetro continuo."""
     base = set()
     for lat, lng in puntos:
         base.add((int(math.floor(lng * mlng / CELDA_M)),
                   int(math.floor(lat * mlat / CELDA_M))))
-    if DILATACION <= 0:
-        return base
-    out = set(base)
-    for _ in range(DILATACION):
-        nuevo = set()
-        for i, j in out:
-            nuevo.update({(i + 1, j), (i - 1, j), (i, j + 1), (i, j - 1)})
-        out |= nuevo
+    out = set()
+    for grupo in _grupos(base, 2 * CIERRE):
+        cerrado = _erosionar(_dilatar(grupo, CIERRE), CIERRE) | grupo
+        out |= _rellenar_huecos(_dilatar(cerrado, DILATACION))
     return out
 
 
