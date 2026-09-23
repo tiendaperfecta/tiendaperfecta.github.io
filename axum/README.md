@@ -118,6 +118,26 @@ repartida en barrios separados da **varias áreas**, que es lo que realmente es:
 antes la envolvente convexa daba un triángulo de 6 × 21 km para el vendedor 10;
 ahora son 1,7 km² de manzanas.
 
+## El mapa de Zonas
+
+Sobre el mismo mapa se ven juntas las tres cosas:
+
+- **La zona**, dibujada sobre las manzanas reales (naranja).
+- **El recorrido del día**, el trazo del GPS (rojo), con la marca de arranque y
+  de última señal y su hora. Se publica aparte en `recorrido-<fecha>.json`, con
+  un punto cada 45 m, y el panel lo carga solo al abrir la pestaña.
+- **Los clientes**: verde si pasó, rojo si le tocaba y no pasó, azul si lo
+  visitó fuera de ruta, y un halo alrededor de cada uno visitado. Con la casilla
+  *ver todos los clientes del área* aparecen también en gris los de otras rutas.
+
+Pasando el cursor por cualquier punto sale la ficha completa del cliente:
+código, razón social, dirección, localidad, rubro, segmento, condición de pago,
+orden de ruta, hora y duración de la visita, y el pedido con importe y hora.
+
+> El encuadre se ajusta a la zona, no al recorrido: un vendedor que se va hasta
+> la ruta 2 abriría el mapa a media provincia. El trazo sigue dibujado, para
+> verlo entero alcanza con alejarse.
+
 ## Alertas de jornada
 
 Cartel arriba de todo, visible en cualquier pestaña, con los nombres y la hora:
