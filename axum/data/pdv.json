@@ -3786,6 +3786,25 @@
    "fecha": "2026-09-23",
    "sellerId": "20",
    "vendedor": "Deposito",
+   "clientId": "2900",
+   "nombre": "MARISA ISABEL VARON",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_B",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 2,
+   "monto": 301071.47,
+   "fechaVenta": "2026-09-23",
+   "horaVenta": "10:42",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-23",
+   "sellerId": "20",
+   "vendedor": "Deposito",
    "clientId": "50014",
    "nombre": "ALGAÑARAZ GERMAN MARCELO",
    "localidad": "MAR DEL PLATA",
@@ -4426,6 +4445,25 @@
    "monto": 82571.56,
    "fechaVenta": "2026-09-23",
    "horaVenta": "14:57",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-23",
+   "sellerId": "3",
+   "vendedor": "Ezequiel Hack",
+   "clientId": "243",
+   "nombre": "CAI SHENGBING",
+   "localidad": "Mar del Plata",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 380500.31,
+   "fechaVenta": "2026-09-23",
+   "horaVenta": "18:24",
    "estado": "vendio_sin_pasar"
   },
   {
@@ -6569,11 +6607,11 @@
    "minutos": 7.5,
    "visito": true,
    "hora": "10:35",
-   "pedidos": 1,
-   "monto": 146999.98,
-   "fechaVenta": "2026-09-23",
-   "horaVenta": "10:42",
-   "estado": "vendio"
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "paso_sin_vender"
   },
   {
    "fecha": "2026-09-23",
@@ -8401,9 +8439,9 @@
   }
  ],
  "resumen": {
-  "vendio": 110,
-  "paso_sin_vender": 99,
+  "vendio": 109,
+  "paso_sin_vender": 100,
   "sin_visita": 22,
-  "vendio_sin_pasar": 211
+  "vendio_sin_pasar": 213
  }
 }
