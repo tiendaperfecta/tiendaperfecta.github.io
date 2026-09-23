@@ -673,10 +673,18 @@ function crearMapa(tab, divId, puntos){
       {key:'asignadas',label:'Asignadas',num:true,fmt:fmtNum},
       {key:'realizadas',label:'Realizadas',num:true,fmt:fmtNum},
       {key:'efectividad',label:'Efectividad',num:true,fmt:v=>v==null?'—':v+'%'},
-      {key:'cartonesARetornar',label:'Cartones a retornar',num:true,fmt:fmtNum},
-      {key:'cartonesRetornados',label:'Retornados',num:true,fmt:fmtNum},
-      {key:'efCartones',label:'% cartón',num:true,fmt:v=>v==null?'—':v+'%'}
+      {key:'cartonesARetornar',label:'Cartones a retornar',num:true,
+        fmt:v=>fl.cartonesCargados? fmtNum(v) : '—'},
+      {key:'cartonesRetornados',label:'Retornados',num:true,
+        fmt:v=>fl.cartonesCargados? fmtNum(v) : '—'},
+      {key:'efCartones',label:'% cartón',num:true,
+        fmt:v=>(!fl.cartonesCargados || v==null)? '—' : v+'%'}
     ], fl.rows, {barCol:'realizadas'});
+    if(!fl.cartonesCargados){
+      $('#t-fleteros').innerHTML += '<p class="nota">Los cartones todavía no están ' +
+        'cargados para este día: se registran uno o dos días después, cuando cierran ' +
+        'los camiones. El acumulado del mes sí los incluye.</p>';
+    }
   } else {
     $('#k-ldr').innerHTML = '';
     $('#t-fleteros').innerHTML = '<div class="empty">' +

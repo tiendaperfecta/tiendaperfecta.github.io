@@ -105,9 +105,13 @@ def construir(fecha, camiones):
 
     tot_a = sum(r["asignadas"] for r in filas)
     tot_r = sum(r["realizadas"] for r in filas)
+    # Los cartones se cargan uno o dos dias despues, cuando cierran los
+    # camiones. Mostrar 0 el mismo dia haria parecer que no volvio ninguno.
+    cartones_cargados = sum(r["cartonesARetornar"] for r in filas) > 0
     out["fleteros"] = {
         "fecha": ultimo,
         "esDeHoy": ultimo == fecha,
+        "cartonesCargados": cartones_cargados,
         "rows": filas,
         "totales": {
             "choferes": len(filas),
