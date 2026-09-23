@@ -3917,25 +3917,6 @@
   },
   {
    "fecha": "2026-09-23",
-   "sellerId": "20",
-   "vendedor": "Deposito",
-   "clientId": "1612",
-   "nombre": "PAGO FACIL",
-   "localidad": "MAR DEL PLATA",
-   "taxonomia": "Kiosco/Maxikiosco_C",
-   "canal": "TRADITIONAL TRADE",
-   "enRuta": false,
-   "minutos": 0.0,
-   "visito": false,
-   "hora": null,
-   "pedidos": 1,
-   "monto": 80428.69,
-   "fechaVenta": "2026-09-23",
-   "horaVenta": "14:54",
-   "estado": "vendio_sin_pasar"
-  },
-  {
-   "fecha": "2026-09-23",
    "sellerId": "3",
    "vendedor": "Ezequiel Hack",
    "clientId": "2334",
@@ -4394,6 +4375,25 @@
    "fecha": "2026-09-23",
    "sellerId": "3",
    "vendedor": "Ezequiel Hack",
+   "clientId": "1612",
+   "nombre": "PAGO FACIL",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 80428.69,
+   "fechaVenta": "2026-09-23",
+   "horaVenta": "14:54",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-23",
+   "sellerId": "3",
+   "vendedor": "Ezequiel Hack",
    "clientId": "1213",
    "nombre": "SEBASTIAN RAU",
    "localidad": "MAR DEL PLATA",
@@ -4407,6 +4407,25 @@
    "monto": 71285.78,
    "fechaVenta": "2026-09-23",
    "horaVenta": "14:55",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-23",
+   "sellerId": "3",
+   "vendedor": "Ezequiel Hack",
+   "clientId": "3114",
+   "nombre": "Gisela Mariel ithurriague",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 82571.56,
+   "fechaVenta": "2026-09-23",
+   "horaVenta": "14:57",
    "estado": "vendio_sin_pasar"
   },
   {
@@ -6212,6 +6231,25 @@
    "monto": 20571.36,
    "fechaVenta": "2026-09-23",
    "horaVenta": "14:40",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-23",
+   "sellerId": "6",
+   "vendedor": "Camila Martinez",
+   "clientId": "2445",
+   "nombre": "Lizarraga Tolaba Matías Antonio",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 22999.98,
+   "fechaVenta": "2026-09-23",
+   "horaVenta": "15:00",
    "estado": "vendio_sin_pasar"
   },
   {
@@ -8208,12 +8246,31 @@
    "fechaVenta": "2026-09-23",
    "horaVenta": "14:54",
    "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-23",
+   "sellerId": "9",
+   "vendedor": "Ludmila Aylen Martinez",
+   "clientId": "52",
+   "nombre": "GABRIELA VIVIANA LEDESMA",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Autoservicio Tradicional_C",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 125357.16,
+   "fechaVenta": "2026-09-23",
+   "horaVenta": "15:01",
+   "estado": "vendio_sin_pasar"
   }
  ],
  "resumen": {
   "vendio": 110,
   "paso_sin_vender": 98,
   "sin_visita": 21,
-  "vendio_sin_pasar": 203
+  "vendio_sin_pasar": 206
  }
 }
