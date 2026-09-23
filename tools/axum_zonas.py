@@ -111,6 +111,7 @@ def jornada(gps, sid, fecha, hora, cartera=None):
 
     track = parsear_recorrido(gps.recorrido(sid, fecha), hora)
     out["puntos"] = len(track)
+    out["track"] = track
     for momento, lat, lng in track:
         if _en_alguna((lat, lng), usar):
             out["puntosEnZona"] += 1

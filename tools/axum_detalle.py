@@ -64,6 +64,21 @@ def _hhmm(momento):
     return momento.strftime("%H:%M") if momento else None
 
 
+def afinar(track, metros=45):
+    """Deja un punto cada `metros` para poder dibujar el trazo sin publicar
+    decenas de miles de posiciones."""
+    salida, ultimo = [], None
+    for momento, lat, lng in track:
+        if ultimo is not None:
+            dlat = (lat - ultimo[0]) * 110540
+            dlng = (lng - ultimo[1]) * 87500      # a esta latitud
+            if (dlat * dlat + dlng * dlng) ** 0.5 < metros:
+                continue
+        ultimo = (lat, lng)
+        salida.append([round(lat, 5), round(lng, 5), momento.strftime("%H:%M")])
+    return salida
+
+
 def _fecha_pedido(o):
     """(fecha, hora) del pedido, desde orderDate '2026-09-21T04:31:37'."""
     txt = str(o.get("orderDate") or "")
@@ -295,7 +310,11 @@ def armar_dia(gps, fecha, orders, maestro, rutas, con_km=True, con_zona=True,
                             "localidad": maestro.localidad(c)} for c in faltan]
     cobertura.sort(key=lambda r: -(r["pct"] or 0))
 
+    recorridos = {sid: afinar(z.get("track") or [])
+                  for sid, z in zona_de.items() if z.get("track")}
+
     return {
+        "recorridos": recorridos,
         "date": fecha, "diaSemana": dia_semana, "jornadaCerrada": jornada_cerrada,
         "umbrales": {"llegada": HORA_LLEGADA.strftime("%H:%M"),
                      "salida": HORA_SALIDA.strftime("%H:%M")},
@@ -335,6 +354,8 @@ def construir(gps, fecha, orders, escribir, meta, ahora=None, maestro=None,
     escribir("cobertura.json", {"date": fecha, "diaSemana": hoy["diaSemana"],
                                 "bySeller": hoy["cobertura"],
                                 "pendientes": hoy["pendientes"]})
+    escribir("recorrido-%s.json" % fecha, {"date": fecha,
+                                           "porVendedor": hoy.pop("recorridos", {})})
     escribir("dia-%s.json" % fecha, hoy)
 
     # ---- dias que falten en la ventana de historia ----
@@ -350,6 +371,7 @@ def construir(gps, fecha, orders, escribir, meta, ahora=None, maestro=None,
                 dia = armar_dia(gps, f, orders_de(f), maestro, rutas,
                                 con_km=False, con_zona=False, ahora=ahora,
                                 avisos=avisos)
+                dia.pop("recorridos", None)      # los dias viejos no lo traen
                 escribir("dia-%s.json" % f, dia)
                 indice[f] = _resumen_indice(dia)
             except Exception as e:

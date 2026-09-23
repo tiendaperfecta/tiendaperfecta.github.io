@@ -216,7 +216,8 @@
         <span><i style="background:#10b981"></i>visitado</span>
         <span><i style="background:#f43f5e"></i>pendiente de la ruta</span>
         <span><i style="background:#60a5fa"></i>visitado fuera de ruta</span>
-        <span><i style="background:#fbbf24;border-radius:2px"></i>zona dibujada con los clientes</span>
+        <span><i style="background:#fbbf24;border-radius:2px"></i>zona (manzanas reales)</span>
+        <span><i style="background:#e11d48;border-radius:1px;height:3px;width:16px"></i>recorrido del día</span>
         <span style="color:rgb(var(--s400))">pasá el cursor por un punto para ver la ficha del cliente</span>
       </div>
       <p class="nota">La zona no es la que tiene cargada Axum: se dibuja sobre las manzanas
@@ -619,6 +620,28 @@ function crearMapa(tab, divId, puntos){
         .bindPopup(html);
       pts.push([k.lat,k.lng]);
     };
+    // Radio de visita: se ve donde estuvo parado, como en el mapa de Axum.
+    visitados.forEach(id=>{
+      const k = cli(id);
+      if(k && k.lat!=null) L.circle([k.lat,k.lng], {radius:70, stroke:false,
+        fillColor:'#f43f5e', fillOpacity:.13}).addTo(capaZonas);
+    });
+
+    // Recorrido del dia: el trazo del GPS.
+    const trazo = recorridos[vend] || [];
+    if(trazo.length > 1){
+      L.polyline(trazo.map(p=>[p[0],p[1]]), {color:'#e11d48', weight:2,
+        opacity:.75, lineJoin:'round'}).addTo(capaZonas);
+      const a = trazo[0], z = trazo[trazo.length-1];
+      L.circleMarker([a[0],a[1]], {radius:5, color:'#fff', weight:2,
+        fillColor:'#e11d48', fillOpacity:1}).addTo(capaZonas)
+        .bindTooltip('Arrancó ' + a[2], {direction:'top', className:'ficha-tt'});
+      L.circleMarker([z[0],z[1]], {radius:5, color:'#fff', weight:2,
+        fillColor:'#0f172a', fillOpacity:1}).addTo(capaZonas)
+        .bindTooltip('Última señal ' + z[2], {direction:'top', className:'ficha-tt'});
+      trazo.forEach(p=>pts.push([p[0],p[1]]));
+    }
+
     enRuta.forEach(id=> poner(id, visitados.has(id)? '#10b981':'#f43f5e',
       visitados.has(id)? 'visitado' : 'pendiente de la ruta'));
     visitados.forEach(id=>{ if(!enRuta.has(id)) poner(id, '#60a5fa', 'visitado fuera de ruta'); });
@@ -632,7 +655,7 @@ function crearMapa(tab, divId, puntos){
       });
       $('#zona-info').textContent = poly.clientes + ' clientes · ' +
         (poly.manzanas!=null? poly.manzanas + ' manzanas' : anillos.length + ' áreas') +
-        (poly.descartados? ' · ' + poly.descartados + ' descartados por estar lejos':'');
+        ((recorridos[vend]||[]).length? ' · con recorrido' : '');
     } else {
       $('#zona-info').textContent = 'sin zona dibujada';
     }
@@ -641,8 +664,11 @@ function crearMapa(tab, divId, puntos){
   }
   $('#sel-zona-vend').onchange = pintarZonas;
 
+  let recorridos = {};
   async function cargarDia(fecha){
     dia = await loadJSON('dia-'+fecha+'.json');
+    const rec = await loadJSON('recorrido-'+fecha+'.json');
+    recorridos = (rec && rec.porVendedor) || {};
     const r = listaDias.find(d=>d.fecha===fecha) || {};
     if(!dia){ $('#dia-resumen').textContent = 'sin datos de ese día'; return; }
     $('#dia-resumen').textContent = fmtNum(r.visitas||0) + ' visitas · ' +
