@@ -347,7 +347,10 @@ def construir(crudo):
         nombre = (c.get("nombre") or c.get("razonSocial") or "").strip()
         clientes[cod] = [nombre, lat, lng, (c.get("localidad") or "").strip(),
                          (c.get("codigoRamo") or "").strip(),
-                         (c.get("codigoSegmento") or "").strip()]
+                         (c.get("codigoSegmento") or "").strip(),
+                         (c.get("direccionEntrega") or "").strip(),
+                         (c.get("razonSocial") or "").strip(),
+                         (c.get("codigoCondicionPago") or "").strip()]
 
         for r in (c.get("rutasPreventa") or []):
             vend = str(r.get("codigoVendedor") or "")
@@ -393,7 +396,8 @@ def refrescar(escribir, meta):
         meta.setdefault("errors", []).append("gescom: %s: %s" % (type(e).__name__, e))
         return False
     escribir("clientes.json",
-             {"campos": ["nombre", "lat", "lng", "localidad", "ramo", "segmento"],
+             {"campos": ["nombre", "lat", "lng", "localidad", "ramo", "segmento",
+                         "direccion", "razonSocial", "pago"],
               "clientes": clientes})
     escribir("rutas.json", rutas)
     escribir("zonas.json", zonas)
