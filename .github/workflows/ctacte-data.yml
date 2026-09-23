@@ -1,0 +1,61 @@
+name: Cuentas corrientes data refresh
+
+# Baja de GesCom los saldos de cuenta corriente y las facturas de los ultimos
+# 120 dias, y commitea ctacte/data.enc.json (cifrado con CTACTE_CLAVE) y
+# ctacte/fecha.txt.
+on:
+  schedule:
+    # Cada 2 horas, de 8:00 a 20:00 hora argentina (UTC-3 => 11:00-23:00 UTC).
+    - cron: "0 11,13,15,17,19,21,23 * * *"
+  workflow_dispatch: {}   # permite correrlo a mano desde la pestaña Actions
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ctacte-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install requests cryptography
+
+      - name: Fetch cuentas corrientes
+        env:
+          GESCOM_REALM: ${{ secrets.GESCOM_REALM }}
+          GESCOM_CLIENT_ID: ${{ secrets.GESCOM_CLIENT_ID }}
+          GESCOM_USERNAME: ${{ secrets.GESCOM_USERNAME }}
+          GESCOM_PASSWORD: ${{ secrets.GESCOM_PASSWORD }}
+          CTACTE_CLAVE: ${{ secrets.CTACTE_CLAVE }}
+        run: python tools/ctacte.py
+
+      - name: Commit data if changed
+        run: |
+          git config user.name  "ctacte-bot"
+          git config user.email "ctacte-bot@users.noreply.github.com"
+          git add ctacte/data.enc.json ctacte/fecha.txt
+          if git diff --cached --quiet; then
+            echo "Sin cambios en los datos."
+            exit 0
+          fi
+          git commit -m "chore(ctacte): refresh data $(date -u +%FT%TZ)"
+          # La Action de Axum commitea cada hora: si llego antes, rebasamos.
+          for i in 1 2 3; do
+            if git push; then
+              exit 0
+            fi
+            echo "Push rechazado, reintento $i tras rebase..."
+            git pull --rebase origin "${GITHUB_REF_NAME}" || exit 1
+            sleep 5
+          done
+          echo "::error title=Ctacte::No se pudo pushear los datos tras 3 intentos."
+          exit 1
