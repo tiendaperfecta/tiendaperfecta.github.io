@@ -95,6 +95,9 @@
   .barra-dia label{font-size:12px;color:rgb(var(--s400));text-transform:uppercase;letter-spacing:.6px}
   .leyenda{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:rgb(var(--s300));margin-top:10px}
   .leyenda i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+  .chk{font-size:12px;color:rgb(var(--s400));font-weight:400;margin-left:10px;cursor:pointer;
+    user-select:none;white-space:nowrap}
+  .chk input{vertical-align:-1px;margin-right:4px;accent-color:rgb(var(--emerald))}
   #map-zonas{height:560px;border-radius:10px;overflow:hidden}
   .leaflet-tooltip.ficha-tt{background:rgb(15 23 42/.97);border:1px solid rgb(var(--s200)/.25);
     color:rgb(var(--s200));border-radius:8px;padding:10px 12px;box-shadow:0 8px 20px rgb(0 0 0/.45);
@@ -210,7 +213,8 @@
     <div class="kpis" id="k-zonas"></div>
     <div class="card">
       <h3>Zona y ruta &nbsp;<select id="sel-zona-vend"></select>
-        <span class="badge" id="zona-info"></span></h3>
+        <span class="badge" id="zona-info"></span>
+        <label class="chk"><input type="checkbox" id="chk-todos"> ver todos los clientes del área</label></h3>
       <div id="map-zonas"></div>
       <div class="leyenda">
         <span><i style="background:#10b981"></i>visitado</span>
@@ -218,6 +222,7 @@
         <span><i style="background:#60a5fa"></i>visitado fuera de ruta</span>
         <span><i style="background:#fbbf24;border-radius:2px"></i>zona (manzanas reales)</span>
         <span><i style="background:#e11d48;border-radius:1px;height:3px;width:16px"></i>recorrido del día</span>
+        <span><i style="background:#64748b"></i><span id="zona-otros"></span></span>
         <span style="color:rgb(var(--s400))">pasá el cursor por un punto para ver la ficha del cliente</span>
       </div>
       <p class="nota">La zona no es la que tiene cargada Axum: se dibuja sobre las manzanas
@@ -646,6 +651,26 @@ function crearMapa(tab, divId, puntos){
       visitados.has(id)? 'visitado' : 'pendiente de la ruta'));
     visitados.forEach(id=>{ if(!enRuta.has(id)) poner(id, '#60a5fa', 'visitado fuera de ruta'); });
 
+    // El resto de los clientes del area, para ver el contexto del barrio.
+    if($('#chk-todos').checked && pts.length){
+      const lat0 = Math.min(...pts.map(p=>p[0])) - .004, lat1 = Math.max(...pts.map(p=>p[0])) + .004;
+      const lng0 = Math.min(...pts.map(p=>p[1])) - .004, lng1 = Math.max(...pts.map(p=>p[1])) + .004;
+      let otros = 0;
+      for(const id in cliMapa){
+        if(enRuta.has(id) || visitados.has(id)) continue;
+        const k = cli(id);
+        if(!k || k.lat==null || k.lat<lat0 || k.lat>lat1 || k.lng<lng0 || k.lng>lng1) continue;
+        L.circleMarker([k.lat,k.lng], {radius:4, color:'#94a3b8', weight:1,
+          fillColor:'#64748b', fillOpacity:.6}).addTo(capaZonas)
+          .bindTooltip(ficha(id, '#94a3b8', 'de otra ruta'), {sticky:true,
+            direction:'top', opacity:1, className:'ficha-tt'});
+        otros++;
+      }
+      $('#zona-otros').textContent = otros? otros + ' clientes de otras rutas' : '';
+    } else {
+      $('#zona-otros').textContent = '';
+    }
+
     const poly = zonasGeo && zonasGeo[vend] && zonasGeo[vend][dia.diaSemana];
     const anillos = poly && (poly.poligonos || (poly.poligono? [poly.poligono] : []));
     if(anillos && anillos.length){
@@ -663,6 +688,7 @@ function crearMapa(tab, divId, puntos){
     if(pts.length) mapaZonas.fitBounds(pts,{padding:[40,40],maxZoom:15});
   }
   $('#sel-zona-vend').onchange = pintarZonas;
+  $('#chk-todos').onchange = pintarZonas;
 
   let recorridos = {};
   async function cargarDia(fecha){
