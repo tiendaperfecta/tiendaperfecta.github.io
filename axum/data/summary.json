@@ -1,20 +1,20 @@
 {
  "date": "2026-09-23",
- "totalNet": 38725296.93,
- "totalGross": 46857609.32,
- "orders": 389,
+ "totalNet": 39960966.96,
+ "totalGross": 48352770.08,
+ "orders": 400,
  "bySeller": [
   {
    "sellerId": "4",
    "name": "Lucas Giayetto",
-   "orders": 28,
-   "total": 8749767.96
+   "orders": 31,
+   "total": 9069767.63
   },
   {
    "sellerId": "8",
    "name": "Martinica Rodriguez",
-   "orders": 36,
-   "total": 7077504.74
+   "orders": 37,
+   "total": 7442308.32
   },
   {
    "sellerId": "7",
@@ -25,8 +25,8 @@
   {
    "sellerId": "9",
    "name": "Ludmila Aylen Martinez",
-   "orders": 30,
-   "total": 4081542.14
+   "orders": 35,
+   "total": 4729185.31
   },
   {
    "sellerId": "2",
@@ -43,8 +43,8 @@
   {
    "sellerId": "3",
    "name": "Ezequiel Hack",
-   "orders": 26,
-   "total": 2735182.78
+   "orders": 27,
+   "total": 2799754.26
   },
   {
    "sellerId": "6",
@@ -55,8 +55,8 @@
   {
    "sellerId": "12",
    "name": "Agustin Pogorzelski",
-   "orders": 32,
-   "total": 2613936.61
+   "orders": 33,
+   "total": 2712079.46
   },
   {
    "sellerId": "11",
@@ -86,13 +86,13 @@
  "byChannel": [
   {
    "channel": "TRADITIONAL TRADE_A",
-   "orders": 84,
-   "total": 19872908.06
+   "orders": 88,
+   "total": 20497907.83
   },
   {
    "channel": "TRADITIONAL TRADE_C",
-   "orders": 101,
-   "total": 9538576.53
+   "orders": 103,
+   "total": 9661719.46
   },
   {
    "channel": "TRADITIONAL TRADE_B",
@@ -101,8 +101,8 @@
   },
   {
    "channel": "TRADITIONAL TRADE_D",
-   "orders": 83,
-   "total": 4870880.85
+   "orders": 86,
+   "total": 5154952.47
   },
   {
    "channel": "PROXIMITY_A",
@@ -121,8 +121,13 @@
   },
   {
    "channel": "AWAY FROM HOME_C",
-   "orders": 9,
-   "total": 447613.87
+   "orders": 10,
+   "total": 545756.73
+  },
+  {
+   "channel": "s/canal",
+   "orders": 27,
+   "total": 364803.58
   },
   {
    "channel": "AWAY FROM HOME_D",
@@ -143,11 +148,6 @@
    "channel": "LIMPIEZA_B",
    "orders": 1,
    "total": 38091.62
-  },
-  {
-   "channel": "s/canal",
-   "orders": 26,
-   "total": 0.0
   }
  ],
  "topClients": [
@@ -218,6 +218,12 @@
    "total": 665078.02
   },
   {
+   "clientId": "3192",
+   "name": "ZHOU ZHISONG (Autoservicio Tradicional_A)",
+   "orders": 3,
+   "total": 546972.75
+  },
+  {
    "clientId": "1162",
    "name": "TEAMDUO S.R.L. (Autoservicio Tradicional_C)",
    "orders": 3,
@@ -264,12 +270,6 @@
    "name": "CHEN ZHENXIONG (Autoservicio Tradicional_A)",
    "orders": 3,
    "total": 428214.6
-  },
-  {
-   "clientId": "2449",
-   "name": "GOURMAND S.R.L (Autoservicio Tradicional_A)",
-   "orders": 2,
-   "total": 417985.63
   }
  ]
 }
