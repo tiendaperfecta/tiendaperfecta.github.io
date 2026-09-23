@@ -1,12 +1,20 @@
 #!/usr/bin/env python3
 """
-georgalos.py — Datos del Panel de ventas de Georgalos (georgalos/data.json).
+georgalos.py — Datos del Panel de ventas de Georgalos (georgalos/*.json).
 
-Baja de GesCom el mes en curso y lo reduce a lo que muestra el panel:
+Baja de GesCom la venta de Georgalos y la guarda dia por dia, para que el
+panel calcule cualquier rango de fechas del año:
+
+    georgalos/meses/AAAA-MM.json  una fila por (dia, vendedor, cliente, marca)
+                                  con bruta, neta, costo y unidades
+    georgalos/maestro.json        clientes (segmento, datos de contacto),
+                                  ruta de cada vendedor y nombres
+    georgalos/indice.json         meses disponibles y fecha de actualizacion
+
+El panel (georgalos/index.html) arma a partir de eso, para el rango elegido:
 
     por vendedor   venta, descuento, margen y cobertura, en total y por marca
-    por taxonomia  venta y clientes compradores / no compradores por segmento
-                   (A/B/C/D, campo codigoSegmento del cliente)
+    por taxonomia  venta y clientes no compradores por segmento A/B/C/D
 
 Fuentes (todas de la API de GesCom, las mismas que usa tools/gescom.py):
 
@@ -31,14 +39,20 @@ Devoluciones (DEV-RE, DEV-CA, AJU-MEN, COM-PD) restan. Todo lo que no esta en
 SIGNO se ignora.
 
 Credenciales: GESCOM_REALM, GESCOM_CLIENT_ID, GESCOM_USERNAME, GESCOM_PASSWORD.
-Sin credenciales no hace nada y queda publicado el ultimo data.json.
+Sin credenciales no hace nada y quedan publicados los datos anteriores.
 
-Uso:  python tools/georgalos.py [AAAA-MM-DD]   (fecha de corte, default hoy)
+Uso:
+    python tools/georgalos.py                 mes en curso (y el anterior los
+                                              primeros 7 dias, por lo que se
+                                              factura tarde)
+    python tools/georgalos.py 2026-03 2026-04 esos meses
+    python tools/georgalos.py --anio 2026     todos los meses del año hasta hoy
 """
 import datetime as dt
 import json
 import re
 import sys
+import time
 from collections import defaultdict
 from pathlib import Path
 
@@ -47,7 +61,7 @@ import requests
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import gescom  # noqa: E402
 
-SALIDA = Path(__file__).resolve().parent.parent / "georgalos" / "data.json"
+DIR = Path(__file__).resolve().parent.parent / "georgalos"
 PROVEEDOR_GEORGALOS = "101"
 TZ_AR = dt.timezone(dt.timedelta(hours=-3))
 
@@ -120,23 +134,39 @@ class Api:
         ahora = dt.datetime.now().timestamp()
         if not self._tok or ahora - self._t > 240:
             self._tok, self._t = gescom._token(self.s), ahora
-        r = self.s.get(gescom.API + path, params=params, timeout=timeout,
-                       headers={"Authorization": "Bearer " + self._tok,
-                                "Accept": "application/json"})
+        # GesCom a veces responde 502/504 o corta la conexion: se reintenta.
+        for intento in range(4):
+            try:
+                r = self.s.get(gescom.API + path, params=params, timeout=timeout,
+                               headers={"Authorization": "Bearer " + self._tok,
+                                        "Accept": "application/json"})
+                if r.status_code < 500:
+                    break
+            except requests.ConnectionError:
+                if intento == 3:
+                    raise
+            time.sleep(10 * (intento + 1))
         r.raise_for_status()
         d = r.json()
         return d if isinstance(d, list) else (d.get("data") or [])
 
     def ventas(self, desde, hasta_excl):
-        todas, skip = [], 0
-        while True:
-            pag = self.get("/data/cmd/ventas/api/v2/get",
-                           {"fechadesde": desde, "fechahasta": hasta_excl,
-                            "pagesize": 500, "pagestotake": 2, "pagestoskip": skip})
-            todas.extend(pag)
-            if len(pag) < 1000:
-                return todas
-            skip += 2
+        # La API responde 400 si se pagina mas alla de 10.000 registros, asi
+        # que se pide de a 7 dias.
+        todas, d, fin = [], dt.date.fromisoformat(desde), dt.date.fromisoformat(hasta_excl)
+        while d < fin:
+            h = min(d + dt.timedelta(days=7), fin)
+            skip = 0
+            while True:
+                pag = self.get("/data/cmd/ventas/api/v2/get",
+                               {"fechadesde": d.isoformat(), "fechahasta": h.isoformat(),
+                                "pagesize": 500, "pagestotake": 2, "pagestoskip": skip})
+                todas.extend(pag)
+                if len(pag) < 1000:
+                    break
+                skip += 2
+            d = h
+        return todas
 
 
 def fecha_venta(v):
@@ -149,184 +179,126 @@ def fecha_venta(v):
 # --------------------------------------------------------------------------- #
 # Armado
 # --------------------------------------------------------------------------- #
-def acum():
-    return {"bruta": 0.0, "neta": 0.0, "costo": 0.0}
+def maestro_articulos(articulos):
+    """(codigo, empresa) -> marca, solo para articulos de Georgalos.
 
+    La Pex (99) usa el maestro de la empresa 1 y hay articulos cargados solo en
+    la otra empresa: se prueba la propia y despues la otra (ver
+    connector/README.md del tablero MdP)."""
+    geo = {}
+    for a in articulos:
+        if cod(a.get("codigoProveedor")) == PROVEEDOR_GEORGALOS:
+            geo[(cod(a.get("codigo")), cod(a.get("codigoEmpresa")))] = marca_de(a.get("descripcion"))
+    todos = {(cod(a.get("codigo")), cod(a.get("codigoEmpresa"))) for a in articulos}
 
-def sumar(a, bruta, neta, costo):
-    a["bruta"] += bruta
-    a["neta"] += neta
-    a["costo"] += costo
-
-
-def redondear(a):
-    return {k: round(v, 2) for k, v in a.items()}
-
-
-def construir(ventas, articulos, clientes, vendedores, desde, corte):
-    # Maestro: (codigo, empresa) -> articulo. La Pex (99) usa el maestro de la
-    # empresa 1 y hay articulos cargados solo en la otra empresa: se prueba la
-    # propia y despues la otra (ver connector/README.md del tablero MdP).
-    maestro = {(cod(a.get("codigo")), cod(a.get("codigoEmpresa"))): a for a in articulos}
-
-    def articulo(codigo, empresa):
+    def marca(codigo, empresa):
         e = "1" if empresa == "99" else empresa
-        return maestro.get((codigo, e)) or maestro.get((codigo, "2" if e == "1" else "1"))
+        otra = "2" if e == "1" else "1"
+        clave = (codigo, e) if (codigo, e) in todos else (codigo, otra)
+        return geo.get(clave)
+    return marca
 
-    # Universo: clientes en la ruta de preventa de cada vendedor.
-    info_cli, universo = {}, defaultdict(set)
-    for c in clientes:
-        cc = cod(c.get("codigo"))
-        if not cc:
-            continue
-        seg = cod(c.get("codigoSegmento")).upper() or "—"
-        dias_vend = defaultdict(list)
-        for r in c.get("rutasPreventa") or []:
-            v = cod(r.get("codigoVendedor"))
-            if not v:
-                continue
-            universo[v].add(cc)
-            dias_vend[v] += [d for d in DIAS if r.get(d)]
-        info_cli[cc] = {
-            "nombre": (c.get("nombre") or c.get("razonSocial") or "").strip(),
-            "direccion": (c.get("direccionEntrega") or "").strip(),
-            "localidad": (c.get("localidad") or "").strip(),
-            "telefono": (c.get("telefono") or "").strip(),
-            "seg": seg,
-            "dias": dias_vend,
-        }
 
-    tot = acum()
-    por_vend = defaultdict(acum)
-    por_vend_marca = defaultdict(acum)          # (vend, marca)
-    por_marca = defaultdict(acum)
-    por_seg = defaultdict(acum)
-    por_vend_seg = defaultdict(acum)            # (vend, seg)
-    cant_cli = defaultdict(float)               # cliente -> unidades netas
-    cant_cli_marca = defaultdict(float)         # (cliente, marca)
-    sin_facturar = 0.0
-    lineas = 0
-
+def filas_mes(ventas, marca, mes):
+    """Filas [dia, vendedor, cliente, marca, bruta, neta, costo, unidades,
+    sin_facturar] de las ventas con fecha dentro de `mes` (AAAA-MM)."""
+    acc = defaultdict(lambda: [0.0, 0.0, 0.0, 0.0])
     for v in ventas:
         signo = SIGNO.get(cod(v.get("codigoTipoVenta")))
         if signo is None or cod(v.get("estado")).lower().startswith("anul"):
             continue
         fecha, facturada = fecha_venta(v)
-        if not (desde <= fecha <= corte):
+        if fecha[:7] != mes:
             continue
         emp, vend, cli = cod(v.get("codigoEmpresa")), cod(v.get("codigoVendedor")), cod(v.get("codigoCliente"))
         for it in v.get("items") or []:
-            a = articulo(cod(it.get("codigoItem")), emp)
-            if not a or cod(a.get("codigoProveedor")) != PROVEEDOR_GEORGALOS:
+            m = marca(cod(it.get("codigoItem")), emp)
+            if m is None:
                 continue
-            cant = num(it.get("cantidad")) * num(it.get("unidadFactor") or 1)
-            bruta = num(it.get("precioUnitario")) * num(it.get("cantidad")) * signo
-            neta = num(it.get("importeNeto")) * signo
-            costo = num(it.get("precioCosto")) * num(it.get("cantidad")) * signo
-            m = marca_de(a.get("descripcion"))
-            seg = info_cli.get(cli, {}).get("seg", "—")
-            for bucket in (tot, por_vend[vend], por_vend_marca[(vend, m)], por_marca[m],
-                           por_seg[seg], por_vend_seg[(vend, seg)]):
-                sumar(bucket, bruta, neta, costo)
-            cant_cli[cli] += cant * signo
-            cant_cli_marca[(cli, m)] += cant * signo
-            if not facturada:
-                sin_facturar += neta
-            lineas += 1
+            q = num(it.get("cantidad"))
+            x = acc[(int(fecha[8:10]), vend, cli, m, 0 if facturada else 1)]
+            x[0] += num(it.get("precioUnitario")) * q * signo
+            x[1] += num(it.get("importeNeto")) * signo
+            x[2] += num(it.get("precioCosto")) * q * signo
+            x[3] += q * num(it.get("unidadFactor") or 1) * signo
+    return [[d, v, c, m, round(b, 2), round(n, 2), round(k, 2), round(u, 3), sf]
+            for (d, v, c, m, sf), (b, n, k, u) in sorted(acc.items())]
 
-    compradores = {c for c, q in cant_cli.items() if q > 0}
-    marcas = sorted(por_marca, key=lambda m: -por_marca[m]["neta"])
 
-    nombres = {cod(x.get("codigo")): (x.get("nombre") or "").strip() for x in vendedores}
-    # Solo los que vendieron Georgalos en el mes: hay fuerzas de venta con
-    # ruta propia (30, 31, 33...) que no llevan la linea y solo inflarian el
-    # universo.
-    codigos = {v for v in por_vend if v and v not in NO_VENDEDORES and por_vend[v]["bruta"] > 0}
-
-    filas = []
-    for v in codigos:
-        uni = universo.get(v, set())
-        cob_marca = {}
-        for m in marcas:
-            n = sum(1 for c in uni if cant_cli_marca.get((c, m), 0) > 0)
-            cob_marca[m] = n
-        segs = {}
-        for s in SEGMENTOS:
-            u = [c for c in uni if info_cli[c]["seg"] == s]
-            segs[s] = {"universo": len(u),
-                       "compradores": sum(1 for c in u if c in compradores),
-                       **redondear(por_vend_seg.get((v, s), acum()))}
-        filas.append({
-            "cod": v,
-            "nombre": nombres.get(v) or ("Vendedor " + v),
-            "universo": len(uni),
-            "compradores": sum(1 for c in uni if c in compradores),
-            **redondear(por_vend.get(v, acum())),
-            "marcas": {m: {**redondear(por_vend_marca.get((v, m), acum())),
-                           "clientes": cob_marca[m]} for m in marcas},
-            "segmentos": segs,
-        })
-    filas.sort(key=lambda f: -f["neta"])
-
-    # No compradores: un cliente por vendedor en cuya ruta esta.
-    no_compran = []
-    for v in codigos:
-        for c in sorted(universo.get(v, ())):
-            if c in compradores:
+def construir_maestro(clientes, vendedores):
+    cli, rutas = {}, defaultdict(dict)
+    for c in clientes:
+        cc = cod(c.get("codigo"))
+        if not cc:
+            continue
+        cli[cc] = [(c.get("nombre") or c.get("razonSocial") or "").strip(),
+                   (c.get("direccionEntrega") or "").strip(),
+                   (c.get("localidad") or "").strip(),
+                   (c.get("telefono") or "").strip(),
+                   cod(c.get("codigoSegmento")).upper() or "—"]
+        for r in c.get("rutasPreventa") or []:
+            v = cod(r.get("codigoVendedor"))
+            if not v or v in NO_VENDEDORES:
                 continue
-            i = info_cli[c]
-            no_compran.append({"vend": v, "codigo": c, "nombre": i["nombre"],
-                               "direccion": i["direccion"], "localidad": i["localidad"],
-                               "telefono": i["telefono"], "seg": i["seg"],
-                               "dias": ", ".join(d.capitalize() for d in i["dias"].get(v, []))})
-
-    todos_uni = set().union(*[universo[v] for v in codigos]) if codigos else set()
-    seg_total = {}
-    for s in SEGMENTOS:
-        u = [c for c in todos_uni if info_cli[c]["seg"] == s]
-        seg_total[s] = {"universo": len(u), "compradores": sum(1 for c in u if c in compradores),
-                        **redondear(por_seg.get(s, acum()))}
-
+            dias = [d.capitalize() for d in DIAS if r.get(d)]
+            previo = rutas[v].get(cc)
+            rutas[v][cc] = ", ".join(filter(None, [previo] + [", ".join(dias)])) if previo else ", ".join(dias)
     return {
-        "desde": desde, "corte": corte,
-        "generado": dt.datetime.now(TZ_AR).isoformat(timespec="minutes"),
-        "total": {**redondear(tot), "universo": len(todos_uni),
-                  "compradores": len(todos_uni & compradores),
-                  "sinFacturar": round(sin_facturar, 2), "lineas": lineas},
-        "marcas": [{"marca": m, **redondear(por_marca[m]),
-                    "clientes": sum(1 for (c, mm), q in cant_cli_marca.items() if mm == m and q > 0 and c in todos_uni)}
-                   for m in marcas],
-        "segmentos": seg_total,
-        "vendedores": filas,
-        "noCompradores": no_compran,
-        "otrosSinFila": round(sum(por_vend[v]["neta"] for v in por_vend if v not in codigos), 2),
+        "campos": ["nombre", "direccion", "localidad", "telefono", "segmento"],
+        "clientes": cli,
+        "rutas": rutas,
+        "vendedores": {cod(x.get("codigo")): (x.get("nombre") or "").strip() for x in vendedores},
+        "noVendedores": sorted(NO_VENDEDORES),
     }
+
+
+def escribir(nombre, data):
+    ruta = DIR / nombre
+    ruta.parent.mkdir(parents=True, exist_ok=True)
+    ruta.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+
+
+def meses_a_bajar(args, hoy):
+    if not args:
+        meses = [hoy.strftime("%Y-%m")]
+        if hoy.day <= 7:
+            meses.insert(0, (hoy.replace(day=1) - dt.timedelta(days=1)).strftime("%Y-%m"))
+        return meses
+    if args[0] == "--anio":
+        anio = int(args[1])
+        ultimo = hoy.month if anio == hoy.year else 12
+        return ["%d-%02d" % (anio, m) for m in range(1, ultimo + 1)]
+    return args
 
 
 def main():
     if not gescom.hay_credenciales():
-        print("Sin credenciales de GesCom: queda publicado el data.json anterior.")
+        print("Sin credenciales de GesCom: quedan publicados los datos anteriores.")
         return 0
-    corte = sys.argv[1] if len(sys.argv) > 1 else dt.datetime.now(TZ_AR).date().isoformat()
-    d_corte = dt.date.fromisoformat(corte)
-    desde = d_corte.replace(day=1).isoformat()
-    # Filtro de la API = fecha de creacion. Se arrastra desde el 24 del mes
-    # anterior para no perder lo creado antes y facturado en este mes.
-    arrastre = (d_corte.replace(day=1) - dt.timedelta(days=8)).isoformat()
-    hasta_excl = (d_corte + dt.timedelta(days=1)).isoformat()
+    hoy = dt.datetime.now(TZ_AR).date()
+    meses = meses_a_bajar(sys.argv[1:], hoy)
 
     api = Api()
-    ventas = api.ventas(arrastre, hasta_excl)
-    articulos = api.get("/data/cmd/inventario/api/v2/get-articulos")
-    clientes = api.get("/data/cmd/ventas/api/v1/get-clientes")
-    vendedores = api.get("/data/cmd/ventas/api/v1/get-vendedores")
+    marca = maestro_articulos(api.get("/data/cmd/inventario/api/v2/get-articulos"))
+    escribir("maestro.json", construir_maestro(
+        api.get("/data/cmd/ventas/api/v1/get-clientes"),
+        api.get("/data/cmd/ventas/api/v1/get-vendedores")))
 
-    data = construir(ventas, articulos, clientes, vendedores, desde, corte)
-    SALIDA.parent.mkdir(parents=True, exist_ok=True)
-    SALIDA.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
-    t = data["total"]
-    print("Georgalos %s..%s: venta $%.0f, %d vendedores, %d/%d clientes compradores -> %s"
-          % (desde, corte, t["neta"], len(data["vendedores"]), t["compradores"], t["universo"], SALIDA))
+    for mes in meses:
+        inicio = dt.date.fromisoformat(mes + "-01")
+        fin = (inicio + dt.timedelta(days=32)).replace(day=1)
+        # Filtro de la API = fecha de creacion (fechahasta exclusiva). Se
+        # arrastra desde 8 dias antes para no perder lo creado a fin del mes
+        # anterior y facturado en este.
+        desde = (inicio - dt.timedelta(days=8)).isoformat()
+        hasta = min(fin, hoy + dt.timedelta(days=1)).isoformat()
+        filas = filas_mes(api.ventas(desde, hasta), marca, mes)
+        escribir("meses/%s.json" % mes, filas)
+        print("Georgalos %s: %d filas, venta $%.0f" % (mes, len(filas), sum(f[5] for f in filas)))
+
+    disponibles = sorted(p.stem for p in (DIR / "meses").glob("*.json"))
+    escribir("indice.json", {"meses": disponibles,
+                             "generado": dt.datetime.now(TZ_AR).isoformat(timespec="minutes")})
     return 0
 
 
