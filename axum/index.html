@@ -613,10 +613,11 @@ function crearMapa(tab, divId, puntos){
         '</div>';
     };
 
-    const pts = [];
+    const pts = [], ptsZona = [];
     const poner = (id, color, estado)=>{
       const k = cli(id);
       if(!k || k.lat==null) return;
+      ptsZona.push([k.lat,k.lng]);
       const html = ficha(id, color, estado);
       L.circleMarker([k.lat,k.lng], {radius:6, color:color, weight:2,
         fillColor:color, fillOpacity:.75}).addTo(capaZonas)
@@ -652,9 +653,11 @@ function crearMapa(tab, divId, puntos){
     visitados.forEach(id=>{ if(!enRuta.has(id)) poner(id, '#60a5fa', 'visitado fuera de ruta'); });
 
     // El resto de los clientes del area, para ver el contexto del barrio.
-    if($('#chk-todos').checked && pts.length){
-      const lat0 = Math.min(...pts.map(p=>p[0])) - .004, lat1 = Math.max(...pts.map(p=>p[0])) + .004;
-      const lng0 = Math.min(...pts.map(p=>p[1])) - .004, lng1 = Math.max(...pts.map(p=>p[1])) + .004;
+    if($('#chk-todos').checked && ptsZona.length){
+      // El encuadre se mide sobre la zona y no sobre el recorrido: si el
+      // vendedor se fue lejos, no tiene sentido traer medio Mar del Plata.
+      const lat0 = Math.min(...ptsZona.map(p=>p[0])) - .002, lat1 = Math.max(...ptsZona.map(p=>p[0])) + .002;
+      const lng0 = Math.min(...ptsZona.map(p=>p[1])) - .002, lng1 = Math.max(...ptsZona.map(p=>p[1])) + .002;
       let otros = 0;
       for(const id in cliMapa){
         if(enRuta.has(id) || visitados.has(id)) continue;
@@ -676,7 +679,7 @@ function crearMapa(tab, divId, puntos){
     if(anillos && anillos.length){
       anillos.forEach(r=>{
         L.polygon(r, {color:'#fbbf24', weight:3, opacity:.95, fillOpacity:.10}).addTo(capaZonas);
-        r.forEach(p=>pts.push(p));
+        r.forEach(p=>{ pts.push(p); ptsZona.push(p); });
       });
       $('#zona-info').textContent = poly.clientes + ' clientes · ' +
         (poly.manzanas!=null? poly.manzanas + ' manzanas' : anillos.length + ' áreas') +
