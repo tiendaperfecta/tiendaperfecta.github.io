@@ -73,6 +73,32 @@ commiteados (que funcionan igual, solo que congelados):
 
 Son los mismos que usa el Panel de Fleteros.
 
+## Zonas dibujadas por manzana
+
+La zona de cada vendedor no sale de Axum: se dibuja con los clientes que le
+tocan ese día según GesCom, pero **sobre una grilla de 100 m** (una cuadra de
+Mar del Plata), no uniendo los puntos:
+
+1. se marcan las celdas donde hay al menos un cliente,
+2. se les suma una celda de halo para unir manzanas vecinas,
+3. se traza el contorno de esa unión (los lados que comparten dos celdas se
+   cancelan; los que quedan son el borde) y se sacan los vértices alineados.
+
+Así el borde cae **por la calle** y no por la puerta de un comercio. Una ruta
+repartida en barrios separados da **varias áreas**, que es lo que realmente es:
+antes la envolvente convexa daba un triángulo de 6 × 21 km para el vendedor 10;
+ahora son 1,7 km² de manzanas.
+
+## Alertas de jornada
+
+Cartel arriba de todo, visible en cualquier pestaña, con los nombres y la hora:
+
+- **Llegó tarde:** primera señal de actividad después de las **09:00**.
+- **Se fue temprano:** última señal antes de las **14:00**, y solo se evalúa
+  pasada esa hora (si no, a las 11 de la mañana los marcaría a todos).
+
+Los umbrales están en `tools/axum_detalle.py` (`HORA_LLEGADA` / `HORA_SALIDA`).
+
 ## Histórico
 
 Cada día se publica entero como `dia-<fecha>.json`, y `dias.json` es el índice.
