@@ -49,16 +49,28 @@ def _token(sesion):
     return r.json()["access_token"]
 
 
-def bajar_clientes():
-    """Lista cruda de clientes de GesCom."""
-    s = requests.Session()
-    tok = _token(s)
-    r = s.get(API + "/data/cmd/ventas/api/v1/get-clientes",
-              headers={"Authorization": "Bearer " + tok, "Accept": "application/json"},
-              timeout=180)
+def _traer(sesion, tok, ruta, timeout=180):
+    r = sesion.get(API + "/data/cmd/" + ruta,
+                   headers={"Authorization": "Bearer " + tok,
+                            "Accept": "application/json"}, timeout=timeout)
     r.raise_for_status()
     d = r.json()
     return d if isinstance(d, list) else (d.get("data") or [])
+
+
+def bajar_clientes():
+    """Clientes + los catalogos de la taxonomia.
+
+    El cliente trae el ramo y el subramo como codigo (`pepsico-7`); la etiqueta
+    legible ("TRADITIONAL TRADE", "Almacen/Despensa") esta en otro endpoint."""
+    s = requests.Session()
+    tok = _token(s)
+    clientes = _traer(s, tok, "ventas/api/v1/get-clientes")
+    ramos = {r["codigo"]: r["descripcion"]
+             for r in _traer(s, tok, "ventas/api/v1/get-ramos", 60)}
+    subramos = {r["codigo"]: r["descripcion"]
+                for r in _traer(s, tok, "ventas/api/v1/get-subramos", 60)}
+    return clientes, ramos, subramos
 
 
 # --------------------------------------------------------------------------- #
@@ -333,8 +345,9 @@ def sin_outliers(puntos, factor=4.0):
 # --------------------------------------------------------------------------- #
 # Armado
 # --------------------------------------------------------------------------- #
-def construir(crudo):
+def construir(crudo, ramos=None, subramos=None):
     """(clientes, rutas, zonas) listos para publicar."""
+    ramos, subramos = ramos or {}, subramos or {}
     clientes, rutas = {}, {d: {} for d in DIAS}
     puntos_por_zona = {}
 
@@ -345,9 +358,13 @@ def construir(crudo):
         if not cod:
             continue
         nombre = (c.get("nombre") or c.get("razonSocial") or "").strip()
+        seg = (c.get("codigoSegmento") or "").strip()
+        canal = ramos.get(c.get("codigoRamo"), "") or ""
+        rubro = subramos.get(c.get("codigoSubramo"), "") or ""
+        # Como lo nombra Axum: "Almacen/Despensa_D" y "TRADITIONAL TRADE_D".
+        taxonomia = (rubro + "_" + seg) if rubro and seg else (rubro or "")
         clientes[cod] = [nombre, lat, lng, (c.get("localidad") or "").strip(),
-                         (c.get("codigoRamo") or "").strip(),
-                         (c.get("codigoSegmento") or "").strip(),
+                         canal, rubro, seg, taxonomia,
                          (c.get("direccionEntrega") or "").strip(),
                          (c.get("razonSocial") or "").strip(),
                          (c.get("codigoCondicionPago") or "").strip()]
@@ -390,14 +407,14 @@ def refrescar(escribir, meta):
         meta["gescom"] = "sin credenciales: se usan los archivos ya publicados"
         return False
     try:
-        crudo = bajar_clientes()
-        clientes, rutas, zonas = construir(crudo)
+        crudo, ramos, subramos = bajar_clientes()
+        clientes, rutas, zonas = construir(crudo, ramos, subramos)
     except Exception as e:
         meta.setdefault("errors", []).append("gescom: %s: %s" % (type(e).__name__, e))
         return False
     escribir("clientes.json",
-             {"campos": ["nombre", "lat", "lng", "localidad", "ramo", "segmento",
-                         "direccion", "razonSocial", "pago"],
+             {"campos": ["nombre", "lat", "lng", "localidad", "canal", "rubro",
+                         "segmento", "taxonomia", "direccion", "razonSocial", "pago"],
               "clientes": clientes})
     escribir("rutas.json", rutas)
     escribir("zonas.json", zonas)

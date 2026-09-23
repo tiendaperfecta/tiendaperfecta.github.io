@@ -270,7 +270,7 @@ function table(cols, rows, opts={}){
   for(const r of rows){
     h += '<tr>' + cols.map(c=>{
       let v = r[c.key];
-      if(c.fmt) v = c.fmt(v);
+      if(c.fmt) v = c.fmt(v, r);
       let cell = `<td class="${c.num?'num':''}">${v??'—'}`;
       if(opts.barCol!=null && c.key===opts.barCol && max>0){
         cell += `<div class="bar" style="width:${(Number(r[c.key])||0)/max*100}%"></div>`;
@@ -354,9 +354,15 @@ function crearMapa(tab, divId, puntos){
        {key:'total',label:'Total',num:true,fmt:fmtMoney}],
       summary.byChannel, {barCol:'total'});
     $('#t-clients').innerHTML = table(
-      [{key:'name',label:'Cliente'},{key:'orders',label:'Pedidos',num:true,fmt:fmtNum},
+      [{key:'name',label:'Cliente'},
+       {key:'taxonomia',label:'Taxonomía'},
+       {key:'canal',label:'Canal'},
+       {key:'orders',label:'Pedidos',num:true,fmt:fmtNum},
        {key:'total',label:'Total',num:true,fmt:fmtMoney}],
-      summary.topClients, {barCol:'total'});
+      (summary.topClients||[]).map(r=>{
+        const k = cli(r.clientId) || {};
+        return {...r, taxonomia:k.taxonomia||'—', canal:k.canal||'—'};
+      }), {barCol:'total'});
   }
 
   // MAPA
@@ -499,6 +505,8 @@ function crearMapa(tab, divId, puntos){
     $('#t-pdv').innerHTML = table([
       {key:'vendedor',label:'Vendedor'},
       {key:'nombre',label:'Cliente'},
+      {key:'taxonomia',label:'Taxonomía',fmt:v=>v||'—'},
+      {key:'canal',label:'Canal',fmt:v=>v||'—'},
       {key:'localidad',label:'Localidad'},
       {key:'enRuta',label:'En ruta',fmt:v=>v?'sí':'no'},
       {key:'hora',label:'Visita',num:true,fmt:v=>v||'—'},
@@ -547,6 +555,7 @@ function crearMapa(tab, divId, puntos){
     const pintarNV = ()=>{
       $('#t-novis').innerHTML = table(
         [{key:'clientId',label:'ID'},{key:'nombre',label:'Cliente'},
+         {key:'taxonomia',label:'Taxonomía',fmt:v=>v||'—'},
          {key:'localidad',label:'Localidad'}], pend[$('#sel-novis').value]||[]);
     };
     $('#sel-novis').onchange = pintarNV; pintarNV();
@@ -603,8 +612,8 @@ function crearMapa(tab, divId, puntos){
         li('Razón social', (k.razonSocial && k.razonSocial!==k.nombre)? k.razonSocial : '') +
         li('Dirección', k.direccion) +
         li('Localidad', k.localidad) +
-        li('Rubro', k.ramo) +
-        li('Segmento', k.segmento) +
+        li('Taxonomía', k.taxonomia) +
+        li('Canal', k.canal) +
         li('Pago', k.pago) +
         li('Orden de ruta', (ordenDe[id] && ordenDe[id] < 9999)? ordenDe[id] : '') +
         li('Visita', f.hora? (f.hora + (f.minutos? ' · ' + fmtMin(f.minutos) : '')) : null) +

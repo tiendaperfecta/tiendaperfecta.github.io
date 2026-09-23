@@ -107,8 +107,12 @@ class Maestro:
     def localidad(self, cid):
         return self._campo(cid, "localidad") or ""
 
-    def ramo(self, cid):
-        return self._campo(cid, "ramo") or ""
+    def canal(self, cid):
+        return self._campo(cid, "canal") or ""
+
+    def taxonomia(self, cid):
+        """Como lo nombra Axum: "Almacen/Despensa_D"."""
+        return self._campo(cid, "taxonomia") or ""
 
 
 # --------------------------------------------------------------------------- #
@@ -171,7 +175,8 @@ def armar_dia(gps, fecha, orders, maestro, rutas, con_km=True, con_zona=True,
         filas.append({
             "fecha": fecha, "sellerId": sid, "vendedor": axum_nombres.de(sid),
             "clientId": cid, "nombre": maestro.nombre(cid),
-            "localidad": maestro.localidad(cid), "ramo": maestro.ramo(cid),
+            "localidad": maestro.localidad(cid),
+            "taxonomia": maestro.taxonomia(cid), "canal": maestro.canal(cid),
             "enRuta": cid in en_ruta.get(sid, set()),
             "minutos": minutos, "visito": visito, "hora": _hhmm(momento),
             "pedidos": ped.get("pedidos", 0) if propio else 0,
@@ -206,7 +211,8 @@ def armar_dia(gps, fecha, orders, maestro, rutas, con_km=True, con_zona=True,
         filas.append({
             "fecha": fecha, "sellerId": sid, "vendedor": axum_nombres.de(sid),
             "clientId": cid, "nombre": maestro.nombre(cid),
-            "localidad": maestro.localidad(cid), "ramo": maestro.ramo(cid),
+            "localidad": maestro.localidad(cid),
+            "taxonomia": maestro.taxonomia(cid), "canal": maestro.canal(cid),
             "enRuta": cid in en_ruta.get(sid, set()),
             "minutos": 0.0, "visito": False, "hora": None,
             "pedidos": ped["pedidos"], "monto": round(ped["monto"], 2),
@@ -307,7 +313,8 @@ def armar_dia(gps, fecha, orders, maestro, rutas, con_km=True, con_zona=True,
             "pct": round(len(hechos) * 100.0 / len(ruta), 1) if ruta else None,
         })
         pendientes[sid] = [{"clientId": c, "nombre": maestro.nombre(c),
-                            "localidad": maestro.localidad(c)} for c in faltan]
+                            "localidad": maestro.localidad(c),
+                            "taxonomia": maestro.taxonomia(c)} for c in faltan]
     cobertura.sort(key=lambda r: -(r["pct"] or 0))
 
     recorridos = {sid: afinar(z.get("track") or [])
