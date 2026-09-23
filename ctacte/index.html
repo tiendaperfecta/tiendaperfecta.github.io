@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Cuentas corrientes</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;700&display=swap">
+<style>
+  :root{
+    --bg:#1e293b; --bg2:#0f172a; --card:rgb(255 255 255/.05); --card2:rgb(255 255 255/.09);
+    --line:rgb(226 232 240/.12); --ink:#e2e8f0; --ink2:#cbd5e1; --mute:#94a3b8; --dim:#64748b;
+    --acc:#38bdf8;
+    /* banda de vencimiento: verde/celeste (lejos) → amarillo/naranja (hoy) → rojos y violetas (vencido).
+       Validada para daltonismo sobre el fondo slate; siempre va con etiqueta de texto. */
+    --b0:#34d399; --b1:#38bdf8; --b2:#fde047; --b3:#fb923c; --b4:#f43f5e; --b5:#a51c1c; --b6:#e879f9; --b7:#7c3aed; --b8:#c084fc;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Manrope,Arial,sans-serif;font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
+  button,input,select{font:inherit;color:inherit}
+  a{color:var(--acc);text-decoration:none}
+  .wrap{max-width:1500px;margin:0 auto;padding:20px 16px 60px}
+  header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;padding-bottom:14px;border-bottom:2px solid rgb(226 232 240/.35);margin-bottom:16px}
+  header h1{margin:0;font-size:22px;font-weight:500}
+  header .sub{color:var(--mute);font-size:12px}
+  .hbtns{display:flex;gap:8px;flex-wrap:wrap}
+  .btn{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer}
+  .btn:hover{background:var(--card2)}
+  .btn.pri{background:#0369a1;border-color:#0369a1}
+  .btn.on{background:#0c4a6e;border-color:var(--acc)}
+
+  /* clave */
+  #gate{max-width:360px;margin:12vh auto;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:24px}
+  #gate h2{margin:0 0 6px;font-weight:500}
+  #gate p{color:var(--mute);margin:0 0 16px;font-size:13px}
+  #gate input{width:100%;padding:10px;border-radius:6px;border:1px solid var(--line);background:var(--bg2);margin-bottom:10px}
+  #gate .err{color:#fca5a5;font-size:13px;min-height:18px}
+
+  /* filtros */
+  .filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px;position:sticky;top:0;z-index:20;background:var(--bg);padding:8px 0}
+  .filters input,.filters select{background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:6px 8px;max-width:190px}
+  .filters input[type=search]{width:220px;max-width:100%}
+  .filters label{display:flex;align-items:center;gap:6px;color:var(--ink2);font-size:13px;white-space:nowrap}
+  .chipsf{display:flex;gap:6px;flex-wrap:wrap}
+
+  /* kpis */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-bottom:16px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+  .kpi .l{color:var(--mute);font-size:12px}
+  .kpi .v{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;margin-top:2px}
+  .kpi .s{color:var(--mute);font-size:12px;margin-top:2px}
+  .kpi.bad .v{color:#fca5a5} .kpi.warn .v{color:#fdba74} .kpi.ok .v{color:#6ee7b7}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:16px}
+  .panel h3{margin:0 0 10px;font-size:15px;font-weight:500;color:var(--ink2)}
+  .grid2{display:grid;grid-template-columns:1fr;gap:16px}
+  @media(min-width:1000px){.grid2{grid-template-columns:3fr 2fr}}
+
+  /* banda */
+  .band{display:flex;height:34px;gap:2px;border-radius:6px;overflow:hidden}
+  .band div{min-width:3px;cursor:pointer;position:relative;transition:filter .1s}
+  .band div:hover{filter:brightness(1.2)}
+  .band div.sel{outline:2px solid #fff;outline-offset:-2px}
+  .legend{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px 12px;margin-top:10px}
+  .lg{display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;padding:3px 4px;border-radius:4px}
+  .lg:hover{background:var(--card2)} .lg.sel{background:#0c4a6e}
+  .sw{width:12px;height:12px;border-radius:3px;flex:none}
+  .lg .n{color:var(--ink2)} .lg .m{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--ink)}
+
+  /* calendario */
+  .cal{display:flex;align-items:flex-end;gap:3px;height:150px;padding-top:6px}
+  .cal .c{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;cursor:default}
+  .cal .bar{width:100%;max-width:34px;border-radius:4px 4px 0 0;min-height:2px}
+  .cal .d{font-size:10px;color:var(--mute);margin-top:4px;white-space:nowrap}
+  .cal .c:hover .bar{filter:brightness(1.25)}
+
+  /* tabs */
+  .tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:10px}
+  .tab{padding:8px 12px;cursor:pointer;border-radius:6px 6px 0 0;color:var(--mute);border:1px solid transparent;border-bottom:none}
+  .tab.on{color:var(--ink);background:var(--card);border-color:var(--line)}
+  .tab .k{font-size:11px;background:var(--bg2);border-radius:10px;padding:1px 7px;margin-left:6px}
+  .tab.bl.on{color:#fca5a5}
+
+  .tw{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+  th{color:var(--mute);font-weight:500;font-size:12px;cursor:pointer;user-select:none;position:sticky;top:0;background:#243247}
+  th.r,td.r{text-align:right;font-variant-numeric:tabular-nums}
+  tbody tr:hover{background:var(--card2)}
+  tbody tr.click{cursor:pointer}
+  td.nm{white-space:normal;min-width:180px;max-width:320px}
+  .pill{display:inline-flex;align-items:center;gap:5px;padding:1px 8px;border-radius:10px;font-size:11px;font-weight:700;color:#0f172a}
+  .mini{display:flex;height:8px;width:120px;gap:1px;border-radius:3px;overflow:hidden;background:var(--bg2)}
+  .muted{color:var(--mute)} .red{color:#fca5a5} .amber{color:#fdba74} .green{color:#6ee7b7}
+  .more{margin-top:10px;text-align:center}
+  .note{color:var(--mute);font-size:12px;margin-top:8px}
+
+  /* ficha */
+  #drawer{position:fixed;inset:0;background:rgb(15 23 42/.6);display:none;z-index:50}
+  #drawer.on{display:block}
+  #drawer .in{position:absolute;right:0;top:0;bottom:0;width:min(640px,100%);background:#172033;border-left:1px solid var(--line);overflow:auto;padding:20px}
+  #drawer h2{margin:0 0 4px;font-weight:500}
+  .facts{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin:14px 0}
+  .facts div{background:var(--card);border-radius:6px;padding:8px 10px}
+  .facts b{display:block;font-size:11px;color:var(--mute);font-weight:500}
+  #tip{position:fixed;pointer-events:none;background:#0b1220;border:1px solid var(--line);border-radius:6px;padding:6px 9px;font-size:12px;display:none;z-index:60;max-width:260px}
+  @media print{.filters,.hbtns,.tabs{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Cuentas corrientes</h1>
+      <div class="sub" id="sub">Tienda Perfecta · TP Pex · Rambla — saldos de GesCom</div>
+    </div>
+    <div class="hbtns" id="hbtns" hidden>
+      <button class="btn" id="bCsv" title="Descarga la vista actual">Exportar CSV</button>
+      <button class="btn" onclick="print()">Imprimir</button>
+      <button class="btn" id="bOut">Salir</button>
+    </div>
+  </header>
+
+  <div id="gate">
+    <h2>Acceso</h2>
+    <p>Los saldos de clientes están cifrados. Ingresá la clave del panel.</p>
+    <form id="fGate"><input type="password" id="pw" placeholder="Clave" autocomplete="current-password" autofocus>
+    <button class="btn pri" style="width:100%">Entrar</button></form>
+    <div class="err" id="gErr"></div>
+  </div>
+
+  <main id="app" hidden>
+    <div class="filters">
+      <input type="search" id="fQ" placeholder="Buscar cliente, código, CUIT, comprobante…">
+      <select id="fEmp"><option value="">Todas las empresas</option></select>
+      <select id="fVend"><option value="">Todos los vendedores</option></select>
+      <select id="fRuta"><option value="">Todas las rutas</option></select>
+      <select id="fCond"><option value="">Toda condición</option></select>
+      <select id="fLoc"><option value="">Toda localidad</option></select>
+      <select id="fCart" title="Clientes de calle (con ruta de preventa) o sin ruta: mayoristas y saldos históricos">
+        <option value="">Toda la cartera</option>
+        <option value="calle">Con ruta de preventa</option>
+        <option value="sin">Sin ruta (mayoristas / históricos)</option>
+      </select>
+      <select id="fEst">
+        <option value="">Vencido y por vencer</option>
+        <option value="venc">Solo vencido</option>
+        <option value="pv">Solo por vencer</option>
+        <option value="bl">Lista negra (+5 días)</option>
+      </select>
+      <label><input type="checkbox" id="fHist" checked> Incluir saldos de +90 días</label>
+      <label><input type="number" id="fMin" min="0" step="1000" placeholder="Saldo mín. $" style="width:120px"></label>
+      <button class="btn" id="bReset">Sin filtros</button>
+    </div>
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="grid2">
+      <div class="panel">
+        <h3>Banda de vencimientos <span class="muted" style="font-size:12px">· tocá una franja para filtrar</span></h3>
+        <div class="band" id="band"></div>
+        <div class="legend" id="legend"></div>
+      </div>
+      <div class="panel">
+        <h3>Próximos 14 días <span class="muted" style="font-size:12px">· lo que vence cada día</span></h3>
+        <div class="cal" id="cal"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="tabs" id="tabs"></div>
+      <div id="view"></div>
+    </div>
+    <div class="note" id="foot"></div>
+  </main>
+</div>
+
+<div id="drawer"><div class="in" id="dIn"></div></div>
+<div id="tip"></div>
+
+<script>
+(() => {
+'use strict';
+const $ = s => document.querySelector(s);
+const store = {
+  get: k => { try { return sessionStorage.getItem(k); } catch { return null; } },
+  set: (k, v) => { try { sessionStorage.setItem(k, v); } catch {} },
+  del: k => { try { sessionStorage.removeItem(k); } catch {} },
+};
+const money = n => '$' + Math.round(n).toLocaleString('es-AR');
+const mm = n => Math.abs(n) >= 1e6 ? '$' + (n / 1e6).toLocaleString('es-AR', {maximumFractionDigits: 1}) + ' M' : money(n);
+const pct = n => (n * 100).toLocaleString('es-AR', {maximumFractionDigits: 1}) + '%';
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fdate = d => d ? new Date(d + 'T12:00:00').toLocaleDateString('es-AR', {day: '2-digit', month: '2-digit', year: '2-digit'}) : '—';
+
+// Bandas: dias = hoy - vencimiento (negativo = falta para vencer)
+const BANDS = [
+  {k: 'b0', n: 'Vence en +7 días',  t: d => d < -7},
+  {k: 'b1', n: 'Vence en 4 a 7 días', t: d => d >= -7 && d <= -4},
+  {k: 'b2', n: 'Vence en 1 a 3 días', t: d => d >= -3 && d <= -1},
+  {k: 'b3', n: 'Vence hoy',         t: d => d === 0},
+  {k: 'b4', n: 'Vencido 1 a 5 días',  t: d => d >= 1 && d <= 5},
+  {k: 'b5', n: 'Vencido 6 a 15 días', t: d => d >= 6 && d <= 15},
+  {k: 'b6', n: 'Vencido 16 a 30 días', t: d => d >= 16 && d <= 30},
+  {k: 'b7', n: 'Vencido 31 a 90 días', t: d => d >= 31 && d <= 90},
+  {k: 'b8', n: 'Vencido +90 días',  t: d => d > 90},
+];
+const bandOf = d => BANDS.findIndex(b => b.t(d));
+const bcol = i => `var(--${BANDS[i].k})`;
+const INK_CLARA = new Set([5, 7]);   // franjas oscuras: texto blanco
+const pill = d => { const i = bandOf(d); return `<span class="pill" style="background:${bcol(i)};color:${INK_CLARA.has(i) ? '#fff' : '#0f172a'}">${d > 0 ? d + ' d vencido' : d === 0 ? 'hoy' : 'en ' + (-d) + ' d'}</span>`; };
+
+let D, HOY, state = {tab: 'cli', band: null, sort: {}, lim: 150};
+
+// ---------- descifrado ----------
+const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+async function descifrar(env, clave) {
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(clave), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey({name: 'PBKDF2', salt: b64(env.salt), iterations: env.iter, hash: 'SHA-256'},
+    base, {name: 'AES-GCM', length: 256}, false, ['decrypt']);
+  const pt = await crypto.subtle.decrypt({name: 'AES-GCM', iv: b64(env.iv)}, key, b64(env.ct));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+let ENV;
+async function entrar(clave) {
+  $('#gErr').textContent = 'Descifrando…';
+  try {
+    ENV = ENV || await (await fetch('data.enc.json', {cache: 'no-store'})).json();
+  } catch { $('#gErr').textContent = 'No se pudieron bajar los datos.'; return; }
+  try { D = await descifrar(ENV, clave); }
+  catch { $('#gErr').textContent = 'Clave incorrecta.'; store.del('ctacte-k'); return; }
+  store.set('ctacte-k', clave);
+  $('#gate').hidden = true; $('#app').hidden = false; $('#hbtns').hidden = false;
+  init();
+}
+$('#fGate').onsubmit = e => { e.preventDefault(); entrar($('#pw').value); };
+$('#bOut').onclick = () => { store.del('ctacte-k'); location.reload(); };
+const k0 = store.get('ctacte-k'); if (k0) entrar(k0);
+
+// ---------- datos ----------
+const dias = v => Math.round((new Date(HOY + 'T12:00:00') - new Date(v + 'T12:00:00')) / 864e5);
+function init() {
+  HOY = D.hoy;
+  const gen = new Date(D.generado);
+  $('#sub').textContent = `Tienda Perfecta · TP Pex · Rambla — saldos de GesCom al ${gen.toLocaleString('es-AR', {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'})}`;
+  D.tramos.forEach(t => { t.dd = dias(t.v); t.bi = bandOf(t.dd); const c = D.clientes[t.c]; t.vend = t.vd || c.vend; t.ruta = t.r || c.ruta; });
+  const opts = (sel, pares) => { const s = $(sel); pares.forEach(([v, n]) => s.insertAdjacentHTML('beforeend', `<option value="${esc(v)}">${esc(n)}</option>`)); };
+  opts('#fEmp', Object.entries(D.empresas));
+  const vs = new Set(D.tramos.map(t => t.vend).filter(Boolean));
+  opts('#fVend', [...vs].map(v => [v, (D.vendedores[v] || 'Vendedor ' + v)]).sort((a, b) => a[1].localeCompare(b[1])));
+  const rs = new Set(D.tramos.map(t => t.ruta).filter(Boolean));
+  opts('#fRuta', [...rs].sort((a, b) => a.localeCompare(b, 'es', {numeric: true})).map(r => [r, 'Ruta ' + r]));
+  opts('#fCond', Object.entries(D.condiciones).map(([k, c]) => [k, c.d]));
+  const ls = new Set(Object.values(D.clientes).map(c => c.loc).filter(Boolean));
+  opts('#fLoc', [...ls].sort().map(l => [l, l]));
+  ['#fQ', '#fEmp', '#fVend', '#fRuta', '#fCond', '#fLoc', '#fCart', '#fEst', '#fHist', '#fMin'].forEach(s => $(s).addEventListener('input', () => { state.lim = 150; render(); }));
+  $('#bReset').onclick = () => {
+    ['#fQ', '#fEmp', '#fVend', '#fRuta', '#fCond', '#fLoc', '#fCart', '#fEst', '#fMin'].forEach(s => $(s).value = '');
+    $('#fHist').checked = true; state.band = null; render();
+  };
+  $('#bCsv').onclick = csv;
+  $('#drawer').onclick = e => { if (e.target.id === 'drawer') $('#drawer').classList.remove('on'); };
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#drawer').classList.remove('on'); });
+  render();
+}
+
+// Filtra tramos y arma clientes con lo que queda
+function filtrar() {
+  const q = $('#fQ').value.trim().toLowerCase(), emp = $('#fEmp').value, vend = $('#fVend').value, ruta = $('#fRuta').value,
+    cond = $('#fCond').value, loc = $('#fLoc').value, cart = $('#fCart').value, est = $('#fEst').value, hist = $('#fHist').checked, min = +$('#fMin').value || 0;
+  let T = D.tramos.filter(t => {
+    const c = D.clientes[t.c];
+    if (emp && t.e !== emp) return false;
+    if (vend && t.vend !== vend) return false;
+    if (ruta && t.ruta !== ruta) return false;
+    if (cond && (t.cp || c.cp) !== cond) return false;
+    if (loc && c.loc !== loc) return false;
+    if (cart === 'calle' && !c.ruta) return false;
+    if (cart === 'sin' && c.ruta) return false;
+    if (!hist && t.dd > 90) return false;
+    if (est === 'venc' && t.dd <= 0) return false;
+    if (est === 'pv' && t.dd > 0) return false;
+    if (q && !(t.c.includes(q) || c.n.toLowerCase().includes(q) || c.rs.toLowerCase().includes(q) || c.doc.replace(/-/g, '').includes(q.replace(/-/g, '')) || t.n.includes(q))) return false;
+    return true;
+  });
+  const bandAll = T; // la banda muestra todo lo filtrado, sin el filtro de franja
+  if (state.band !== null) T = T.filter(t => t.bi === state.band);
+  const cm = new Map();
+  for (const t of T) {
+    let a = cm.get(t.c);
+    if (!a) cm.set(t.c, a = {cod: t.c, c: D.clientes[t.c], total: 0, venc: 0, pv: 0, maxd: -1e9, bands: new Array(9).fill(0), tr: []});
+    a.total += t.s; a.tr.push(t);
+    if (t.dd > 0) a.venc += t.s; else a.pv += t.s;
+    if (t.dd > a.maxd) a.maxd = t.dd;
+    a.bands[t.bi] += t.s;
+  }
+  let C = [...cm.values()];
+  if (min) { C = C.filter(a => a.total >= min); const ok = new Set(C.map(a => a.cod)); T = T.filter(t => ok.has(t.c)); }
+  if (est === 'bl') { C = C.filter(a => a.maxd > 5); const ok = new Set(C.map(a => a.cod)); T = T.filter(t => ok.has(t.c)); }
+  return {T, C, bandAll: min || est === 'bl' ? bandAll.filter(t => C.some(a => a.cod === t.c)) : bandAll};
+}
+
+let F;
+function render() {
+  F = filtrar();
+  kpis(); band(); cal(); tabs(); view();
+  $('#foot').innerHTML = `Saldo por cliente: <b>ctacte</b> de GesCom (deuda, crédito a favor, vencimiento impago más viejo). ` +
+    `Cada saldo se reparte sobre las facturas más nuevas del cliente (los cobros cancelan primero lo más viejo); vence en fecha de factura + días de su condición de pago. ` +
+    `Lo que excede las facturas de los últimos ${Math.round((new Date(HOY) - new Date(D.desde)) / 864e5)} días figura como "Saldo anterior" con el vencimiento más viejo que informa GesCom. ` +
+    `Excluye EMFACO / vendedor 1176 (intercompany).`;
+}
+
+function kpis() {
+  const {T, C} = F;
+  const tot = T.reduce((s, t) => s + t.s, 0), venc = T.filter(t => t.dd > 0).reduce((s, t) => s + t.s, 0);
+  const pv = tot - venc, p7 = T.filter(t => t.dd <= 0 && t.dd >= -7).reduce((s, t) => s + t.s, 0);
+  const bl = C.filter(a => a.maxd > 5), blm = bl.reduce((s, a) => s + a.venc, 0);
+  const atr = venc ? T.filter(t => t.dd > 0).reduce((s, t) => s + t.s * t.dd, 0) / venc : 0;
+  const ids = new Set(C.map(a => a.cod));
+  const cred = Object.entries(D.clientes).filter(([k, c]) => c.cred > 1 && (ids.has(k) || !C.length || !anyFilter())).reduce((s, [, c]) => s + c.cred, 0);
+  const excede = C.filter(a => a.c.tope && a.maxd > 0 && a.maxd > a.c.tope).length;
+  const hoyM = T.filter(t => t.dd === 0).reduce((s, t) => s + t.s, 0);
+  const k = (l, v, s, cls = '') => `<div class="kpi ${cls}"><div class="l">${l}</div><div class="v">${v}</div><div class="s">${s}</div></div>`;
+  $('#kpis').innerHTML =
+    k('Deuda total', mm(tot), `${C.length.toLocaleString('es-AR')} clientes · ${T.length.toLocaleString('es-AR')} comprobantes`) +
+    k('Vencido', mm(venc), `${tot ? pct(venc / tot) : '—'} de la deuda`, 'bad') +
+    k('Por vencer', mm(pv), `incluye ${mm(hoyM)} que vence hoy`, 'ok') +
+    k('Vence en 7 días', mm(p7), 'cobranza de la semana', 'warn') +
+    k('Lista negra', bl.length.toLocaleString('es-AR'), `${mm(blm)} vencido hace +5 días`, 'bad') +
+    k('Atraso promedio', Math.round(atr) + ' días', 'ponderado por monto vencido') +
+    k('Exceden su tope', excede.toLocaleString('es-AR'), 'clientes con más días que su tope', excede ? 'warn' : '') +
+    k('Crédito a favor', mm(cred), 'saldos a favor de clientes');
+}
+const anyFilter = () => ['#fQ', '#fEmp', '#fVend', '#fRuta', '#fCond', '#fLoc', '#fCart', '#fEst', '#fMin'].some(s => $(s).value) || !$('#fHist').checked || state.band !== null;
+
+function band() {
+  const sums = new Array(9).fill(0), cnt = new Array(9).fill(0), cli = BANDS.map(() => new Set());
+  F.bandAll.forEach(t => { sums[t.bi] += t.s; cnt[t.bi]++; cli[t.bi].add(t.c); });
+  const tot = sums.reduce((a, b) => a + b, 0) || 1;
+  $('#band').innerHTML = sums.map((s, i) => s ? `<div data-i="${i}" class="${state.band === i ? 'sel' : ''}" style="flex:${Math.max(s / tot, .006)};background:${bcol(i)}" data-tip="<b>${BANDS[i].n}</b><br>${money(s)} · ${pct(s / tot)}<br>${cli[i].size} clientes · ${cnt[i]} comprobantes"></div>` : '').join('');
+  $('#legend').innerHTML = BANDS.map((b, i) => `<div class="lg ${state.band === i ? 'sel' : ''}" data-i="${i}"><span class="sw" style="background:${bcol(i)}"></span><span class="n">${b.n}</span><span class="m">${mm(sums[i])}</span></div>`).join('');
+  document.querySelectorAll('#band div,#legend .lg').forEach(el => el.onclick = () => { const i = +el.dataset.i; state.band = state.band === i ? null : i; render(); });
+}
+
+function cal() {
+  const days = [], by = {};
+  F.T.forEach(t => { if (t.dd <= 0 && t.dd >= -13) by[-t.dd] = (by[-t.dd] || 0) + t.s; });
+  for (let i = 0; i < 14; i++) days.push(by[i] || 0);
+  const mx = Math.max(...days, 1);
+  const dt = i => { const d = new Date(HOY + 'T12:00:00'); d.setDate(d.getDate() + i); return d; };
+  $('#cal').innerHTML = days.map((v, i) => {
+    const d = dt(i), lab = i === 0 ? 'hoy' : d.toLocaleDateString('es-AR', {weekday: 'short', day: 'numeric'});
+    return `<div class="c" data-tip="<b>${d.toLocaleDateString('es-AR', {weekday: 'long', day: 'numeric', month: 'short'})}</b><br>${money(v)}"><div class="bar" style="height:${v / mx * 100}%;background:${bcol(bandOf(-i))}"></div><div class="d">${lab}</div></div>`;
+  }).join('');
+}
+
+// ---------- vistas ----------
+const TABS = [
+  {k: 'cli', n: 'Clientes', c: () => F.C.length},
+  {k: 'bl', n: 'Lista negra', c: () => F.C.filter(a => a.maxd > 5).length, cls: 'bl'},
+  {k: 'comp', n: 'Comprobantes', c: () => F.T.length},
+  {k: 'vend', n: 'Por vendedor'},
+  {k: 'ruta', n: 'Por ruta'},
+  {k: 'emp', n: 'Por empresa'},
+  {k: 'fav', n: 'Saldos a favor', c: () => Object.values(D.clientes).filter(c => c.cred > 1).length},
+];
+function tabs() {
+  $('#tabs').innerHTML = TABS.map(t => `<div class="tab ${t.cls || ''} ${state.tab === t.k ? 'on' : ''}" data-k="${t.k}">${t.n}${t.c ? `<span class="k">${t.c().toLocaleString('es-AR')}</span>` : ''}</div>`).join('');
+  document.querySelectorAll('.tab').forEach(el => el.onclick = () => { state.tab = el.dataset.k; state.lim = 150; tabs(); view(); });
+}
+const miniBands = a => `<div class="mini">${a.bands.map((s, i) => s ? `<div style="flex:${s};background:${bcol(i)}"></div>` : '').join('')}</div>`;
+const vn = v => v ? (D.vendedores[v] || v) : '—';
+
+// tabla genérica ordenable
+function table(id, cols, rows, onRow) {
+  const s = state.sort[id] || {i: cols.findIndex(c => c.def) >= 0 ? cols.findIndex(c => c.def) : 0, d: -1};
+  const c = cols[s.i];
+  rows = rows.slice().sort((a, b) => { const x = c.v(a), y = c.v(b); return (typeof x === 'string' ? x.localeCompare(y) : x - y) * s.d; });
+  state.lastRows = {cols, rows};
+  const shown = rows.slice(0, state.lim);
+  const html = `<div class="tw"><table><thead><tr>${cols.map((c, i) => `<th class="${c.r ? 'r' : ''}" data-i="${i}">${c.n}${s.i === i ? (s.d < 0 ? ' ▾' : ' ▴') : ''}</th>`).join('')}</tr></thead>
+    <tbody>${shown.map((r, j) => `<tr class="${onRow ? 'click' : ''}" data-j="${j}">${cols.map(c => `<td class="${c.r ? 'r' : ''} ${c.cls || ''}">${c.h ? c.h(r) : esc(c.v(r))}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+    ${rows.length > state.lim ? `<div class="more"><button class="btn" id="bMore">Ver más (${(rows.length - state.lim).toLocaleString('es-AR')} restantes)</button></div>` : ''}
+    ${!rows.length ? '<p class="muted">No hay nada con estos filtros.</p>' : ''}`;
+  $('#view').innerHTML = html;
+  $('#view').querySelectorAll('th').forEach(th => th.onclick = () => { const i = +th.dataset.i; const cur = state.sort[id] || s; state.sort[id] = {i, d: cur.i === i ? -cur.d : -1}; view(); });
+  if (onRow) $('#view').querySelectorAll('tbody tr').forEach(tr => tr.onclick = () => onRow(shown[+tr.dataset.j]));
+  const m = $('#bMore'); if (m) m.onclick = () => { state.lim += 300; view(); };
+}
+
+const colsCli = [
+  {n: 'Cliente', v: a => a.c.n, h: a => `<b>${esc(a.c.n)}</b><div class="muted" style="font-size:11px">${esc(a.cod)} · ${esc(a.c.loc || '')}${a.c.activo ? '' : ' · <span class="amber">no está en el maestro</span>'}</div>`, cls: 'nm'},
+  {n: 'Vendedor', v: a => vn(a.c.vend || a.tr[0].vend)},
+  {n: 'Ruta', v: a => a.c.ruta || a.tr[0].ruta || ''},
+  {n: 'Condición', v: a => (D.condiciones[a.c.cp] || {}).d || a.c.cp || '—'},
+  {n: 'Deuda', r: 1, def: 1, v: a => a.total, h: a => money(a.total)},
+  {n: 'Vencido', r: 1, v: a => a.venc, h: a => a.venc ? `<span class="red">${money(a.venc)}</span>` : '<span class="muted">—</span>'},
+  {n: 'Por vencer', r: 1, v: a => a.pv, h: a => a.pv ? money(a.pv) : '<span class="muted">—</span>'},
+  {n: 'Estado', v: a => a.maxd, h: a => pill(a.maxd)},
+  {n: 'Banda', v: a => a.maxd, h: miniBands},
+  {n: 'Tope', r: 1, v: a => a.c.tope || 0, h: a => a.c.tope ? (a.maxd > a.c.tope ? `<span class="amber">${a.c.tope} d ⚠</span>` : a.c.tope + ' d') : '<span class="muted">—</span>'},
+  {n: 'Vta 30 d', r: 1, v: a => a.c.vta30, h: a => a.c.vta30 ? mm(a.c.vta30) : '<span class="muted">—</span>'},
+  {n: 'Días de deuda', r: 1, v: a => a.c.vta30 ? a.total / (a.c.vta30 / 30) : 1e9, h: a => a.c.vta30 ? Math.round(a.total / (a.c.vta30 / 30)) : '<span class="muted">sin compras</span>'},
+];
+
+function view() {
+  const t = state.tab;
+  if (t === 'cli') return table('cli', colsCli, F.C, ficha);
+  if (t === 'bl') {
+    const rows = F.C.filter(a => a.maxd > 5);
+    const cols = [
+      {n: 'Cliente', v: a => a.c.n, h: colsCli[0].h, cls: 'nm'},
+      {n: 'Días de atraso', r: 1, def: 1, v: a => a.maxd, h: a => pill(a.maxd)},
+      {n: 'Vencido', r: 1, v: a => a.venc, h: a => `<b class="red">${money(a.venc)}</b>`},
+      {n: 'Deuda total', r: 1, v: a => a.total, h: a => money(a.total)},
+      {n: 'Vendedor', v: a => vn(a.c.vend || a.tr[0].vend)},
+      {n: 'Ruta', v: a => a.c.ruta || a.tr[0].ruta || ''},
+      {n: 'Teléfono', v: a => a.c.tel || '', h: a => telLink(a.c.tel, a)},
+      {n: 'Vta 30 d', r: 1, v: a => a.c.vta30, h: a => a.c.vta30 ? `<span class="amber" title="Sigue comprando con deuda vencida">${mm(a.c.vta30)}</span>` : '<span class="muted">—</span>'},
+    ];
+    table('bl', cols, rows, ficha);
+    $('#view').insertAdjacentHTML('afterbegin', `<p class="note" style="margin-top:0">Clientes con deuda vencida hace <b>más de 5 días</b>. Si tienen "Vta 30 d" en naranja, siguieron comprando con deuda vencida.</p>`);
+    return;
+  }
+  if (t === 'comp') {
+    const cols = [
+      {n: 'Vence', v: r => r.v, h: r => fdate(r.v)},
+      {n: 'Estado', r: 0, def: 1, v: r => r.dd, h: r => pill(r.dd)},
+      {n: 'Cliente', v: r => D.clientes[r.c].n, h: r => `${esc(D.clientes[r.c].n)} <span class="muted">${esc(r.c)}</span>`, cls: 'nm'},
+      {n: 'Comprobante', v: r => r.t + ' ' + r.n, h: r => r.t === 'ANT' ? '<span class="muted">Saldo anterior</span>' : esc(r.t + ' ' + r.n)},
+      {n: 'Fecha', v: r => r.f || '', h: r => fdate(r.f)},
+      {n: 'Empresa', v: r => D.empresas[r.e] || r.e || '—'},
+      {n: 'Condición', v: r => (D.condiciones[r.cp] || {}).d || r.cp || '—'},
+      {n: 'Vendedor', v: r => vn(r.vend)},
+      {n: 'Importe', r: 1, v: r => r.imp, h: r => money(r.imp)},
+      {n: 'Saldo', r: 1, v: r => r.s, h: r => `<b>${money(r.s)}</b>`},
+    ];
+    return table('comp', cols, F.T, r => ficha(F.C.find(a => a.cod === r.c)));
+  }
+  if (t === 'vend' || t === 'ruta' || t === 'emp') {
+    const key = t === 'vend' ? (x => x.vend || '') : t === 'ruta' ? (x => x.ruta || '') : (x => x.e || '');
+    const g = new Map();
+    F.T.forEach(x => {
+      const k = key(x); let a = g.get(k);
+      if (!a) g.set(k, a = {k, total: 0, venc: 0, pv: 0, v5: 0, cli: new Set(), bl: new Set(), bands: new Array(9).fill(0)});
+      a.total += x.s; a.cli.add(x.c); a.bands[x.bi] += x.s;
+      if (x.dd > 0) a.venc += x.s; else a.pv += x.s;
+      if (x.dd > 5) { a.v5 += x.s; a.bl.add(x.c); }
+    });
+    const name = t === 'vend' ? (a => vn(a.k)) : t === 'ruta' ? (a => a.k ? 'Ruta ' + a.k : 'Sin ruta') : (a => D.empresas[a.k] || 'Sin empresa');
+    const cols = [
+      {n: t === 'vend' ? 'Vendedor' : t === 'ruta' ? 'Ruta' : 'Empresa', v: name},
+      {n: 'Clientes', r: 1, v: a => a.cli.size},
+      {n: 'Deuda', r: 1, def: 1, v: a => a.total, h: a => money(a.total)},
+      {n: 'Vencido', r: 1, v: a => a.venc, h: a => `<span class="red">${money(a.venc)}</span>`},
+      {n: '% vencido', r: 1, v: a => a.total ? a.venc / a.total : 0, h: a => pct(a.total ? a.venc / a.total : 0)},
+      {n: 'Por vencer', r: 1, v: a => a.pv, h: a => money(a.pv)},
+      {n: 'Lista negra', r: 1, v: a => a.bl.size, h: a => a.bl.size ? `<span class="red">${a.bl.size}</span> <span class="muted">(${mm(a.v5)})</span>` : '<span class="muted">—</span>'},
+      {n: 'Banda', v: a => a.venc, h: miniBands},
+    ];
+    const rows = [...g.values()];
+    const onRow = a => {
+      const sel = t === 'vend' ? '#fVend' : t === 'ruta' ? '#fRuta' : '#fEmp';
+      $(sel).value = a.k; state.tab = 'cli'; render();
+    };
+    table(t, cols, rows, onRow);
+    $('#view').insertAdjacentHTML('afterbegin', `<p class="note" style="margin-top:0">Tocá una fila para ver sus clientes.</p>`);
+    return;
+  }
+  if (t === 'fav') {
+    const q = $('#fQ').value.trim().toLowerCase();
+    const rows = Object.entries(D.clientes).filter(([k, c]) => c.cred > 1 && (!q || c.n.toLowerCase().includes(q) || k.includes(q)))
+      .map(([k, c]) => ({cod: k, c}));
+    const cols = [
+      {n: 'Cliente', v: a => a.c.n, h: a => `<b>${esc(a.c.n)}</b> <span class="muted">${esc(a.cod)}</span>`, cls: 'nm'},
+      {n: 'Crédito a favor', r: 1, def: 1, v: a => a.c.cred, h: a => `<span class="green">${money(a.c.cred)}</span>`},
+      {n: 'Deuda', r: 1, v: a => a.c.saldo, h: a => a.c.saldo > 1 ? money(a.c.saldo) : '<span class="muted">—</span>'},
+      {n: 'Saldo neto', r: 1, v: a => a.c.neto, h: a => a.c.neto < 0 ? `<span class="green">${money(a.c.neto)}</span>` : money(a.c.neto)},
+      {n: 'Vendedor', v: a => vn(a.c.vend)},
+      {n: 'Localidad', v: a => a.c.loc || ''},
+    ];
+    table('fav', cols, rows);
+    $('#view').insertAdjacentHTML('afterbegin', `<p class="note" style="margin-top:0">Notas de crédito o pagos a cuenta todavía sin imputar. Si el cliente también tiene deuda, conviene imputarlos en GesCom.</p>`);
+  }
+}
+
+function telLink(tel, a) {
+  if (!tel) return '<span class="muted">—</span>';
+  let n = String(tel).replace(/\D/g, '');
+  if (n.startsWith('0')) n = n.slice(1);
+  if (!n.startsWith('54')) n = '549' + n;
+  const msg = a ? `Hola ${a.c.n}, te escribimos de Tienda Perfecta. Registramos un saldo vencido de ${money(a.venc)}. ¿Coordinamos el pago?` : '';
+  return `<a href="https://wa.me/${n}?text=${encodeURIComponent(msg)}" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">${esc(tel)}</a>`;
+}
+
+function ficha(a) {
+  if (!a) return;
+  const c = a.c, todos = D.tramos.filter(t => t.c === a.cod).sort((x, y) => y.dd - x.dd);
+  const venc = todos.filter(t => t.dd > 0).reduce((s, t) => s + t.s, 0), maxd = Math.max(...todos.map(t => t.dd));
+  const cond = (D.condiciones[c.cp] || {}).d || c.cp || '—';
+  $('#dIn').innerHTML = `
+    <div style="display:flex;justify-content:space-between;gap:10px"><div><h2>${esc(c.n)}</h2>
+    <div class="muted">${esc(a.cod)}${c.rs && c.rs !== c.n ? ' · ' + esc(c.rs) : ''}${c.doc ? ' · ' + esc(c.doc) : ''}</div></div>
+    <button class="btn" onclick="document.getElementById('drawer').classList.remove('on')">Cerrar</button></div>
+    <div style="margin-top:10px">${pill(maxd)} ${maxd > 5 ? '<span class="pill" style="background:#fca5a5;color:#0f172a">LISTA NEGRA</span>' : ''} ${c.tope && maxd > c.tope ? `<span class="pill" style="background:#fdba74">Excede tope de ${c.tope} días</span>` : ''}</div>
+    <div class="facts">
+      <div><b>Deuda</b>${money(c.saldo)}</div>
+      <div><b>Vencido</b><span class="red">${money(venc)}</span></div>
+      <div><b>Crédito a favor</b>${c.cred > 1 ? `<span class="green">${money(c.cred)}</span>` : '—'}</div>
+      <div><b>Saldo neto</b>${money(c.neto)}</div>
+      <div><b>Venc. impago más viejo</b>${fdate(c.vmin)}</div>
+      <div><b>Condición de pago</b>${esc(cond)}</div>
+      <div><b>Tope de días</b>${c.tope ?? '—'}</div>
+      <div><b>Compras últimos 30 días</b>${c.vta30 ? money(c.vta30) : '—'}</div>
+      <div><b>Vendedor · Ruta</b>${esc(vn(c.vend))} · ${esc(c.ruta || '—')}</div>
+      <div><b>Teléfono</b>${telLink(c.tel, {c, venc})}</div>
+      <div><b>Dirección</b>${esc(c.dir || '—')}<br><span class="muted">${esc(c.loc || '')}</span></div>
+      <div><b>Email</b>${c.mail ? `<a href="mailto:${esc(c.mail)}">${esc(c.mail)}</a>` : '—'}</div>
+    </div>
+    <h3 style="font-weight:500;font-size:15px">Composición del saldo</h3>
+    <div class="tw"><table><thead><tr><th>Comprobante</th><th>Fecha</th><th>Vence</th><th>Estado</th><th class="r">Importe</th><th class="r">Saldo</th></tr></thead>
+    <tbody>${todos.map(t => `<tr><td>${t.t === 'ANT' ? '<span class="muted">Saldo anterior</span>' : esc(t.t + ' ' + t.n)}<div class="muted" style="font-size:11px">${esc(D.empresas[t.e] || '')}</div></td><td>${fdate(t.f)}</td><td>${fdate(t.v)}</td><td>${pill(t.dd)}</td><td class="r">${money(t.imp)}</td><td class="r"><b>${money(t.s)}</b></td></tr>`).join('')}</tbody></table></div>
+    ${c.tags && c.tags.length ? `<p class="note">Etiquetas: ${c.tags.map(esc).join(', ')}</p>` : ''}`;
+  $('#drawer').classList.add('on');
+}
+
+function csv() {
+  const L = state.lastRows; if (!L) return;
+  const strip = h => String(h).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+  const cell = v => { v = typeof v === 'number' ? String(Math.round(v * 100) / 100).replace('.', ',') : String(v ?? ''); return /[;"\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+  const lines = [L.cols.map(c => cell(strip(c.n))).join(';')].concat(L.rows.map(r => L.cols.map(c => cell(c.v(r))).join(';')));
+  const blob = new Blob(['﻿' + lines.join('\r\n')], {type: 'text/csv;charset=utf-8'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `ctacte-${state.tab}-${HOY}.csv`; a.click();
+}
+
+// tooltip
+const tip = $('#tip');
+document.addEventListener('mousemove', e => {
+  const el = e.target.closest('[data-tip]');
+  if (!el) { tip.style.display = 'none'; return; }
+  tip.innerHTML = el.dataset.tip; tip.style.display = 'block';
+  tip.style.left = Math.min(e.clientX + 12, innerWidth - tip.offsetWidth - 8) + 'px';
+  tip.style.top = (e.clientY + 14) + 'px';
+});
+})();
+</script>
+</body>
+</html>
