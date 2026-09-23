@@ -4954,8 +4954,8 @@
    "minutos": 0.0,
    "visito": false,
    "hora": null,
-   "pedidos": 3,
-   "monto": 389058.49,
+   "pedidos": 4,
+   "monto": 449058.61,
    "fechaVenta": "2026-09-23",
    "horaVenta": "13:01",
    "estado": "vendio_sin_pasar"
@@ -6769,6 +6769,25 @@
    "fecha": "2026-09-23",
    "sellerId": "7",
    "vendedor": "Ramiro Rando",
+   "clientId": "4393",
+   "nombre": "BRAIAN EMANUEL MILICAY",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.1,
+   "visito": true,
+   "hora": "15:36",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "paso_sin_vender"
+  },
+  {
+   "fecha": "2026-09-23",
+   "sellerId": "7",
+   "vendedor": "Ramiro Rando",
    "clientId": "4406",
    "nombre": "ROMINA VALVERDE",
    "localidad": "MAR DEL PLATA",
@@ -6954,6 +6973,25 @@
    "fechaVenta": null,
    "horaVenta": null,
    "estado": "paso_sin_vender"
+  },
+  {
+   "fecha": "2026-09-23",
+   "sellerId": "7",
+   "vendedor": "Ramiro Rando",
+   "clientId": "629",
+   "nombre": "MIRANDA LAURA VALERIA ANA",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": "15:37",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "sin_visita"
   },
   {
    "fecha": "2026-09-23",
@@ -8265,12 +8303,31 @@
    "fechaVenta": "2026-09-23",
    "horaVenta": "15:01",
    "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-23",
+   "sellerId": "9",
+   "vendedor": "Ludmila Aylen Martinez",
+   "clientId": "4280",
+   "nombre": "Marcela Alejandra campos",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Fiambreria_B",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 135262.23,
+   "fechaVenta": "2026-09-23",
+   "horaVenta": "15:08",
+   "estado": "vendio_sin_pasar"
   }
  ],
  "resumen": {
   "vendio": 110,
-  "paso_sin_vender": 98,
-  "sin_visita": 21,
-  "vendio_sin_pasar": 206
+  "paso_sin_vender": 99,
+  "sin_visita": 22,
+  "vendio_sin_pasar": 207
  }
 }

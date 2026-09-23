@@ -4960,8 +4960,8 @@
    "minutos": 0.0,
    "visito": false,
    "hora": null,
-   "pedidos": 3,
-   "monto": 389058.49,
+   "pedidos": 4,
+   "monto": 449058.61,
    "fechaVenta": "2026-09-23",
    "horaVenta": "13:01",
    "estado": "vendio_sin_pasar"
@@ -6775,6 +6775,25 @@
    "fecha": "2026-09-23",
    "sellerId": "7",
    "vendedor": "Ramiro Rando",
+   "clientId": "4393",
+   "nombre": "BRAIAN EMANUEL MILICAY",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.1,
+   "visito": true,
+   "hora": "15:36",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "paso_sin_vender"
+  },
+  {
+   "fecha": "2026-09-23",
+   "sellerId": "7",
+   "vendedor": "Ramiro Rando",
    "clientId": "4406",
    "nombre": "ROMINA VALVERDE",
    "localidad": "MAR DEL PLATA",
@@ -6960,6 +6979,25 @@
    "fechaVenta": null,
    "horaVenta": null,
    "estado": "paso_sin_vender"
+  },
+  {
+   "fecha": "2026-09-23",
+   "sellerId": "7",
+   "vendedor": "Ramiro Rando",
+   "clientId": "629",
+   "nombre": "MIRANDA LAURA VALERIA ANA",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": "15:37",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "sin_visita"
   },
   {
    "fecha": "2026-09-23",
@@ -8271,13 +8309,32 @@
    "fechaVenta": "2026-09-23",
    "horaVenta": "15:01",
    "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-23",
+   "sellerId": "9",
+   "vendedor": "Ludmila Aylen Martinez",
+   "clientId": "4280",
+   "nombre": "Marcela Alejandra campos",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Fiambreria_B",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 135262.23,
+   "fechaVenta": "2026-09-23",
+   "horaVenta": "15:08",
+   "estado": "vendio_sin_pasar"
   }
  ],
  "resumen": {
   "vendio": 110,
-  "paso_sin_vender": 98,
-  "sin_visita": 21,
-  "vendio_sin_pasar": 206
+  "paso_sin_vender": 99,
+  "sin_visita": 22,
+  "vendio_sin_pasar": 207
  },
  "bySeller": [
   {
@@ -8296,7 +8353,7 @@
    "pedidos": 19,
    "monto": 2232022.41,
    "pasoSinVender": 34,
-   "km": 18.0,
+   "km": 25.0,
    "llegoTarde": false,
    "salioTemprano": true
   },
@@ -8304,21 +8361,21 @@
    "sellerId": "7",
    "vendedor": "Ramiro Rando",
    "inicioJornada": "08:34",
-   "finJornada": "13:38",
+   "finJornada": "15:36",
    "entradaZona": null,
    "salidaZona": null,
    "zonaConfiable": false,
    "primera": "08:34",
-   "ultima": "13:38",
-   "visitas": 35,
-   "minutosTotal": 245.0,
-   "minutosPromedio": 7.0,
+   "ultima": "15:36",
+   "visitas": 36,
+   "minutosTotal": 245.1,
+   "minutosPromedio": 6.8,
    "pedidos": 31,
    "monto": 5594529.56,
-   "pasoSinVender": 14,
-   "km": 28.0,
+   "pasoSinVender": 15,
+   "km": 39.0,
    "llegoTarde": false,
-   "salioTemprano": true
+   "salioTemprano": false
   },
   {
    "sellerId": "1",
@@ -8336,7 +8393,7 @@
    "pedidos": 35,
    "monto": 2121856.86,
    "pasoSinVender": 12,
-   "km": 57.0,
+   "km": 58.0,
    "llegoTarde": true,
    "salioTemprano": true
   },
@@ -8356,7 +8413,7 @@
    "pedidos": 24,
    "monto": 2244302.38,
    "pasoSinVender": 12,
-   "km": 46.0,
+   "km": 47.0,
    "llegoTarde": true,
    "salioTemprano": false
   },
@@ -8364,10 +8421,10 @@
    "sellerId": "12",
    "vendedor": "Agustin Pogorzelski",
    "inicioJornada": "09:10",
-   "finJornada": "13:13",
-   "entradaZona": null,
-   "salidaZona": null,
-   "zonaConfiable": false,
+   "finJornada": "15:17",
+   "entradaZona": "15:14",
+   "salidaZona": "15:17",
+   "zonaConfiable": true,
    "primera": "09:10",
    "ultima": "13:13",
    "visitas": 24,
@@ -8376,9 +8433,9 @@
    "pedidos": 34,
    "monto": 2799508.1,
    "pasoSinVender": 7,
-   "km": 11.0,
+   "km": 14.0,
    "llegoTarde": true,
-   "salioTemprano": true
+   "salioTemprano": false
   },
   {
    "sellerId": "4",
@@ -8393,8 +8450,8 @@
    "visitas": 22,
    "minutosTotal": 130.9,
    "minutosPromedio": 5.9,
-   "pedidos": 34,
-   "monto": 9235449.14,
+   "pedidos": 35,
+   "monto": 9295449.26,
    "pasoSinVender": 9,
    "km": 29.0,
    "llegoTarde": false,
@@ -8593,8 +8650,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 41,
-   "monto": 5256368.99,
+   "pedidos": 42,
+   "monto": 5391631.22,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -12321,9 +12378,9 @@
   ]
  },
  "totales": {
-  "visitas": 208,
-  "minutos": 1218.3,
-  "pedidos": 426,
-  "monto": 50355749.9
+  "visitas": 209,
+  "minutos": 1218.4,
+  "pedidos": 428,
+  "monto": 50551012.25
  }
 }
