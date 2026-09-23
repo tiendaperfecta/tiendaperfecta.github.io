@@ -346,9 +346,10 @@ def _resumen_indice(dia):
 
 
 def construir(gps, fecha, orders, escribir, meta, ahora=None, maestro=None,
-              rutas=None, orders_de=None, dias_existentes=()):
+              rutas=None, orders_de=None, dias_existentes=(), leer=None):
     """Arma el dia de hoy, lo publica, y completa los dias que falten."""
     avisos = []
+    leer = leer or (lambda _n: None)
     maestro = Maestro(maestro)
     hoy = armar_dia(gps, fecha, orders, maestro, rutas, con_km=True,
                     con_zona=True, ahora=ahora, avisos=avisos)
@@ -385,6 +386,13 @@ def construir(gps, fecha, orders, escribir, meta, ahora=None, maestro=None,
                 avisos.append("historia %s: %s" % (f, e))
     escribir("dias.json",
              {"dias": sorted(indice.values(), key=lambda d: d["fecha"], reverse=True)})
+
+    # ---- Aviso de llegadas tarde: un solo mail por dia ----
+    try:
+        import axum_alerta
+        axum_alerta.revisar(hoy, fecha, leer, escribir, meta, ahora)
+    except Exception as e:
+        avisos.append("alerta: %s: %s" % (type(e).__name__, e))
 
     # ---- LDR ----
     try:

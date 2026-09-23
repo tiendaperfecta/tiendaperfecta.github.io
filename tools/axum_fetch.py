@@ -511,7 +511,8 @@ def build():
                 maestro=read_json("clientes.json"),
                 rutas=read_json("rutas.json"),
                 orders_de=(lambda f: o.orders_all(f, f)[0]) if orders_ok else None,
-                dias_existentes=(read_json("dias.json") or {}).get("dias", []))
+                dias_existentes=(read_json("dias.json") or {}).get("dias", []),
+                leer=read_json)
         except Exception as e:
             meta["errors"].append("detalle: %s: %s" % (type(e).__name__, e))
 
