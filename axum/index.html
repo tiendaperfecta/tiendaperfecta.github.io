@@ -645,7 +645,10 @@ function crearMapa(tab, divId, puntos){
       L.circleMarker([z[0],z[1]], {radius:5, color:'#fff', weight:2,
         fillColor:'#0f172a', fillOpacity:1}).addTo(capaZonas)
         .bindTooltip('Última señal ' + z[2], {direction:'top', className:'ficha-tt'});
-      trazo.forEach(p=>pts.push([p[0],p[1]]));
+      // El trazo no entra en el encuadre: si el vendedor se fue lejos, el mapa
+      // se abriria tanto que la zona dejaria de verse. Queda para el que se
+      // aleje con la rueda.
+
     }
 
     enRuta.forEach(id=> poner(id, visitados.has(id)? '#10b981':'#f43f5e',
@@ -687,8 +690,9 @@ function crearMapa(tab, divId, puntos){
     } else {
       $('#zona-info').textContent = 'sin zona dibujada';
     }
-    mapas['zonas'].pts = pts;
-    if(pts.length) mapaZonas.fitBounds(pts,{padding:[40,40],maxZoom:15});
+    const encuadre = ptsZona.length? ptsZona : pts;
+    mapas['zonas'].pts = encuadre;
+    if(encuadre.length) mapaZonas.fitBounds(encuadre,{padding:[40,40],maxZoom:16});
   }
   $('#sel-zona-vend').onchange = pintarZonas;
   $('#chk-todos').onchange = pintarZonas;
