@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ventas Georgalos TP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f3ec; --panel:#ffffff; --panel-2:#efe9dc; --text:#241f18; --muted:#71695a;
+  --border:#e2d9c6; --accent:#8a3b2e; --accent-soft:#f3dfd6;
+  --good:#3f7d4f; --good-soft:#e4f0e6; --warn:#b5651d; --warn-soft:#f6e8d5; --bad:#b23b2e; --bad-soft:#f7e2de;
+  --heat-l:42%; --heat-a:.20;
+  --shadow: 0 1px 2px rgba(36,31,24,.06), 0 8px 24px -12px rgba(36,31,24,.18);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#17140f; --panel:#211c15; --panel-2:#282219; --text:#f2ece0; --muted:#a89a86;
+    --border:#3a3122; --accent:#e58a72; --accent-soft:#3a1f18;
+    --good:#6cbb84; --good-soft:#1e3324; --warn:#e2a33d; --warn-soft:#3a2c15; --bad:#e2695c; --bad-soft:#3a1e1b;
+    --heat-l:55%; --heat-a:.26;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px -14px rgba(0,0,0,.6);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#17140f; --panel:#211c15; --panel-2:#282219; --text:#f2ece0; --muted:#a89a86;
+  --border:#3a3122; --accent:#e58a72; --accent-soft:#3a1f18;
+  --good:#6cbb84; --good-soft:#1e3324; --warn:#e2a33d; --warn-soft:#3a2c15; --bad:#e2695c; --bad-soft:#3a1e1b;
+  --heat-l:55%; --heat-a:.26;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px -14px rgba(0,0,0,.6);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:"IBM Plex Sans", system-ui, sans-serif; font-size:14px;
+  padding:28px 16px 48px; display:flex; justify-content:center;
+}
+.wrap{width:100%; max-width:1180px}
+.eyebrow{font:600 12px/1 "IBM Plex Mono", monospace; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin:0 0 10px}
+h1{font-family:"Fraunces", Georgia, serif; font-weight:600; font-size:clamp(26px,4vw,38px); line-height:1.1; margin:0 0 8px; text-wrap:balance}
+.sub{color:var(--muted); font-size:14.5px; margin:0 0 24px; max-width:70ch}
+.sub b{color:var(--text); font-weight:600}
+
+.kpis{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:28px}
+@media (max-width:860px){ .kpis{grid-template-columns:repeat(2,1fr)} }
+.kpi{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:16px 16px 14px; box-shadow:var(--shadow); min-width:0}
+.kpi .label{font:600 11px/1 "IBM Plex Mono",monospace; letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
+.kpi .value{font-family:"Fraunces",serif; font-weight:600; font-size:25px; margin-top:8px; font-variant-numeric:tabular-nums; white-space:nowrap}
+.kpi .unit{font-size:13px; color:var(--muted); font-weight:500; margin-left:3px}
+.kpi .foot{font-size:12px; color:var(--muted); margin-top:4px; font-family:"IBM Plex Mono",monospace}
+.kpi.accent{background:linear-gradient(155deg,var(--accent-soft),var(--panel) 65%)}
+
+.block{border-top:2px solid var(--border); padding-top:22px; margin-top:8px}
+.block-title{font-family:"Fraunces",serif; font-weight:600; font-size:24px; margin:0 0 4px}
+.block-note{color:var(--muted); font-size:13.5px; margin:0 0 22px; max-width:78ch}
+.section-title{font-family:"Fraunces",serif; font-weight:600; font-size:19px; margin:0 0 4px}
+.section-note{color:var(--muted); font-size:13px; margin:0 0 14px; max-width:80ch}
+.section-head{display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; margin-bottom:14px}
+.section-head .section-note{margin:0}
+
+.seg-ctl{display:inline-flex; background:var(--panel-2); border:1px solid var(--border); border-radius:99px; padding:3px; gap:2px; flex-wrap:wrap}
+.seg-ctl button{
+  font:600 12px "IBM Plex Sans"; color:var(--muted); background:transparent; border:0; border-radius:99px;
+  padding:6px 12px; cursor:pointer;
+}
+.seg-ctl button[aria-pressed="true"]{background:var(--panel); color:var(--text); box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.seg-ctl button:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+
+.table-scroll{overflow-x:auto; border:1px solid var(--border); border-radius:12px; background:var(--panel); box-shadow:var(--shadow); margin-bottom:28px}
+table{border-collapse:collapse; width:100%; font-size:13px}
+.wide{min-width:920px}
+thead tr.grp th{font:600 11px/1 "IBM Plex Mono",monospace; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); text-align:center; padding:12px 10px 6px}
+thead tr.grp th.g-a{color:var(--accent)}
+thead tr.cols th{font:600 11.5px "IBM Plex Sans"; color:var(--muted); text-align:right; padding:12px 10px 10px; border-bottom:1px solid var(--border); white-space:nowrap}
+thead tr.grp + tr.cols th{padding-top:0}
+thead tr.cols th.name-col{text-align:left}
+tbody td{padding:10px; text-align:right; border-bottom:1px solid var(--border); font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; white-space:nowrap}
+tbody td.name, tfoot td.name{text-align:left; font-family:"IBM Plex Sans"; font-weight:600}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--panel-2)}
+tbody td.heat{font-weight:600}
+td.sep, th.sep{width:14px; padding:0}
+.muted{color:var(--muted)}
+.cell-bar{display:flex; align-items:center; gap:8px; justify-content:flex-end}
+.mini-bar{width:52px; height:6px; border-radius:99px; background:var(--panel-2); overflow:hidden; flex:none}
+.mini-bar span{display:block; height:100%; border-radius:99px}
+.pill{display:inline-block; padding:2px 8px; border-radius:99px; font:600 11px "IBM Plex Mono",monospace}
+.pill.good{background:var(--good-soft); color:var(--good)}
+.pill.warn{background:var(--warn-soft); color:var(--warn)}
+.pill.bad{background:var(--bad-soft); color:var(--bad)}
+tfoot td{padding:12px 10px; font-weight:700; border-top:2px solid var(--border); font-family:"IBM Plex Mono",monospace; text-align:right; white-space:nowrap}
+
+.clickable{cursor:pointer; text-decoration:underline dotted; text-underline-offset:3px; text-decoration-color:var(--muted)}
+.clickable:hover{color:var(--accent)}
+.foot-note{color:var(--muted); font-size:12.5px; line-height:1.6; margin:-12px 0 28px; max-width:90ch}
+.foot-note code{font-family:"IBM Plex Mono",monospace; background:var(--panel-2); padding:1px 5px; border-radius:4px}
+.alert{background:var(--bad-soft); color:var(--bad); border-radius:12px; padding:14px 16px; margin-bottom:20px; display:none}
+
+.modal-overlay{position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:flex-start; justify-content:center; z-index:100; padding:6vh 16px; overflow-y:auto}
+.modal-overlay.open{display:flex}
+.modal-panel{background:var(--panel); border:1px solid var(--border); border-radius:14px; max-width:960px; width:100%; box-shadow:0 20px 60px -20px rgba(0,0,0,.6); max-height:88vh; display:flex; flex-direction:column}
+.modal-head{display:flex; justify-content:space-between; align-items:flex-start; gap:16px; padding:18px 22px 14px; border-bottom:1px solid var(--border)}
+.modal-head h3{font-family:"Fraunces",serif; font-weight:600; font-size:17px; margin:0 0 4px}
+.modal-head p{margin:0; color:var(--muted); font-size:13px}
+.modal-close{background:var(--panel-2); border:1px solid var(--border); color:var(--text); width:30px; height:30px; border-radius:50%; font-size:16px; line-height:1; cursor:pointer; flex:none}
+.modal-body{overflow:auto; padding:0 22px 20px}
+.modal-body table{font-size:12.5px}
+.modal-body th{position:sticky; top:0; background:var(--panel); text-align:left; color:var(--muted); font-weight:600; padding:10px 8px 8px; border-bottom:1px solid var(--border); white-space:nowrap}
+.modal-body td{padding:7px 8px; text-align:left; font-family:"IBM Plex Sans"; white-space:nowrap}
+.modal-count{color:var(--muted); font-size:12.5px; margin:12px 0 4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow" id="eyebrow">Georgalos · Tienda Perfecta</p>
+  <h1>Panel de ventas de Georgalos</h1>
+  <p class="sub" id="sub">Cargando datos…</p>
+  <div class="alert" id="alert"></div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <!-- ============================ CUADRO 1 ============================ -->
+  <section class="block">
+    <h2 class="block-title">Por vendedor</h2>
+    <p class="block-note">Venta por marcas, descuento, margen y cobertura de cada vendedor, en lo que va del mes.</p>
+
+    <h3 class="section-title">Resumen por vendedor</h3>
+    <p class="section-note">Ordenado de mayor a menor venta. Cobertura = clientes de la ruta del vendedor que compraron algo de Georgalos en el mes ÷ clientes de su ruta.</p>
+    <div class="table-scroll">
+      <table class="wide">
+        <thead>
+          <tr class="cols">
+            <th class="name-col">Vendedor</th>
+            <th>Venta neta</th><th>% del total</th>
+            <th class="sep"></th>
+            <th>Descuento $</th><th>Desc. %</th>
+            <th class="sep"></th>
+            <th>Margen $</th><th>Margen %</th>
+            <th class="sep"></th>
+            <th>Compradores</th><th>Cobertura</th>
+          </tr>
+        </thead>
+        <tbody id="tb-resumen"></tbody>
+        <tfoot id="tf-resumen"></tfoot>
+      </table>
+    </div>
+
+    <div class="section-head">
+      <div>
+        <h3 class="section-title">Por marca y vendedor</h3>
+        <p class="section-note" id="marca-note"></p>
+      </div>
+      <div class="seg-ctl" role="group" aria-label="Métrica" id="ctl-marca">
+        <button type="button" data-m="venta" aria-pressed="true">Venta $</button>
+        <button type="button" data-m="desc" aria-pressed="false">Descuento %</button>
+        <button type="button" data-m="margen" aria-pressed="false">Margen %</button>
+        <button type="button" data-m="cob" aria-pressed="false">Cobertura %</button>
+      </div>
+    </div>
+    <div class="table-scroll">
+      <table class="wide">
+        <thead id="th-marca"></thead>
+        <tbody id="tb-marca"></tbody>
+        <tfoot id="tf-marca"></tfoot>
+      </table>
+    </div>
+    <p class="foot-note">
+      Color relativo por columna: dentro de cada marca, el tono más intenso marca el mejor vendedor y el más pálido
+      el peor (en Descuento, menos descuento se pinta como mejor). Una celda en <span class="muted">—</span> es un
+      vendedor que no vendió esa marca.
+    </p>
+  </section>
+
+  <!-- ============================ CUADRO 2 ============================ -->
+  <section class="block">
+    <h2 class="block-title">Por taxonomía</h2>
+    <p class="block-note">Taxonomía = segmento del cliente en GesCom (A, B, C, D), el mismo que usa el CCC de PepsiCo.</p>
+
+    <h3 class="section-title">Venta por taxonomía</h3>
+    <p class="section-note">Venta neta de Georgalos por segmento del cliente y, entre paréntesis, la participación de cada segmento dentro de la venta del vendedor.</p>
+    <div class="table-scroll">
+      <table class="wide">
+        <thead>
+          <tr class="cols">
+            <th class="name-col">Vendedor</th>
+            <th>A</th><th>B</th><th>C</th><th>D</th>
+            <th class="sep"></th>
+            <th>Total</th><th>Margen A</th><th>Margen B</th><th>Margen C</th><th>Margen D</th>
+          </tr>
+        </thead>
+        <tbody id="tb-taxo"></tbody>
+        <tfoot id="tf-taxo"></tfoot>
+      </table>
+    </div>
+
+    <h3 class="section-title">Clientes no compradores por taxonomía</h3>
+    <p class="section-note">
+      Clientes de la ruta del vendedor que <b>no</b> compraron nada de Georgalos en el mes. Formato: no compradores /
+      universo del segmento. Ordenado de mayor a menor cantidad de no compradores. Click en cualquier celda para ver
+      el listado.
+    </p>
+    <div class="table-scroll">
+      <table class="wide">
+        <thead>
+          <tr class="cols">
+            <th class="name-col">Vendedor</th>
+            <th>A</th><th>B</th><th>C</th><th>D</th>
+            <th class="sep"></th>
+            <th>Total</th><th>% sin compra</th>
+          </tr>
+        </thead>
+        <tbody id="tb-nc"></tbody>
+        <tfoot id="tf-nc"></tfoot>
+      </table>
+    </div>
+    <p class="foot-note" id="fuente"></p>
+  </section>
+</div>
+
+<div class="modal-overlay" id="drill" onclick="if(event.target===this) closeDrill()">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="drill-title">
+    <div class="modal-head">
+      <div><h3 id="drill-title">Clientes</h3><p id="drill-sub"></p></div>
+      <button class="modal-close" onclick="closeDrill()" aria-label="Cerrar">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-count" id="drill-count"></p>
+      <table>
+        <thead><tr><th>Código</th><th>Cliente</th><th>Dirección</th><th>Localidad</th><th>Teléfono</th><th>Seg.</th><th>Día visita</th></tr></thead>
+        <tbody id="drill-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+const SEGS = ["A","B","C","D"];
+let D = null, metric = "venta";
+
+const $ = id => document.getElementById(id);
+const fmt = (n, d=0) => (n ?? 0).toLocaleString("es-AR", {minimumFractionDigits:d, maximumFractionDigits:d});
+const money = n => "$ " + fmt(n);
+const mill = n => fmt(n/1e6, 1);
+const pct = (a, b) => b ? a / b * 100 : null;
+const fp = (v, d=1) => v == null ? "—" : fmt(v, d) + "%";
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const desc = r => r.bruta - r.neta;
+const marg = r => r.neta - r.costo;
+const fechaAR = iso => iso.slice(8,10) + "/" + iso.slice(5,7);
+
+function tierMargen(p){ return p == null ? "" : p >= 18 ? "good" : p >= 14 ? "warn" : "bad"; }
+function tierDesc(p){ return p == null ? "" : p <= 7 ? "good" : p <= 10 ? "warn" : "bad"; }
+function tierCob(p){ return p == null ? "" : p >= 40 ? "good" : p >= 28 ? "warn" : "bad"; }
+function pill(v, tier, d=1){ return v == null ? '<span class="muted">—</span>' : `<span class="pill ${tier}">${fmt(v,d)}%</span>`; }
+function bar(v, tier){
+  return `<div class="cell-bar"><span class="mini-bar"><span style="width:${Math.max(0,Math.min(v??0,100))}%;background:var(--${tier||'muted'})"></span></span>${fp(v)}</div>`;
+}
+
+// Mapa de calor por columna: rojo (peor) a verde (mejor), translucido para
+// que funcione igual en claro y oscuro.
+function heat(v, min, max, invert){
+  let t = max > min ? (v - min) / (max - min) : .5;
+  if (invert) t = 1 - t;
+  return `<td class="heat" style="background:hsl(${Math.round(t*120)} 62% var(--heat-l) / var(--heat-a))">`;
+}
+
+function render(){
+  const T = D.total, V = D.vendedores;
+  $("eyebrow").textContent = `Georgalos · Tienda Perfecta · ${mesNombre(D.corte)}`;
+  $("sub").innerHTML = `Venta neta en <b>pesos sin IVA</b>, del <b>${fechaAR(D.desde)}</b> al <b>${fechaAR(D.corte)}</b>
+    (fecha de comprobante; lo pedido y todavía sin facturar entra por fecha de pedido).
+    Actualizado el <b>${D.generado.slice(8,10)}/${D.generado.slice(5,7)} a las ${D.generado.slice(11,16)}</b>
+    desde GesCom. Empresas Tienda Perfecta, Rambla y Pex, proveedor Georgalos Hnos.`;
+
+  $("kpis").innerHTML = `
+    <div class="kpi accent"><div class="label">Venta neta</div><div class="value">${mill(T.neta)}<span class="unit">M</span></div><div class="foot">${money(T.neta)}</div></div>
+    <div class="kpi"><div class="label">Descuento</div><div class="value">${fmt(pct(desc(T),T.bruta),1)}<span class="unit">%</span></div><div class="foot">${money(desc(T))}</div></div>
+    <div class="kpi"><div class="label">Margen</div><div class="value">${fmt(pct(marg(T),T.neta),1)}<span class="unit">%</span></div><div class="foot">${money(marg(T))}</div></div>
+    <div class="kpi"><div class="label">Cobertura</div><div class="value">${fmt(pct(T.compradores,T.universo),1)}<span class="unit">%</span></div><div class="foot">${fmt(T.compradores)} de ${fmt(T.universo)} clientes</div></div>
+    <div class="kpi"><div class="label">Sin compra</div><div class="value">${fmt(T.universo-T.compradores)}<span class="unit">clientes</span></div><div class="foot">${fmt(pct(T.universo-T.compradores,T.universo),1)}% del universo</div></div>`;
+
+  // ---- Resumen
+  $("tb-resumen").innerHTML = V.map(r => {
+    const dp = pct(desc(r), r.bruta), mp = pct(marg(r), r.neta), cp = pct(r.compradores, r.universo);
+    return `<tr>
+      <td class="name">${esc(r.cod)} - ${esc(r.nombre)}</td>
+      <td>${money(r.neta)}</td><td>${fp(pct(r.neta, T.neta))}</td><td class="sep"></td>
+      <td>${money(desc(r))}</td><td>${pill(dp, tierDesc(dp))}</td><td class="sep"></td>
+      <td>${money(marg(r))}</td><td>${pill(mp, tierMargen(mp))}</td><td class="sep"></td>
+      <td>${fmt(r.compradores)}/${fmt(r.universo)}</td><td>${bar(cp, tierCob(cp))}</td>
+    </tr>`;}).join("");
+  const dpt = pct(desc(T),T.bruta), mpt = pct(marg(T),T.neta), cpt = pct(T.compradores,T.universo);
+  $("tf-resumen").innerHTML = `<tr><td class="name">Total Georgalos</td>
+    <td>${money(T.neta)}</td><td>100,0%</td><td></td>
+    <td>${money(desc(T))}</td><td>${fp(dpt)}</td><td></td>
+    <td>${money(marg(T))}</td><td>${fp(mpt)}</td><td></td>
+    <td>${fmt(T.compradores)}/${fmt(T.universo)}</td><td>${fp(cpt)}</td></tr>`;
+
+  renderMarca();
+  renderTaxo();
+
+  const nota = [];
+  if (T.sinFacturar) nota.push(`${money(T.sinFacturar)} de la venta todavía no tiene comprobante (pedidos cargados sin facturar).`);
+  if (D.otrosSinFila) nota.push(`${money(D.otrosSinFila)} vendidos por usuarios que no son vendedores de calle (depósito, etc.) cuentan en el total pero no tienen fila.`);
+  $("fuente").innerHTML = `Fuente: API de GesCom — <code>ventas/v2/get</code> (items de artículos con proveedor Georgalos,
+    código 101), <code>get-clientes</code> (segmento y ruta de preventa de cada cliente) y <code>get-articulos</code>.
+    Descuento = precio de lista × cantidad − importe neto. Margen = importe neto − precio de costo × cantidad.
+    Las devoluciones restan. La marca se deduce de la descripción del artículo porque GesCom no la tiene cargada.
+    Un cliente cuenta como comprador si compró algo de Georgalos en el mes, a cualquier vendedor. ${nota.join(" ")}`;
+}
+
+function mesNombre(iso){
+  const m = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+  return m[+iso.slice(5,7)-1] + " " + iso.slice(0,4);
+}
+
+const METRICAS = {
+  venta:  {nota:"Venta neta por marca en millones de pesos. Columnas ordenadas por venta total de la marca.",
+           val:(m,r)=> m && m.bruta ? m.neta : null, cell:v=>fmt(v/1e6,2), inv:false, tot:(m)=>fmt(m.neta/1e6,2)},
+  desc:   {nota:"Descuento otorgado sobre el precio de lista, por marca: (lista − neto) ÷ lista.",
+           val:(m)=> m && m.bruta ? pct(m.bruta-m.neta, m.bruta) : null, cell:v=>fmt(v,1)+"%", inv:true, tot:(m)=>fp(pct(m.bruta-m.neta,m.bruta))},
+  margen: {nota:"Margen sobre venta, por marca: (neto − costo) ÷ neto.",
+           val:(m)=> m && m.neta ? pct(m.neta-m.costo, m.neta) : null, cell:v=>fmt(v,1)+"%", inv:false, tot:(m)=>fp(pct(m.neta-m.costo,m.neta))},
+  cob:    {nota:"Cobertura por marca: clientes de la ruta del vendedor que compraron la marca ÷ clientes de su ruta.",
+           val:(m,r)=> m && r.universo ? pct(m.clientes, r.universo) : null, cell:v=>fmt(v,1)+"%", inv:false, tot:(m)=>fp(pct(m.clientes,D.total.universo))},
+};
+
+function renderMarca(){
+  const M = METRICAS[metric], V = D.vendedores;
+  const marcas = D.marcas.filter(m => m.bruta > 0 || m.clientes > 0).map(m => m.marca);
+  $("marca-note").textContent = M.nota;
+  $("th-marca").innerHTML = `<tr class="cols"><th class="name-col">Vendedor</th>${marcas.map(m=>`<th>${esc(m)}</th>`).join("")}</tr>`;
+  const vals = {};
+  marcas.forEach(m => { vals[m] = V.map(r => M.val(r.marcas[m], r)).filter(v => v != null); });
+  $("tb-marca").innerHTML = V.map(r => `<tr><td class="name">${esc(r.cod)} - ${esc(r.nombre)}</td>${
+    marcas.map(m => {
+      const v = M.val(r.marcas[m], r);
+      if (v == null || (metric !== "venta" && metric !== "cob" && !r.marcas[m].neta)) return '<td class="muted">—</td>';
+      const xs = vals[m];
+      return heat(v, Math.min(...xs), Math.max(...xs), M.inv) + M.cell(v) + "</td>";
+    }).join("")}</tr>`).join("");
+  const byM = Object.fromEntries(D.marcas.map(m => [m.marca, m]));
+  $("tf-marca").innerHTML = `<tr><td class="name">Total Georgalos</td>${marcas.map(m => `<td>${M.tot(byM[m])}</td>`).join("")}</tr>`;
+}
+
+function renderTaxo(){
+  const V = D.vendedores, S = D.segmentos;
+  $("tb-taxo").innerHTML = V.map(r => `<tr><td class="name">${esc(r.cod)} - ${esc(r.nombre)}</td>
+    ${SEGS.map(s => { const x = r.segmentos[s]; return `<td>${money(x.neta)} <span class="muted">(${fmt(pct(x.neta, r.neta) ?? 0, 0)}%)</span></td>`; }).join("")}
+    <td class="sep"></td><td>${money(r.neta)}</td>
+    ${SEGS.map(s => { const x = r.segmentos[s], p = x.neta ? pct(marg(x), x.neta) : null; return `<td>${pill(p, tierMargen(p))}</td>`; }).join("")}
+  </tr>`).join("");
+  $("tf-taxo").innerHTML = `<tr><td class="name">Total Georgalos</td>
+    ${SEGS.map(s => `<td>${money(S[s].neta)} <span class="muted">(${fmt(pct(S[s].neta, D.total.neta) ?? 0,0)}%)</span></td>`).join("")}
+    <td></td><td>${money(D.total.neta)}</td>
+    ${SEGS.map(s => `<td>${fp(S[s].neta ? pct(marg(S[s]), S[s].neta) : null)}</td>`).join("")}</tr>`;
+
+  const filas = V.map(r => {
+    const nc = SEGS.map(s => r.segmentos[s].universo - r.segmentos[s].compradores);
+    return {r, nc, tot: r.universo - r.compradores};
+  }).sort((a,b) => b.tot - a.tot);
+  $("tb-nc").innerHTML = filas.map(({r, nc, tot}) => {
+    const p = pct(tot, r.universo);
+    return `<tr><td class="name">${esc(r.cod)} - ${esc(r.nombre)}</td>
+      ${SEGS.map((s,i) => `<td class="clickable" onclick="drill('${r.cod}','${s}')">${fmt(nc[i])}/${fmt(r.segmentos[s].universo)}</td>`).join("")}
+      <td class="sep"></td>
+      <td class="clickable" onclick="drill('${r.cod}','')">${fmt(tot)}/${fmt(r.universo)}</td>
+      <td>${pill(p, p <= 60 ? "good" : p <= 72 ? "warn" : "bad")}</td></tr>`;
+  }).join("");
+  const tu = D.total.universo, tn = tu - D.total.compradores;
+  $("tf-nc").innerHTML = `<tr><td class="name">Total Georgalos</td>
+    ${SEGS.map(s => `<td>${fmt(S[s].universo - S[s].compradores)}/${fmt(S[s].universo)}</td>`).join("")}
+    <td></td><td>${fmt(tn)}/${fmt(tu)}</td><td>${fp(pct(tn, tu))}</td></tr>`;
+}
+
+function drill(vend, seg){
+  const r = D.vendedores.find(v => v.cod === vend);
+  const list = D.noCompradores.filter(c => c.vend === vend && (!seg || c.seg === seg));
+  $("drill-title").textContent = `${r.cod} - ${r.nombre}`;
+  $("drill-sub").textContent = (seg ? `Segmento ${seg}` : "Todos los segmentos") +
+    ` — sin compra de Georgalos del ${fechaAR(D.desde)} al ${fechaAR(D.corte)}`;
+  $("drill-count").textContent = list.length + (list.length === 1 ? " cliente" : " clientes");
+  $("drill-body").innerHTML = list.map(c => `<tr>
+    <td>${esc(c.codigo)}</td><td>${esc(c.nombre)}</td><td>${esc(c.direccion)}</td><td>${esc(c.localidad)}</td>
+    <td>${esc(c.telefono) || "—"}</td><td>${esc(c.seg)}</td><td>${esc(c.dias) || "—"}</td></tr>`).join("")
+    || '<tr><td colspan="7" class="muted" style="text-align:center">Todos los clientes de esta selección compraron</td></tr>';
+  $("drill").classList.add("open");
+}
+function closeDrill(){ $("drill").classList.remove("open"); }
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeDrill(); });
+
+$("ctl-marca").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  metric = b.dataset.m;
+  $("ctl-marca").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  try { localStorage.setItem("geo-metric", metric); } catch (_) {}
+  renderMarca();
+});
+try {
+  const m = localStorage.getItem("geo-metric");
+  if (m && METRICAS[m]) { metric = m; $("ctl-marca").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x.dataset.m === m)); }
+} catch (_) {}
+
+fetch("data.json", {cache: "no-store"})
+  .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+  .then(d => { D = d; render(); })
+  .catch(e => { $("sub").textContent = ""; const a = $("alert"); a.style.display = "block"; a.textContent = "No se pudieron cargar los datos (" + e.message + ")."; });
+</script>
+</body>
+</html>
