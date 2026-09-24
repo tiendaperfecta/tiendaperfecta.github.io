@@ -350,8 +350,13 @@ def armar_dia(gps, fecha, orders, maestro, rutas, con_km=True, con_zona=True,
 # --------------------------------------------------------------------------- #
 # Publicacion
 # --------------------------------------------------------------------------- #
+# Se sube cuando el dia pasa a guardar algo nuevo: los dias viejos se rehacen
+# solos, de a poco, hasta ponerse al dia.
+VERSION_DIA = 2
+
+
 def _resumen_indice(dia):
-    return dict({"fecha": dia["date"], "diaSemana": dia["diaSemana"],
+    return dict({"fecha": dia["date"], "diaSemana": dia["diaSemana"], "v": VERSION_DIA,
                  "vendedores": len([s for s in dia["bySeller"] if s["visitas"]])},
                 **dia["totales"])
 
@@ -384,8 +389,12 @@ def construir(gps, fecha, orders, escribir, meta, ahora=None, maestro=None,
         base = dt.date.fromisoformat(fecha)
         faltan = [(base - dt.timedelta(days=i)).isoformat()
                   for i in range(1, DIAS_HISTORIA + 1)]
-        faltan = [f for f in faltan if f not in indice]
-        for f in faltan[:BACKFILL_POR_CORRIDA]:
+        nuevos = [f for f in faltan if f not in indice]
+        # Dias ya armados con una version anterior: se rehacen para que el
+        # historico tenga tambien los repartos y los rechazos.
+        viejos = [f for f in faltan
+                  if f in indice and indice[f].get("v", 1) < VERSION_DIA]
+        for f in (nuevos + viejos)[:BACKFILL_POR_CORRIDA]:
             try:
                 dia = armar_dia(gps, f, orders_de(f), maestro, rutas,
                                 con_km=False, con_zona=False, ahora=ahora,
