@@ -942,7 +942,6 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
         <tr class="cols">
           <th class="name-col">Vendedor</th>
           <th class="name-col">Cliente</th>
-          <th class="name-col">Razón Social</th>
           <th class="name-col">Motivo</th>
           <th>Filas</th><th>Importe</th>
         </tr>
@@ -1123,7 +1122,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
         <table>
           <thead>
             <tr>
-              <th>Código</th><th>Razón social</th><th>Dirección</th><th>Localidad</th><th>Teléfono</th><th>Segmento</th><th>Día visita</th>
+              <th>Código</th><th>Razón social</th><th>Localidad</th><th>Segmento</th><th>Día visita</th>
             </tr>
           </thead>
           <tbody id="drillBody"></tbody>
@@ -1164,10 +1163,10 @@ function openDrill(title, subtitle, list) {
   document.getElementById('drillCount').textContent = list.length + (list.length === 1 ? ' cliente' : ' clientes');
   document.getElementById('drillBody').innerHTML = list.map(c => `
     <tr>
-      <td>${c.codigo}</td><td>${c.razon}</td><td>${c.direccion}</td><td>${c.localidad}</td>
-      <td>${c.telefono || '—'}</td><td>${c.seg}</td><td>${c.dia || '—'}</td>
+      <td>${c.codigo}</td><td>${c.razon}</td><td>${c.localidad}</td>
+      <td>${c.seg}</td><td>${c.dia || '—'}</td>
     </tr>
-  `).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--muted)">Sin clientes en esta selección</td></tr>';
+  `).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--muted)">Sin clientes en esta selección</td></tr>';
   document.getElementById('drillModal').classList.add('open');
 }
 function drillCombos(vendedor) {
@@ -1487,10 +1486,10 @@ function openDrillPortafolio(title, subtitle, list) {
   document.getElementById('drillCount').textContent = list.length + (list.length === 1 ? ' cliente' : ' clientes');
   document.getElementById('drillBody').innerHTML = list.map(c => `
     <tr>
-      <td>${c.codigo}</td><td>${c.razon}</td><td>${c.direccion}</td><td>${c.localidad}</td>
-      <td>${c.telefono || '—'}</td><td>${c.seg}</td><td>${c.dia || '—'}</td>
+      <td>${c.codigo}</td><td>${c.razon}</td><td>${c.localidad}</td>
+      <td>${c.seg}</td><td>${c.dia || '—'}</td>
     </tr>
-  `).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--muted)">Sin clientes en esta selección</td></tr>';
+  `).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--muted)">Sin clientes en esta selección</td></tr>';
   document.getElementById('drillModal').classList.add('open');
 }
 
@@ -1721,14 +1720,13 @@ document.getElementById('tbody-motivos').innerHTML = motivoRows.map(r => `
 `).join('');
 
 const motivosUltimaFechaRows = [
-  {n:"Lucas Giayetto",  cliente:"744",  razon:"VERONICA ELIZABETH FIGUEROA", motivo:"ERROR DE PREVENTA", cant:8, importe:-788529},
-  {n:"Melanie Larrama", cliente:"1086", razon:"CREMONA SA",                  motivo:"SIN STOCK",         cant:2, importe:-10029},
+  {n:"Lucas Giayetto",  cliente:"744",  motivo:"ERROR DE PREVENTA", cant:8, importe:-788529},
+  {n:"Melanie Larrama", cliente:"1086", motivo:"SIN STOCK",         cant:2, importe:-10029},
 ];
 document.getElementById('tbody-motivosUltimaFecha').innerHTML = motivosUltimaFechaRows.map(r => `
   <tr>
     <td class="name">${r.n}</td>
     <td>${r.cliente}</td>
-    <td>${r.razon}</td>
     <td>${r.motivo}</td>
     <td>${fmt(r.cant)}</td>
     <td>-$ ${fmt(Math.abs(r.importe))}</td>
