@@ -4486,11 +4486,11 @@
    "minutos": 3.0,
    "visito": true,
    "hora": "09:30",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 125435.5,
+   "fechaVenta": "2026-09-24",
+   "horaVenta": "19:13",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-09-24",
@@ -4562,11 +4562,11 @@
    "minutos": 0.6,
    "visito": true,
    "hora": "12:39",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 125128.47,
+   "fechaVenta": "2026-09-24",
+   "horaVenta": "19:06",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-09-24",
@@ -4752,11 +4752,11 @@
    "minutos": 0.1,
    "visito": true,
    "hora": "13:50",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 107985.58,
+   "fechaVenta": "2026-09-24",
+   "horaVenta": "19:00",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-09-24",
@@ -4984,6 +4984,63 @@
    "monto": 45500.03,
    "fechaVenta": "2026-09-24",
    "horaVenta": "14:16",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-24",
+   "sellerId": "12",
+   "vendedor": "Agustin Pogorzelski",
+   "clientId": "1790",
+   "nombre": "LAVIADA GRISELDA HAYDEE",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 107128.46,
+   "fechaVenta": "2026-09-24",
+   "horaVenta": "19:04",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-24",
+   "sellerId": "12",
+   "vendedor": "Agustin Pogorzelski",
+   "clientId": "1830",
+   "nombre": "Rocio belén galeano",
+   "localidad": "Mar del Plata",
+   "taxonomia": "Dietetica_B",
+   "canal": "AWAY FROM HOME",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 27199.86,
+   "fechaVenta": "2026-09-24",
+   "horaVenta": "19:09",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-24",
+   "sellerId": "12",
+   "vendedor": "Agustin Pogorzelski",
+   "clientId": "2279",
+   "nombre": "LOPEZ OZORNIO CLAUDIA ALEJANDR",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 129259.0,
+   "fechaVenta": "2026-09-24",
+   "horaVenta": "19:10",
    "estado": "vendio_sin_pasar"
   },
   {
@@ -11996,13 +12053,32 @@
    "fechaVenta": "2026-09-24",
    "horaVenta": "17:52",
    "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-24",
+   "sellerId": "9",
+   "vendedor": "Ludmila Aylen Martinez",
+   "clientId": "3718",
+   "nombre": "NATALIA KARINA LENCINA",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 44140.51,
+   "fechaVenta": "2026-09-24",
+   "horaVenta": "19:10",
+   "estado": "vendio_sin_pasar"
   }
  ],
  "resumen": {
-  "paso_sin_vender": 239,
-  "vendio": 206,
+  "paso_sin_vender": 236,
+  "vendio": 209,
   "sin_visita": 29,
-  "vendio_sin_pasar": 125
+  "vendio_sin_pasar": 129
  },
  "bySeller": [
   {
@@ -12158,9 +12234,9 @@
    "visitas": 33,
    "minutosTotal": 253.5,
    "minutosPromedio": 7.7,
-   "pedidos": 37,
-   "monto": 3820631.39,
-   "pasoSinVender": 14,
+   "pedidos": 43,
+   "monto": 4442768.26,
+   "pasoSinVender": 11,
    "km": 45.0,
    "llegoTarde": false,
    "salioTemprano": false
@@ -12238,8 +12314,8 @@
    "visitas": 2,
    "minutosTotal": 35.0,
    "minutosPromedio": 17.5,
-   "pedidos": 37,
-   "monto": 4982599.13,
+   "pedidos": 38,
+   "monto": 5026739.64,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": true,
@@ -16196,7 +16272,7 @@
  "totales": {
   "visitas": 445,
   "minutos": 2033.6,
-  "pedidos": 452,
-  "monto": 78993930.62
+  "pedidos": 459,
+  "monto": 79660208.0
  }
 }
