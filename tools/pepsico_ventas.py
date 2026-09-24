@@ -215,6 +215,26 @@ def main():
     # --- ventas del mes en curso ---
     ventas = api.ventas(inicio_mes.isoformat(), (hoy + dt.timedelta(days=1)).isoformat())
     print("Ventas traidas (mes en curso):", len(ventas))
+  
+    # --- DIAGNOSTICO temporal: para armar invendible/rechazos hace falta
+    # confirmar el codigo real de tipo de venta y donde esta el motivo. Se
+    # borra esta seccion en cuanto quede confirmado. ---
+    tipos_vistos = {}
+    ejemplo_dev = None
+    for v in ventas:
+        t = cod(v.get("codigoTipoVenta"))
+        tipos_vistos[t] = tipos_vistos.get(t, 0) + 1
+        if ejemplo_dev is None and t and "DEV" in t.upper():
+            ejemplo_dev = v
+    print("DIAG tipos de venta vistos:", dict(sorted(tipos_vistos.items(), key=lambda kv: -kv[1])))
+    if ejemplo_dev is not None:
+        print("DIAG claves del registro de venta:", list(ejemplo_dev.keys()))
+        if ejemplo_dev.get("items"):
+            print("DIAG claves de un item:", list(ejemplo_dev["items"][0].keys()))
+        print("DIAG registro completo (recortado a 4000 caracteres):",
+              json.dumps(ejemplo_dev, ensure_ascii=False, default=str)[:4000])
+    else:
+        print("DIAG no se encontro ningun registro con tipo que contenga 'DEV' en este mes.")
 
     compra_cliente = {}      # codigo cliente -> unidades Pepsico compradas (CCC, umbral 3)
     venta_rechazo = {}       # vendedor -> [{motivo/importe...}] (placeholder, ver aviso)
