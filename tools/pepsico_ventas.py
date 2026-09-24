@@ -121,18 +121,6 @@ def main():
     inicio_mes = hoy.replace(day=1)
 
     clientes_raw, ramos, subramos = gescom.bajar_clientes()
-    # --- DIAGNOSTICO temporal (round 3): el split Platino+Gold vs Silver&Bronze
-    # del kg-Avance es por SEGMENTO DE CLIENTE (no de articulo). Confirmar que
-    # codigoSegmento existe y que valores trae. Se borra al confirmar. ---
-    if clientes_raw:
-        print("DIAG campos de un cliente:", list(clientes_raw[0].keys()))
-        campos_seg = [k for k in clientes_raw[0].keys() if "segmento" in k.lower() or "categoria" in k.lower()]
-        print("DIAG campos que podrian ser segmento de cliente:", campos_seg)
-        valores_seg = {}
-        for c in clientes_raw:
-            v = cod(c.get("codigoSegmento")).upper()
-            valores_seg[v] = valores_seg.get(v, 0) + 1
-        print("DIAG valores codigoSegmento y conteo:", valores_seg)
     clientes = {}
     for c in clientes_raw:
         codigo = cod(c.get("codigo"))
@@ -153,6 +141,32 @@ def main():
     nombre_por_codven = {cod(x.get("codigo")): (x.get("nombre") or "").strip() for x in vendedores_raw}
 
     articulos = api.get("/data/cmd/inventario/api/v2/get-articulos")
+
+    # --- DIAGNOSTICO temporal (round 4): buscar si existe un endpoint de API
+    # que exponga el reporte "Avance de Ventas Pepsico" (Objetivo por
+    # vendedor/segmento), en vez de solo ventas/clientes/articulos crudos.
+    # Se borra en cuanto se confirme que existe o no. ---
+    candidatos = [
+        "/data/cmd/ventas/api/v1/get-objetivos",
+        "/data/cmd/ventas/api/v2/get-objetivos",
+        "/data/cmd/ventas/api/v1/get-objetivo",
+        "/data/cmd/objetivos/api/v1/get",
+        "/data/cmd/objetivos/api/v1/get-objetivos",
+        "/data/cmd/reportes/api/v1/get-avance-ventas",
+        "/data/cmd/reportes/api/v1/avance-ventas",
+        "/data/cmd/ventas/api/v1/get-metas",
+        "/data/cmd/ventas/api/v1/avance",
+        "/data/cmd/ventas/api/v1/get-avance",
+    ]
+    for path in candidatos:
+        try:
+            r = api.get(path)
+            print("DIAG endpoint OK:", path, "-> tipo:", type(r).__name__,
+                  "len:", len(r) if hasattr(r, "__len__") else "?",
+                  "muestra:", json.dumps(r, ensure_ascii=False, default=str)[:500] if r else r)
+        except Exception as e:
+            print("DIAG endpoint FALLO:", path, "->", type(e).__name__, str(e)[:150])
+
     if articulos:
         pepsico_arts = [a for a in articulos if es_pepsico((a.get("descripcion") or "").upper())]
         print("DIAG articulos Pepsico:", len(pepsico_arts), "| con factorPeso:",
