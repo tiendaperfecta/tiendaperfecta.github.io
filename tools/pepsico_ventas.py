@@ -3,15 +3,18 @@
 pepsico_ventas.py — pepsico/{no_compradores_detalle,invendible_detalle,
 rechazos_detalle,pehuamar90_no_comprado}.json, por API de GesCom.
 
-*** BORRADOR SIN PROBAR ***
-No se pudo correr contra la API real todavia: este token de GitHub no tiene
-el scope "workflow" (hace falta para crear o tocar archivos en
-.github/workflows/, que es donde se inyectan los secrets de GesCom en CI), asi
-que no hubo forma de validar esto en un entorno con credenciales sin pedirle a
-alguien que lo autorice a mano. Todo lo de aca abajo esta armado por analogia
-con tools/georgalos.py (que si esta probado y anda en produccion), pero varios
-campos son supuestos de buena fe, no confirmados:
+*** EN VALIDACION — ya corrio una vez contra la API real (24/09, workflow_dispatch) ***
+Primer corrida real: 113 articulos Pepsico identificados, 9.569 ventas del mes
+traidas, las 2 SKUs de Pehuamar 90gr matchearon exacto, y "sin Pehuamar 90gr
+hoy" dio 401 (contra 392 del ultimo export manual, cerca). "No compradores"
+dio 1.121 contra ~490 del export manual — con un desvio grande. Se encontro
+una causa concreta y se corrigio: el maestro de articulos separa por empresa
+(1 vs 99/Pex) y una venta de la empresa 99 puede corresponder a un articulo
+cargado solo en la empresa 1 (el mismo problema que georgalos.maestro_articulos()
+ya resuelve con un fallback); esta version ya usa el mismo fallback. Falta una
+segunda corrida para confirmar si esto cierra la diferencia.
 
+Lo que sigue sin confirmar:
   - fechaCarga: georgalos.py NO usa este campo (usa fechaComprobante o, si no
     hay, fechaPedido). Todo este proyecto encontro que Gescom arrastra ventas
     con comprobante pendiente que solo aparecen por FechaCarga, asi que puede
@@ -21,17 +24,12 @@ campos son supuestos de buena fe, no confirmados:
     descripcion del articulo (mismo patron ya verificado contra los CSV de
     venta reales en tools locales de este proyecto, ver _cobertura_marca_v3_csv
     en el historial del tablero): 3Ds, Cheetos, Doritos, Lays, Pehuamar, Pep,
-    Quaker, Tostitos, Twistos. No se confirmo si el articulo de GesCom trae un
-    campo "marca" propio (como en inventario/api/v2/get-articulos de otros
-    proveedores) que sea mas confiable que este texto.
+    Quaker, Tostitos, Twistos. Encontro 113 articulos en la corrida real — no
+    se confirmo a mano si son todos los que corresponden o si falta alguno.
   - codigoTipoVenta "DEV-RE" = Devolucion por Rechazo, "DEV-CA" = Devolucion
     por Canje: se dedujo por analogia con el diccionario SIGNO de
     georgalos.py (que si esta verificado), pero no se confirmo el texto
     exacto que corresponde a cada codigo para GesCom TP/Pex.
-  - Pehuamar 90gr Lisa/Acanalada: se buscan estos dos articulos por
-    descripcion ("PEHUA PAPA LISA 90GX22 RM", "PEHUA PAPA ACANA 90GX22 RM"),
-    tal como aparecen en el export manual de Gescom que se uso hasta ahora.
-    Puede que la API use una descripcion levemente distinta.
 
 Antes de dejar esto corriendo solo hace falta: (1) que alguien con permisos
 agregue el workflow (ver tools/pepsico-data.workflow.yml.txt en esta misma
@@ -179,20 +177,47 @@ def main():
             "codven": cod((c.get("rutasPreventa") or [{}])[0].get("codigoVendedor")) if c.get("rutasPreventa") else "",
         }
 
+    # --- diagnostico: por que el universo puede no coincidir con el de antes ---
+    con_ruta = sum(1 for c in clientes.values() if c["dia"] and c["codven"])
+    por_codven = {}
+    for c in clientes.values():
+        if c["dia"] and c["codven"]:
+            por_codven[c["codven"]] = por_codven.get(c["codven"], 0) + 1
+    print("DIAG clientes: crudo=%d | con dia+codven=%d" % (len(clientes_raw), con_ruta))
+    print("DIAG clientes por codven:", dict(sorted(por_codven.items(), key=lambda kv: -kv[1])))
+
     api = Api()
 
     # --- articulos: para saber que items son Pepsico y cuales son Pehuamar 90gr ---
+    # Igual que georgalos.maestro_articulos(): la Pex (empresa 99) usa el
+    # maestro de la empresa 1, y hay articulos cargados solo en una de las
+    # dos. Se prueba la empresa propia y, si no esta, la otra.
     articulos = api.get("/data/cmd/inventario/api/v2/get-articulos")
-    marca_pepsico = {}   # (codigo, empresa) -> True si es de una marca Pepsico
-    pehuamar90 = set()   # (codigo, empresa) de las 2 SKUs de Pehuamar 90gr
+    es_pepsico_por_clave = {}
+    es_pehuamar90_por_clave = {}
+    todas_claves = set()
     for a in articulos:
         clave = (cod(a.get("codigo")), cod(a.get("codigoEmpresa")))
+        todas_claves.add(clave)
         desc = (a.get("descripcion") or "").upper().strip()
         if es_pepsico(desc):
-            marca_pepsico[clave] = True
+            es_pepsico_por_clave[clave] = True
         if desc in PEHUAMAR_SKUS:
-            pehuamar90.add(clave)
-    print("Articulos Pepsico encontrados:", len(marca_pepsico), "| SKUs Pehuamar 90gr:", len(pehuamar90))
+            es_pehuamar90_por_clave[clave] = True
+
+    def clave_equivalente(codigo, empresa):
+        e = "1" if empresa == "99" else empresa
+        otra = "2" if e == "1" else "1"
+        return (codigo, e) if (codigo, e) in todas_claves else (codigo, otra)
+
+    def es_articulo_pepsico(codigo, empresa):
+        return es_pepsico_por_clave.get(clave_equivalente(codigo, empresa), False)
+
+    def es_articulo_pehuamar90(codigo, empresa):
+        return es_pehuamar90_por_clave.get(clave_equivalente(codigo, empresa), False)
+
+    print("Articulos Pepsico encontrados:", len(es_pepsico_por_clave),
+          "| SKUs Pehuamar 90gr:", len(es_pehuamar90_por_clave))
 
     # --- ventas del mes en curso ---
     ventas = api.ventas(inicio_mes.isoformat(), (hoy + dt.timedelta(days=1)).isoformat())
@@ -203,6 +228,7 @@ def main():
     venta_canje = {}
     pehuamar_compra = {}     # codigo cliente -> unidades Pehuamar 90gr compradas
 
+    items_pepsico_vistos = 0
     for v in ventas:
         tipo = cod(v.get("codigoTipoVenta"))
         if cod(v.get("estado")).lower().startswith("anul"):
@@ -210,16 +236,19 @@ def main():
         emp = cod(v.get("codigoEmpresa"))
         cli = cod(v.get("codigoCliente"))
         for it in v.get("items") or []:
-            clave = (cod(it.get("codigoItem")), emp)
+            codigo_it = cod(it.get("codigoItem"))
             q = num(it.get("cantidad")) * num(it.get("unidadFactor") or 1)
-            if clave in marca_pepsico and tipo == "VEN":
+            if tipo == "VEN" and es_articulo_pepsico(codigo_it, emp):
                 compra_cliente[cli] = compra_cliente.get(cli, 0) + q
-            if clave in pehuamar90 and tipo == "VEN":
+                items_pepsico_vistos += 1
+            if tipo == "VEN" and es_articulo_pehuamar90(codigo_it, emp):
                 pehuamar_compra[cli] = pehuamar_compra.get(cli, 0) + q
             if tipo == TIPO_RECHAZO:
                 pass  # TODO: agrupar por vendedor/motivo una vez confirmado el campo de motivo
             if tipo == TIPO_CANJE:
                 pass  # TODO: idem
+    print("DIAG items de venta Pepsico contados:", items_pepsico_vistos,
+          "| clientes con al menos 1 unidad:", len(compra_cliente))
 
     # --- no compradores: clientes con ruta asignada y < 3 unidades Pepsico ---
     hoy_key = DIAS_CAP[hoy.weekday()]
