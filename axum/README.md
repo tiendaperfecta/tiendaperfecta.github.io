@@ -167,8 +167,25 @@ números cierren entre los dos paneles.
 > no están facturados. Por eso también se miran las ventas de los días
 > siguientes al armar cada día.
 
-El motivo del rechazo viene como código (`6`, `8`, `pepsico-10000`): GesCom no
-expone el catálogo de motivos por API, así que se muestra el número.
+### Por qué nos rechazan
+
+El motivo viene **en texto** dentro de la propia venta (campo `motivo`), y en
+`observacionesInternas` si el rechazo fue parcial o total. No hace falta el
+catálogo de códigos, que GesCom no expone por API.
+
+Con eso el panel separa de quién fue la culpa, deduciéndolo del motivo:
+
+| Motivo | Responsable |
+|---|---|
+| Error de Armado (diferencia de unidades, producto roto) | error propio |
+| NO SE CARGÓ · SIN STOCK · ERROR DE PREVENTA | error propio |
+| CERRADO · SIN DINERO · RECHAZO · NO ENTREGADO | del cliente |
+
+No es un detalle menor: en diez días, de 136 rechazos, **92 fueron error propio**
+y 43 dependieron del cliente. La plata, en cambio, se concentra del lado del
+cliente, porque un "sin dinero" de un mayorista pesa más que veinte errores de
+armado. El reparto de la culpa está en `axum_repartos.py` (`NUESTRO` /
+`DEL_CLIENTE`) por si hay que ajustarlo.
 
 ## Taxonomía del cliente
 
