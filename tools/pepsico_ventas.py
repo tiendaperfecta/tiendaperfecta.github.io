@@ -141,23 +141,35 @@ def main():
     nombre_por_codven = {cod(x.get("codigo")): (x.get("nombre") or "").strip() for x in vendedores_raw}
 
     articulos = api.get("/data/cmd/inventario/api/v2/get-articulos")
-    # --- DIAGNOSTICO temporal: para automatizar el kg-avance hace falta saber
-    # si el articulo trae peso por unidad y clasificacion Platino+Gold vs
-    # Silver&Bronze. Se borra esta seccion en cuanto quede confirmado. ---
+    # --- DIAGNOSTICO temporal (round 2): confirmar si factorPeso/marca/linea/
+    # segmentoMargen/tags estan POBLADOS para los articulos Pepsico, no solo
+    # si el campo existe. Se borra esta seccion en cuanto quede confirmado. ---
     if articulos:
-        print("DIAG campos de un articulo:", list(articulos[0].keys()))
-        ejemplo_pepsico = next((a for a in articulos
-                                if es_pepsico((a.get("descripcion") or "").upper())), None)
-        if ejemplo_pepsico:
-            print("DIAG articulo Pepsico completo:",
-                  json.dumps(ejemplo_pepsico, ensure_ascii=False, default=str)[:3000])
-        campos_peso = [k for k in articulos[0].keys()
-                       if "peso" in k.lower() or "kg" in k.lower() or "gramo" in k.lower()]
-        campos_segmento = [k for k in articulos[0].keys()
-                            if "segment" in k.lower() or "tag" in k.lower() or "categoria" in k.lower()
-                            or "clase" in k.lower() or "rentabilidad" in k.lower()]
-        print("DIAG campos que podrian ser peso:", campos_peso)
-        print("DIAG campos que podrian ser segmento/tag:", campos_segmento)
+        pepsico_arts = [a for a in articulos if es_pepsico((a.get("descripcion") or "").upper())]
+        total = len(pepsico_arts)
+        con_peso = sum(1 for a in pepsico_arts if a.get("factorPeso") not in (None, 0))
+        con_marca = sum(1 for a in pepsico_arts if a.get("codigoMarca"))
+        con_linea = sum(1 for a in pepsico_arts if a.get("codigoLinea"))
+        con_familia = sum(1 for a in pepsico_arts if a.get("codigoFamilia"))
+        con_segmargen = sum(1 for a in pepsico_arts if a.get("codigoSegmentoMargen"))
+        con_tags = sum(1 for a in pepsico_arts if a.get("tags"))
+        print("DIAG total articulos Pepsico:", total)
+        print("DIAG con factorPeso poblado:", con_peso)
+        print("DIAG con codigoMarca poblado:", con_marca)
+        print("DIAG con codigoLinea poblado:", con_linea)
+        print("DIAG con codigoFamilia poblado:", con_familia)
+        print("DIAG con codigoSegmentoMargen poblado:", con_segmargen)
+        print("DIAG con tags no vacio:", con_tags)
+        valores_marca = sorted({a.get("codigoMarca") for a in pepsico_arts if a.get("codigoMarca")})
+        valores_segmargen = sorted({a.get("codigoSegmentoMargen") for a in pepsico_arts if a.get("codigoSegmentoMargen")})
+        valores_tags = sorted({t for a in pepsico_arts for t in (a.get("tags") or [])})
+        print("DIAG valores unicos codigoMarca:", valores_marca[:30])
+        print("DIAG valores unicos codigoSegmentoMargen:", valores_segmargen[:30])
+        print("DIAG valores unicos tags:", valores_tags[:30])
+        ejemplo_con_peso = next((a for a in pepsico_arts if a.get("factorPeso") not in (None, 0)), None)
+        if ejemplo_con_peso:
+            print("DIAG ejemplo con factorPeso:",
+                  json.dumps(ejemplo_con_peso, ensure_ascii=False, default=str)[:1500])
     es_pepsico_por_clave = {}
     es_pehuamar90_por_clave = {}
     descripcion_por_clave = {}
