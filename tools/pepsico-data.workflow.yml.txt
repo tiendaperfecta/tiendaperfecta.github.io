@@ -1,0 +1,72 @@
+name: Pepsico data refresh
+
+# Refresco horario del panel Avance PepsiCo (pepsico/*.json). Mismo patron que
+# georgalos-data.yml. Este archivo esta guardado con extension .txt en vez de
+# vivir en .github/workflows/ porque el token de GitHub usado para armar esta
+# rama no tenia el scope "workflow" (obligatorio para tocar ese directorio).
+#
+# Para activarlo: mover este contenido a .github/workflows/pepsico-data.yml
+# (con `gh auth refresh -h github.com -s workflow` primero si hace falta, o
+# subiendolo por la web de GitHub) y borrar este .txt.
+#
+# IMPORTANTE: antes de poner esto en produccion, tools/pepsico_ventas.py es
+# un borrador sin probar contra la API real (ver el aviso al principio de ese
+# archivo). Conviene primero correrlo con workflow_dispatch y revisar los
+# conteos a mano.
+on:
+  schedule:
+    - cron: "0 3-23 * * 1-6"
+    - cron: "0 0-2 * * 0,2-6"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pepsico-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install requests
+
+      - name: Fetch Pepsico data (GesCom)
+        env:
+          GESCOM_REALM: ${{ secrets.GESCOM_REALM }}
+          GESCOM_CLIENT_ID: ${{ secrets.GESCOM_CLIENT_ID }}
+          GESCOM_USERNAME: ${{ secrets.GESCOM_USERNAME }}
+          GESCOM_PASSWORD: ${{ secrets.GESCOM_PASSWORD }}
+        run: python tools/pepsico_ventas.py
+
+      - name: Fetch Pepsico data (Frescura, sin credenciales)
+        run: python tools/pepsico_frescura.py
+
+      - name: Commit data if changed
+        run: |
+          git config user.name  "pepsico-bot"
+          git config user.email "pepsico-bot@users.noreply.github.com"
+          git add -A pepsico/
+          if git diff --cached --quiet; then
+            echo "Sin cambios en los datos."
+            exit 0
+          fi
+          git commit -m "chore(pepsico): refresh data $(date -u +%FT%TZ)"
+          for i in 1 2 3; do
+            if git push; then
+              exit 0
+            fi
+            echo "Push rechazado, reintento $i tras rebase..."
+            git pull --rebase origin "${GITHUB_REF_NAME}" || exit 1
+            sleep 5
+          done
+          echo "::error title=Pepsico::No se pudo pushear los datos tras 3 intentos."
+          exit 1
