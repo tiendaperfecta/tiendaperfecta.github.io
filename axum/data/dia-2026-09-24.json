@@ -18,7 +18,7 @@
     "entregadas": 45,
     "rechazos": 0,
     "clientes": 30,
-    "importe": 2675883.91,
+    "importe": 2660883.9,
     "importeRechazado": 0.0,
     "bultosRechazados": 0.0,
     "efectividad": 100.0
@@ -39,7 +39,7 @@
     "entregadas": 43,
     "rechazos": 0,
     "clientes": 23,
-    "importe": 3325632.69,
+    "importe": 3282153.51,
     "importeRechazado": 0.0,
     "bultosRechazados": 0.0,
     "efectividad": 100.0
@@ -60,7 +60,7 @@
     "entregadas": 38,
     "rechazos": 0,
     "clientes": 24,
-    "importe": 2288608.3,
+    "importe": 2285494.75,
     "importeRechazado": 0.0,
     "bultosRechazados": 0.0,
     "efectividad": 100.0
@@ -81,7 +81,7 @@
     "entregadas": 37,
     "rechazos": 0,
     "clientes": 21,
-    "importe": 4153348.2,
+    "importe": 4137971.4,
     "importeRechazado": 0.0,
     "bultosRechazados": 0.0,
     "efectividad": 100.0
@@ -123,7 +123,7 @@
     "entregadas": 33,
     "rechazos": 0,
     "clientes": 23,
-    "importe": 9729396.84,
+    "importe": 9516414.68,
     "importeRechazado": 0.0,
     "bultosRechazados": 0.0,
     "efectividad": 100.0
@@ -207,7 +207,7 @@
     "entregadas": 30,
     "rechazos": 0,
     "clientes": 23,
-    "importe": 2850604.63,
+    "importe": 2823318.93,
     "importeRechazado": 0.0,
     "bultosRechazados": 0.0,
     "efectividad": 100.0
@@ -603,7 +603,7 @@
    "rechazos": 0,
    "repartosFacturados": 12,
    "clientesQueRechazaron": 0,
-   "importe": 42130438.48,
+   "importe": 41813201.08,
    "importeRechazado": 0.0,
    "efectividad": 100.0
   }
@@ -6299,6 +6299,25 @@
   },
   {
    "fecha": "2026-09-24",
+   "sellerId": "20",
+   "vendedor": "Deposito",
+   "clientId": "1234",
+   "nombre": "Vanesa Romina Nomeedeu",
+   "localidad": "Mar del Plata",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 48142.8,
+   "fechaVenta": "2026-09-24",
+   "horaVenta": "16:36",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-24",
    "sellerId": "3",
    "vendedor": "Ezequiel Hack",
    "clientId": "3642",
@@ -11698,7 +11717,7 @@
   "paso_sin_vender": 245,
   "vendio": 200,
   "sin_visita": 29,
-  "vendio_sin_pasar": 109
+  "vendio_sin_pasar": 110
  },
  "bySeller": [
   {
@@ -11797,7 +11816,7 @@
    "pedidos": 25,
    "monto": 2491255.43,
    "pasoSinVender": 29,
-   "km": 27.0,
+   "km": 28.0,
    "llegoTarde": true,
    "salioTemprano": false
   },
@@ -11837,7 +11856,7 @@
    "pedidos": 32,
    "monto": 10119368.41,
    "pasoSinVender": 17,
-   "km": 29.0,
+   "km": 30.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -11857,7 +11876,7 @@
    "pedidos": 37,
    "monto": 3820631.39,
    "pasoSinVender": 14,
-   "km": 35.0,
+   "km": 45.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -11974,8 +11993,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 23,
-   "monto": 13371.44,
+   "pedidos": 24,
+   "monto": 61514.24,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -15892,7 +15911,7 @@
  "totales": {
   "visitas": 445,
   "minutos": 2033.6,
-  "pedidos": 428,
-  "monto": 77124116.33
+  "pedidos": 429,
+  "monto": 77172259.13
  }
 }
