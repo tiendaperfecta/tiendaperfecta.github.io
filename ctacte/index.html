@@ -164,6 +164,7 @@
       <label><input type="checkbox" id="fHist" checked> Incluir saldos de +90 días</label>
       <label><input type="number" id="fMin" min="0" step="1000" placeholder="Saldo mín. $" style="width:120px"></label>
       <button class="btn" id="bReset">Sin filtros</button>
+      <button class="btn on" id="bPadre" hidden title="Quitar el filtro de cuenta madre"></button>
     </div>
 
     <div class="kpis" id="kpis"></div>
@@ -256,7 +257,10 @@ function init() {
   HOY = D.hoy;
   const gen = new Date(D.generado);
   $('#sub').textContent = `Tienda Perfecta · TP Pex · Rambla — saldos de GesCom al ${gen.toLocaleString('es-AR', {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'})}`;
+  D.creditos = D.creditos || []; D.padres = D.padres || {};
   D.tramos.forEach(t => { t.dd = dias(t.v); t.bi = bandOf(t.dd); const c = D.clientes[t.c]; t.vend = t.vd || c.vend; t.ruta = t.r || c.ruta; });
+  D.creditos.forEach(t => { const c = D.clientes[t.c]; t.vend = t.vd || c.vend; t.ruta = c.ruta; });
+  $('#bPadre').onclick = () => { state.padre = null; render(); };
   const opts = (sel, pares) => multi($(sel), pares);
   opts('#fEmp', Object.entries(D.empresas));
   const vs = new Set(D.tramos.map(t => t.vend).filter(Boolean));
@@ -269,7 +273,7 @@ function init() {
   ['#fQ', '#fEmp', '#fVend', '#fRuta', '#fCond', '#fLoc', '#fCart', '#fEst', '#fHist', '#fMin'].forEach(s => $(s).addEventListener('input', () => { state.lim = 150; render(); }));
   $('#bReset').onclick = () => {
     ['#fQ', '#fEmp', '#fVend', '#fRuta', '#fCond', '#fLoc', '#fCart', '#fEst', '#fMin'].forEach(s => $(s).value = '');
-    $('#fHist').checked = true; state.band = null; render();
+    $('#fHist').checked = true; state.band = null; state.padre = null; render();
   };
   $('#bCsv').onclick = csv;
   $('#drawer').onclick = e => { if (e.target.id === 'drawer') $('#drawer').classList.remove('on'); };
@@ -323,8 +327,11 @@ document.addEventListener('click', () => document.querySelectorAll('.ms.open').f
 function filtrar() {
   const q = $('#fQ').value.trim().toLowerCase(), emp = $('#fEmp').sel, vend = $('#fVend').sel, ruta = $('#fRuta').sel,
     cond = $('#fCond').sel, loc = $('#fLoc').sel, cart = $('#fCart').value, est = $('#fEst').value, hist = $('#fHist').checked, min = +$('#fMin').value || 0;
-  let T = D.tramos.filter(t => {
+  const qn = q.replace(/-/g, '');
+  // filtros que valen para deuda y creditos
+  const base = t => {
     const c = D.clientes[t.c];
+    if (state.padre && c.padre !== state.padre) return false;
     if (emp.size && !emp.has(t.e)) return false;
     if (vend.size && !vend.has(t.vend)) return false;
     if (ruta.size && !ruta.has(t.ruta)) return false;
@@ -332,10 +339,16 @@ function filtrar() {
     if (loc.size && !loc.has(c.loc)) return false;
     if (cart === 'calle' && !c.ruta) return false;
     if (cart === 'sin' && c.ruta) return false;
+    if (q && !(t.c.includes(q) || c.n.toLowerCase().includes(q) || c.rs.toLowerCase().includes(q) || (qn && c.doc.replace(/-/g, '').includes(qn)) || t.n.includes(q)
+      || (D.padres[c.padre] || '').toLowerCase().includes(q))) return false;
+    return true;
+  };
+  let K = D.creditos.filter(base);
+  let T = D.tramos.filter(t => {
+    if (!base(t)) return false;
     if (!hist && t.dd > 90) return false;
     if (est === 'venc' && t.dd <= 0) return false;
     if (est === 'pv' && t.dd > 0) return false;
-    if (q && !(t.c.includes(q) || c.n.toLowerCase().includes(q) || c.rs.toLowerCase().includes(q) || c.doc.replace(/-/g, '').includes(q.replace(/-/g, '')) || t.n.includes(q))) return false;
     return true;
   });
   const bandAll = T; // la banda muestra todo lo filtrado, sin el filtro de franja
@@ -350,19 +363,20 @@ function filtrar() {
     a.bands[t.bi] += t.s;
   }
   let C = [...cm.values()];
-  if (min) { C = C.filter(a => a.total >= min); const ok = new Set(C.map(a => a.cod)); T = T.filter(t => ok.has(t.c)); }
-  if (est === 'bl') { C = C.filter(a => a.maxd > 5); const ok = new Set(C.map(a => a.cod)); T = T.filter(t => ok.has(t.c)); }
-  return {T, C, bandAll: min || est === 'bl' ? bandAll.filter(t => C.some(a => a.cod === t.c)) : bandAll};
+  if (min) { C = C.filter(a => a.total >= min); const ok = new Set(C.map(a => a.cod)); T = T.filter(t => ok.has(t.c)); K = K.filter(t => ok.has(t.c)); }
+  if (est === 'bl') { C = C.filter(a => a.maxd > 5); const ok = new Set(C.map(a => a.cod)); T = T.filter(t => ok.has(t.c)); K = K.filter(t => ok.has(t.c)); }
+  if (est === 'venc' || est === 'pv' || state.band !== null) { const ok = new Set(C.map(a => a.cod)); K = K.filter(t => ok.has(t.c)); }
+  return {T, C, K, bandAll: min || est === 'bl' ? bandAll.filter(t => C.some(a => a.cod === t.c)) : bandAll};
 }
 
 let F;
 function render() {
   F = filtrar();
   kpis(); band(); cal(); tabs(); view();
-  $('#foot').innerHTML = `Saldo por cliente: <b>ctacte</b> de GesCom (deuda, crédito a favor, vencimiento impago más viejo). ` +
-    `Cada saldo se reparte sobre las facturas más nuevas del cliente (los cobros cancelan primero lo más viejo); vence en fecha de factura + días de su condición de pago. ` +
-    `Lo que excede las facturas de los últimos ${Math.round((new Date(HOY) - new Date(D.desde)) / 864e5)} días figura como "Saldo anterior" con el vencimiento más viejo que informa GesCom. ` +
-    `Excluye EMFACO / vendedor 1176 (intercompany).`;
+  const bp = $('#bPadre'); bp.hidden = !state.padre; if (state.padre) bp.textContent = `Cuenta madre: ${D.padres[state.padre] || state.padre} ✕`;
+  $('#foot').innerHTML = `Fuente: reportes de GesCom <b>Saldo actual detallado por cliente</b> y <b>Saldo detallado por Cliente Asociados</b> ` +
+    `(Cta. Cte. Clientes › Reportes), comprobante por comprobante, sin exclusiones. Vencimiento y saldo de cada comprobante tal como los informa GesCom. ` +
+    `Los importes negativos (notas de crédito, ajustes de crédito, pagos a cuenta y retenciones sin imputar) figuran en <b>Créditos</b> y se restan en el saldo neto.`;
 }
 
 function kpis() {
@@ -371,8 +385,7 @@ function kpis() {
   const pv = tot - venc, p7 = T.filter(t => t.dd <= 0 && t.dd >= -7).reduce((s, t) => s + t.s, 0);
   const bl = C.filter(a => a.maxd > 5), blm = bl.reduce((s, a) => s + a.venc, 0);
   const atr = venc ? T.filter(t => t.dd > 0).reduce((s, t) => s + t.s * t.dd, 0) / venc : 0;
-  const ids = new Set(C.map(a => a.cod));
-  const cred = Object.entries(D.clientes).filter(([k, c]) => c.cred > 1 && (ids.has(k) || !C.length || !anyFilter())).reduce((s, [, c]) => s + c.cred, 0);
+  const cred = -F.K.reduce((s, t) => s + t.s, 0);
   const excede = C.filter(a => a.c.tope && a.maxd > 0 && a.maxd > a.c.tope).length;
   const hoyM = T.filter(t => t.dd === 0).reduce((s, t) => s + t.s, 0);
   const k = (l, v, s, cls = '') => `<div class="kpi ${cls}"><div class="l">${l}</div><div class="v">${v}</div><div class="s">${s}</div></div>`;
@@ -384,7 +397,8 @@ function kpis() {
     k('Lista negra', bl.length.toLocaleString('es-AR'), `${mm(blm)} vencido hace +5 días`, 'bad') +
     k('Atraso promedio', Math.round(atr) + ' días', 'ponderado por monto vencido') +
     k('Exceden su tope', excede.toLocaleString('es-AR'), 'clientes con más días que su tope', excede ? 'warn' : '') +
-    k('Crédito a favor', mm(cred), 'saldos a favor de clientes');
+    k('Créditos sin imputar', mm(cred), `${F.K.length.toLocaleString('es-AR')} NC, ajustes y pagos a cuenta`, 'ok') +
+    k('Saldo neto', mm(tot - cred), 'deuda menos créditos (como el reporte)');
 }
 const anyFilter = () => ['#fQ', '#fEmp', '#fVend', '#fRuta', '#fCond', '#fLoc', '#fCart', '#fEst', '#fMin'].some(s => $(s).value) || !$('#fHist').checked || state.band !== null;
 
@@ -417,7 +431,8 @@ const TABS = [
   {k: 'vend', n: 'Por vendedor'},
   {k: 'ruta', n: 'Por ruta'},
   {k: 'emp', n: 'Por empresa'},
-  {k: 'fav', n: 'Saldos a favor', c: () => Object.values(D.clientes).filter(c => c.cred > 1).length},
+  {k: 'padre', n: 'Por cuenta madre'},
+  {k: 'cred', n: 'Créditos', c: () => F.K.length},
 ];
 function tabs() {
   $('#tabs').innerHTML = TABS.map(t => `<div class="tab ${t.cls || ''} ${state.tab === t.k ? 'on' : ''}" data-k="${t.k}">${t.n}${t.c ? `<span class="k">${t.c().toLocaleString('es-AR')}</span>` : ''}</div>`).join('');
@@ -444,7 +459,7 @@ function table(id, cols, rows, onRow) {
 }
 
 const colsCli = [
-  {n: 'Cliente', v: a => a.c.n, h: a => `<b>${esc(a.c.n)}</b><div class="muted" style="font-size:11px">${esc(a.cod)} · ${esc(a.c.loc || '')}${a.c.activo ? '' : ' · <span class="amber">no está en el maestro</span>'}</div>`, cls: 'nm'},
+  {n: 'Cliente', v: a => a.c.n, h: a => `<b>${esc(a.c.n)}</b><div class="muted" style="font-size:11px">${esc(a.cod)} · ${esc(a.c.loc || '')}${a.c.activo ? '' : ' · <span class="amber">no está en el maestro</span>'}${a.c.padre && a.c.padre !== a.cod ? ` · <span class="muted">asociado a ${esc(D.padres[a.c.padre] || a.c.padre)}</span>` : ''}</div>`, cls: 'nm'},
   {n: 'Vendedor', v: a => vn(a.c.vend || a.tr[0].vend)},
   {n: 'Ruta', v: a => a.c.ruta || a.tr[0].ruta || ''},
   {n: 'Condición', v: a => (D.condiciones[a.c.cp] || {}).d || a.c.cp || '—'},
@@ -482,18 +497,20 @@ function view() {
       {n: 'Vence', v: r => r.v, h: r => fdate(r.v)},
       {n: 'Estado', r: 0, def: 1, v: r => r.dd, h: r => pill(r.dd)},
       {n: 'Cliente', v: r => D.clientes[r.c].n, h: r => `${esc(D.clientes[r.c].n)} <span class="muted">${esc(r.c)}</span>`, cls: 'nm'},
-      {n: 'Comprobante', v: r => r.t + ' ' + r.n, h: r => r.t === 'ANT' ? '<span class="muted">Saldo anterior</span>' : esc(r.t + ' ' + r.n)},
+      {n: 'Comprobante', v: r => r.t + ' ' + r.n},
       {n: 'Fecha', v: r => r.f || '', h: r => fdate(r.f)},
       {n: 'Empresa', v: r => D.empresas[r.e] || r.e || '—'},
       {n: 'Condición', v: r => (D.condiciones[r.cp] || {}).d || r.cp || '—'},
       {n: 'Vendedor', v: r => vn(r.vend)},
+      {n: 'Reparto · Chofer', v: r => [r.rep, r.ch].filter(Boolean).join(' · ')},
+      {n: 'Comentario', v: r => r.com || '', cls: 'nm'},
       {n: 'Importe', r: 1, v: r => r.imp, h: r => money(r.imp)},
       {n: 'Saldo', r: 1, v: r => r.s, h: r => `<b>${money(r.s)}</b>`},
     ];
     return table('comp', cols, F.T, r => ficha(F.C.find(a => a.cod === r.c)));
   }
-  if (t === 'vend' || t === 'ruta' || t === 'emp') {
-    const key = t === 'vend' ? (x => x.vend || '') : t === 'ruta' ? (x => x.ruta || '') : (x => x.e || '');
+  if (t === 'vend' || t === 'ruta' || t === 'emp' || t === 'padre') {
+    const key = t === 'vend' ? (x => x.vend || '') : t === 'ruta' ? (x => x.ruta || '') : t === 'padre' ? (x => D.clientes[x.c].padre || x.c) : (x => x.e || '');
     const g = new Map();
     F.T.forEach(x => {
       const k = key(x); let a = g.get(k);
@@ -502,10 +519,10 @@ function view() {
       if (x.dd > 0) a.venc += x.s; else a.pv += x.s;
       if (x.dd > 5) { a.v5 += x.s; a.bl.add(x.c); }
     });
-    const name = t === 'vend' ? (a => vn(a.k)) : t === 'ruta' ? (a => a.k ? 'Ruta ' + a.k : 'Sin ruta') : (a => D.empresas[a.k] || 'Sin empresa');
+    const name = t === 'vend' ? (a => vn(a.k)) : t === 'ruta' ? (a => a.k ? 'Ruta ' + a.k : 'Sin ruta') : t === 'padre' ? (a => `${D.padres[a.k] || a.k} (${a.k})`) : (a => D.empresas[a.k] || 'Sin empresa');
     const cols = [
-      {n: t === 'vend' ? 'Vendedor' : t === 'ruta' ? 'Ruta' : 'Empresa', v: name},
-      {n: 'Clientes', r: 1, v: a => a.cli.size},
+      {n: t === 'vend' ? 'Vendedor' : t === 'ruta' ? 'Ruta' : t === 'padre' ? 'Cuenta madre' : 'Empresa', v: name, cls: t === 'padre' ? 'nm' : ''},
+      {n: t === 'padre' ? 'Clientes asociados' : 'Clientes', r: 1, v: a => a.cli.size},
       {n: 'Deuda', r: 1, def: 1, v: a => a.total, h: a => money(a.total)},
       {n: 'Vencido', r: 1, v: a => a.venc, h: a => `<span class="red">${money(a.venc)}</span>`},
       {n: '% vencido', r: 1, v: a => a.total ? a.venc / a.total : 0, h: a => pct(a.total ? a.venc / a.total : 0)},
@@ -515,27 +532,28 @@ function view() {
     ];
     const rows = [...g.values()];
     const onRow = a => {
-      const sel = t === 'vend' ? '#fVend' : t === 'ruta' ? '#fRuta' : '#fEmp';
-      $(sel).value = [a.k]; state.tab = 'cli'; render();
+      if (t === 'padre') state.padre = a.k;
+      else $(t === 'vend' ? '#fVend' : t === 'ruta' ? '#fRuta' : '#fEmp').value = [a.k];
+      state.tab = 'cli'; render();
     };
     table(t, cols, rows, onRow);
-    $('#view').insertAdjacentHTML('afterbegin', `<p class="note" style="margin-top:0">Tocá una fila para ver sus clientes.</p>`);
+    $('#view').insertAdjacentHTML('afterbegin', `<p class="note" style="margin-top:0">${t === 'padre' ? 'Agrupado como el reporte <b>Saldo detallado por Cliente Asociados</b>: cada cuenta madre con sus clientes asociados. ' : ''}Tocá una fila para ver sus clientes.</p>`);
     return;
   }
-  if (t === 'fav') {
-    const q = $('#fQ').value.trim().toLowerCase();
-    const rows = Object.entries(D.clientes).filter(([k, c]) => c.cred > 1 && (!q || c.n.toLowerCase().includes(q) || k.includes(q)))
-      .map(([k, c]) => ({cod: k, c}));
+  if (t === 'cred') {
     const cols = [
-      {n: 'Cliente', v: a => a.c.n, h: a => `<b>${esc(a.c.n)}</b> <span class="muted">${esc(a.cod)}</span>`, cls: 'nm'},
-      {n: 'Crédito a favor', r: 1, def: 1, v: a => a.c.cred, h: a => `<span class="green">${money(a.c.cred)}</span>`},
-      {n: 'Deuda', r: 1, v: a => a.c.saldo, h: a => a.c.saldo > 1 ? money(a.c.saldo) : '<span class="muted">—</span>'},
-      {n: 'Saldo neto', r: 1, v: a => a.c.neto, h: a => a.c.neto < 0 ? `<span class="green">${money(a.c.neto)}</span>` : money(a.c.neto)},
-      {n: 'Vendedor', v: a => vn(a.c.vend)},
-      {n: 'Localidad', v: a => a.c.loc || ''},
+      {n: 'Fecha', v: r => r.f || '', h: r => fdate(r.f)},
+      {n: 'Cliente', v: r => D.clientes[r.c].n, h: r => `${esc(D.clientes[r.c].n)} <span class="muted">${esc(r.c)}</span>`, cls: 'nm'},
+      {n: 'Comprobante', v: r => r.t + ' ' + r.n},
+      {n: 'Empresa', v: r => D.empresas[r.e] || r.e || '—'},
+      {n: 'Vendedor', v: r => vn(r.vend)},
+      {n: 'Comentario', v: r => r.com || '', cls: 'nm'},
+      {n: 'Importe', r: 1, v: r => r.imp, h: r => money(r.imp)},
+      {n: 'Saldo a favor', r: 1, def: 1, v: r => -r.s, h: r => `<b class="green">${money(-r.s)}</b>`},
+      {n: 'Deuda del cliente', r: 1, v: r => D.clientes[r.c].saldo, h: r => D.clientes[r.c].saldo > 1 ? money(D.clientes[r.c].saldo) : '<span class="muted">—</span>'},
     ];
-    table('fav', cols, rows);
-    $('#view').insertAdjacentHTML('afterbegin', `<p class="note" style="margin-top:0">Notas de crédito o pagos a cuenta todavía sin imputar. Si el cliente también tiene deuda, conviene imputarlos en GesCom.</p>`);
+    table('cred', cols, F.K, r => ficha({cod: r.c, c: D.clientes[r.c]}));
+    $('#view').insertAdjacentHTML('afterbegin', `<p class="note" style="margin-top:0">Notas de crédito, ajustes de crédito, pagos a cuenta y retenciones todavía sin imputar. Si el cliente también tiene deuda, conviene imputarlos en GesCom.</p>`);
   }
 }
 
@@ -551,13 +569,16 @@ function telLink(tel, a) {
 function ficha(a) {
   if (!a) return;
   const c = a.c, todos = D.tramos.filter(t => t.c === a.cod).sort((x, y) => y.dd - x.dd);
-  const venc = todos.filter(t => t.dd > 0).reduce((s, t) => s + t.s, 0), maxd = Math.max(...todos.map(t => t.dd));
+  const creds = D.creditos.filter(t => t.c === a.cod);
+  const asoc = Object.entries(D.clientes).filter(([k, x]) => x.padre === c.padre && k !== a.cod);
+  const venc = todos.filter(t => t.dd > 0).reduce((s, t) => s + t.s, 0), maxd = todos.length ? Math.max(...todos.map(t => t.dd)) : -999;
+  const det = t => [t.rep && 'Reparto ' + t.rep, t.ch, t.com].filter(Boolean).map(esc).join(' · ');
   const cond = (D.condiciones[c.cp] || {}).d || c.cp || '—';
   $('#dIn').innerHTML = `
     <div style="display:flex;justify-content:space-between;gap:10px"><div><h2>${esc(c.n)}</h2>
     <div class="muted">${esc(a.cod)}${c.rs && c.rs !== c.n ? ' · ' + esc(c.rs) : ''}${c.doc ? ' · ' + esc(c.doc) : ''}</div></div>
     <button class="btn" onclick="document.getElementById('drawer').classList.remove('on')">Cerrar</button></div>
-    <div style="margin-top:10px">${pill(maxd)} ${maxd > 5 ? '<span class="pill" style="background:#fca5a5;color:#0f172a">LISTA NEGRA</span>' : ''} ${c.tope && maxd > c.tope ? `<span class="pill" style="background:#fdba74">Excede tope de ${c.tope} días</span>` : ''}</div>
+    <div style="margin-top:10px">${todos.length ? pill(maxd) : ''} ${maxd > 5 ? '<span class="pill" style="background:#fca5a5;color:#0f172a">LISTA NEGRA</span>' : ''} ${c.tope && maxd > c.tope ? `<span class="pill" style="background:#fdba74">Excede tope de ${c.tope} días</span>` : ''}</div>
     <div class="facts">
       <div><b>Deuda</b>${money(c.saldo)}</div>
       <div><b>Vencido</b><span class="red">${money(venc)}</span></div>
@@ -571,10 +592,14 @@ function ficha(a) {
       <div><b>Teléfono</b>${telLink(c.tel, {c, venc})}</div>
       <div><b>Dirección</b>${esc(c.dir || '—')}<br><span class="muted">${esc(c.loc || '')}</span></div>
       <div><b>Email</b>${c.mail ? `<a href="mailto:${esc(c.mail)}">${esc(c.mail)}</a>` : '—'}</div>
+      <div><b>Cuenta madre</b>${c.padre && c.padre !== a.cod ? esc((D.padres[c.padre] || '') + ' (' + c.padre + ')') : 'Es cuenta propia'}${asoc.length ? `<br><span class="muted">${asoc.length} asociado${asoc.length > 1 ? 's' : ''} más</span>` : ''}</div>
     </div>
     <h3 style="font-weight:500;font-size:15px">Composición del saldo</h3>
     <div class="tw"><table><thead><tr><th>Comprobante</th><th>Fecha</th><th>Vence</th><th>Estado</th><th class="r">Importe</th><th class="r">Saldo</th></tr></thead>
-    <tbody>${todos.map(t => `<tr><td>${t.t === 'ANT' ? '<span class="muted">Saldo anterior</span>' : esc(t.t + ' ' + t.n)}<div class="muted" style="font-size:11px">${esc(D.empresas[t.e] || '')}</div></td><td>${fdate(t.f)}</td><td>${fdate(t.v)}</td><td>${pill(t.dd)}</td><td class="r">${money(t.imp)}</td><td class="r"><b>${money(t.s)}</b></td></tr>`).join('')}</tbody></table></div>
+    <tbody>${todos.map(t => `<tr><td>${esc(t.t + ' ' + t.n)}<div class="muted" style="font-size:11px;white-space:normal">${esc(D.empresas[t.e] || '')}${det(t) ? ' · ' + det(t) : ''}</div></td><td>${fdate(t.f)}</td><td>${fdate(t.v)}</td><td>${pill(t.dd)}</td><td class="r">${money(t.imp)}</td><td class="r"><b>${money(t.s)}</b></td></tr>`).join('')}
+    ${creds.map(t => `<tr><td>${esc(t.t + ' ' + t.n)}<div class="muted" style="font-size:11px;white-space:normal">${esc(D.empresas[t.e] || '')}${det(t) ? ' · ' + det(t) : ''}</div></td><td>${fdate(t.f)}</td><td>—</td><td><span class="pill" style="background:#6ee7b7;color:#0f172a">crédito</span></td><td class="r">${money(t.imp)}</td><td class="r"><b class="green">${money(t.s)}</b></td></tr>`).join('')}
+    <tr><td colspan="5" class="r"><b>Saldo neto</b></td><td class="r"><b>${money(c.neto)}</b></td></tr></tbody></table></div>
+    ${asoc.length ? `<h3 style="font-weight:500;font-size:15px;margin-top:16px">Clientes de la misma cuenta madre</h3><div class="tw"><table><tbody>${asoc.map(([k, x]) => `<tr><td>${esc(x.n)} <span class="muted">${esc(k)}</span></td><td class="r">${money(x.neto)}</td></tr>`).join('')}</tbody></table></div>` : ''}
     ${c.tags && c.tags.length ? `<p class="note">Etiquetas: ${c.tags.map(esc).join(', ')}</p>` : ''}`;
   $('#drawer').classList.add('on');
 }
