@@ -3,7 +3,7 @@
 `https://tiendaperfecta.github.io/georgalos/`
 
 ```
-GitHub Action (todos los dias 23:30 AR)  →  tools/georgalos.py  →  georgalos/*.json  →  index.html
+GitHub Action (cada 1 hora, lunes a sabado)  →  tools/georgalos.py  →  georgalos/*.json  →  index.html
 ```
 
 - **Filtro de fechas:** desde / hasta, cualquier dia del año, con atajos (hoy, ayer,
