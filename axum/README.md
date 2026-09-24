@@ -138,6 +138,38 @@ orden de ruta, hora y duración de la visita, y el pedido con importe y hora.
 > la ruta 2 abriría el mapa a media provincia. El trazo sigue dibujado, para
 > verlo entero alcanza con alejarse.
 
+## LDR: repartos y rechazos
+
+Además de las estadísticas por chofer que ya trae el Panel de Fleteros, la
+pestaña abre el detalle del módulo de distribución de GesCom:
+
+- **Rechazos por cliente:** quién rechazó, de qué rubro, en qué localidad, con
+  qué chofer, cuántos bultos y cuánta plata. Y el detalle de cada rechazo con
+  hora, vehículo, reparto, motivo y comprobante.
+- **Repartos del día:** chofer, vehículo, turno, etapa, clientes asignados,
+  boletas, entregadas, rechazos, efectividad e importe facturado.
+
+### Cómo se reconoce un rechazo
+
+```
+venta DEV-RE  +  fecha de pedido >= fecha del reparto  ->  RECHAZO
+venta DEV-RE  +  fecha de pedido  <  fecha del reparto  ->  devolución programada
+```
+
+Si la devolución se genera el mismo día que sale el camión, el cliente no la
+recibió. Si venía de antes, es una devolución acordada y cuenta como entrega.
+Es **el mismo criterio que usa el robot del Panel de Fleteros**, para que los
+números cierren entre los dos paneles.
+
+> **Ojo con el día de hoy:** GesCom factura las boletas de un reparto uno o dos
+> días después de que sale el camión, así que el día en curso siempre se ve a
+> medias y los rechazos pueden aumentar. El panel avisa cuántos repartos todavía
+> no están facturados. Por eso también se miran las ventas de los días
+> siguientes al armar cada día.
+
+El motivo del rechazo viene como código (`6`, `8`, `pepsico-10000`): GesCom no
+expone el catálogo de motivos por API, así que se muestra el número.
+
 ## Taxonomía del cliente
 
 GesCom guarda el ramo y el subramo como código (`pepsico-7`, `pepsico-171`); las
