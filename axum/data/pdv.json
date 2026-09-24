@@ -166,11 +166,11 @@
    "minutos": 5.6,
    "visito": true,
    "hora": "12:57",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 172820.82,
+   "fechaVenta": "2026-09-24",
+   "horaVenta": "17:25",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-09-24",
@@ -185,8 +185,8 @@
    "minutos": 5.6,
    "visito": true,
    "hora": "13:14",
-   "pedidos": 1,
-   "monto": 54000.1,
+   "pedidos": 2,
+   "monto": 274564.23,
    "fechaVenta": "2026-09-24",
    "horaVenta": "13:17",
    "estado": "vendio"
@@ -356,11 +356,11 @@
    "minutos": 3.2,
    "visito": true,
    "hora": "11:51",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 2,
+   "monto": 140320.04,
+   "fechaVenta": "2026-09-24",
+   "horaVenta": "17:18",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-09-24",
@@ -489,11 +489,11 @@
    "minutos": 1.5,
    "visito": true,
    "hora": "10:45",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 144727.37,
+   "fechaVenta": "2026-09-24",
+   "horaVenta": "17:27",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-09-24",
@@ -565,11 +565,11 @@
    "minutos": 1.2,
    "visito": true,
    "hora": "12:44",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 185586.64,
+   "fechaVenta": "2026-09-24",
+   "horaVenta": "17:23",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-09-24",
@@ -945,11 +945,11 @@
    "minutos": 0.4,
    "visito": true,
    "hora": "13:30",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 210993.42,
+   "fechaVenta": "2026-09-24",
+   "horaVenta": "17:28",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-09-24",
@@ -5684,25 +5684,6 @@
   },
   {
    "fecha": "2026-09-24",
-   "sellerId": "20",
-   "vendedor": "Deposito",
-   "clientId": "1234",
-   "nombre": "Vanesa Romina Nomeedeu",
-   "localidad": "Mar del Plata",
-   "taxonomia": "Almacen/Despensa_D",
-   "canal": "TRADITIONAL TRADE",
-   "enRuta": false,
-   "minutos": 0.0,
-   "visito": false,
-   "hora": null,
-   "pedidos": 1,
-   "monto": 48142.8,
-   "fechaVenta": "2026-09-24",
-   "horaVenta": "16:36",
-   "estado": "vendio_sin_pasar"
-  },
-  {
-   "fecha": "2026-09-24",
    "sellerId": "3",
    "vendedor": "Ezequiel Hack",
    "clientId": "3642",
@@ -10187,6 +10168,25 @@
   },
   {
    "fecha": "2026-09-24",
+   "sellerId": "7",
+   "vendedor": "Ramiro Rando",
+   "clientId": "1234",
+   "nombre": "Vanesa Romina Nomeedeu",
+   "localidad": "Mar del Plata",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 48142.8,
+   "fechaVenta": "2026-09-24",
+   "horaVenta": "16:36",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-24",
    "sellerId": "8",
    "vendedor": "Martinica Rodriguez",
    "clientId": "2610",
@@ -11096,12 +11096,50 @@
    "fechaVenta": "2026-09-24",
    "horaVenta": "14:45",
    "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-24",
+   "sellerId": "9",
+   "vendedor": "Ludmila Aylen Martinez",
+   "clientId": "1264",
+   "nombre": "Cesar la bella",
+   "localidad": "Chapadmalal",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 63631.98,
+   "fechaVenta": "2026-09-24",
+   "horaVenta": "17:44",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-24",
+   "sellerId": "9",
+   "vendedor": "Ludmila Aylen Martinez",
+   "clientId": "417",
+   "nombre": "JOHANNA ELIZABETH EVTUSHENKO",
+   "localidad": "MIRAMAR",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 61224.73,
+   "fechaVenta": "2026-09-24",
+   "horaVenta": "17:47",
+   "estado": "vendio_sin_pasar"
   }
  ],
  "resumen": {
-  "paso_sin_vender": 245,
-  "vendio": 200,
+  "paso_sin_vender": 240,
+  "vendio": 205,
   "sin_visita": 29,
-  "vendio_sin_pasar": 110
+  "vendio_sin_pasar": 112
  }
 }

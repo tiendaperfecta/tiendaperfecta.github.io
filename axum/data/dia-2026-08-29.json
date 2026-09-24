@@ -1,4 +1,46 @@
 {
+ "repartos": {
+  "fecha": "2026-08-29",
+  "repartos": [
+   {
+    "codigo": "212",
+    "fecha": "2026-08-29",
+    "chofer": "SIN CHOFER",
+    "choferId": "10013",
+    "vehiculo": "603",
+    "turno": 1,
+    "etapa": "Rendicion",
+    "estado": "Finalizado",
+    "cerrado": true,
+    "cancelado": false,
+    "clientesAsignados": 33,
+    "boletas": 4,
+    "entregadas": 4,
+    "rechazos": 0,
+    "clientes": 4,
+    "importe": 345276.94,
+    "importeRechazado": 0.0,
+    "bultosRechazados": 0.0,
+    "efectividad": 100.0
+   }
+  ],
+  "rechazos": [],
+  "porCliente": [],
+  "porMotivo": [],
+  "porResponsable": {},
+  "totales": {
+   "repartos": 1,
+   "choferes": 1,
+   "boletas": 4,
+   "entregadas": 4,
+   "rechazos": 0,
+   "repartosFacturados": 1,
+   "clientesQueRechazaron": 0,
+   "importe": 345276.94,
+   "importeRechazado": 0.0,
+   "efectividad": 100.0
+  }
+ },
  "date": "2026-08-29",
  "diaSemana": "sabado",
  "jornadaCerrada": true,
@@ -14,7 +56,8 @@
    "clientId": "1389",
    "nombre": "KIOSMDQ",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -32,7 +75,8 @@
    "clientId": "1601",
    "nombre": "KIOSMDQ",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -50,7 +94,8 @@
    "clientId": "4588",
    "nombre": "LOCABA POLIRRUBROS S.A.",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -68,7 +113,8 @@
    "clientId": "3708",
    "nombre": "CHOCOCHIA S.A.",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -86,7 +132,8 @@
    "clientId": "1021",
    "nombre": "LI YUANTONG",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -104,7 +151,8 @@
    "clientId": "1122",
    "nombre": "HUANG LECONG",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -122,7 +170,8 @@
    "clientId": "4724",
    "nombre": "GERONIMO ERRECALDE",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -140,7 +189,8 @@
    "clientId": "1074",
    "nombre": "DI RICO SERGIO GABRIEL",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -158,7 +208,8 @@
    "clientId": "517",
    "nombre": "FERNANDO LAGO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 46.5,
    "visito": true,
@@ -176,7 +227,8 @@
    "clientId": "2681",
    "nombre": "MARINE GONZALEZ URQUIZA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-5",
+   "taxonomia": "Carniceria/Granja_A",
+   "canal": "AWAY FROM HOME",
    "enRuta": true,
    "minutos": 22.3,
    "visito": true,
@@ -194,7 +246,8 @@
    "clientId": "990",
    "nombre": "ROBERTO GUSTAVO GONZALEZ",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 17.8,
    "visito": true,
@@ -212,7 +265,8 @@
    "clientId": "989",
    "nombre": "Iron servicios sa",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 11.3,
    "visito": true,
@@ -230,7 +284,8 @@
    "clientId": "3275",
    "nombre": "PABLO DAMIAN PORRAS",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 9.5,
    "visito": true,
@@ -248,7 +303,8 @@
    "clientId": "2556",
    "nombre": "YANFENG CHI",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 5.7,
    "visito": true,
@@ -266,7 +322,8 @@
    "clientId": "94",
    "nombre": "MARTINEZ JUAN PABLO Y BARRIOS MARTIN SOCIEDAD LEY",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 5.5,
    "visito": true,
@@ -284,7 +341,8 @@
    "clientId": "4256",
    "nombre": "JOEL JULIAN PAGLIONE",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 4.5,
    "visito": true,
@@ -302,7 +360,8 @@
    "clientId": "2991",
    "nombre": "Super Tejedor N 2631 S.r.l.",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 4.4,
    "visito": true,
@@ -320,7 +379,8 @@
    "clientId": "2355",
    "nombre": "KAWSAY AYLLU S.A",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 3.4,
    "visito": true,
@@ -338,7 +398,8 @@
    "clientId": "1457",
    "nombre": "ESTEBAN GERMAN ALESSANDRINI",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 2.9,
    "visito": true,
@@ -356,7 +417,8 @@
    "clientId": "320",
    "nombre": "BRANDO SOCIEDAD ANONIMA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 2.4,
    "visito": true,
@@ -374,7 +436,8 @@
    "clientId": "3550",
    "nombre": "ORELLANA JOSE LUIS",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 2.2,
    "visito": true,
@@ -392,7 +455,8 @@
    "clientId": "1040",
    "nombre": "SEGURA MARIELA ANAHI",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 1.9,
    "visito": true,
@@ -410,7 +474,8 @@
    "clientId": "4935",
    "nombre": "SERGIO ASKER",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-5",
+   "taxonomia": "Carniceria/Granja_D",
+   "canal": "AWAY FROM HOME",
    "enRuta": true,
    "minutos": 1.5,
    "visito": true,
@@ -428,7 +493,8 @@
    "clientId": "2661",
    "nombre": "BRANDO SOCIEDAD ANONIMA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-31",
+   "taxonomia": "Estacion de Servicio - YPF_C",
+   "canal": "PROXIMITY",
    "enRuta": true,
    "minutos": 0.6,
    "visito": true,
@@ -446,7 +512,8 @@
    "clientId": "2926",
    "nombre": "ROSA CECILIA NUÑEZ PAREDES",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.4,
    "visito": true,
@@ -464,7 +531,8 @@
    "clientId": "3760",
    "nombre": "NICADELO SA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.4,
    "visito": true,
@@ -482,7 +550,8 @@
    "clientId": "1871",
    "nombre": "GONZALEZ VIRGINIA CAROLINA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.3,
    "visito": true,
@@ -500,7 +569,8 @@
    "clientId": "1317",
    "nombre": "VAZQUEZ GUADALUPE CECILIA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -518,7 +588,8 @@
    "clientId": "3781",
    "nombre": "Salcedo Fernando",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Resto de Tradicionales_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.1,
    "visito": true,
@@ -536,7 +607,8 @@
    "clientId": "824",
    "nombre": "Lago Gabriel",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.1,
    "visito": true,
@@ -554,7 +626,8 @@
    "clientId": "3781",
    "nombre": "Salcedo Fernando",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Resto de Tradicionales_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.1,
    "visito": true,
@@ -572,7 +645,8 @@
    "clientId": "40",
    "nombre": "PAÑALERA UNIVERSAL",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.1,
    "visito": true,
@@ -590,7 +664,8 @@
    "clientId": "3317",
    "nombre": "LEANDRO MAXIMILIANO ZUBIRIA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -608,7 +683,8 @@
    "clientId": "1312",
    "nombre": "MANDAGARAN MATTA JOSE",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -626,7 +702,8 @@
    "clientId": "1937",
    "nombre": "DE LAS HERAS NIDIA AGUSTINA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Fiambreria_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -644,7 +721,8 @@
    "clientId": "4968",
    "nombre": "ROMINA ANDREA CROVA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Resto de Tradicionales_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -662,7 +740,8 @@
    "clientId": "2443",
    "nombre": "AMELIA CAROLINA ROSELLI",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -680,7 +759,8 @@
    "clientId": "4541",
    "nombre": "CINTIA LORENA DAGANI",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": true,
@@ -698,7 +778,8 @@
    "clientId": "3541",
    "nombre": "ByB",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": true,
@@ -716,7 +797,8 @@
    "clientId": "1936",
    "nombre": "HERNANDEZ SEBASTIAN PABLO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Fiambreria_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": true,
@@ -734,7 +816,8 @@
    "clientId": "4443",
    "nombre": "WANG ZHENGWEN",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -752,7 +835,8 @@
    "clientId": "2022",
    "nombre": "ANTONIO DI MEGLIO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": true,
@@ -770,7 +854,8 @@
    "clientId": "2443",
    "nombre": "AMELIA CAROLINA ROSELLI",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -788,7 +873,8 @@
    "clientId": "4541",
    "nombre": "CINTIA LORENA DAGANI",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": true,
@@ -806,7 +892,8 @@
    "clientId": "864",
    "nombre": "LOCABA POLIRRUBROS S.A",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": true,
@@ -824,7 +911,8 @@
    "clientId": "1943",
    "nombre": "GREGSAL GROUP SRL",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": true,
@@ -842,7 +930,8 @@
    "clientId": "1945",
    "nombre": "USANDIZAGA PABLO ALEJANDRO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": true,
@@ -860,7 +949,8 @@
    "clientId": "1309",
    "nombre": "Lucas Leandro Telechea",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": true,
@@ -878,7 +968,8 @@
    "clientId": "2025",
    "nombre": "MAYORA GUSTAVO MANUEL",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": true,
@@ -896,7 +987,8 @@
    "clientId": "2022",
    "nombre": "ANTONIO DI MEGLIO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": true,
@@ -914,7 +1006,8 @@
    "clientId": "1016",
    "nombre": "TOLABA CHOQUE WILSON GABRIEL",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": true,
@@ -932,7 +1025,8 @@
    "clientId": "1936",
    "nombre": "HERNANDEZ SEBASTIAN PABLO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Fiambreria_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": true,
@@ -950,7 +1044,8 @@
    "clientId": "1414",
    "nombre": "RAMOS MAXIMILIANO JAVIER",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 29.0,
    "visito": true,
@@ -968,7 +1063,8 @@
    "clientId": "1964",
    "nombre": "GIGENA HUGO ERNESTO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 19.7,
    "visito": true,
@@ -986,7 +1082,8 @@
    "clientId": "1025",
    "nombre": "QIU XIAOYAN",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 12.4,
    "visito": true,
@@ -1004,7 +1101,8 @@
    "clientId": "1975",
    "nombre": "VALORZI RUBEN",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-5",
+   "taxonomia": "Panaderia_C",
+   "canal": "AWAY FROM HOME",
    "enRuta": true,
    "minutos": 7.5,
    "visito": true,
@@ -1022,7 +1120,8 @@
    "clientId": "1211",
    "nombre": "Jeremías ramos",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 7.2,
    "visito": true,
@@ -1040,7 +1139,8 @@
    "clientId": "2442",
    "nombre": "MARIA LAURA PEREZ BLANCO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 6.2,
    "visito": true,
@@ -1058,7 +1158,8 @@
    "clientId": "1404",
    "nombre": "DI RENZO JUAN NICOLAS",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 5.0,
    "visito": true,
@@ -1076,7 +1177,8 @@
    "clientId": "3431",
    "nombre": "JULIAN ANTONINI",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 4.8,
    "visito": true,
@@ -1094,7 +1196,8 @@
    "clientId": "1957",
    "nombre": "BARBARA SOFIA CRAVERO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 3.6,
    "visito": true,
@@ -1112,7 +1215,8 @@
    "clientId": "1259",
    "nombre": "ACOSTA ROBERTO OMAR",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 3.5,
    "visito": true,
@@ -1130,7 +1234,8 @@
    "clientId": "3520",
    "nombre": "CHOCOCHIA S. A.",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 3.4,
    "visito": true,
@@ -1148,7 +1253,8 @@
    "clientId": "3514",
    "nombre": "WALTER ELISEO ESCUDERO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 2.9,
    "visito": true,
@@ -1166,7 +1272,8 @@
    "clientId": "1965",
    "nombre": "Thiago casali",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 1.8,
    "visito": true,
@@ -1184,7 +1291,8 @@
    "clientId": "4495",
    "nombre": "CELESTE AGOSTINA SAEZ",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 1.8,
    "visito": true,
@@ -1202,7 +1310,8 @@
    "clientId": "1363",
    "nombre": "PALAVECINO MIRTA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 1.7,
    "visito": true,
@@ -1220,7 +1329,8 @@
    "clientId": "3082",
    "nombre": "VERONICA VICTORIA LOURO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 1.6,
    "visito": true,
@@ -1238,7 +1348,8 @@
    "clientId": "527",
    "nombre": "DONG XINGWU",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 1.4,
    "visito": true,
@@ -1256,7 +1367,8 @@
    "clientId": "3800",
    "nombre": "FLORENCIA BIAGETTI",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 1.3,
    "visito": true,
@@ -1274,7 +1386,8 @@
    "clientId": "3654",
    "nombre": "RONCATI RAFAEL GUILLERMO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 1.1,
    "visito": true,
@@ -1292,7 +1405,8 @@
    "clientId": "2029",
    "nombre": "ANA RUTH TRIPODI",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 1.0,
    "visito": true,
@@ -1310,7 +1424,8 @@
    "clientId": "2035",
    "nombre": "Pablo Verón",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.9,
    "visito": true,
@@ -1328,7 +1443,8 @@
    "clientId": "3806",
    "nombre": "NICADELO SA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.9,
    "visito": true,
@@ -1346,7 +1462,8 @@
    "clientId": "1966",
    "nombre": "INNOVACIONES SUREÑAS SA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.8,
    "visito": true,
@@ -1364,7 +1481,8 @@
    "clientId": "1967",
    "nombre": "GRAFF MARIA LUISA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.8,
    "visito": true,
@@ -1382,7 +1500,8 @@
    "clientId": "1841",
    "nombre": "TARETTO ESTELA ROSA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.8,
    "visito": true,
@@ -1400,7 +1519,8 @@
    "clientId": "1467",
    "nombre": "URQUIJO FLORENCIA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.5,
    "visito": true,
@@ -1418,7 +1538,8 @@
    "clientId": "1024",
    "nombre": "PAREDEZ RUBEN DARIO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.4,
    "visito": true,
@@ -1436,7 +1557,8 @@
    "clientId": "1970",
    "nombre": "MULTIESPACIO DEPORTIVO DORREGO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.4,
    "visito": true,
@@ -1454,7 +1576,8 @@
    "clientId": "1894",
    "nombre": "SAILOR CHIPS SANTA CLARA S.A",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.2,
    "visito": true,
@@ -1472,7 +1595,8 @@
    "clientId": "2033",
    "nombre": "ARISTEO SRL",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -1490,7 +1614,8 @@
    "clientId": "3926",
    "nombre": "DIEGO ESTEBAN VILLAR",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -1508,7 +1633,8 @@
    "clientId": "3156",
    "nombre": "SERGIO GUSTAVO PROSPERO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -1526,7 +1652,8 @@
    "clientId": "280",
    "nombre": "ROBERTO MANUEL STRASSERA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -1544,7 +1671,8 @@
    "clientId": "726",
    "nombre": "DAMBARMA SRL",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -1562,7 +1690,8 @@
    "clientId": "4241",
    "nombre": "OPERADORA SAN JUAN S.A.",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-31",
+   "taxonomia": "Estacion de Servicio - SHELL_A",
+   "canal": "PROXIMITY",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -1580,7 +1709,8 @@
    "clientId": "1401",
    "nombre": "Valle Gisele Alicia",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -1598,7 +1728,8 @@
    "clientId": "1820",
    "nombre": "selecto market srl",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Fiambreria_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -1616,7 +1747,8 @@
    "clientId": "1634",
    "nombre": "BOGADO RUBEN DARIO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-5",
+   "taxonomia": "Colegios/Universidades_D",
+   "canal": "AWAY FROM HOME",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -1634,7 +1766,8 @@
    "clientId": "1714",
    "nombre": "fruticel touch srl",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 21.6,
    "visito": true,
@@ -1652,7 +1785,8 @@
    "clientId": "4915",
    "nombre": "Telechea Lucas Leandro",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 4.6,
    "visito": true,
@@ -1670,7 +1804,8 @@
    "clientId": "1332",
    "nombre": "FRUTICEL TOUCH S.R.L.",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.7,
    "visito": true,
@@ -1688,7 +1823,8 @@
    "clientId": "2047",
    "nombre": "RAMOS ELBA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.5,
    "visito": true,
@@ -1706,7 +1842,8 @@
    "clientId": "482",
    "nombre": "BAOHONG HE",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.4,
    "visito": true,
@@ -1724,7 +1861,8 @@
    "clientId": "1334",
    "nombre": "FRUTICEL TOUCH S.R.L.",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.3,
    "visito": true,
@@ -1742,7 +1880,8 @@
    "clientId": "1336",
    "nombre": "MARINO GABRIEL ALEJANDRO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.2,
    "visito": true,
@@ -1760,7 +1899,8 @@
    "clientId": "1532",
    "nombre": "ESPINOSA RAUL OSCAR",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.2,
    "visito": true,
@@ -1778,7 +1918,8 @@
    "clientId": "1062",
    "nombre": "BATTISTESSA KARINA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.2,
    "visito": true,
@@ -1796,7 +1937,8 @@
    "clientId": "1470",
    "nombre": "ZARAGOZA NELIDA ADELA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-5",
+   "taxonomia": "Rotiseria_B",
+   "canal": "AWAY FROM HOME",
    "enRuta": true,
    "minutos": 0.1,
    "visito": true,
@@ -1814,7 +1956,8 @@
    "clientId": "1334",
    "nombre": "FRUTICEL TOUCH S.R.L.",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -1830,9 +1973,10 @@
    "sellerId": "12",
    "vendedor": "Agustin Pogorzelski",
    "clientId": "2043",
-   "nombre": "DOMINGUEZ MARTIN ARIEL",
-   "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "nombre": "Cliente 2043",
+   "localidad": "",
+   "taxonomia": "",
+   "canal": "",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -1850,7 +1994,8 @@
    "clientId": "1882",
    "nombre": "BALLESTEROS SERGIO GABRIEL",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -1868,7 +2013,8 @@
    "clientId": "1042",
    "nombre": "CREMONA SA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "georgalos-32",
+   "taxonomia": "Mayoristas_B",
+   "canal": "Mayorista",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -1886,7 +2032,8 @@
    "clientId": "1722",
    "nombre": "RUBEN OSCAR ROMERO",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-7",
+   "taxonomia": "Fiambreria_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": true,
@@ -1904,7 +2051,8 @@
    "clientId": "1333",
    "nombre": "FRUTICEL TOUCH S.R.L.",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -1922,7 +2070,8 @@
    "clientId": "1043",
    "nombre": "NI ZHENGXIONG",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -1940,7 +2089,8 @@
    "clientId": "1114",
    "nombre": "YE CHENGGEN",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -1958,7 +2108,8 @@
    "clientId": "4834",
    "nombre": "SHI AICHUN",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -1976,7 +2127,8 @@
    "clientId": "1780",
    "nombre": "Juan María gabilan",
    "localidad": "Balcarce",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -1994,7 +2146,8 @@
    "clientId": "1949",
    "nombre": "IGLESIAS LUCAS ANTONIO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -2008,11 +2161,12 @@
   {
    "fecha": "2026-08-29",
    "sellerId": "2",
-   "vendedor": "Julian NuÃ±ez",
+   "vendedor": "Julian Nuñez",
    "clientId": "4488",
    "nombre": "SCURINI ALAIA BRISA",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -2026,11 +2180,12 @@
   {
    "fecha": "2026-08-29",
    "sellerId": "2",
-   "vendedor": "Julian NuÃ±ez",
+   "vendedor": "Julian Nuñez",
    "clientId": "1426",
    "nombre": "SEÑORIÑO NATALIA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -2044,11 +2199,12 @@
   {
    "fecha": "2026-08-29",
    "sellerId": "2",
-   "vendedor": "Julian NuÃ±ez",
+   "vendedor": "Julian Nuñez",
    "clientId": "1057",
    "nombre": "NIETO SILVANA BEATRIZ",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -2062,11 +2218,12 @@
   {
    "fecha": "2026-08-29",
    "sellerId": "2",
-   "vendedor": "Julian NuÃ±ez",
+   "vendedor": "Julian Nuñez",
    "clientId": "3131",
    "nombre": "HOTEL NUEVO HORIZONTE",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-5",
+   "taxonomia": "Hotel_C",
+   "canal": "AWAY FROM HOME",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -2084,7 +2241,8 @@
    "clientId": "4125",
    "nombre": "JOAQUIN GABRIEL LEONARDO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Resto de Tradicionales_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -2102,7 +2260,8 @@
    "clientId": "3809",
    "nombre": "ITURBE OSCAR ALBERTO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-50",
+   "taxonomia": "Empleados_C",
+   "canal": "Empleados",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -2120,7 +2279,8 @@
    "clientId": "4948",
    "nombre": "NICOLAS AMILCAR MARTINEZ",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-50",
+   "taxonomia": "Empleados_D",
+   "canal": "Empleados",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -2138,7 +2298,8 @@
    "clientId": "3625",
    "nombre": "PRADO MANNINI GUILLERMO ALEJANDRO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-50",
+   "taxonomia": "Empleados_C",
+   "canal": "Empleados",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -2156,7 +2317,8 @@
    "clientId": "4914",
    "nombre": "LUCA GREGORIO CAMPOS",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-50",
+   "taxonomia": "Empleados_D",
+   "canal": "Empleados",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -2174,7 +2336,8 @@
    "clientId": "503",
    "nombre": "LADISLAO DOMINGUEZ",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-50",
+   "taxonomia": "Empleados_D",
+   "canal": "Empleados",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -2192,7 +2355,8 @@
    "clientId": "2158",
    "nombre": "GRUMBLATT VERONICA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -2210,7 +2374,8 @@
    "clientId": "1180",
    "nombre": "AIQIN WANG",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -2228,7 +2393,8 @@
    "clientId": "1613",
    "nombre": "ESPIRITU Y VIÑA S.A.",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -2246,7 +2412,8 @@
    "clientId": "1182",
    "nombre": "BONOMI MARIA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-31",
+   "taxonomia": "Estacion de Servicio - NO OFICIALES_D",
+   "canal": "PROXIMITY",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -2264,7 +2431,8 @@
    "clientId": "1505",
    "nombre": "CARRASCO LUSIANA NATALIA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -2282,7 +2450,8 @@
    "clientId": "1078",
    "nombre": "CHEN YUN",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -2300,7 +2469,8 @@
    "clientId": "2085",
    "nombre": "DI SANTO FRANCO EDUARDO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -2318,7 +2488,8 @@
    "clientId": "511",
    "nombre": "JOSE LUIS BARROS",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -2336,7 +2507,8 @@
    "clientId": "174",
    "nombre": "DANIELA BEATRIZ RIVERO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 8.6,
    "visito": true,
@@ -2354,7 +2526,8 @@
    "clientId": "4016",
    "nombre": "CLAUDIO NICOLAS PEREYRA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 7.4,
    "visito": true,
@@ -2372,7 +2545,8 @@
    "clientId": "140",
    "nombre": "CAWZ MDP S.A.",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 6.8,
    "visito": true,
@@ -2390,7 +2564,8 @@
    "clientId": "973",
    "nombre": "Fernando campos",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 5.8,
    "visito": true,
@@ -2408,7 +2583,8 @@
    "clientId": "5031",
    "nombre": "RAUL OSCAR GARCIA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 3.9,
    "visito": true,
@@ -2426,7 +2602,8 @@
    "clientId": "655",
    "nombre": "CRISTINA GABRIELA BERNARD",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 3.4,
    "visito": true,
@@ -2444,7 +2621,8 @@
    "clientId": "3912",
    "nombre": "ALEJANDRO NICOLAS RICARDO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 3.1,
    "visito": true,
@@ -2462,7 +2640,8 @@
    "clientId": "171",
    "nombre": "MARIA NATALIA NUÑEZ",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 3.0,
    "visito": true,
@@ -2480,7 +2659,8 @@
    "clientId": "5030",
    "nombre": "ROXANA ELIZABETH MARISCAL",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 2.8,
    "visito": true,
@@ -2498,7 +2678,8 @@
    "clientId": "565",
    "nombre": "ANA MARIA ALVAREZ",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 2.1,
    "visito": true,
@@ -2516,7 +2697,8 @@
    "clientId": "2522",
    "nombre": "LUCIA ANDREA GONZALEZ Y JULIETA NATALIA GONZALEZ S",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 1.2,
    "visito": true,
@@ -2534,7 +2716,8 @@
    "clientId": "571",
    "nombre": "LUCENA ELIZABET ROMINA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 1.1,
    "visito": true,
@@ -2550,10 +2733,11 @@
    "sellerId": "4",
    "vendedor": "Lucas Giayetto",
    "clientId": "3103",
-   "nombre": "Eugenia ace",
-   "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
-   "enRuta": true,
+   "nombre": "Cliente 3103",
+   "localidad": "",
+   "taxonomia": "",
+   "canal": "",
+   "enRuta": false,
    "minutos": 1.1,
    "visito": true,
    "hora": "10:16",
@@ -2570,7 +2754,8 @@
    "clientId": "2863",
    "nombre": "D IPOLITO VERONICA LILIANA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Fiambreria_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 1.0,
    "visito": true,
@@ -2588,7 +2773,8 @@
    "clientId": "3021",
    "nombre": "FRANCO MATIAS LAZARTE",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.4,
    "visito": true,
@@ -2606,7 +2792,8 @@
    "clientId": "2434",
    "nombre": "CABRERA GOMEZ EMANUEL MAXIMILIANO",
    "localidad": "Sierra de los Padres",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.2,
    "visito": true,
@@ -2624,7 +2811,8 @@
    "clientId": "424",
    "nombre": "GOROSITO JULIO CESAR",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-5",
+   "taxonomia": "Verduleria_D",
+   "canal": "AWAY FROM HOME",
    "enRuta": false,
    "minutos": 0.2,
    "visito": true,
@@ -2642,7 +2830,8 @@
    "clientId": "2854",
    "nombre": "LEONARDO FABIAN DE BELLIS",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -2660,7 +2849,8 @@
    "clientId": "1529",
    "nombre": "@1991 GROUP",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -2678,7 +2868,8 @@
    "clientId": "424",
    "nombre": "GOROSITO JULIO CESAR",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-5",
+   "taxonomia": "Verduleria_D",
+   "canal": "AWAY FROM HOME",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -2696,7 +2887,8 @@
    "clientId": "770",
    "nombre": "LAURA ELISABETH LAZZARO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -2714,7 +2906,8 @@
    "clientId": "727",
    "nombre": "las Marías",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.1,
    "visito": true,
@@ -2732,7 +2925,8 @@
    "clientId": "1163",
    "nombre": "LALLI GLADYS ESTER",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -2750,7 +2944,8 @@
    "clientId": "1948",
    "nombre": "CREMONA SA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "georgalos-32",
+   "taxonomia": "Mayoristas_A",
+   "canal": "Mayorista",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -2768,7 +2963,8 @@
    "clientId": "2434",
    "nombre": "CABRERA GOMEZ EMANUEL MAXIMILIANO",
    "localidad": "Sierra de los Padres",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -2786,7 +2982,8 @@
    "clientId": "2573",
    "nombre": "ZAMUDIO JUAN CARLOS",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -2804,7 +3001,8 @@
    "clientId": "5053",
    "nombre": "WANZHEN NI",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -2822,7 +3020,8 @@
    "clientId": "170",
    "nombre": "YANYUN WANG",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -2840,7 +3039,8 @@
    "clientId": "974",
    "nombre": "JOSE GONZALO SCORDIA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -2858,7 +3058,8 @@
    "clientId": "3621",
    "nombre": "FABIO CESAR MORAN",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -2876,7 +3077,8 @@
    "clientId": "1896",
    "nombre": "VERONICA MICAELA GALVAN",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -2894,7 +3096,8 @@
    "clientId": "426",
    "nombre": "MARTA SUSANA BERARDO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -2912,7 +3115,8 @@
    "clientId": "2557",
    "nombre": "RODRIGUEZ GERMAN MARTIN",
    "localidad": "VIVORATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 54.1,
    "visito": true,
@@ -2930,7 +3134,8 @@
    "clientId": "924",
    "nombre": "MARIANA NATALIN GÓMEZ",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 20.4,
    "visito": true,
@@ -2948,7 +3153,8 @@
    "clientId": "2974",
    "nombre": "BALMACEDA EMILIANO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 19.7,
    "visito": true,
@@ -2966,7 +3172,8 @@
    "clientId": "619",
    "nombre": "AUTOSERVICO SIGLO XXI",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 19.0,
    "visito": true,
@@ -2984,7 +3191,8 @@
    "clientId": "3355",
    "nombre": "autoservicio camet",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 8.9,
    "visito": true,
@@ -3002,7 +3210,8 @@
    "clientId": "620",
    "nombre": "NOELIA ELIZABET BUSTAMANTE",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-5",
+   "taxonomia": "Carniceria/Granja_D",
+   "canal": "AWAY FROM HOME",
    "enRuta": true,
    "minutos": 8.2,
    "visito": true,
@@ -3020,7 +3229,8 @@
    "clientId": "3737",
    "nombre": "MIGUELENA JORGE",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 7.5,
    "visito": true,
@@ -3038,7 +3248,8 @@
    "clientId": "3302",
    "nombre": "COMBUSTIBLES DEL MAR S.A.",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-31",
+   "taxonomia": "Estacion de Servicio - NO OFICIALES_C",
+   "canal": "PROXIMITY",
    "enRuta": false,
    "minutos": 6.1,
    "visito": true,
@@ -3056,7 +3267,8 @@
    "clientId": "2218",
    "nombre": "calvo Rodrigo",
    "localidad": "VIVORATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 5.2,
    "visito": true,
@@ -3074,7 +3286,8 @@
    "clientId": "706",
    "nombre": "EL PITU",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 2.8,
    "visito": true,
@@ -3092,7 +3305,8 @@
    "clientId": "3365",
    "nombre": "ROMINA JAQUELINE RIOPEDRE",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 2.5,
    "visito": true,
@@ -3110,7 +3324,8 @@
    "clientId": "615",
    "nombre": "SERVICIOS KILOMETRO 393 S.A.",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-31",
+   "taxonomia": "Estacion de Servicio - NO OFICIALES_B",
+   "canal": "PROXIMITY",
    "enRuta": true,
    "minutos": 2.4,
    "visito": true,
@@ -3128,7 +3343,8 @@
    "clientId": "2324",
    "nombre": "LUIS ALBERTO GONZALEZ",
    "localidad": "VIVORATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 1.9,
    "visito": true,
@@ -3146,7 +3362,8 @@
    "clientId": "790",
    "nombre": "Rocio belen monzon",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 1.5,
    "visito": true,
@@ -3164,7 +3381,8 @@
    "clientId": "3070",
    "nombre": "GISELE EVA MOISES",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-5",
+   "taxonomia": "Dietetica_D",
+   "canal": "AWAY FROM HOME",
    "enRuta": true,
    "minutos": 1.1,
    "visito": true,
@@ -3182,7 +3400,8 @@
    "clientId": "3374",
    "nombre": "CHOCOCHIA S. A.",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.2,
    "visito": true,
@@ -3200,7 +3419,8 @@
    "clientId": "2223",
    "nombre": "SUSANA ISABEL RIVADAVIA",
    "localidad": "VIVORATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.2,
    "visito": true,
@@ -3218,7 +3438,8 @@
    "clientId": "2348",
    "nombre": "GERMAN DANIEL D ONOFRIO",
    "localidad": "VIVORATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.1,
    "visito": true,
@@ -3236,7 +3457,8 @@
    "clientId": "1938",
    "nombre": "MARGALL STREET SA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -3254,7 +3476,8 @@
    "clientId": "1765",
    "nombre": "CHOCOCHIA S. A",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -3272,7 +3495,8 @@
    "clientId": "1167",
    "nombre": "SERVICIOS LUARCA SA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-31",
+   "taxonomia": "Estacion de Servicio - AXION_A",
+   "canal": "PROXIMITY",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -3290,7 +3514,8 @@
    "clientId": "1381",
    "nombre": "LLANOS LANDEO CAMILA ALDANA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -3308,7 +3533,8 @@
    "clientId": "3672",
    "nombre": "WEI QINGGUI",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -3326,7 +3552,8 @@
    "clientId": "1520",
    "nombre": "SUPER CONSTITUCION S.A EN FORMACION",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -3344,7 +3571,8 @@
    "clientId": "3389",
    "nombre": "Mariano Dumas",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -3362,7 +3590,8 @@
    "clientId": "2956",
    "nombre": "SUAREZ JUAN JOSÉ",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -3380,7 +3609,8 @@
    "clientId": "1875",
    "nombre": "MEMAIVI SRL",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-31",
+   "taxonomia": "Estacion de Servicio - NO OFICIALES_D",
+   "canal": "PROXIMITY",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -3398,7 +3628,8 @@
    "clientId": "686",
    "nombre": "LUIS BADOZA",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -3416,7 +3647,8 @@
    "clientId": "618",
    "nombre": "ZHENGQIANG WANG",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -3434,7 +3666,8 @@
    "clientId": "1387",
    "nombre": "LIN XIA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 18.2,
    "visito": true,
@@ -3452,7 +3685,8 @@
    "clientId": "1746",
    "nombre": "GRIMALDI JEREMIAS DAVID",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 4.4,
    "visito": true,
@@ -3470,7 +3704,8 @@
    "clientId": "331",
    "nombre": "CARLOS JAVIER CORIA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Fiambreria_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 3.5,
    "visito": true,
@@ -3488,7 +3723,8 @@
    "clientId": "3412",
    "nombre": "CHOCOCHIA S.A",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.8,
    "visito": true,
@@ -3506,7 +3742,8 @@
    "clientId": "2483",
    "nombre": "PEDRO ALBERTO CELASCO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.8,
    "visito": true,
@@ -3524,7 +3761,8 @@
    "clientId": "1386",
    "nombre": "CLASA SA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-31",
+   "taxonomia": "Estacion de Servicio - NO OFICIALES_B",
+   "canal": "PROXIMITY",
    "enRuta": true,
    "minutos": 0.4,
    "visito": true,
@@ -3542,7 +3780,8 @@
    "clientId": "2328",
    "nombre": "RAMOS PATRICIA NOEMI",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-5",
+   "taxonomia": "Dietetica_C",
+   "canal": "AWAY FROM HOME",
    "enRuta": false,
    "minutos": 0.2,
    "visito": true,
@@ -3560,7 +3799,8 @@
    "clientId": "678",
    "nombre": "CREMONA S.A",
    "localidad": "MAR DEL PLATA",
-   "ramo": "georgalos-32",
+   "taxonomia": "Mayoristas_D",
+   "canal": "Mayorista",
    "enRuta": false,
    "minutos": 0.2,
    "visito": true,
@@ -3578,7 +3818,8 @@
    "clientId": "1295",
    "nombre": "LOPEZ CESAR FEDERICO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -3596,7 +3837,8 @@
    "clientId": "1152",
    "nombre": "WEI JIANHUI",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -3614,7 +3856,8 @@
    "clientId": "1116",
    "nombre": "XIAFENG GUO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -3632,7 +3875,8 @@
    "clientId": "1393",
    "nombre": "VISONE MONICA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -3650,7 +3894,8 @@
    "clientId": "1045",
    "nombre": "XING FENGYAN",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -3668,7 +3913,8 @@
    "clientId": "1158",
    "nombre": "LI MIN",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -3686,7 +3932,8 @@
    "clientId": "3170",
    "nombre": "SUPER COSTE CORDOBA S.A.",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -3704,7 +3951,8 @@
    "clientId": "1162",
    "nombre": "TEAMDUO S.R.L.",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -3722,7 +3970,8 @@
    "clientId": "4391",
    "nombre": "ANDRES SEBASTIAN TAYLOR",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -3740,7 +3989,8 @@
    "clientId": "1717",
    "nombre": "Fabiana casavalle",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 54.6,
    "visito": true,
@@ -3758,7 +4008,8 @@
    "clientId": "719",
    "nombre": "campomor laura lorena",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 13.3,
    "visito": true,
@@ -3776,7 +4027,8 @@
    "clientId": "3216",
    "nombre": "FRYDMAN SILVANA CLAUDIA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 9.0,
    "visito": true,
@@ -3794,7 +4046,8 @@
    "clientId": "4431",
    "nombre": "Ariel Raúl Alcoba",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 4.5,
    "visito": true,
@@ -3812,7 +4065,8 @@
    "clientId": "4685",
    "nombre": "STELLA MARIS HERRERA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 4.5,
    "visito": true,
@@ -3830,7 +4084,8 @@
    "clientId": "931",
    "nombre": "Heber Nelson mancini",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 4.4,
    "visito": true,
@@ -3848,7 +4103,8 @@
    "clientId": "1598",
    "nombre": "GIANETTA YESICA SOLEDAD",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 4.1,
    "visito": true,
@@ -3866,7 +4122,8 @@
    "clientId": "1488",
    "nombre": "HERRERA CECILIA",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 2.5,
    "visito": true,
@@ -3884,7 +4141,8 @@
    "clientId": "1530",
    "nombre": "LORENA NOEMI JUAREZ",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 2.1,
    "visito": true,
@@ -3902,7 +4160,8 @@
    "clientId": "572",
    "nombre": "MONICA ANTONIA BODLOVICH",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 1.4,
    "visito": true,
@@ -3920,7 +4179,8 @@
    "clientId": "173",
    "nombre": "DANIELA VICTORIA ROJAS",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.2,
    "visito": true,
@@ -3938,7 +4198,8 @@
    "clientId": "648",
    "nombre": "SILVANA ALMADA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.2,
    "visito": true,
@@ -3956,7 +4217,8 @@
    "clientId": "3909",
    "nombre": "MONICA MILAGROS MONTEAGUDO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.2,
    "visito": true,
@@ -3974,7 +4236,8 @@
    "clientId": "1931",
    "nombre": "JUMA193 S.R.L",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -3992,7 +4255,8 @@
    "clientId": "470",
    "nombre": "SABELOTE S.A.",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -4010,7 +4274,8 @@
    "clientId": "3850",
    "nombre": "FABIANA LORENA DI SCALA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -4028,7 +4293,8 @@
    "clientId": "2845",
    "nombre": "JAVIER ALBERTO GURIDI",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -4046,7 +4312,8 @@
    "clientId": "2769",
    "nombre": "GRUPO XXF SOCIEDAD DE RESPONSABILIDAD LIMITADA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.1,
    "visito": true,
@@ -4064,7 +4331,8 @@
    "clientId": "2790",
    "nombre": "CARMEN NILDA LOREFICE",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -4082,7 +4350,8 @@
    "clientId": "1856",
    "nombre": "fabiquiel srl",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -4100,7 +4369,8 @@
    "clientId": "1087",
    "nombre": "CREMONA SA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "georgalos-32",
+   "taxonomia": "Mayoristas_D",
+   "canal": "Mayorista",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -4118,7 +4388,8 @@
    "clientId": "1650",
    "nombre": "LAIA NOE BRITOS",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-7",
+   "taxonomia": "Fiambreria_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -4136,7 +4407,8 @@
    "clientId": "645",
    "nombre": "LAURIANA ESTHER BAEZ",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.1,
    "visito": true,
@@ -4154,7 +4426,8 @@
    "clientId": "1439",
    "nombre": "HIDDE LEONARDO ADRIAN",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -4172,7 +4445,8 @@
    "clientId": "2646",
    "nombre": "JOSE LUIS FINAMORE",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -4190,7 +4464,8 @@
    "clientId": "1855",
    "nombre": "GOÑI JOSE MARIA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-5",
+   "taxonomia": "Panaderia_A",
+   "canal": "AWAY FROM HOME",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -4208,7 +4483,8 @@
    "clientId": "1853",
    "nombre": "DIAZ ROVIRA JOSE LUIS",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-5",
+   "taxonomia": "Carniceria/Granja_D",
+   "canal": "AWAY FROM HOME",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -4226,7 +4502,8 @@
    "clientId": "499",
    "nombre": "BERNAL LUCIANA ANAHI",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-5",
+   "taxonomia": "Verduleria_C",
+   "canal": "AWAY FROM HOME",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -4244,7 +4521,8 @@
    "clientId": "941",
    "nombre": "ADRIANA MABEL NEME  (LO DE MA )",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -4262,7 +4540,8 @@
    "clientId": "3576",
    "nombre": "FRYDMAN SILVANA CLAUDIA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-31",
+   "taxonomia": "Estacion de Servicio - NO OFICIALES_C",
+   "canal": "PROXIMITY",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -4280,7 +4559,8 @@
    "clientId": "2853",
    "nombre": "ELIANA CINTIA PADIN",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -4298,7 +4578,8 @@
    "clientId": "2250",
    "nombre": "FERQUIN S.A.",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -4316,7 +4597,8 @@
    "clientId": "3033",
    "nombre": "DARIO ALBERTO RUSO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.1,
    "visito": true,
@@ -4334,7 +4616,8 @@
    "clientId": "4311",
    "nombre": "ANABEL LUCIA MASTELLONE",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": true,
@@ -4352,7 +4635,8 @@
    "clientId": "490",
    "nombre": "ANALIA FERNANDA AGUILAR",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-5",
+   "taxonomia": "Dietetica_A",
+   "canal": "AWAY FROM HOME",
    "enRuta": false,
    "minutos": 0.0,
    "visito": true,
@@ -4370,7 +4654,8 @@
    "clientId": "493",
    "nombre": "LUCAS DAMIAN MALDONADO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": true,
@@ -4388,7 +4673,8 @@
    "clientId": "3027",
    "nombre": "IRINA BRITOS",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Fiambreria_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": true,
@@ -4406,7 +4692,8 @@
    "clientId": "4266",
    "nombre": "Ferreyra Victoria Ayelen",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -4424,7 +4711,8 @@
    "clientId": "594",
    "nombre": "DAI YAQIN",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": true,
@@ -4442,7 +4730,8 @@
    "clientId": "578",
    "nombre": "MARIELA ANDREA ARAUJO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Fiambreria_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": true,
@@ -4460,7 +4749,8 @@
    "clientId": "2358",
    "nombre": "Sosa Juan Ignacio",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": true,
@@ -4478,7 +4768,8 @@
    "clientId": "574",
    "nombre": "BAZTERRICA PABLO JAVIER MARTIN",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": true,
@@ -4496,7 +4787,8 @@
    "clientId": "2839",
    "nombre": "NESTOR MARCELO LUNGHI",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Fiambreria_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": true,
@@ -4514,7 +4806,8 @@
    "clientId": "1176",
    "nombre": "EMFACO SA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-31",
+   "taxonomia": "Estacion de Servicio - SHELL_B",
+   "canal": "PROXIMITY",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -4532,7 +4825,8 @@
    "clientId": "2297",
    "nombre": "PETUINHA S.A",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -4550,7 +4844,8 @@
    "clientId": "3613",
    "nombre": "MARIA DEL CARMEN RAMOS",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -4568,7 +4863,8 @@
    "clientId": "1665",
    "nombre": "Javier Alcides Orellana",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -4586,7 +4882,8 @@
    "clientId": "4902",
    "nombre": "Verónica Analía Peiro",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -4604,7 +4901,8 @@
    "clientId": "853",
    "nombre": "JUAN MARIA RODRIGUEZ",
    "localidad": "BALCARCE",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -4622,7 +4920,8 @@
    "clientId": "7623",
    "nombre": "JOAQUIN DAMIAN CAMINO",
    "localidad": "BALCARCE",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -4640,7 +4939,8 @@
    "clientId": "234",
    "nombre": "OSVALDO PEDRO CURRI",
    "localidad": "BALCARCE",
-   "ramo": "pepsico-5",
+   "taxonomia": "Carniceria/Granja_D",
+   "canal": "AWAY FROM HOME",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -4658,7 +4958,8 @@
    "clientId": "867",
    "nombre": "Damián loscalzo",
    "localidad": "BALCARCE",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -4676,7 +4977,8 @@
    "clientId": "3108",
    "nombre": "MARTINEZ BALCAS DIONICIO",
    "localidad": "BALCARCE",
-   "ramo": "pepsico-5",
+   "taxonomia": "Verduleria_A",
+   "canal": "AWAY FROM HOME",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -4694,7 +4996,8 @@
    "clientId": "2620",
    "nombre": "XUEMEI ZHENG",
    "localidad": "BALCARCE",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -4712,7 +5015,8 @@
    "clientId": "625",
    "nombre": "GAITERO MIRIAM",
    "localidad": "Balcarce",
-   "ramo": "pepsico-5",
+   "taxonomia": "Carniceria/Granja_C",
+   "canal": "AWAY FROM HOME",
    "enRuta": false,
    "minutos": 0.0,
    "visito": false,
@@ -4730,7 +5034,8 @@
    "clientId": "3989",
    "nombre": "JUAN JOSE SUAREZ",
    "localidad": "BALCARCE",
-   "ramo": "pepsico-31",
+   "taxonomia": "Estacion de Servicio - NO OFICIALES_C",
+   "canal": "PROXIMITY",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -4748,7 +5053,8 @@
    "clientId": "247",
    "nombre": "L VERLOTTA MARCOS ARIE",
    "localidad": "BALCARCE",
-   "ramo": "pepsico-7",
+   "taxonomia": "Fiambreria_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -4766,7 +5072,8 @@
    "clientId": "3721",
    "nombre": "FABIAN ALEJANDRO BARZOLA",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -4784,7 +5091,8 @@
    "clientId": "4736",
    "nombre": "SILVANA VALERIA GONZALEZ",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -4802,7 +5110,8 @@
    "clientId": "1125",
    "nombre": "MARIELA HERRERO",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -4820,7 +5129,8 @@
    "clientId": "1768",
    "nombre": "QUIMEY LOPEZ",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_B",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -4838,7 +5148,8 @@
    "clientId": "3733",
    "nombre": "Lin wenting",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -4856,7 +5167,8 @@
    "clientId": "1065",
    "nombre": "Ramos Griselda Mabel",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -4874,7 +5186,8 @@
    "clientId": "4753",
    "nombre": "Lo de Nora",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-5",
+   "taxonomia": "Dietetica_D",
+   "canal": "AWAY FROM HOME",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -4892,7 +5205,8 @@
    "clientId": "4960",
    "nombre": "CARLOS ALBERTO GOBBI",
    "localidad": "MAR DEL PLATA",
-   "ramo": "pepsico-7",
+   "taxonomia": "Autoservicio Tradicional_C",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -4910,7 +5224,8 @@
    "clientId": "1542",
    "nombre": "mella parada Fernando patricio",
    "localidad": "Mar del Plata",
-   "ramo": "pepsico-7",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
    "enRuta": true,
    "minutos": 0.0,
    "visito": false,
@@ -5091,7 +5406,7 @@
   },
   {
    "sellerId": "2",
-   "vendedor": "Julian NuÃ±ez",
+   "vendedor": "Julian Nuñez",
    "inicioJornada": null,
    "finJornada": null,
    "entradaZona": null,
@@ -5860,7 +6175,7 @@
    {
     "hora": "10:09",
     "clientId": "3103",
-    "nombre": "Eugenia ace"
+    "nombre": "Cliente 3103"
    },
    {
     "hora": "10:09",
@@ -6184,7 +6499,7 @@
    {
     "hora": "10:06",
     "clientId": "2043",
-    "nombre": "DOMINGUEZ MARTIN ARIEL"
+    "nombre": "Cliente 2043"
    },
    {
     "hora": "10:07",
@@ -6253,11 +6568,11 @@
   {
    "sellerId": "4",
    "vendedor": "Lucas Giayetto",
-   "ruta": 27,
-   "visitadosDeRuta": 16,
+   "ruta": 26,
+   "visitadosDeRuta": 15,
    "pendientes": 11,
-   "fueraDeRuta": 7,
-   "pct": 59.3
+   "fueraDeRuta": 8,
+   "pct": 57.7
   },
   {
    "sellerId": "6",
@@ -6280,15 +6595,15 @@
   {
    "sellerId": "1",
    "vendedor": "Maria Noelia Madia",
-   "ruta": 12,
+   "ruta": 13,
    "visitadosDeRuta": 0,
-   "pendientes": 12,
+   "pendientes": 13,
    "fueraDeRuta": 0,
    "pct": 0.0
   },
   {
    "sellerId": "2",
-   "vendedor": "Julian NuÃ±ez",
+   "vendedor": "Julian Nuñez",
    "ruta": 11,
    "visitadosDeRuta": 0,
    "pendientes": 11,
@@ -6355,195 +6670,238 @@
    {
     "clientId": "1021",
     "nombre": "LI YUANTONG",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_C"
    },
    {
     "clientId": "1121",
     "nombre": "SABELOTE S.A.",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_B"
    },
    {
     "clientId": "1122",
     "nombre": "HUANG LECONG",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_D"
    },
    {
     "clientId": "1493",
     "nombre": "MILKI MDQ SA",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_A"
    },
    {
     "clientId": "1584",
     "nombre": "CHOCOCHIA S.A.",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_A"
    },
    {
     "clientId": "1956",
     "nombre": "Podesta Blas",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_A"
+   },
+   {
+    "clientId": "2144",
+    "nombre": "GONZALES ROSANA EVA",
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_C"
    },
    {
     "clientId": "2518",
     "nombre": "SERGIO ADRIAN RODRIGUES",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_B"
    },
    {
     "clientId": "3495",
     "nombre": "Huang Lecong",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_D"
    },
    {
     "clientId": "3708",
     "nombre": "CHOCOCHIA S.A.",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_A"
    },
    {
     "clientId": "3898",
     "nombre": "PABLO DANIEL AGUERO",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Limpieza_B"
    },
    {
     "clientId": "4958",
     "nombre": "CLAUDIA SARA BARATTUCCI",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Dietetica_D"
    },
    {
     "clientId": "816",
     "nombre": "YAN JOHANA",
-    "localidad": "Mar del Plata"
+    "localidad": "Mar del Plata",
+    "taxonomia": "Autoservicio Tradicional_A"
    }
   ],
   "10": [
    {
     "clientId": "1431",
     "nombre": "Pennisi Daiana Solange",
-    "localidad": "Mar del Plata"
+    "localidad": "Mar del Plata",
+    "taxonomia": "Autoservicio Tradicional_D"
    }
   ],
   "11": [
    {
     "clientId": "1401",
     "nombre": "Valle Gisele Alicia",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Almacen/Despensa_B"
    }
   ],
   "12": [
    {
     "clientId": "1043",
     "nombre": "NI ZHENGXIONG",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_B"
    },
    {
     "clientId": "1114",
     "nombre": "YE CHENGGEN",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_B"
    },
    {
     "clientId": "1164",
     "nombre": "SALINAS CHICO S.A",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Estacion de Servicio - NO OFICIALES_C"
    },
    {
     "clientId": "1328",
     "nombre": "EMPRENDIMIENTOS SALBEN SRL",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Almacen/Despensa_A"
    },
    {
     "clientId": "1333",
     "nombre": "FRUTICEL TOUCH S.R.L.",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_B"
    },
    {
     "clientId": "1339",
     "nombre": "OLITA FRANCO",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
     "clientId": "1459",
     "nombre": "CREMONA SA",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Mayoristas_D"
    },
    {
     "clientId": "1949",
     "nombre": "IGLESIAS LUCAS ANTONIO",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Almacen/Despensa_A"
    },
    {
     "clientId": "2037",
     "nombre": "FIGINI LLUL ANTONELA",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_A"
    },
    {
     "clientId": "2701",
     "nombre": "PIARAN MAS S.R.L.",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_C"
    },
    {
     "clientId": "3079",
     "nombre": "KIOSMDQ",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_A"
    },
    {
     "clientId": "4834",
     "nombre": "SHI AICHUN",
-    "localidad": "Mar del Plata"
+    "localidad": "Mar del Plata",
+    "taxonomia": "Kiosco/Maxikiosco_B"
    }
   ],
   "2": [
    {
     "clientId": "1057",
     "nombre": "NIETO SILVANA BEATRIZ",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Almacen/Despensa_C"
    },
    {
     "clientId": "1094",
     "nombre": "EL FRACASO S.A",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_B"
    },
    {
     "clientId": "1096",
     "nombre": "MARCELO ALEJANDRO BORELLI",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Almacen/Despensa_D"
    },
    {
     "clientId": "1607",
     "nombre": "XIAO XIANGYING",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_C"
    },
    {
     "clientId": "1671",
     "nombre": "VALERIA SOLEDAD CAYO",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_C"
    },
    {
     "clientId": "1688",
     "nombre": "NICADELO SA",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
     "clientId": "3059",
     "nombre": "ELIANA VERONICA FRANCONERE",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Almacen/Despensa_D"
    },
    {
     "clientId": "4108",
     "nombre": "PABLO AGUSTIN CHIERCHIA",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Limpieza_A"
    },
    {
     "clientId": "4150",
     "nombre": "MARCELO FABIAN IANNI",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Dietetica_D"
    },
    {
     "clientId": "4875",
     "nombre": "LA CURADURIA",
-    "localidad": "MAR DEL PLATA NORTE"
+    "localidad": "MAR DEL PLATA NORTE",
+    "taxonomia": "Autoservicio Tradicional_D"
    },
    {
     "clientId": "4957",
     "nombre": "BRISCHETTO JONATHAN ALEJANDRO",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_D"
    }
   ],
   "20": [],
@@ -6551,633 +6909,756 @@
    {
     "clientId": "1078",
     "nombre": "CHEN YUN",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_A"
    },
    {
     "clientId": "1079",
     "nombre": "SANCHEZ NAZARENA DORA",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_D"
    },
    {
     "clientId": "1177",
     "nombre": "EL UNICO S A",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Estacion de Servicio - NO OFICIALES_B"
    },
    {
     "clientId": "1180",
     "nombre": "AIQIN WANG",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_A"
    },
    {
     "clientId": "1182",
     "nombre": "BONOMI MARIA",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Estacion de Servicio - NO OFICIALES_D"
    },
    {
     "clientId": "1505",
     "nombre": "CARRASCO LUSIANA NATALIA",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_B"
    },
    {
     "clientId": "1613",
     "nombre": "ESPIRITU Y VIÑA S.A.",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_A"
    },
    {
     "clientId": "1696",
     "nombre": "FERNANDEZ ANA MARIA",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
     "clientId": "1959",
     "nombre": "FERNANDO ALBERTO ARNAL",
-    "localidad": "Mar del Plata"
+    "localidad": "Mar del Plata",
+    "taxonomia": "Kiosco/Maxikiosco_A"
    },
    {
     "clientId": "2085",
     "nombre": "DI SANTO FRANCO EDUARDO",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Almacen/Despensa_C"
    },
    {
     "clientId": "2158",
     "nombre": "GRUMBLATT VERONICA",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Almacen/Despensa_A"
    },
    {
     "clientId": "2671",
     "nombre": "Santiago Domingo Marzano",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
     "clientId": "2690",
     "nombre": "CBF PUNTANOS MR SRL",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
     "clientId": "4267",
     "nombre": "CARLOS RUBEN BENEDETTI",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
     "clientId": "4894",
     "nombre": "Rodriguez Diaz Javier Alexis Gustavo",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Almacen/Despensa_D"
    }
   ],
   "31": [
    {
     "clientId": "1008",
     "nombre": "CHEN QIANG",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_A"
    },
    {
     "clientId": "1265",
     "nombre": "XIAOQIANG CHEN",
-    "localidad": "Mar del Plata"
+    "localidad": "Mar del Plata",
+    "taxonomia": "Autoservicio Tradicional_C"
    },
    {
     "clientId": "1462",
     "nombre": "HE WEI",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_C"
    },
    {
     "clientId": "1562",
     "nombre": "SILVANA SOLEDAD SPADA",
-    "localidad": "Mar del Plata"
+    "localidad": "Mar del Plata",
+    "taxonomia": "Limpieza_B"
    },
    {
     "clientId": "2495",
     "nombre": "SUPER NI BENJAMIN S.A. EN FORMACION",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_A"
    },
    {
     "clientId": "3605",
     "nombre": "GISELLA ANAHI ARTASU",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Almacen/Despensa_C"
    },
    {
     "clientId": "3826",
     "nombre": "MARIA LETICIA ROPPA",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Almacen/Despensa_C"
    },
    {
     "clientId": "4061",
     "nombre": "MAGDALENA PALAVECINO",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_C"
    },
    {
     "clientId": "4216",
     "nombre": "DORA ESTER QUIROGA",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Almacen/Despensa_C"
    },
    {
     "clientId": "4218",
     "nombre": "JUAN OSCAR MOULIA",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Almacen/Despensa_A"
    },
    {
     "clientId": "4415",
     "nombre": "DAIANA SOLANGE CARULLO",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_C"
    },
    {
     "clientId": "4442",
     "nombre": "WALTER SEBASTIAN LAZ",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_C"
    },
    {
     "clientId": "695",
     "nombre": "REYES GUILLERMO PABLO Y STAMPELLA MARIA GUILLERMINA S. CAP I SECC IV",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Almacen/Despensa_A"
    },
    {
     "clientId": "753",
     "nombre": "RUBEN OMAR PUCCIA",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Temporada_B"
    },
    {
     "clientId": "99",
     "nombre": "Aimei Mao",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_B"
    }
   ],
   "33": [
    {
     "clientId": "1046",
     "nombre": "GRIMALDI ARNALDO EZEQUIEL",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_B"
    },
    {
     "clientId": "1360",
     "nombre": "ODACREMERCADO S.R.L EN FORMACION",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_A"
    }
   ],
   "4": [
    {
     "clientId": "170",
     "nombre": "YANYUN WANG",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_A"
    },
    {
     "clientId": "1896",
     "nombre": "VERONICA MICAELA GALVAN",
-    "localidad": "Mar del Plata"
+    "localidad": "Mar del Plata",
+    "taxonomia": "Almacen/Despensa_A"
    },
    {
     "clientId": "1988",
     "nombre": "ALIVIO MARKET SA",
-    "localidad": "Mar del Plata"
+    "localidad": "Mar del Plata",
+    "taxonomia": "Autoservicio Tradicional_A"
    },
    {
     "clientId": "2453",
     "nombre": "CLAUDIA ANAHI MARCOVECCHIO",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Carniceria/Granja_C"
    },
    {
     "clientId": "2534",
     "nombre": "GISELA MARIA GONZALEZ",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_D"
    },
    {
     "clientId": "3621",
     "nombre": "FABIO CESAR MORAN",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Almacen/Despensa_D"
    },
    {
     "clientId": "426",
     "nombre": "MARTA SUSANA BERARDO",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_A"
    },
    {
     "clientId": "5053",
     "nombre": "WANZHEN NI",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_A"
    },
    {
     "clientId": "758",
     "nombre": "GODOY AMADEO RAUL",
-    "localidad": "Mar del Plata"
+    "localidad": "Mar del Plata",
+    "taxonomia": "Autoservicio Tradicional_D"
    },
    {
     "clientId": "974",
     "nombre": "JOSE GONZALO SCORDIA",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Almacen/Despensa_C"
    },
    {
     "clientId": "996",
     "nombre": "DAVID EMANUEL GOMEZ",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Almacen/Despensa_D"
    }
   ],
   "5": [
    {
     "clientId": "162",
     "nombre": "ROBERTO BENITO MASETTO",
-    "localidad": "VIVORATA"
+    "localidad": "VIVORATA",
+    "taxonomia": "Almacen/Despensa_D"
    },
    {
     "clientId": "3389",
     "nombre": "Mariano Dumas",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Almacen/Despensa_A"
    },
    {
     "clientId": "3418",
     "nombre": "ANTONIO EMILIO ALVAREZ",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
     "clientId": "4573",
     "nombre": "LAURA PATRICIA QUIROGA",
-    "localidad": "VIVORATA"
+    "localidad": "VIVORATA",
+    "taxonomia": "Almacen/Despensa_D"
    },
    {
     "clientId": "618",
     "nombre": "ZHENGQIANG WANG",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_B"
    },
    {
     "clientId": "686",
     "nombre": "LUIS BADOZA",
-    "localidad": "Mar del Plata"
+    "localidad": "Mar del Plata",
+    "taxonomia": "Almacen/Despensa_D"
    }
   ],
   "6": [
    {
     "clientId": "1175",
     "nombre": "REFINERIA BAHIA BLANCA S.A.U",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Estacion de Servicio - NO OFICIALES_D"
    },
    {
     "clientId": "1390",
     "nombre": "MARTINEZ FERNANDO",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_A"
    },
    {
     "clientId": "1484",
     "nombre": "SUARPI SA",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Estacion de Servicio - NO OFICIALES_D"
    },
    {
     "clientId": "1566",
     "nombre": "LIZARDO WALTER OSVALDO",
-    "localidad": "Mar del Plata"
+    "localidad": "Mar del Plata",
+    "taxonomia": "Kiosco/Maxikiosco_B"
    },
    {
     "clientId": "1859",
     "nombre": "KIOSMDQ",
-    "localidad": "Mar del Plata"
+    "localidad": "Mar del Plata",
+    "taxonomia": "Kiosco/Maxikiosco_B"
    },
    {
     "clientId": "1951",
     "nombre": "CASCIOTTI GUSTAVO CLAUDIO",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_C"
    },
    {
     "clientId": "2068",
     "nombre": "GUASAPA KIOSKOS SA",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_B"
    },
    {
     "clientId": "3168",
     "nombre": "CHOCOCHIA S.A.",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_B"
    },
    {
     "clientId": "4466",
     "nombre": "KIOSMDQ",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_B"
    },
    {
     "clientId": "4657",
     "nombre": "NICADELO SA",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_A"
    },
    {
     "clientId": "4727",
     "nombre": "LUCIANA ANAHI BERNAL",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Almacen/Despensa_C"
    },
    {
     "clientId": "5049",
     "nombre": "ARISTEO S.R.L.",
-    "localidad": "Mar del Plata"
+    "localidad": "Mar del Plata",
+    "taxonomia": "Fiambreria_B"
    }
   ],
   "7": [
    {
     "clientId": "1665",
     "nombre": "Javier Alcides Orellana",
-    "localidad": "Mar del Plata"
+    "localidad": "Mar del Plata",
+    "taxonomia": "Autoservicio Tradicional_D"
    },
    {
     "clientId": "1885",
     "nombre": "NATALIA CELESTE AGUILAR",
-    "localidad": "Mar del Plata"
+    "localidad": "Mar del Plata",
+    "taxonomia": "Kiosco/Maxikiosco_A"
    },
    {
     "clientId": "3613",
     "nombre": "MARIA DEL CARMEN RAMOS",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_C"
    },
    {
     "clientId": "4902",
     "nombre": "Verónica Analía Peiro",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Almacen/Despensa_C"
    },
    {
     "clientId": "840",
     "nombre": "APARICIO MAURO MAXIMILIANO",
-    "localidad": "Mar del Plata"
+    "localidad": "Mar del Plata",
+    "taxonomia": "Almacen/Despensa_D"
    },
    {
     "clientId": "999",
     "nombre": "MALDONADO ROSANA",
-    "localidad": "Mar del Plata"
+    "localidad": "Mar del Plata",
+    "taxonomia": "Almacen/Despensa_D"
    }
   ],
   "8": [
    {
     "clientId": "109",
     "nombre": "CLAUDIA ANDREA ERRECABORDE",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Estacion de Servicio - NO OFICIALES_D"
    },
    {
     "clientId": "1273",
     "nombre": "Abel marucci",
-    "localidad": "Balcarce"
+    "localidad": "Balcarce",
+    "taxonomia": "Almacen/Despensa_D"
    },
    {
     "clientId": "1275",
     "nombre": "Carina salinas",
-    "localidad": "Balcarce"
+    "localidad": "Balcarce",
+    "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
     "clientId": "143",
     "nombre": "JUAN CARLOS FARIAS",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
     "clientId": "150",
     "nombre": "ROSA ELSA LOPEZ",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Almacen/Despensa_C"
    },
    {
     "clientId": "234",
     "nombre": "OSVALDO PEDRO CURRI",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Carniceria/Granja_D"
    },
    {
     "clientId": "247",
     "nombre": "L VERLOTTA MARCOS ARIE",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Fiambreria_C"
    },
    {
     "clientId": "2536",
     "nombre": "ROZA HNOS SA",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Estacion de Servicio - NO OFICIALES_D"
    },
    {
     "clientId": "2608",
     "nombre": "JUAN MARIA GABILAN COMERCIALIZADORA",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Autoservicio Tradicional_C"
    },
    {
     "clientId": "2617",
     "nombre": "MARTIN NEBER LEGUIZAMON",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Autoservicio Tradicional_C"
    },
    {
     "clientId": "262",
     "nombre": "Paola Andrea Marcone",
-    "localidad": "Balcarce"
+    "localidad": "Balcarce",
+    "taxonomia": "Verduleria_C"
    },
    {
     "clientId": "2620",
     "nombre": "XUEMEI ZHENG",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Autoservicio Tradicional_C"
    },
    {
     "clientId": "2948",
     "nombre": "SAPRAMELA S.A",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Mayoristas_D"
    },
    {
     "clientId": "295",
     "nombre": "VALERIA CELESTE RICCILLO",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Almacen/Despensa_C"
    },
    {
     "clientId": "3020",
     "nombre": "MC CERDO",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Carniceria/Granja_D"
    },
    {
     "clientId": "3108",
     "nombre": "MARTINEZ BALCAS DIONICIO",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Verduleria_A"
    },
    {
     "clientId": "3370",
     "nombre": "Ilie axel kowalik",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Kiosco/Maxikiosco_C"
    },
    {
     "clientId": "3706",
     "nombre": "MARIA ROSA LANGELAAN",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
     "clientId": "3989",
     "nombre": "JUAN JOSE SUAREZ",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Estacion de Servicio - NO OFICIALES_C"
    },
    {
     "clientId": "4429",
     "nombre": "VIRGINIA SEGURA",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Dietetica_D"
    },
    {
     "clientId": "4491",
     "nombre": "QUINTEXBAL BALCARCE S.R.L.",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Carniceria/Granja_D"
    },
    {
     "clientId": "4569",
     "nombre": "DIONICIO MARTINEZ BALCAS",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Almacen/Despensa_C"
    },
    {
     "clientId": "7605",
     "nombre": "GUSTAVO JAVIER D ONOFRIO",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Kiosco/Maxikiosco_C"
    },
    {
     "clientId": "7610",
     "nombre": "LILIANA NOEMI BIANCHINI",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Fiambreria_D"
    },
    {
     "clientId": "7616",
     "nombre": "SERGIO FABIAN CHAVES",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Estacion de Servicio - SHELL_B"
    },
    {
     "clientId": "7620",
     "nombre": "PAOLA ESTHER MARUCCI",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Almacen/Despensa_C"
    },
    {
     "clientId": "7623",
     "nombre": "JOAQUIN DAMIAN CAMINO",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
     "clientId": "798",
     "nombre": "ECHEVARRIA SANDRA GABRIELA",
-    "localidad": "Balcarce"
+    "localidad": "Balcarce",
+    "taxonomia": "Almacen/Despensa_D"
    },
    {
     "clientId": "827",
     "nombre": "ANA CRISTINA YUSTRA",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Almacen/Despensa_B"
    },
    {
     "clientId": "848",
     "nombre": "Adrian Maximiliano Briz",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Almacen/Despensa_D"
    },
    {
     "clientId": "853",
     "nombre": "JUAN MARIA RODRIGUEZ",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Autoservicio Tradicional_D"
    },
    {
     "clientId": "854",
     "nombre": "PIÑERO MARIA VERONICA",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Almacen/Despensa_D"
    },
    {
     "clientId": "867",
     "nombre": "Damián loscalzo",
-    "localidad": "BALCARCE"
+    "localidad": "BALCARCE",
+    "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
     "clientId": "923",
     "nombre": "Torres Toledo Jesica",
-    "localidad": "Balcarce"
+    "localidad": "Balcarce",
+    "taxonomia": "Almacen/Despensa_D"
    },
    {
     "clientId": "927",
     "nombre": "FAMEBE",
-    "localidad": "Balcarce"
+    "localidad": "Balcarce",
+    "taxonomia": "Carniceria/Granja_B"
    }
   ],
   "9": [
    {
     "clientId": "1065",
     "nombre": "Ramos Griselda Mabel",
-    "localidad": "Mar del Plata"
+    "localidad": "Mar del Plata",
+    "taxonomia": "Almacen/Despensa_D"
    },
    {
     "clientId": "1125",
     "nombre": "MARIELA HERRERO",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_C"
    },
    {
     "clientId": "1542",
     "nombre": "mella parada Fernando patricio",
-    "localidad": "Mar del Plata"
+    "localidad": "Mar del Plata",
+    "taxonomia": "Almacen/Despensa_D"
    },
    {
     "clientId": "1768",
     "nombre": "QUIMEY LOPEZ",
-    "localidad": "Mar del Plata"
+    "localidad": "Mar del Plata",
+    "taxonomia": "Almacen/Despensa_B"
    },
    {
     "clientId": "305",
     "nombre": "Nerina Betsabe Portas",
-    "localidad": "Mar del Plata"
+    "localidad": "Mar del Plata",
+    "taxonomia": "Autoservicio Tradicional_D"
    },
    {
     "clientId": "3193",
     "nombre": "STELLA MARIS TAPIA",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
     "clientId": "3194",
     "nombre": "SEBASTIAN PABLO ANDREOZZI",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_D"
    },
    {
     "clientId": "3196",
     "nombre": "MIRTA ANDREA BERTH",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Almacen/Despensa_D"
    },
    {
     "clientId": "3583",
     "nombre": "SHOUCI LIAN",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_C"
    },
    {
     "clientId": "3648",
     "nombre": "MARIA LAURA MORBIDONI",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Almacen/Despensa_D"
    },
    {
     "clientId": "3721",
     "nombre": "FABIAN ALEJANDRO BARZOLA",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_D"
    },
    {
     "clientId": "3733",
     "nombre": "Lin wenting",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_A"
    },
    {
     "clientId": "4736",
     "nombre": "SILVANA VALERIA GONZALEZ",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Almacen/Despensa_D"
    },
    {
     "clientId": "4753",
     "nombre": "Lo de Nora",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Dietetica_D"
    },
    {
     "clientId": "4797",
     "nombre": "LEONARDO AGUSTIN CAROTENUTO",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Fiambreria_D"
    },
    {
     "clientId": "4799",
     "nombre": "ANGEL OMAR MARQUEZ",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Almacen/Despensa_D"
    },
    {
     "clientId": "4817",
     "nombre": "DAIANA INES MEDINA",
-    "localidad": "MAR DEL PLATA SUR"
+    "localidad": "MAR DEL PLATA SUR",
+    "taxonomia": "Autoservicio Tradicional_C"
    },
    {
     "clientId": "4877",
     "nombre": "ALEJANDRA JACQUELINE LOPEZ",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
     "clientId": "4960",
     "nombre": "CARLOS ALBERTO GOBBI",
-    "localidad": "MAR DEL PLATA"
+    "localidad": "MAR DEL PLATA",
+    "taxonomia": "Autoservicio Tradicional_C"
    },
    {
     "clientId": "61",
     "nombre": "EVA ISABEL GARCIA",
-    "localidad": "Mar del Plata"
+    "localidad": "Mar del Plata",
+    "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
     "clientId": "685",
     "nombre": "SILVA ADRIANA YANINA",
-    "localidad": "Mar del Plata"
+    "localidad": "Mar del Plata",
+    "taxonomia": "Autoservicio Tradicional_D"
    }
   ]
  },
