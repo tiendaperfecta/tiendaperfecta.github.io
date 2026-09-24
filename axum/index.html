@@ -138,7 +138,7 @@
     <label for="sel-dia">Día:</label>
     <select id="sel-dia"></select>
     <span class="badge" id="dia-resumen"></span>
-    <span class="nota" style="margin:0">aplica a Tiempos, Clientes y Zonas</span>
+    <span class="nota" style="margin:0">aplica a Tiempos, Clientes, Zonas y LDR</span>
   </div>
 
   <!-- VENTAS -->
@@ -234,7 +234,21 @@
 
   <!-- LDR -->
   <section class="panel" id="p-ldr">
-    <div class="kpis" id="k-ldr"></div>
+    <div class="kpis" id="k-reparto"></div>
+    <div class="card">
+      <h3>Rechazos por cliente <span class="badge bad" id="rech-total"></span></h3>
+      <div class="scroll" id="t-rech-cliente"></div>
+      <p class="nota" id="rech-nota"></p>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>Detalle de cada rechazo</h3>
+      <div class="scroll scrollx" id="t-rech-detalle"></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>Repartos del día <span class="badge" id="rep-info"></span></h3>
+      <div class="scrollx" id="t-repartos"></div>
+    </div>
+    <div class="kpis" id="k-ldr" style="margin-top:18px"></div>
     <div class="card">
       <h3>Choferes <span id="ldr-fecha" class="badge"></span></h3>
       <div class="scrollx" id="t-fleteros"></div>
@@ -293,7 +307,7 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
   // quedan con un tile suelto y el zoom al maximo. Al mostrarlos hay que
   // remedirlos y volver a encuadrar.
   document.getElementById('barra-dia').classList.toggle('on',
-    ['tiempos','clientes','zonas'].indexOf(t.dataset.t) >= 0);
+    ['tiempos','clientes','zonas','ldr'].indexOf(t.dataset.t) >= 0);
   const m = mapas[t.dataset.t];
   if(m) setTimeout(()=>{
     m.map.invalidateSize();
@@ -561,6 +575,75 @@ function crearMapa(tab, divId, puntos){
     $('#sel-novis').onchange = pintarNV; pintarNV();
   }
 
+  // ---------- REPARTOS Y RECHAZOS (LDR) ----------
+  function pintarRepartos(){
+    const R = dia.repartos;
+    if(!R || !R.totales){
+      $('#k-reparto').innerHTML = '';
+      $('#t-rech-cliente').innerHTML = '<div class="empty">Sin datos de reparto para este día.</div>';
+      $('#t-rech-detalle').innerHTML = '';
+      $('#t-repartos').innerHTML = '';
+      $('#rech-total').textContent = '';
+      $('#rep-info').textContent = '';
+      $('#rech-nota').textContent = '';
+      return;
+    }
+    const T = R.totales;
+    $('#k-reparto').innerHTML =
+      kpi('Boletas entregadas', fmtNum(T.entregadas), 'sobre ' + fmtNum(T.boletas) + ' facturadas') +
+      kpi('Efectividad', T.efectividad==null? '—' : T.efectividad + '%') +
+      kpi('Rechazos', fmtNum(T.rechazos), fmtNum(T.clientesQueRechazaron) + ' clientes') +
+      kpi('Plata rechazada', fmtMoney(T.importeRechazado));
+
+    const rc = $('#rech-total');
+    rc.textContent = T.rechazos? fmtNum(T.rechazos) + ' rechazos · ' + fmtMoney(T.importeRechazado) : 'sin rechazos';
+    rc.className = 'badge ' + (T.rechazos? 'bad' : 'ok');
+
+    $('#t-rech-cliente').innerHTML = table([
+      {key:'nombre',label:'Cliente'},
+      {key:'taxonomia',label:'Taxonomía',fmt:v=>v||'—'},
+      {key:'localidad',label:'Localidad',fmt:v=>v||'—'},
+      {key:'chofer',label:'Chofer'},
+      {key:'rechazos',label:'Rechazos',num:true,fmt:fmtNum},
+      {key:'bultos',label:'Bultos',num:true,fmt:fmtNum},
+      {key:'importe',label:'Importe',num:true,fmt:fmtMoney}
+    ], R.porCliente, {barCol:'importe'});
+
+    $('#t-rech-detalle').innerHTML = table([
+      {key:'hora',label:'Hora',num:true,fmt:v=>v||'—'},
+      {key:'nombre',label:'Cliente'},
+      {key:'chofer',label:'Chofer'},
+      {key:'vehiculo',label:'Vehículo'},
+      {key:'reparto',label:'Reparto'},
+      {key:'motivo',label:'Motivo',fmt:v=>v? 'código ' + v : '—'},
+      {key:'bultos',label:'Bultos',num:true,fmt:fmtNum},
+      {key:'importe',label:'Importe',num:true,fmt:fmtMoney},
+      {key:'comprobante',label:'Comprobante'}
+    ], R.rechazos);
+
+    $('#rep-info').textContent = fmtNum(T.repartos) + ' repartos · ' +
+      fmtNum(T.repartosFacturados) + ' ya facturados · ' + fmtMoney(T.importe);
+    $('#t-repartos').innerHTML = table([
+      {key:'codigo',label:'Reparto'},
+      {key:'chofer',label:'Chofer'},
+      {key:'vehiculo',label:'Vehículo'},
+      {key:'turno',label:'Turno',num:true,fmt:v=>v??'—'},
+      {key:'etapa',label:'Etapa'},
+      {key:'clientesAsignados',label:'Clientes',num:true,fmt:fmtNum},
+      {key:'boletas',label:'Boletas',num:true,fmt:fmtNum},
+      {key:'entregadas',label:'Entregadas',num:true,fmt:fmtNum},
+      {key:'rechazos',label:'Rechazos',num:true,fmt:fmtNum},
+      {key:'efectividad',label:'Efectividad',num:true,fmt:v=>v==null?'—':v+'%'},
+      {key:'importe',label:'Facturado',num:true,fmt:v=>v?fmtMoney(v):'—'}
+    ], R.repartos, {barCol:'entregadas'});
+
+    $('#rech-nota').textContent = T.repartosFacturados < T.repartos
+      ? 'GesCom factura las boletas uno o dos días después de que sale el camión: ' +
+        (T.repartos - T.repartosFacturados) + ' de los ' + T.repartos + ' repartos de este día ' +
+        'todavía no tienen boletas cargadas, así que los rechazos pueden aumentar.'
+      : 'Todos los repartos de este día ya están facturados.';
+  }
+
   // ---------- ZONAS ----------
   let mapaZonas, capaZonas;
   function pintarZonas(){
@@ -715,7 +798,7 @@ function crearMapa(tab, divId, puntos){
     if(!dia){ $('#dia-resumen').textContent = 'sin datos de ese día'; return; }
     $('#dia-resumen').textContent = fmtNum(r.visitas||0) + ' visitas · ' +
       fmtNum(r.pedidos||0) + ' pedidos · ' + fmtMoney(r.monto||0);
-    pintarAlertas(); pintarTiempos(); pintarClientes(); pintarZonas();
+    pintarAlertas(); pintarTiempos(); pintarClientes(); pintarZonas(); pintarRepartos();
   }
   $('#sel-dia').onchange = e=>cargarDia(e.target.value);
   if(listaDias.length) await cargarDia(listaDias[0].fecha);

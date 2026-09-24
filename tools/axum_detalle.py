@@ -269,6 +269,16 @@ def armar_dia(gps, fecha, orders, maestro, rutas, con_km=True, con_zona=True,
                 zona_de[sid] = {}
                 avisos.append("zona %s: %s" % (sid, e))
 
+    # ---- repartos y rechazos por cliente (GesCom) ----
+    # Se factura uno o dos dias despues del reparto, asi que el dia de hoy suele
+    # verse a medias y los dias cerrados, completos.
+    repartos_dia = None
+    try:
+        import axum_repartos
+        repartos_dia = axum_repartos.del_dia(fecha, maestro)
+    except Exception as e:
+        avisos.append("repartos %s: %s" % (fecha, e))
+
     # ---- estadisticas y alertas ----
     stats = []
     for sid in sellers:
@@ -322,6 +332,7 @@ def armar_dia(gps, fecha, orders, maestro, rutas, con_km=True, con_zona=True,
 
     return {
         "recorridos": recorridos,
+        "repartos": repartos_dia,
         "date": fecha, "diaSemana": dia_semana, "jornadaCerrada": jornada_cerrada,
         "umbrales": {"llegada": HORA_LLEGADA.strftime("%H:%M"),
                      "salida": HORA_SALIDA.strftime("%H:%M")},
