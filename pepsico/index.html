@@ -1,4 +1,3 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <meta charset="utf-8">
 <title>Avance PepsiCo TP</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,7 +43,7 @@ h1{
 .sub b{color:var(--text); font-weight:600}
 
 .kpis{
-  display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:20px;
+  display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px;
 }
 @media (max-width:860px){ .kpis{grid-template-columns:repeat(2,1fr)} }
 .kpi{
@@ -53,6 +52,13 @@ h1{
 }
 .kpi .label{font:600 11px/1 "IBM Plex Mono",monospace; letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
 .kpi .value{font-family:"Fraunces",serif; font-weight:600; font-size:25px; margin-top:8px; font-variant-numeric:tabular-nums}
+.kpi .value-input{
+  width:100%; border:none; background:transparent; padding:0; margin-top:8px;
+  font-family:"Fraunces",serif; font-weight:600; font-size:25px; color:var(--text); font-variant-numeric:tabular-nums;
+}
+.kpi .value-input::placeholder{color:var(--muted); font-size:16px; font-family:"IBM Plex Sans",sans-serif; font-weight:500}
+.kpi .value-input:focus{outline:none}
+.kpi.editable{border-color:var(--accent)}
 .kpi .unit{font-size:13px; color:var(--muted); font-weight:500; margin-left:3px}
 .kpi.accent{background:linear-gradient(155deg,var(--accent-soft),var(--panel) 65%)}
 
@@ -94,6 +100,11 @@ h1{
 .section-title{
   font-family:"Fraunces",serif; font-weight:600; font-size:19px; margin:0 0 4px;
 }
+.section-title-row{
+  display:flex; align-items:center; justify-content:space-between; gap:16px; margin:0 0 4px;
+}
+.section-title-row .section-title, .section-title-row .subsection-title{ margin:0 }
+.mn-logo{ height:34px; width:auto; flex:none }
 .subsection-title{
   font-family:"Fraunces",serif; font-weight:600; font-size:15.5px; color:var(--accent);
   margin:28px 0 4px; text-transform:uppercase; letter-spacing:.03em;
@@ -140,11 +151,65 @@ tfoot td{
 }
 tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
 
+.tp-summary{margin-bottom:20px}
+.tp-total-card{
+  background:linear-gradient(155deg,var(--accent-soft),var(--panel) 70%); border:1px solid var(--border);
+  border-radius:12px; padding:16px 18px; box-shadow:var(--shadow); margin-bottom:12px;
+}
+.tp-total-title{font:700 13px "IBM Plex Mono",monospace; letter-spacing:.05em; text-transform:uppercase; color:var(--accent); margin-bottom:12px}
+.tp-tiles{display:grid; grid-template-columns:repeat(4,1fr); gap:12px}
+.tp-tile{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:12px; text-align:center}
+.tp-tile .v{font-family:"Fraunces",serif; font-weight:600; font-size:22px; font-variant-numeric:tabular-nums}
+.tp-tile .v.good{color:var(--good)} .tp-tile .v.bad{color:var(--bad)}
+.tp-tile .l{font:600 10.5px "IBM Plex Mono",monospace; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); margin-top:4px}
+.tp-status-row{display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:12px; margin-bottom:12px}
+@media (max-width:760px){ .tp-status-row{grid-template-columns:1fr 1fr} .tp-tiles{grid-template-columns:1fr 1fr} }
+.tp-status{border-radius:10px; padding:10px 14px; text-align:center; border:1px solid var(--border)}
+.tp-status .l{font:700 11px "IBM Plex Mono",monospace; letter-spacing:.04em; text-transform:uppercase; margin-bottom:8px}
+.tp-status .v{font-family:"Fraunces",serif; font-weight:600; font-size:19px}
+.tp-status .p{font:600 12px "IBM Plex Mono",monospace; margin-left:6px}
+.tp-status.good{background:var(--good-soft)} .tp-status.good .l,.tp-status.good .v,.tp-status.good .p{color:var(--good)}
+.tp-status.bad{background:var(--bad-soft)} .tp-status.bad .l,.tp-status.bad .v,.tp-status.bad .p{color:var(--bad)}
+.tp-status.warn{background:var(--warn-soft)} .tp-status.warn .l,.tp-status.warn .v,.tp-status.warn .p{color:var(--warn)}
+.tp-status.neutral{background:var(--panel)} .tp-status.neutral .l{color:var(--muted)} .tp-status.neutral .v{color:var(--text)}
+.tp-tax-row{display:grid; grid-template-columns:repeat(4,1fr); gap:12px}
+@media (max-width:760px){ .tp-tax-row{grid-template-columns:1fr 1fr} }
+.tp-tax-card{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:10px 12px; box-shadow:var(--shadow)}
+.tp-tax-head{display:flex; align-items:center; gap:8px; margin-bottom:8px}
+.tp-tax-badge{
+  display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:6px;
+  background:var(--accent); color:#fff; font:700 12px "IBM Plex Mono",monospace;
+}
+.tp-tax-title{font:600 11px "IBM Plex Mono",monospace; letter-spacing:.04em; text-transform:uppercase; color:var(--muted)}
+.tp-tax-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:6px; text-align:center}
+.tp-tax-grid .v{font-family:"Fraunces",serif; font-weight:600; font-size:15px}
+.tp-tax-grid .l{font:600 9px "IBM Plex Mono",monospace; color:var(--muted); text-transform:uppercase; margin-top:2px}
+
 .foot-note{color:var(--muted); font-size:12.5px; line-height:1.6; margin-top:8px}
 .foot-note code{font-family:"IBM Plex Mono",monospace; background:var(--panel-2); padding:1px 5px; border-radius:4px}
 
 .clickable{cursor:pointer; text-decoration:underline dotted; text-underline-offset:3px; text-decoration-color:var(--muted)}
 .clickable:hover{color:var(--accent)}
+
+.compromiso-input{
+  width:80px; padding:5px 8px; border:1px solid var(--border); border-radius:6px; background:var(--panel-2);
+  color:var(--text); font-family:"IBM Plex Mono",monospace; font-size:12.5px; text-align:right;
+  font-variant-numeric:tabular-nums;
+}
+.compromiso-input:focus{outline:2px solid var(--accent); outline-offset:1px}
+.compromiso-input:disabled{opacity:.5}
+.compromiso-total{font-weight:700}
+
+.ip-input{
+  width:90px; padding:5px 8px; border:1px solid var(--border); border-radius:6px; background:var(--panel-2);
+  color:var(--text); font-family:"IBM Plex Mono",monospace; font-size:12.5px; text-align:right;
+  font-variant-numeric:tabular-nums;
+}
+.ip-input:focus{outline:2px solid var(--accent); outline-offset:1px}
+.ip-input:disabled{opacity:.5}
+.ip-input-sm{width:56px}
+.ip-freq-cell{display:flex; align-items:center; justify-content:flex-end; gap:6px}
+.ip-pct{font:600 11px "IBM Plex Mono",monospace; color:var(--muted); min-width:38px; text-align:right}
 
 .modal-overlay{
   position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:flex-start;
@@ -175,17 +240,35 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
 .modal-body td{padding:7px 8px; border-bottom:1px solid var(--border); white-space:nowrap}
 .modal-body tr:last-child td{border-bottom:none}
 .modal-count{color:var(--muted); font-size:12.5px; margin:0 0 10px}
+
+.closing-quote{
+  text-align:center; margin:56px 0 8px; padding:60px 24px;
+  border-top:1px solid var(--border);
+  min-height:88vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+}
+.closing-quote p{
+  font-family:"Fraunces",serif; font-style:italic; font-weight:600; font-size:clamp(30px,5.4vw,52px);
+  color:var(--text); max-width:18ch; margin:0 auto; line-height:1.3;
+}
+.closing-quote p b{color:var(--accent); font-style:normal}
+.closing-quote .closing-wish{
+  margin-top:32px; font-family:"IBM Plex Sans",sans-serif; font-style:normal; font-weight:600;
+  font-size:clamp(20px,3vw,28px); color:var(--accent); max-width:none;
+}
 </style>
 
 <div class="wrap">
   <p class="eyebrow">PepsiCo · Tienda Perfecta · Objetivo TN Septiembre 2026</p>
   <h1>Avance de venta diario</h1>
   <p class="sub">
-    Medida en <b>kilogramos</b>. Acumulado del <b>01/09</b> al <b>17/09</b>, con
-    <b>15 de 26</b> días hábiles transcurridos (lunes a sábado). El <b>Avance</b> es
+    Medida en <b>kilogramos</b>. Acumulado del <b>01/09</b> al <b>22/09</b>, con
+    <b>19 de 26</b> días hábiles transcurridos (lunes a sábado, domingo no es día hábil). El <b>Avance</b> es
     contra el objetivo prorrateado a la fecha, no contra el objetivo total del mes.
-    Columna <b>Real</b> = venta del día de la última visita teórica (hoy, 17/09), traída
+    Columna <b>Real</b> = venta del día de la última visita teórica (hoy, 22/09), traída
     en vivo del reporte <b>Avance de Ventas Pepsico</b> del módulo Objetivos de Gescom.
+    <b>Media necesaria</b> = suma de los kg/día que necesita cada vendedor en los días que quedan para llegar al
+    objetivo. <b>Compromiso vendedores</b> = suma en vivo de lo que cada vendedor cargó en la tabla de abajo.
+    <b>Compromiso supervisor</b> es editable y queda guardado para todos.
   </p>
 
   <div class="kpis">
@@ -195,80 +278,56 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     </div>
     <div class="kpi">
       <div class="label">Acumulado</div>
-      <div class="value">15.155<span class="unit">kg</span></div>
+      <div class="value">19.474<span class="unit">kg</span></div>
     </div>
     <div class="kpi">
       <div class="label">Avance a la fecha</div>
-      <div class="value">101,0<span class="unit">%</span></div>
+      <div class="value">102,5<span class="unit">%</span></div>
     </div>
     <div class="kpi">
       <div class="label">Tendencia cierre</div>
-      <div class="value">26.269<span class="unit">kg</span></div>
+      <div class="value">26.649<span class="unit">kg</span></div>
     </div>
     <div class="kpi">
       <div class="label">Venta real hoy</div>
-      <div class="value">690<span class="unit">kg</span></div>
+      <div class="value">1.320<span class="unit">kg</span></div>
+    </div>
+    <div class="kpi">
+      <div class="label">Media necesaria</div>
+      <div class="value">932,3<span class="unit">kg/día</span></div>
+    </div>
+    <div class="kpi">
+      <div class="label">Compromiso vendedores</div>
+      <div class="value" id="kpi-compromiso-total">—</div>
+    </div>
+    <div class="kpi editable">
+      <div class="label">Compromiso supervisor</div>
+      <input class="value-input" id="compromiso-supervisor-input" type="number" step="1" placeholder="cargar kg" />
     </div>
   </div>
 
   <div class="segments">
     <div class="seg">
-      <div class="seg-head"><span class="name">Platino + Gold</span><span class="pct">102,4%</span></div>
+      <div class="seg-head"><span class="name">Platino + Gold</span><span class="pct">104,6%</span></div>
       <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
-      <div class="seg-foot"><span>Objetivo 18.000 kg</span><span>Acumulado 10.631 kg</span></div>
+      <div class="seg-foot"><span>Objetivo 18.000 kg</span><span>Acumulado 13.757 kg</span></div>
     </div>
     <div class="seg">
-      <div class="seg-head"><span class="name">Silver &amp; Bronze</span><span class="pct">98,0%</span></div>
-      <div class="bar-track"><div class="bar-fill" style="width:98.0%"></div></div>
-      <div class="seg-foot"><span>Objetivo 8.000 kg</span><span>Acumulado 4.525 kg</span></div>
+      <div class="seg-head"><span class="name">Silver &amp; Bronze</span><span class="pct">97,8%</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:97.8%"></div></div>
+      <div class="seg-foot"><span>Objetivo 8.000 kg</span><span>Acumulado 5.717 kg</span></div>
     </div>
-  </div>
-
-  <div class="mn-panel">
-    <div class="mn-head">
-      <div>
-        <span class="name">Mi Negocio+</span>
-        <span class="mn-sub">venta Pepsico pedida por el canal digital, sin visita de preventa</span>
-      </div>
-      <span class="pct">81,0<span class="unit">%</span></span>
-    </div>
-    <div class="bar-track mn-track">
-      <div class="bar-fill mn-fill" style="width:81.0%"></div>
-      <div class="goal-marker" style="left:85%" title="Compromiso: 85%"></div>
-    </div>
-    <div class="seg-foot">
-      <span>Acumulado 12.278 kg de 15.155 kg Pepsico</span>
-      <span>Compromiso 85% · faltan 4,0 pts</span>
-    </div>
-    <p class="mn-note">
-      Columna <code>AcumuladoMN</code> del mismo reporte <b>Avance de Ventas Pepsico</b> (no hay un
-      objetivo ni reporte separado para Mi Negocio+). % Mi Negocio = AcumuladoMN ÷ Acumulado total.
-    </p>
-  </div>
-
-  <h2 class="section-title">Mi Negocio+ por vendedor</h2>
-  <p class="section-note">Ordenado de menor a mayor % de venta por el canal digital.</p>
-
-  <div class="table-scroll">
-    <table>
-      <thead>
-        <tr class="cols">
-          <th class="name-col">Vendedor</th>
-          <th>Acum. MN</th><th>Acumulado</th><th>% Mi Negocio</th><th>Avance MN</th>
-        </tr>
-      </thead>
-      <tbody id="tbody-mn"></tbody>
-      <tfoot>
-        <tr>
-          <td class="name">Total PepsiCo</td>
-          <td>12.278</td><td>15.155</td><td>81,0%</td><td>81,9%</td>
-        </tr>
-      </tfoot>
-    </table>
   </div>
 
   <h2 class="section-title">Por vendedor</h2>
-  <p class="section-note">Ordenado de menor a mayor avance — los que necesitan más empuje primero.</p>
+  <p class="section-note">
+    Ordenado de menor a mayor avance — los que necesitan más empuje primero. <b>Promedio</b> = kg/día vendidos en
+    lo que va del mes, <b>Media Nec.</b> = kg/día necesarios en los días que quedan para llegar al objetivo,
+    <b>Penúlt./Últ. Vis.</b> = kg vendidos en las últimas dos visitas — los tres del reporte
+    <code>Avance de Ventas Pepsico</code>. <b>Compromiso</b> es editable por separado para Platino+Gold y para
+    Silver&amp;Bronze; la columna <b>Total</b> suma ambos automáticamente. Cada vendedor carga su proyección de
+    cierre de mes y queda guardado para todos.
+  </p>
 
   <div class="table-scroll">
     <table>
@@ -276,7 +335,8 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
         <col style="width:190px">
         <col><col><col>
         <col class="sep"><col><col><col>
-        <col class="sep"><col><col><col><col><col>
+        <col class="sep"><col><col><col><col><col><col><col><col>
+        <col class="sep"><col style="width:110px"><col style="width:110px"><col style="width:110px">
       </colgroup>
       <thead>
         <tr class="grp">
@@ -285,7 +345,9 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
           <th></th>
           <th colspan="3">Silver &amp; Bronze</th>
           <th></th>
-          <th colspan="5">Total vendedor</th>
+          <th colspan="9">Total vendedor</th>
+          <th></th>
+          <th colspan="3">Compromiso</th>
         </tr>
         <tr class="cols">
           <th class="name-col">Vendedor</th>
@@ -293,25 +355,176 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
           <th></th>
           <th>Objetivo</th><th>Acum.</th><th>Avance</th>
           <th></th>
-          <th>Objetivo</th><th>Acumulado</th><th>Avance</th><th>Real hoy</th><th>Venta $</th>
+          <th>Objetivo</th><th>Acumulado</th><th>Avance</th><th>Promedio</th><th>Media Nec.</th><th>Penúlt. Vis.</th><th>Últ. Vis.</th><th>Real hoy</th><th>Venta $</th>
+          <th></th>
+          <th>Platino+Gold</th><th>Silver&amp;Bronze</th><th>Total</th>
         </tr>
       </thead>
       <tbody id="tbody"></tbody>
       <tfoot>
         <tr>
           <td class="name">Total PepsiCo</td>
-          <td>18.000</td><td>10.631</td><td>102,4%</td><td></td>
-          <td>8.000</td><td>4.525</td><td>98,0%</td><td></td>
-          <td>26.000</td><td>15.155</td><td>101,0%</td><td>690</td><td>$ 350.977.754</td>
+          <td>18.000</td><td>13.757</td><td>104,6%</td><td></td>
+          <td>8.000</td><td>5.717</td><td>97,8%</td><td></td>
+          <td>26.000</td><td>19.474</td><td>102,5%</td><td>1.024,9</td><td>932,3</td><td>992,4</td><td>779,1</td><td>1.320</td><td>$ 484.510.390</td>
+          <td></td>
+          <td></td><td></td><td id="tfoot-compromiso-total"></td>
         </tr>
       </tfoot>
     </table>
   </div>
 
+  <h3 class="subsection-title">Proyección de IPs por vendedor</h3>
+  <p class="section-note">
+    Cada vendedor proyecta su objetivo en 4 indicadores clave. <b>Base</b> es el dato de partida (no editable);
+    <b>Compromiso</b> es editable y queda guardado para todos. <b>Frecuencia con Compra</b>: Base = universo de
+    clientes de la ruta de hoy (<span id="ip-hoy-label"></span>), Compromiso = a cuántos les van a vender — el %
+    al lado se calcula solo (Compromiso ÷ Base). <b>Tienda Perfecta Portafolio Ideal</b>: Base = clientes con
+    oportunidad de portafolio (60%-79%) de la ruta de hoy, Compromiso = cuántos van a superar el 80%.
+    <b>Cobertura Pehuamar MB</b>: Base = clientes de la ruta de hoy que todavía no compraron Pehuamar Papa Lisa o
+    Acanalada 90gr en lo que va del mes (click para ver el listado), Compromiso = a cuántos clientes más le van a
+    vender. <b>Mi Negocio Sell Out</b>: Compromiso kg = el compromiso que cargó el vendedor en la tabla "Por
+    vendedor" (Platino+Gold + Silver&amp;Bronze, se actualiza solo), Proyectado kg = cuántos de esos kg proyecta
+    vender por Mi Negocio+ (editable), % Proyectado se calcula solo (Proyectado ÷ Compromiso) con meta &gt;80%.
+  </p>
+
+  <div class="table-scroll">
+    <table>
+      <colgroup>
+        <col style="width:190px">
+        <col><col>
+        <col class="sep"><col><col>
+        <col class="sep"><col><col>
+        <col class="sep"><col><col><col>
+      </colgroup>
+      <thead>
+        <tr class="grp">
+          <th></th>
+          <th class="g-platino" colspan="2">Frecuencia con Compra</th>
+          <th></th>
+          <th colspan="2">Tienda Perfecta Portafolio Ideal</th>
+          <th></th>
+          <th colspan="2">Cobertura Pehuamar MB</th>
+          <th></th>
+          <th colspan="3">Mi Negocio Sell Out</th>
+        </tr>
+        <tr class="cols">
+          <th class="name-col">Vendedor</th>
+          <th>Base</th><th>Compromiso</th>
+          <th></th>
+          <th>Base</th><th>Compromiso</th>
+          <th></th>
+          <th>Base</th><th>Compromiso</th>
+          <th></th>
+          <th>Compromiso kg</th><th>Proyectado kg</th><th>% Proyectado</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-ip"></tbody>
+      <tfoot>
+        <tr>
+          <td class="name">Total PepsiCo</td>
+          <td id="tfoot-ip-freq-base"></td><td id="tfoot-ip-freq-comp"></td><td></td>
+          <td id="tfoot-ip-port-base"></td><td id="tfoot-ip-port-comp"></td><td></td>
+          <td id="tfoot-ip-pehuamar-base"></td><td id="tfoot-ip-pehuamar-comp"></td><td></td>
+          <td id="tfoot-ip-mn-base"></td><td id="tfoot-ip-mn-comp"></td><td id="tfoot-ip-mn-comp-pct"></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <p class="foot-note">
+    Frecuencia con Compra usa el universo de la ruta del día de hoy (misma fuente que <code>No compradores por
+    día</code>). Portafolio Ideal usa los clientes con oportunidad de portafolio (60%-79%) de la ruta del día de
+    hoy, de la sección <code>Portafolio</code>. Cobertura Pehuamar identifica clientes reales de la ruta de hoy sin
+    compra de los artículos <code>PEHUA PAPA LISA 90GX22 RM</code> y <code>PEHUA PAPA ACANA 90GX22 RM</code> entre
+    el 01/09 y el 24/09 por <code>FechaCarga</code>, cruzando <code>Detallado de ventas extendido Pepsico</code>
+    (export del 24/09) con el listado de clientes. Mi Negocio Sell Out toma en vivo el Compromiso en kg
+    (Platino+Gold + Silver&amp;Bronze) que cada vendedor cargó en la tabla "Por vendedor" de más arriba.
+  </p>
+
+  <div class="mn-panel">
+    <div class="mn-head">
+      <div>
+        <span class="name">Mi Negocio+</span>
+        <span class="mn-sub">venta Pepsico pedida por el canal digital, sin visita de preventa</span>
+      </div>
+      <span class="pct">80,1<span class="unit">%</span></span>
+    </div>
+    <div class="bar-track mn-track">
+      <div class="bar-fill mn-fill" style="width:80.1%"></div>
+      <div class="goal-marker" style="left:85%" title="Compromiso: 85%"></div>
+    </div>
+    <div class="seg-foot">
+      <span>Acumulado 15.596 kg de 19.474 kg Pepsico</span>
+      <span>Compromiso 85% · faltan 4,9 pts</span>
+    </div>
+    <p class="mn-note">
+      Columna <code>AcumuladoMN</code> del mismo reporte <b>Avance de Ventas Pepsico</b> (no hay un
+      objetivo ni reporte separado para Mi Negocio+). % Mi Negocio = AcumuladoMN ÷ Acumulado total.
+    </p>
+  </div>
+
+  <div class="section-title-row">
+    <h2 class="section-title">Mi Negocio+ por vendedor</h2>
+    <img src="logo_mi_negocio.png" alt="Mi Negocio+" class="mn-logo">
+  </div>
+  <p class="section-note">
+    Ordenado de menor a mayor % de venta por el canal digital. <b>Universo/Registrado/Activos/Fully Digital</b>
+    vienen del Power BI "Mi Negocio +" (PepsiCo), export manual del 22/09.
+  </p>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr class="cols">
+          <th class="name-col">Vendedor</th>
+          <th>Universo</th><th>Registrados</th><th>Activos</th>
+          <th>Acum. MN</th><th>Acumulado</th><th>% Mi Negocio</th><th>Fully Digital</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-mn"></tbody>
+      <tfoot>
+        <tr>
+          <td class="name">Total PepsiCo</td>
+          <td>2.548</td><td>2.217</td><td>1.371</td>
+          <td>15.596</td><td>19.474</td><td>80,1%</td><td>1.128</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="section-title-row">
+    <h3 class="subsection-title" style="margin:0">Seguimiento Mi Negocio+ por día</h3>
+    <img src="logo_mi_negocio.png" alt="Mi Negocio+" class="mn-logo">
+  </div>
+  <p class="section-note">
+    Clientes registrados que necesitan seguimiento: sin activar en Mi Negocio+, o activos pero con menos del 70%
+    de su venta por el canal digital. Agrupados por día de ruta. Click en cualquier celda para ver el listado de
+    clientes.
+  </p>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr class="cols">
+          <th class="name-col">Vendedor</th>
+          <th>Lunes</th><th>Martes</th><th>Miércoles</th><th>Jueves</th><th>Viernes</th><th>Sábado</th><th>Total</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-mnSeg"></tbody>
+      <tfoot id="tfoot-mnSeg"></tfoot>
+    </table>
+  </div>
+
+  <p class="foot-note">
+    Fuente: Power BI "Mi Negocio +" (PepsiCo), export manual del 22/09, cruzado con la ruta de preventa de
+    <code>Clientes Claude.xlsx</code>.
+  </p>
+
   <h2 class="section-title">Cobertura por marca y vendedor</h2>
   <p class="section-note">
     Cobertura = clientes con 3 o más unidades de la marca en el período ÷ universo de clientes del vendedor.
-    Período 01/09-17/09. Color relativo por columna (rojo = más bajo, verde = más alto dentro de esa marca).
+    Período 01/09-22/09. Color relativo por columna (rojo = más bajo, verde = más alto dentro de esa marca).
   </p>
 
   <div class="table-scroll">
@@ -348,10 +561,11 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
 
   <p class="foot-note">
     Fuente: <code>Detallado de ventas extendido Pepsico</code> (campo <code>Marca</code>, <code>CantBase</code> por
-    cliente, <code>FechaComprobante</code> 01/09-17/09, empresas Tienda Perfecta + Pex, proveedor Pepsico de
+    cliente, <code>FechaCarga</code> 01/09-22/09, empresas Tienda Perfecta + Pex, proveedor Pepsico de
     Argentina SRL) cruzado con el universo de clientes por vendedor de <code>Clientes Claude.xlsx</code>. La columna
-    <b>Venta $</b> de la tabla "Por vendedor" sale del mismo export, filtrado por <code>FechaCarga</code> entre el
-    <b>01/09 y el 17/09</b>, sumando <code>ImporteItem</code> tal cual viene en el archivo (los tipos de venta que
+    <b>Venta $</b> de la tabla "Por vendedor" sale de una exportación manual más reciente de
+    <code>Detallado de ventas extendido Pepsico</code> (22/09), filtrado por <code>FechaCarga</code> entre el
+    <b>01/09 y el 22/09</b>, sumando <code>ImporteItem</code> tal cual viene en el archivo (los tipos de venta que
     restan, como devoluciones, ya vienen en negativo). Es el importe facturado, no está prorrateado contra ningún
     objetivo en $.
   </p>
@@ -362,7 +576,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     Tienda Perfecta: A 384 · B 337 · C 669 · D 903 (2.293 clientes) — prorrateado por vendedor según su
     participación de clientes en cada segmento y redondeado a números enteros (por eso la suma de cada
     segmento cierra exacto contra el objetivo oficial). Cumple = cliente con compra de Pepsico y más de 3
-    unidades entre el 01/09 y el 17/09. Ordenado de menor a mayor avance total. Click en el % de Avance de
+    unidades entre el 01/09 y el 22/09. Ordenado de menor a mayor avance total. Click en el % de Avance de
     cada segmento para ver el detalle de los clientes que todavía no compraron.
   </p>
 
@@ -406,11 +620,11 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
       <tfoot>
         <tr>
           <td class="name">Total PepsiCo</td>
-          <td>384</td><td>381</td><td>99,2%</td><td></td>
-          <td>337</td><td>305</td><td>90,5%</td><td></td>
-          <td>669</td><td>591</td><td>88,3%</td><td></td>
-          <td>903</td><td>602</td><td>66,7%</td><td></td>
-          <td>2.293</td><td>1.879</td><td>81,9%</td>
+          <td>384</td><td>391</td><td>101,8%</td><td></td>
+          <td>337</td><td>306</td><td>90,8%</td><td></td>
+          <td>669</td><td>632</td><td>94,5%</td><td></td>
+          <td>903</td><td>727</td><td>80,5%</td><td></td>
+          <td>2.293</td><td>2.056</td><td>89,7%</td>
         </tr>
       </tfoot>
     </table>
@@ -419,7 +633,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
   <p class="foot-note">
     Fuente: segmento y vendedor de <code>Clientes Claude.xlsx</code> (base propia, columnas SegmentoClienteCodigo
     y Vendedor) cruzada con <code>Detallado de ventas extendido Pepsico</code> (unidades por cliente,
-    <code>FechaComprobante</code> 01/09-17/09, empresas Tienda Perfecta + Pex, proveedor Pepsico). El objetivo
+    <code>FechaCarga</code> 01/09-22/09, empresas Tienda Perfecta + Pex, proveedor Pepsico). El objetivo
     global (384/337/669/903) es el que confirmaste; el reparto por vendedor es una estimación proporcional, no un
     objetivo oficial cargado en Gescom.
   </p>
@@ -444,8 +658,8 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
       <tfoot>
         <tr>
           <td class="name">Total PepsiCo</td>
-          <td>104/467</td><td>118/470</td><td>110/468</td><td>140/483</td><td>132/435</td><td>66/226</td>
-          <td>670/2.249</td>
+          <td>43/466</td><td>56/470</td><td>108/468</td><td>120/481</td><td>102/435</td><td>61/226</td>
+          <td>490/2.546</td>
         </tr>
       </tfoot>
     </table>
@@ -453,68 +667,445 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
 
   <p class="foot-note">
     El universo por día sale de la ruta de preventa asignada en <code>Clientes Claude.xlsx</code> (el nombre de la
-    ruta empieza con el día, ej. "Viernes V4"). Un cliente sin ruta cargada no entra en esta tabla, por eso el
-    universo total (2.249) es algo menor a los 2.293 del objetivo CCC.
+    ruta empieza con el día, ej. "Viernes V4"). Un cliente sin ruta cargada no entra en esta tabla; el objetivo CCC
+    (2.293) es un prorrateo oficial y no tiene por qué coincidir con el universo real con ruta asignada (2.546).
   </p>
 
-  <h2 class="section-title">Tiendas Perfectas, Combos e Invendible</h2>
+  <h2 class="section-title">Tienda Perfecta</h2>
   <p class="section-note">
-    Tiendas Perfectas: % de clientes censados que cumplen el estándar, y puntaje promedio (0-100).
-    Combos e Invendible en kg y en $ del período 01/09 al 17/09.
+    Universo: clientes de subcanal Kiosco/Maxikiosco, Almacén/Despensa, Autoservicio Tradicional, Estación de
+    Servicio - No Oficiales y Fiambrería. Tienda Perfecta = 80% o más de cobertura de portafolio <b>y</b>
+    validación del supervisor. Fuente: <code>Ventas/Reportes/Rumbo Pepsico/6.1 Censo Tienda perfecta</code>.
+  </p>
+
+  <div class="tp-summary">
+    <div class="tp-total-card">
+      <div class="tp-total-title">Total Tiendas Perfectas</div>
+      <div class="tp-tiles">
+        <div class="tp-tile"><div class="v">1.208</div><div class="l">Objetivo</div></div>
+        <div class="tp-tile"><div class="v good">830</div><div class="l">TPs</div></div>
+        <div class="tp-tile"><div class="v">378</div><div class="l">Faltantes</div></div>
+        <div class="tp-tile"><div class="v">68,7%</div><div class="l">Avance</div></div>
+      </div>
+    </div>
+    <div class="tp-status-row">
+      <div class="tp-status good"><div class="l">Tiendas Perfectas</div><div class="v">830<span class="p">36,7%</span></div></div>
+      <div class="tp-status bad"><div class="l">No Tiendas Perfectas</div><div class="v">1.422<span class="p">62,8%</span></div></div>
+      <div class="tp-status warn"><div class="l">TPs a validar</div><div class="v">11<span class="p">0,5%</span></div></div>
+      <div class="tp-status neutral"><div class="l">Universo subcanales TP</div><div class="v">2.263</div></div>
+    </div>
+    <div class="tp-tax-row">
+      <div class="tp-tax-card">
+        <div class="tp-tax-head"><span class="tp-tax-badge">A</span><span class="tp-tax-title">Segmento A</span></div>
+        <div class="tp-tax-grid">
+          <div><div class="v">251</div><div class="l">Objetivo</div></div>
+          <div><div class="v">238</div><div class="l">TPs</div></div>
+          <div><div class="v">13</div><div class="l">Faltante</div></div>
+          <div><div class="v">94,8%</div><div class="l">Avance</div></div>
+        </div>
+      </div>
+      <div class="tp-tax-card">
+        <div class="tp-tax-head"><span class="tp-tax-badge">B</span><span class="tp-tax-title">Segmento B</span></div>
+        <div class="tp-tax-grid">
+          <div><div class="v">188</div><div class="l">Objetivo</div></div>
+          <div><div class="v">122</div><div class="l">TPs</div></div>
+          <div><div class="v">66</div><div class="l">Faltante</div></div>
+          <div><div class="v">64,9%</div><div class="l">Avance</div></div>
+        </div>
+      </div>
+      <div class="tp-tax-card">
+        <div class="tp-tax-head"><span class="tp-tax-badge">C</span><span class="tp-tax-title">Segmento C</span></div>
+        <div class="tp-tax-grid">
+          <div><div class="v">328</div><div class="l">Objetivo</div></div>
+          <div><div class="v">234</div><div class="l">TPs</div></div>
+          <div><div class="v">94</div><div class="l">Faltante</div></div>
+          <div><div class="v">71,3%</div><div class="l">Avance</div></div>
+        </div>
+      </div>
+      <div class="tp-tax-card">
+        <div class="tp-tax-head"><span class="tp-tax-badge">D</span><span class="tp-tax-title">Segmento D</span></div>
+        <div class="tp-tax-grid">
+          <div><div class="v">441</div><div class="l">Objetivo</div></div>
+          <div><div class="v">236</div><div class="l">TPs</div></div>
+          <div><div class="v">205</div><div class="l">Faltante</div></div>
+          <div><div class="v">53,5%</div><div class="l">Avance</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="subsection-title">Detalle por vendedor</h3>
+  <p class="section-note">
+    Objetivo prorrateado por vendedor según su participación de clientes en cada segmento (universo TP). Ordenado
+    de menor a mayor avance total.
   </p>
 
   <div class="table-scroll">
     <table>
       <colgroup>
         <col style="width:190px">
-        <col><col>
-        <col class="sep"><col><col>
-        <col class="sep"><col><col>
+        <col><col><col>
+        <col class="sep"><col><col><col>
+        <col class="sep"><col><col><col>
+        <col class="sep"><col><col><col>
+        <col class="sep"><col><col><col>
       </colgroup>
       <thead>
         <tr class="grp">
           <th></th>
-          <th class="g-platino" colspan="2">Tienda Perfecta</th>
+          <th class="g-platino" colspan="3">Segmento A</th>
           <th></th>
-          <th colspan="2">Combos</th>
+          <th colspan="3">Segmento B</th>
           <th></th>
-          <th colspan="2">Invendible (Devol. por Canje)</th>
+          <th colspan="3">Segmento C</th>
+          <th></th>
+          <th colspan="3">Segmento D</th>
+          <th></th>
+          <th colspan="3">Total</th>
         </tr>
         <tr class="cols">
           <th class="name-col">Vendedor</th>
-          <th>Cumple</th><th>Puntaje</th>
+          <th>Obj.</th><th>Cumple</th><th>Avance</th>
           <th></th>
-          <th>Kg</th><th>Importe</th>
+          <th>Obj.</th><th>Cumple</th><th>Avance</th>
           <th></th>
-          <th>Kg</th><th>Importe</th>
+          <th>Obj.</th><th>Cumple</th><th>Avance</th>
+          <th></th>
+          <th>Obj.</th><th>Cumple</th><th>Avance</th>
+          <th></th>
+          <th>Obj.</th><th>Cumple</th><th>Avance</th>
         </tr>
       </thead>
       <tbody id="tbody-tp"></tbody>
+      <tfoot>
+        <tr>
+          <td class="name">Total PepsiCo</td>
+          <td>251</td><td>238</td><td>94,8%</td><td></td>
+          <td>188</td><td>122</td><td>64,9%</td><td></td>
+          <td>328</td><td>234</td><td>71,3%</td><td></td>
+          <td>441</td><td>236</td><td>53,5%</td><td></td>
+          <td>1.208</td><td>830</td><td>68,7%</td>
+        </tr>
+      </tfoot>
     </table>
   </div>
 
-  <h2 class="section-title">Cobertura por marca</h2>
-  <p class="section-note">Kg vendidos y clientes alcanzados por marca, sobre un universo de 2.544 clientes censados. Ordenado por kg.</p>
+  <p class="foot-note">
+    Fuente: <code>Ventas / Reportes / Rumbo Pepsico / LATAM (Desde 04-2024) 6.1 Censo Tienda perfecta</code> (2.263
+    clientes de subcanal TP con segmento asignado). El objetivo global (251/188/328/441) es el que confirmaste; el
+    reparto por vendedor es una estimación proporcional según la composición de clientes de cada segmento, no un
+    objetivo oficial cargado en Gescom.
+  </p>
+
+  <h2 class="section-title">Portafolio</h2>
+  <p class="section-note">
+    Cobertura de portafolio sobre el universo de Tienda Perfecta (2.263 clientes). Oportunidad de Portafolio =
+    clientes con cobertura entre 60% y 79% (ya tienen buena parte del portafolio pero no llegan al 80% que define
+    Tienda Perfecta). Click en cualquier celda para ver el listado de clientes.
+  </p>
+
+  <div class="tp-summary">
+    <div class="tp-total-card">
+      <div class="tp-total-title">Cobertura de Portafolio</div>
+      <div class="tp-tiles">
+        <div class="tp-tile"><div class="v">60,4%</div><div class="l">Cobertura promedio</div></div>
+        <div class="tp-tile"><div class="v good">482</div><div class="l">Con oportunidad (60-79%)</div></div>
+        <div class="tp-tile"><div class="v">2.263</div><div class="l">Universo TP</div></div>
+        <div class="tp-tile"><div class="v">21,3%</div><div class="l">% con oportunidad</div></div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="subsection-title">Oportunidad de portafolio por día de visita</h3>
+  <p class="section-note">
+    Formato de celda: clientes con oportunidad de portafolio / universo de ese día. Ordenado de mayor a menor
+    cantidad de clientes con oportunidad.
+  </p>
 
   <div class="table-scroll">
     <table>
       <thead>
         <tr class="cols">
-          <th class="name-col">Marca</th>
-          <th>Kg vendidos</th><th>Clientes</th><th>Cobertura</th>
+          <th class="name-col">Vendedor</th>
+          <th>Lunes</th><th>Martes</th><th>Miércoles</th><th>Jueves</th><th>Viernes</th><th>Sábado</th><th>Total</th>
         </tr>
       </thead>
-      <tbody id="tbody-marca"></tbody>
+      <tbody id="tbody-portdia"></tbody>
+      <tfoot id="tfoot-portdia"></tfoot>
+    </table>
+  </div>
+
+  <h3 class="subsection-title">Oportunidad de portafolio por segmento / taxonomía</h3>
+  <p class="section-note">
+    Formato de celda: clientes con oportunidad de portafolio / universo de ese segmento. Ordenado de mayor a menor
+    cantidad de clientes con oportunidad.
+  </p>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr class="cols">
+          <th class="name-col">Vendedor</th>
+          <th>Segmento A</th><th>Segmento B</th><th>Segmento C</th><th>Segmento D</th><th>Total</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-portseg"></tbody>
+      <tfoot id="tfoot-portseg"></tfoot>
     </table>
   </div>
 
   <p class="foot-note">
-    Fuente: <code>Reportes / Rumbo Pepsico / LATAM (Desde 04-2024) 6.1 Censo Tienda perfecta</code> (2.544 clientes
-    censados) y <code>Exportación / Detallado de ventas extendido Pepsico</code> (45.531 líneas con
-    <code>FechaComprobante</code> entre 01/09 y 17/09, sobre un total exportado de 26/08 al 17/09, empresa Tienda
-    Perfecta) · Invendible = <code>TipoDeVenta = Devolución por Canje</code> · Marca = campo
-    <code>Marca</code> del maestro de artículos, solo para los 9 SKU con marca cargada.
+    Fuente: <code>Ventas / Reportes / Rumbo Pepsico / LATAM (Desde 04-2024) 6.1 Censo Tienda perfecta</code>, campo
+    <code>porcentajePortafolio</code>. Día de visita = ruta de preventa de <code>Clientes Claude.xlsx</code>
+    (4 clientes sin ruta asignada quedan fuera de la tabla por día, pero sí en la de segmento).
   </p>
+
+  <h2 class="section-title">Invendible / Vencidos por Canje</h2>
+  <p class="section-note">
+    Productos vencidos o dañados retirados de los clientes este mes. <b>Venta $</b> = filas con
+    <code>TipoDeVenta = Venta</code>. <b>Retirado por Canje</b> = filas con
+    <code>TipoDeVenta = Devolución por Canje</code> (viene en negativo, es lo que se retiró sin cobrar).
+    <b>% Invendible</b> = Retirado por Canje ÷ Venta $. Período 01/09-22/09 por <code>FechaCarga</code>,
+    empresas Tienda Perfecta + Pex, proveedor Pepsico. Ordenado de mayor a menor % (peor primero). Click en el
+    vendedor para ver el detalle de productos y cantidades retiradas.
+  </p>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr class="cols">
+          <th class="name-col">Vendedor</th>
+          <th>Venta $</th><th>Retirado por Canje</th><th>% Invendible</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-invendible"></tbody>
+      <tfoot>
+        <tr>
+          <td class="name">Total PepsiCo</td>
+          <td>$ 484.422.537</td><td>-$ 8.863.826</td><td>1,83%</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <p class="foot-note">
+    Fuente: <code>Detallado de ventas extendido Pepsico</code>, mismo export usado para Venta $, filtrado por
+    <code>TipoDeVenta</code> en lugar de sumar todos los tipos juntos.
+  </p>
+
+  <h2 class="section-title">Rechazos</h2>
+  <p class="section-note">
+    Pedidos rechazados o no entregados este mes. <b>Venta $</b> = filas con <code>TipoDeVenta = Venta</code>.
+    <b>Devolución por Rechazo</b> = filas con <code>TipoDeVenta = Devolución por Rechazo</code> (viene en
+    negativo, es lo que se rechazó sin cobrar). <b>% Rechazo</b> = Devolución por Rechazo ÷ Venta $. Período
+    01/09-22/09 por <code>FechaCarga</code>, empresas Tienda Perfecta + Pex, proveedor Pepsico. Ordenado de mayor
+    a menor % (peor primero). Click en el vendedor para ver el detalle de motivos de devolución.
+  </p>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr class="cols">
+          <th class="name-col">Vendedor</th>
+          <th>Venta $</th><th>Devolución por Rechazo</th><th>% Rechazo</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-rechazos"></tbody>
+      <tfoot id="tfoot-rechazos"></tfoot>
+    </table>
+  </div>
+
+  <h3 class="subsection-title">Motivos de devolución — total PepsiCo</h3>
+  <p class="section-note">Desglose de todas las devoluciones por rechazo, ordenado por importe.</p>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr class="cols">
+          <th class="name-col">Motivo</th>
+          <th>Filas</th><th>Importe</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-motivos"></tbody>
+    </table>
+  </div>
+
+  <h3 class="subsection-title">Motivos de devolución — última fecha (22/09)</h3>
+  <p class="section-note">
+    Devoluciones por rechazo del último día con datos, por <code>FechaComprobante</code> (no
+    <code>FechaCarga</code>).
+  </p>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr class="cols">
+          <th class="name-col">Vendedor</th>
+          <th class="name-col">Cliente</th>
+          <th class="name-col">Razón Social</th>
+          <th class="name-col">Motivo</th>
+          <th>Filas</th><th>Importe</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-motivosUltimaFecha"></tbody>
+    </table>
+  </div>
+
+  <p class="foot-note">
+    Fuente: <code>Detallado de ventas extendido Pepsico</code>, mismo export usado para Venta $ e Invendible,
+    campo <code>MotivoDevolucion</code>.
+  </p>
+
+  <h2 class="section-title">Seguimiento de Frescura</h2>
+  <p class="section-note">
+    Productos de fecha corta de Pepsico (Tienda Perfecta y Rambla de los Lobos), semana del 21/09 al 27/09.
+    <b>Cuota fija toda la semana</b>: foto del depósito tomada el 21/09, artículos que vencen dentro de 50 días,
+    repartidos en partes iguales entre los 12 vendedores activos. <b>Vendido</b> = unidades cargadas desde el
+    21/09 (por <code>FechaCarga</code>), sumando ventas y débitos, restando devoluciones y canjes — es todo lo
+    vendido de ese código, no solo el lote por vencer. Los % topean en 100% por artículo. Ordenado por urgencia
+    de vencimiento. Click en una fila para ver el objetivo y lo vendido por vendedor.
+  </p>
+
+  <div class="tp-summary">
+    <div class="tp-total-card">
+      <div class="tp-total-title">Total (12 vendedores)</div>
+      <div class="tp-tiles">
+        <div class="tp-tile"><div class="v good" id="fresc-tot-pct">—</div><div class="l">% Cumplido</div></div>
+        <div class="tp-tile"><div class="v" id="fresc-tot-vendidas">—</div><div class="l">Vendidas</div></div>
+        <div class="tp-tile"><div class="v" id="fresc-tot-cuota">—</div><div class="l">Cuota</div></div>
+        <div class="tp-tile"><div class="v" id="fresc-tot-faltan">—</div><div class="l">Faltan</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr class="cols">
+          <th class="name-col">Artículo</th>
+          <th>Código</th><th>Origen</th><th>Vence</th><th>Días</th><th>Cuota Total</th><th>Cuota x Vendedor</th><th>Vendido</th><th>Acción</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-frescura"></tbody>
+      <tfoot id="tfoot-frescura"></tfoot>
+    </table>
+  </div>
+
+  <p class="foot-note">
+    Fuente de cuotas: reporte "Próximos a vencer" de Digip, leído una vez por semana (foto del 21/09) filtrado a
+    artículos Pepsico que vencen dentro de 50 días. La cuota se cascadea en partes iguales entre vendedores
+    activos, redondeando artículo por artículo. Dashboard propio
+    <code>frescura.tienda-perfecta.workers.dev</code>.
+  </p>
+
+  <h2 class="section-title">Combos Tradicionales Axum</h2>
+  <p class="section-note">
+    Combos usados por vendedor, período 02/09 al 23/09. <b>Combos vendidos</b> = cantidad de combos aplicados.
+    <b>A Reconocer</b> = monto en $ que Axum reconoce por esos combos. Ordenado de mayor a menor $.
+  </p>
+
+  <div class="tp-summary">
+    <div class="tp-total-card">
+      <div class="tp-total-title">Total Combos Tradicionales</div>
+      <div class="tp-tiles" style="grid-template-columns:1fr 1fr">
+        <div class="tp-tile"><div class="v good" id="combo-tot-cant">—</div><div class="l">Combos vendidos</div></div>
+        <div class="tp-tile"><div class="v" id="combo-tot-monto">—</div><div class="l">A Reconocer</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr class="cols">
+          <th class="name-col">Vendedor</th>
+          <th>Combos vendidos</th><th>A Reconocer</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-combos"></tbody>
+      <tfoot id="tfoot-combos"></tfoot>
+    </table>
+  </div>
+
+  <h3 class="subsection-title">Detalle de combos por vendedor</h3>
+  <p class="section-note">
+    Cada combo con su columna de <b>Cant.</b> (combos vendidos) y <b>$</b> (a reconocer). Ordenado de mayor a
+    menor total $.
+  </p>
+
+  <div class="table-scroll">
+    <table id="tabla-combosDetalle">
+      <thead>
+        <tr class="grp" id="grp-combosDetalle"></tr>
+        <tr class="cols" id="cols-combosDetalle"></tr>
+      </thead>
+      <tbody id="tbody-combosDetalle"></tbody>
+      <tfoot id="tfoot-combosDetalle"></tfoot>
+    </table>
+  </div>
+
+  <p class="foot-note">
+    Fuente: Gescom <code>Ventas / Reportes / Combos</code> (hojas DetalleVendedor, TotalesVendedor y Totales),
+    export manual del 22/09.
+  </p>
+
+  <div class="section-title-row">
+    <h2 class="section-title">Combos Mi Negocio</h2>
+    <img src="logo_mi_negocio.png" alt="Mi Negocio+" class="mn-logo">
+  </div>
+  <p class="section-note">
+    Combos del canal digital Mi Negocio+ usados por vendedor, período 02/09 al 23/09. Ordenado de mayor a menor $.
+  </p>
+
+  <div class="tp-summary">
+    <div class="tp-total-card">
+      <div class="tp-total-title">Total Combos Mi Negocio</div>
+      <div class="tp-tiles" style="grid-template-columns:1fr 1fr">
+        <div class="tp-tile"><div class="v good" id="comboMn-tot-cant">—</div><div class="l">Combos vendidos</div></div>
+        <div class="tp-tile"><div class="v" id="comboMn-tot-monto">—</div><div class="l">A Reconocer</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr class="cols">
+          <th class="name-col">Vendedor</th>
+          <th>Combos vendidos</th><th>A Reconocer</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-combosMn"></tbody>
+      <tfoot id="tfoot-combosMn"></tfoot>
+    </table>
+  </div>
+
+  <h3 class="subsection-title">Detalle de combos Mi Negocio por vendedor</h3>
+  <p class="section-note">
+    Cada combo con su columna de <b>Cant.</b> (combos vendidos) y <b>$</b> (a reconocer). Ordenado de mayor a
+    menor total $.
+  </p>
+
+  <div class="table-scroll">
+    <table id="tabla-combosMnDetalle">
+      <thead>
+        <tr class="grp" id="grp-combosMnDetalle"></tr>
+        <tr class="cols" id="cols-combosMnDetalle"></tr>
+      </thead>
+      <tbody id="tbody-combosMnDetalle"></tbody>
+      <tfoot id="tfoot-combosMnDetalle"></tfoot>
+    </table>
+  </div>
+
+  <p class="foot-note">
+    Fuente: Gescom <code>Ventas / Reportes / Combos</code> (versión Mi Negocio+, hojas DetalleVendedor,
+    TotalesVendedor y Totales), export manual del 22/09.
+  </p>
+
+  <div class="closing-quote">
+    <p>“Cuando el conocimiento se acompaña de <b>creatividad</b>, lo imposible se simplifica.”</p>
+    <p class="closing-wish">¡Que tengan un excelente día de ventas!</p>
+  </div>
 </div>
 
 <div class="modal-overlay" id="drillModal" onclick="if(event.target===this) closeDrill()">
@@ -527,15 +1118,18 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
       <button class="modal-close" onclick="closeDrill()" aria-label="Cerrar">&times;</button>
     </div>
     <div class="modal-body">
-      <p class="modal-count" id="drillCount"></p>
-      <table>
-        <thead>
-          <tr>
-            <th>Código</th><th>Razón social</th><th>Dirección</th><th>Localidad</th><th>Teléfono</th><th>Segmento</th><th>Día visita</th>
-          </tr>
-        </thead>
-        <tbody id="drillBody"></tbody>
-      </table>
+      <div id="drillDefaultBody">
+        <p class="modal-count" id="drillCount"></p>
+        <table>
+          <thead>
+            <tr>
+              <th>Código</th><th>Razón social</th><th>Dirección</th><th>Localidad</th><th>Teléfono</th><th>Segmento</th><th>Día visita</th>
+            </tr>
+          </thead>
+          <tbody id="drillBody"></tbody>
+        </table>
+      </div>
+      <div id="drillCustomBody" style="display:none"></div>
     </div>
   </div>
 </div>
@@ -544,7 +1138,27 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
 let noCompradoresDetalle = [];
 fetch('no_compradores_detalle.json').then(r => r.json()).then(data => { noCompradoresDetalle = data; }).catch(() => {});
 
+let invendibleDetalle = {};
+fetch('invendible_detalle.json').then(r => r.json()).then(data => { invendibleDetalle = data; }).catch(() => {});
+
+let combosDetalle = {};
+fetch('combos_detalle.json').then(r => r.json()).then(data => { combosDetalle = data; }).catch(() => {});
+
+let rechazosDetalle = {};
+fetch('rechazos_detalle.json').then(r => r.json()).then(data => { rechazosDetalle = data; }).catch(() => {});
+
+let mnSeguimientoDetalle = [];
+fetch('mn_seguimiento.json').then(r => r.json()).then(data => { mnSeguimientoDetalle = data; }).catch(() => {});
+
+let frescuraData = null;
+fetch('frescura_data.json').then(r => r.json()).then(data => {
+  frescuraData = data;
+  renderFrescura();
+}).catch(() => {});
+
 function openDrill(title, subtitle, list) {
+  document.getElementById('drillDefaultBody').style.display = '';
+  document.getElementById('drillCustomBody').style.display = 'none';
   document.getElementById('drillTitle').textContent = title;
   document.getElementById('drillSubtitle').textContent = subtitle;
   document.getElementById('drillCount').textContent = list.length + (list.length === 1 ? ' cliente' : ' clientes');
@@ -556,63 +1170,284 @@ function openDrill(title, subtitle, list) {
   `).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--muted)">Sin clientes en esta selección</td></tr>';
   document.getElementById('drillModal').classList.add('open');
 }
+function drillCombos(vendedor) {
+  const rows = (combosDetalle[vendedor] || []).slice().sort((a,b) => b.reconocer - a.reconocer);
+  const tot = rows.reduce((s,r) => s + r.reconocer, 0);
+  const html = `
+    <p class="modal-count">${rows.length} tipos de combo · Total: $ ${fmt(tot)}</p>
+    <table>
+      <thead><tr><th>Combo</th><th style="text-align:right">Combos vendidos</th><th style="text-align:right">A Reconocer</th></tr></thead>
+      <tbody>
+        ${rows.map(r => `<tr><td>${r.combo}</td><td style="text-align:right">${fmt(r.cantidad)}</td><td style="text-align:right">$ ${fmt(r.reconocer)}</td></tr>`).join('')}
+      </tbody>
+    </table>
+  `;
+  openDrillCustom(vendedor, 'Combos Tradicionales Axum · período 02/09-23/09', html);
+}
+
+function drillInvendible(vendedor) {
+  const rows = (invendibleDetalle[vendedor] || []).slice().sort((a,b) => a.importe - b.importe);
+  const tot = rows.reduce((s,r) => s + r.importe, 0);
+  const html = `
+    <p class="modal-count">${rows.length} productos retirados por canje · Total: $ ${fmt(Math.abs(tot))}</p>
+    <table>
+      <thead><tr><th>Producto</th><th style="text-align:right">Cantidad</th><th style="text-align:right">Importe</th></tr></thead>
+      <tbody>
+        ${rows.map(r => `<tr><td>${r.articulo}</td><td style="text-align:right">${fmt(Math.abs(r.cant),1)}</td><td style="text-align:right">-$ ${fmt(Math.abs(r.importe))}</td></tr>`).join('')}
+      </tbody>
+    </table>
+  `;
+  openDrillCustom(vendedor, `Productos retirados por canje · período 01/09-22/09 (FechaCarga)`, html);
+}
+
+function drillRechazo(vendedor) {
+  const rows = (rechazosDetalle[vendedor] || []).slice().sort((a,b) => a.importe - b.importe);
+  const tot = rows.reduce((s,r) => s + r.importe, 0);
+  const html = `
+    <p class="modal-count">${rows.length} motivos de devolucion. Total: $ ${fmt(Math.abs(tot))}</p>
+    <table>
+      <thead><tr><th>Motivo</th><th style="text-align:right">Filas</th><th style="text-align:right">Importe</th></tr></thead>
+      <tbody>
+        ${rows.map(r => `<tr><td>${r.motivo}</td><td style="text-align:right">${fmt(r.cant)}</td><td style="text-align:right">-$ ${fmt(Math.abs(r.importe))}</td></tr>`).join('')}
+      </tbody>
+    </table>
+  `;
+  openDrillCustom(vendedor, 'Motivos de devolucion por rechazo - periodo 01/09-22/09 (FechaCarga)', html);
+}
+
+function openDrillCustom(title, subtitle, html) {
+  document.getElementById('drillDefaultBody').style.display = 'none';
+  document.getElementById('drillCustomBody').style.display = '';
+  document.getElementById('drillTitle').textContent = title;
+  document.getElementById('drillSubtitle').textContent = subtitle;
+  document.getElementById('drillCustomBody').innerHTML = html;
+  document.getElementById('drillModal').classList.add('open');
+}
 function closeDrill() { document.getElementById('drillModal').classList.remove('open'); }
 
 function drillBySegmento(vendedor, seg) {
   const list = noCompradoresDetalle.filter(c => c.vendedor === vendedor && c.seg === seg);
-  openDrill(vendedor, `Segmento ${seg} — no llegaron al CCC (Pepsico > 3 unidades, 01/09-17/09)`, list);
+  openDrill(vendedor, `Segmento ${seg} — no llegaron al CCC (Pepsico > 3 unidades, 01/09-22/09)`, list);
 }
+const pehuamarSubRows = [
+  {codven:"1",  n:"Maria Noelia Madia",     universo:179, Matambrito:23, Chimichurri:15, LisaAcanalada90:19},
+  {codven:"2",  n:"Julian Nuñez",           universo:188, Matambrito:33, Chimichurri:20, LisaAcanalada90:47},
+  {codven:"3",  n:"Ezequiel Hack",          universo:221, Matambrito:25, Chimichurri:11, LisaAcanalada90:28},
+  {codven:"4",  n:"Lucas Giayetto",         universo:234, Matambrito:51, Chimichurri:25, LisaAcanalada90:48},
+  {codven:"5",  n:"Nicolas Martinez",       universo:211, Matambrito:36, Chimichurri:21, LisaAcanalada90:45},
+  {codven:"6",  n:"Camila Martinez",        universo:217, Matambrito:46, Chimichurri:33, LisaAcanalada90:59},
+  {codven:"7",  n:"Ramiro Rando",           universo:224, Matambrito:36, Chimichurri:21, LisaAcanalada90:38},
+  {codven:"8",  n:"Martinica Rodriguez",    universo:253, Matambrito:58, Chimichurri:18, LisaAcanalada90:32},
+  {codven:"9",  n:"Ludmila Aylen Martinez", universo:203, Matambrito:31, Chimichurri:21, LisaAcanalada90:55},
+  {codven:"10", n:"Matias Parada",          universo:215, Matambrito:20, Chimichurri:9,  LisaAcanalada90:23},
+  {codven:"11", n:"Melanie Larrama",        universo:201, Matambrito:62, Chimichurri:23, LisaAcanalada90:55},
+  {codven:"12", n:"Agustin Pogorzelski",    universo:203, Matambrito:44, Chimichurri:22, LisaAcanalada90:41},
+];
+const PEHUAMAR_SUB_OBJ = 30;
+const PEHUAMAR_SUB_LABELS = {Matambrito:"Pehuamar Matambrito", Chimichurri:"Pehuamar Chimichurri", LisaAcanalada90:"Pehuamar Lisa + Acanalada x90g"};
+
+function productSubTable(rowsData, key, label, obj){
+  const items = rowsData.map(r => {
+    const cob = r.universo ? r[key] / r.universo * 100 : 0;
+    const cump = obj ? cob / obj * 100 : 0;
+    return {n: r.n, universo: r.universo, count: r[key], cob, cump};
+  });
+  const totU = items.reduce((s,i)=>s+i.universo,0);
+  const totC = items.reduce((s,i)=>s+i.count,0);
+  const totCob = totU ? totC/totU*100 : 0;
+  const totCump = obj ? totCob / obj * 100 : 0;
+  return `
+    <h4 style="font-family:'Fraunces',serif;font-weight:600;font-size:14.5px;margin:18px 0 8px">${label}</h4>
+    <table>
+      <thead><tr><th>Vendedor</th><th style="text-align:right">Clientes</th><th style="text-align:right">Objetivo</th><th style="text-align:right">Cobertura</th><th style="text-align:right">Cump. %</th></tr></thead>
+      <tbody>
+        ${items.map(i => `<tr><td>${i.n}</td><td style="text-align:right">${fmt(i.count,0)}</td><td style="text-align:right">${fmt(obj,0)}%</td><td style="text-align:right">${fmt(i.cob,1)}%</td><td style="text-align:right"><span class="pill ${tier(i.cump)}">${fmt(i.cump,1)}%</span></td></tr>`).join('')}
+      </tbody>
+      <tfoot><tr style="font-weight:700"><td>Total PepsiCo</td><td style="text-align:right">${fmt(totC,0)}</td><td style="text-align:right">${fmt(obj,0)}%</td><td style="text-align:right">${fmt(totCob,1)}%</td><td style="text-align:right">${fmt(totCump,1)}%</td></tr></tfoot>
+    </table>
+  `;
+}
+
+function drillPehuamar(){
+  const html = Object.keys(PEHUAMAR_SUB_LABELS).map(k => productSubTable(pehuamarSubRows, k, PEHUAMAR_SUB_LABELS[k], PEHUAMAR_SUB_OBJ)).join('');
+  openDrillCustom('Pehuamar — desglose por producto', 'Cobertura = clientes con 3+ unidades del producto ÷ universo del vendedor · Objetivo 30% por vendedor · período 01/09-22/09', html);
+}
+
+const laysSubRows = [
+  {codven:"1",  n:"Maria Noelia Madia",     universo:179, Caprese:25, SalMarina:37, LimonHierbas:0},
+  {codven:"2",  n:"Julian Nuñez",           universo:188, Caprese:16, SalMarina:44, LimonHierbas:0},
+  {codven:"3",  n:"Ezequiel Hack",          universo:221, Caprese:19, SalMarina:25, LimonHierbas:0},
+  {codven:"4",  n:"Lucas Giayetto",         universo:234, Caprese:19, SalMarina:21, LimonHierbas:0},
+  {codven:"5",  n:"Nicolas Martinez",       universo:211, Caprese:9,  SalMarina:11, LimonHierbas:0},
+  {codven:"6",  n:"Camila Martinez",        universo:217, Caprese:36, SalMarina:49, LimonHierbas:0},
+  {codven:"7",  n:"Ramiro Rando",           universo:224, Caprese:20, SalMarina:29, LimonHierbas:0},
+  {codven:"8",  n:"Martinica Rodriguez",    universo:253, Caprese:21, SalMarina:37, LimonHierbas:0},
+  {codven:"9",  n:"Ludmila Aylen Martinez", universo:203, Caprese:18, SalMarina:26, LimonHierbas:0},
+  {codven:"10", n:"Matias Parada",          universo:215, Caprese:21, SalMarina:45, LimonHierbas:0},
+  {codven:"11", n:"Melanie Larrama",        universo:201, Caprese:9,  SalMarina:12, LimonHierbas:0},
+  {codven:"12", n:"Agustin Pogorzelski",    universo:203, Caprese:12, SalMarina:24, LimonHierbas:0},
+];
+const LAYS_SUB_OBJ = 20;
+const LAYS_SUB_LABELS = {Caprese:"Lays Rústicas Caprese", SalMarina:"Lays Rústicas Sal Marina", LimonHierbas:"Lays Rústicas Limón y Hierbas"};
+
+function drillLays(){
+  const html = Object.keys(LAYS_SUB_LABELS).map(k => productSubTable(laysSubRows, k, LAYS_SUB_LABELS[k], LAYS_SUB_OBJ)).join('');
+  openDrillCustom('Lays — Rústicas por sabor', 'Cobertura = clientes con 3+ unidades del sabor ÷ universo del vendedor · Objetivo 20% por vendedor · período 01/09-22/09', html);
+}
+
+const tostitosSubRows = [
+  {codven:"1",  n:"Maria Noelia Madia",     universo:179, G144:3, G90:28},
+  {codven:"2",  n:"Julian Nuñez",           universo:188, G144:4, G90:16},
+  {codven:"3",  n:"Ezequiel Hack",          universo:221, G144:6, G90:22},
+  {codven:"4",  n:"Lucas Giayetto",         universo:234, G144:2, G90:14},
+  {codven:"5",  n:"Nicolas Martinez",       universo:211, G144:0, G90:3},
+  {codven:"6",  n:"Camila Martinez",        universo:217, G144:2, G90:37},
+  {codven:"7",  n:"Ramiro Rando",           universo:224, G144:2, G90:15},
+  {codven:"8",  n:"Martinica Rodriguez",    universo:253, G144:12, G90:18},
+  {codven:"9",  n:"Ludmila Aylen Martinez", universo:203, G144:0, G90:14},
+  {codven:"10", n:"Matias Parada",          universo:215, G144:0, G90:11},
+  {codven:"11", n:"Melanie Larrama",        universo:201, G144:0, G90:6},
+  {codven:"12", n:"Agustin Pogorzelski",    universo:203, G144:1, G90:5},
+];
+const TOSTITOS_SUB_OBJ = 20;
+const TOSTITOS_SUB_LABELS = {G144:"Tostitos Hierbas y Limón 144g", G90:"Tostitos Hierbas y Limón 90g"};
+
+function drillTostitos(){
+  const html = Object.keys(TOSTITOS_SUB_LABELS).map(k => productSubTable(tostitosSubRows, k, TOSTITOS_SUB_LABELS[k], TOSTITOS_SUB_OBJ)).join('');
+  openDrillCustom('Tostitos — Hierbas y Limón por gramaje', 'Cobertura = clientes con 3+ unidades del gramaje ÷ universo del vendedor · Objetivo 20% por vendedor · período 01/09-22/09', html);
+}
+
 function drillByDia(vendedor, dia) {
   const list = dia === 'Total'
     ? noCompradoresDetalle.filter(c => c.vendedor === vendedor)
     : noCompradoresDetalle.filter(c => c.vendedor === vendedor && c.dia === dia);
-  const sub = dia === 'Total' ? 'Todos los días — no llegaron al CCC' : `Ruta de ${dia} — no llegaron al CCC (Pepsico > 3 unidades, 01/09-17/09)`;
+  const sub = dia === 'Total' ? 'Todos los días — no llegaron al CCC' : `Ruta de ${dia} — no llegaron al CCC (Pepsico > 3 unidades, 01/09-22/09)`;
   openDrill(vendedor, sub, list);
 }
 
+function drillMnSeguimiento(vendedor, dia) {
+  const vendMatch = c => c.vendedor === vendedor || c.vendedor.split(' - ').pop() === vendedor;
+  const list = dia === 'Total'
+    ? mnSeguimientoDetalle.filter(vendMatch)
+    : mnSeguimientoDetalle.filter(c => vendMatch(c) && c.dia === dia);
+  const html = `
+    <p class="modal-count">${list.length} clientes</p>
+    <table>
+      <thead><tr><th>Código</th><th>Cliente</th><th>Localidad</th><th>Activo</th><th style="text-align:right">% Venta MN</th><th>Motivo</th></tr></thead>
+      <tbody>
+        ${list.map(c => `<tr><td>${c.cod}</td><td>${c.nombre||''}</td><td>${c.localidad||''}</td><td>${c.activo?'Sí':'No'}</td><td style="text-align:right">${c.ratio!==null?fmt(c.ratio,1)+'%':'-'}</td><td>${c.motivo}</td></tr>`).join('')}
+      </tbody>
+    </table>
+  `;
+  const sub = dia === 'Total' ? 'Todos los días — necesita seguimiento en Mi Negocio+' : `Ruta de ${dia} — necesita seguimiento en Mi Negocio+`;
+  openDrillCustom(vendedor, sub, html);
+}
+
+function fmtFechaFrescura(iso) {
+  const [y,m,d] = iso.split('-');
+  return `${d}/${m}`;
+}
+function tierDias(d) { return d<=10 ? 'bad' : d<=30 ? 'warn' : 'good'; }
+
+function renderFrescura() {
+  if (!frescuraData) return;
+  const arts = frescuraData.articulos;
+  let totVendido = 0, totCuota = 0;
+  arts.forEach(a => {
+    totVendido += Math.min(a.vendidoCodigo, a.cuotaTotal);
+    totCuota += a.cuotaTotal;
+  });
+  const totPct = totCuota ? totVendido/totCuota*100 : 0;
+  document.getElementById('fresc-tot-pct').textContent = fmt(totPct,1) + '%';
+  document.getElementById('fresc-tot-vendidas').textContent = fmt(totVendido);
+  document.getElementById('fresc-tot-cuota').textContent = fmt(totCuota);
+  document.getElementById('fresc-tot-faltan').textContent = fmt(totCuota-totVendido);
+
+  document.getElementById('tbody-frescura').innerHTML = arts.map(a => {
+    const cuotaVend = a.cuotaTotal / 12;
+    const accion = a.diasAlVencimiento < 30 ? '50% desc' : 'FOCO';
+    const accionClass = a.diasAlVencimiento < 30 ? 'bad' : 'warn';
+    return `
+    <tr class="clickable" onclick="drillFrescura('${a.codigo}')">
+      <td class="name">${a.descripcion}</td>
+      <td>${a.codigo}</td>
+      <td>${a.origen}</td>
+      <td>${fmtFechaFrescura(a.fechaVencimiento)}</td>
+      <td><span class="pill ${tierDias(a.diasAlVencimiento)}">${a.diasAlVencimiento} d</span></td>
+      <td>${fmt(a.cuotaTotal)}</td>
+      <td>${fmt(cuotaVend,1)}</td>
+      <td>${fmt(a.vendidoCodigo)}</td>
+      <td><span class="pill ${accionClass}">${accion}</span></td>
+    </tr>
+  `;}).join('');
+  document.getElementById('tfoot-frescura').innerHTML = `
+    <tr>
+      <td class="name">Total</td>
+      <td></td><td></td><td></td><td></td>
+      <td>${fmt(totCuota)}</td><td>${fmt(totCuota/12,1)}</td><td>${fmt(totVendido)}</td><td></td>
+    </tr>
+  `;
+}
+
+function drillFrescura(codigo) {
+  const a = frescuraData.articulos.find(x => x.codigo === codigo);
+  if (!a) return;
+  const vend = a.porVendedor.slice().sort((x,y) => y.vendido - x.vendido);
+  const html = `
+    <p class="modal-count">Cuota total: ${fmt(a.cuotaTotal)} · Vendido: ${fmt(a.vendidoCodigo)} · Vence ${fmtFechaFrescura(a.fechaVencimiento)} (${a.diasAlVencimiento} días)</p>
+    <table>
+      <thead><tr><th>Vendedor</th><th style="text-align:right">Vendido</th><th style="text-align:right">Objetivo</th><th style="text-align:right">% Cumplido</th></tr></thead>
+      <tbody>
+        ${vend.map(v => `<tr><td>${v.nombre}</td><td style="text-align:right">${fmt(v.vendido)}</td><td style="text-align:right">${fmt(v.cuota)}</td><td style="text-align:right"><span class="pill ${tier(v.pct*100)}">${fmt(v.pct*100,1)}%</span></td></tr>`).join('')}
+      </tbody>
+    </table>
+  `;
+  openDrillCustom(a.descripcion, `Código ${a.codigo} — objetivo y vendido por vendedor`, html);
+}
+
 const rows = [
-  {n:"Ludmila Aylen Martinez", p1o:1842.82,p1a:1057.29,p1p:99.45, p2o:1185.19,p2a:503.31,p2p:73.61, to:3028.0,ta:1560.6,tp:89.3,real:85.34, venta:36626190},
-  {n:"Julian Nuñez",            p1o:1772.69,p1a:939.05, p1p:91.82,p2o:957.44, p2a:513.04,p2p:92.88, to:2730.1,ta:1452.1,tp:92.2,real:58.20, venta:33187874},
-  {n:"Maria Noelia Madia",      p1o:1347.05,p1a:739.46, p1p:95.15,p2o:509.50, p2a:254.86,p2p:86.71, to:1856.5,ta:994.3, tp:92.8,real:53.34, venta:23132261},
-  {n:"Agustin Pogorzelski",     p1o:1321.55,p1a:724.31, p1p:95.00,p2o:499.27, p2a:265.84,p2p:92.29, to:1820.8,ta:990.1, tp:94.3,real:59.46, venta:24030535},
-  {n:"Melanie Larrama",         p1o:1309.56,p1a:700.23, p1p:92.68,p2o:659.77, p2a:388.45,p2p:102.05,to:1969.3,ta:1088.7,tp:95.8,real:41.61, venta:23304471},
-  {n:"Ezequiel Hack",           p1o:1382.44,p1a:788.49, p1p:98.86,p2o:637.89, p2a:364.96,p2p:99.17, to:2020.3,ta:1153.5,tp:99.0,real:46.75, venta:27937448},
-  {n:"Camila Martinez",         p1o:1299.88,p1a:794.76, p1p:105.98,p2o:550.79,p2a:300.44,p2p:94.55, to:1850.7,ta:1095.2,tp:102.6,real:42.89, venta:26343753},
-  {n:"Matias Parada",           p1o:1270.48,p1a:761.38, p1p:103.88,p2o:488.19,p2a:284.22,p2p:100.91,to:1758.7,ta:1045.6,tp:103.1,real:36.22, venta:24835020},
-  {n:"Ramiro Rando",            p1o:1670.92,p1a:1021.46,p1p:105.96,p2o:570.34,p2a:341.62,p2p:103.82,to:2241.3,ta:1363.1,tp:105.4,real:43.68, venta:33272229},
-  {n:"Lucas Giayetto",          p1o:1764.64,p1a:1130.29,p1p:111.02,p2o:641.37,p2a:417.83,p2p:112.92,to:2406.0,ta:1548.1,tp:111.5,real:95.67, venta:33644402},
-  {n:"Martinica Rodriguez",     p1o:1423.91,p1a:864.90, p1p:105.29,p2o:674.54,p2a:511.41,p2p:131.41,to:2098.4,ta:1376.3,tp:113.7,real:65.87, venta:31704004},
-  {n:"Nicolas Martinez",        p1o:1594.06,p1a:1109.22,p1p:120.61,p2o:625.71,p2a:378.59,p2p:104.88,to:2219.8,ta:1487.8,tp:116.2,real:61.21, venta:32959567},
+  {n:"Julian Nuñez",            p1o:1772.69,p1a:1170.32,p1p:90.33, p2o:957.44, p2a:641.24,p2p:91.66, to:2730.13,ta:1811.56,tp:90.80, real:145.32, venta:43470200, promedio:95.35,medianec:131.22,penult:172.52,ultima:115.10},
+  {n:"Ludmila Aylen Martinez", p1o:1842.82,p1a:1357.63,p1p:100.81, p2o:1185.19,p2a:642.29,p2p:74.14, to:3028.01,ta:1999.92,tp:90.37, real:186.89, venta:48937656, promedio:105.26,medianec:146.87,penult:154.52,ultima:69.07},
+  {n:"Agustin Pogorzelski",     p1o:1321.55,p1a:963.12, p1p:99.72, p2o:499.27, p2a:341.62,p2p:93.64, to:1820.82,ta:1304.74,tp:98.06, real:107.60, venta:33752874, promedio:68.67,medianec:73.73,penult:52.94,ultima:54.68},
+  {n:"Melanie Larrama",         p1o:1309.56,p1a:919.99, p1p:96.13, p2o:659.77, p2a:470.05,p2p:97.50, to:1969.33,ta:1390.04,tp:96.59, real:89.01, venta:32696376, promedio:73.16,medianec:82.76,penult:45.46,ultima:66.15},
+  {n:"Maria Noelia Madia",      p1o:1347.05,p1a:985.84, p1p:100.12,p2o:509.50, p2a:329.42,p2p:88.47, to:1856.55,ta:1315.26,tp:96.93, real:63.36, venta:32494320, promedio:69.22,medianec:77.33,penult:70.28,ultima:60.48},
+  {n:"Ezequiel Hack",           p1o:1382.44,p1a:993.44, p1p:98.33, p2o:637.89, p2a:450.90,p2p:96.74, to:2020.33,ta:1444.34,tp:97.83, real:73.40, venta:38245474, promedio:76.02,medianec:82.28,penult:65.90,ultima:44.98},
+  {n:"Matias Parada",           p1o:1270.48,p1a:991.64, p1p:106.81,p2o:488.19,p2a:356.93,p2p:100.05, to:1758.67,ta:1348.57,tp:104.93, real:98.89, venta:34228978, promedio:70.98,medianec:58.59,penult:49.21,ultima:60.32},
+  {n:"Camila Martinez",         p1o:1299.88,p1a:1069.22, p1p:112.56,p2o:550.79,p2a:380.08,p2p:94.43, to:1850.67,ta:1449.30,tp:107.18, real:80.79, venta:37574039, promedio:76.28,medianec:57.34,penult:32.11,ultima:35.01},
+  {n:"Ramiro Rando",            p1o:1670.92,p1a:1347.24,p1p:110.33,p2o:570.34,p2a:426.74,p2p:102.41,to:2241.26,ta:1773.98,tp:108.31, real:87.29, venta:46722890, promedio:93.36,medianec:66.75,penult:70.27,ultima:74.09},
+  {n:"Martinica Rodriguez",     p1o:1423.91,p1a:1112.44,p1p:106.91,p2o:674.54,p2a:642.48,p2p:130.32,to:2098.45,ta:1754.92,tp:114.45, real:122.99, venta:42403482, promedio:92.36,medianec:49.08,penult:97.51,ultima:60.09},
+  {n:"Nicolas Martinez",        p1o:1594.06,p1a:1373.46,p1p:117.90,p2o:625.71,p2a:482.97,p2p:105.65,to:2219.77,ta:1856.43,tp:114.45, real:83.84, venta:44663697, promedio:97.70,medianec:51.91,penult:98.87,ultima:56.65},
+  {n:"Lucas Giayetto",          p1o:1764.64,p1a:1472.51,p1p:114.19,p2o:641.37,p2a:552.54,p2p:117.91,to:2406.01,ta:2025.05,tp:115.17, real:180.63, venta:49232551, promedio:106.58,medianec:54.42,penult:82.80,ultima:82.49},
 ];
 
 const mnRows = [
-  {n:"Ezequiel Hack",           mn:803.0,  acum:1153.5, share:69.6, avanceMn:68.9},
-  {n:"Matias Parada",           mn:733.0,  acum:1045.6, share:70.1, avanceMn:72.2},
-  {n:"Ludmila Aylen Martinez",  mn:1184.9, acum:1560.6, share:75.9, avanceMn:67.8},
-  {n:"Lucas Giayetto",          mn:1231.7, acum:1548.1, share:79.6, avanceMn:88.7},
-  {n:"Camila Martinez",         mn:881.3,  acum:1095.2, share:80.5, avanceMn:82.5},
-  {n:"Agustin Pogorzelski",     mn:798.5,  acum:990.1,  share:80.6, avanceMn:76.0},
-  {n:"Melanie Larrama",         mn:881.1,  acum:1088.7, share:80.9, avanceMn:77.6},
-  {n:"Nicolas Martinez",        mn:1227.2, acum:1487.8, share:82.5, avanceMn:95.8},
-  {n:"Martinica Rodriguez",     mn:1162.5, acum:1376.3, share:84.5, avanceMn:96.0},
-  {n:"Maria Noelia Madia",      mn:872.9,  acum:994.3,  share:87.8, avanceMn:81.5},
-  {n:"Julian Nuñez",            mn:1289.8, acum:1452.1, share:88.8, avanceMn:81.9},
-  {n:"Ramiro Rando",            mn:1211.5, acum:1363.1, share:88.9, avanceMn:93.7},
+  {n:"Matias Parada",           mn:910.66,  acum:1348.57, share:67.52, avanceMn:79.20, universo:215, registrado:166, activos:79,  fullyDigital:59},
+  {n:"Ezequiel Hack",           mn:994.64,  acum:1444.34, share:68.86, avanceMn:75.29, universo:221, registrado:188, activos:80,  fullyDigital:67},
+  {n:"Ludmila Aylen Martinez",  mn:1505.37, acum:1999.92, share:75.28, avanceMn:76.03, universo:203, registrado:171, activos:116, fullyDigital:85},
+  {n:"Lucas Giayetto",          mn:1593.86, acum:2025.05, share:78.71, avanceMn:101.31, universo:234, registrado:184, activos:104, fullyDigital:83},
+  {n:"Melanie Larrama",         mn:1103.71, acum:1390.04, share:79.40, avanceMn:85.73, universo:201, registrado:180, activos:98,  fullyDigital:78},
+  {n:"Camila Martinez",         mn:1160.82, acum:1449.30, share:80.09, avanceMn:95.92, universo:217, registrado:200, activos:142, fullyDigital:106},
+  {n:"Agustin Pogorzelski",     mn:1051.82, acum:1304.74, share:80.62, avanceMn:88.35, universo:203, registrado:184, activos:111, fullyDigital:100},
+  {n:"Nicolas Martinez",        mn:1522.69, acum:1856.43, share:82.02, avanceMn:104.90, universo:211, registrado:206, activos:149, fullyDigital:115},
+  {n:"Martinica Rodriguez",     mn:1489.00, acum:1754.92, share:84.85, avanceMn:108.52, universo:254, registrado:200, activos:131, fullyDigital:110},
+  {n:"Maria Noelia Madia",      mn:1134.31, acum:1315.26, share:86.24, avanceMn:93.44, universo:176, registrado:169, activos:103, fullyDigital:95},
+  {n:"Ramiro Rando",            mn:1535.18, acum:1773.98, share:86.54, avanceMn:104.76, universo:223, registrado:196, activos:125, fullyDigital:115},
+  {n:"Julian Nuñez",            mn:1594.09, acum:1811.56, share:87.99, avanceMn:89.30, universo:190, registrado:173, activos:133, fullyDigital:115},
 ];
 
 const marcaVendRows = [
-  {codven:"1",  n:"Maria Noelia Madia",     universo:179, "3Ds":52.5,"Cheetos":48.6,"Doritos":62.6,"Lays":67.0,"Pehuamar":56.4,"Pep":57.0,"Quaker":5.0,"Tostitos":3.9,"Twistos":52.0},
-  {codven:"2",  n:"Julian Nuñez",           universo:188, "3Ds":47.3,"Cheetos":49.5,"Doritos":66.0,"Lays":64.9,"Pehuamar":51.6,"Pep":46.8,"Quaker":5.9,"Tostitos":9.0,"Twistos":45.7},
-  {codven:"3",  n:"Ezequiel Hack",          universo:221, "3Ds":48.0,"Cheetos":46.2,"Doritos":61.5,"Lays":50.7,"Pehuamar":34.8,"Pep":42.1,"Quaker":1.4,"Tostitos":4.5,"Twistos":37.1},
-  {codven:"4",  n:"Lucas Giayetto",         universo:234, "3Ds":44.0,"Cheetos":46.2,"Doritos":62.4,"Lays":48.7,"Pehuamar":41.0,"Pep":48.7,"Quaker":4.3,"Tostitos":4.7,"Twistos":35.9},
-  {codven:"5",  n:"Nicolas Martinez",       universo:211, "3Ds":58.3,"Cheetos":56.9,"Doritos":73.9,"Lays":67.8,"Pehuamar":52.6,"Pep":52.1,"Quaker":6.2,"Tostitos":10.4,"Twistos":52.6},
-  {codven:"6",  n:"Camila Martinez",        universo:217, "3Ds":44.7,"Cheetos":47.9,"Doritos":66.4,"Lays":66.8,"Pehuamar":57.1,"Pep":47.9,"Quaker":2.3,"Tostitos":6.9,"Twistos":47.9},
-  {codven:"7",  n:"Ramiro Rando",           universo:224, "3Ds":50.4,"Cheetos":51.8,"Doritos":69.6,"Lays":62.9,"Pehuamar":44.6,"Pep":58.0,"Quaker":3.6,"Tostitos":4.9,"Twistos":39.3},
-  {codven:"8",  n:"Martinica Rodriguez",    universo:253, "3Ds":42.3,"Cheetos":35.6,"Doritos":64.0,"Lays":48.6,"Pehuamar":41.1,"Pep":38.3,"Quaker":2.4,"Tostitos":2.0,"Twistos":41.5},
-  {codven:"9",  n:"Ludmila Aylen Martinez", universo:203, "3Ds":51.7,"Cheetos":51.7,"Doritos":65.0,"Lays":58.6,"Pehuamar":55.2,"Pep":48.3,"Quaker":4.4,"Tostitos":10.3,"Twistos":42.4},
-  {codven:"10", n:"Matias Parada",          universo:215, "3Ds":42.8,"Cheetos":50.7,"Doritos":64.2,"Lays":57.7,"Pehuamar":34.4,"Pep":52.6,"Quaker":3.3,"Tostitos":7.4,"Twistos":43.7},
-  {codven:"11", n:"Melanie Larrama",        universo:201, "3Ds":47.8,"Cheetos":49.8,"Doritos":64.2,"Lays":65.7,"Pehuamar":54.7,"Pep":43.8,"Quaker":1.5,"Tostitos":6.5,"Twistos":43.8},
-  {codven:"12", n:"Agustin Pogorzelski",    universo:203, "3Ds":50.7,"Cheetos":53.2,"Doritos":68.0,"Lays":60.1,"Pehuamar":47.8,"Pep":44.3,"Quaker":2.5,"Tostitos":8.4,"Twistos":49.3},
+  {codven:"1",  n:"Maria Noelia Madia",     universo:179, "3Ds":57.0,"Cheetos":51.4,"Doritos":68.7,"Lays":70.9,"Pehuamar":58.1,"Pep":58.1,"Quaker":5.0,"Tostitos":16.8,"Twistos":58.7},
+  {codven:"2",  n:"Julian Nuñez",           universo:188, "3Ds":53.2,"Cheetos":53.2,"Doritos":69.1,"Lays":70.7,"Pehuamar":53.7,"Pep":50.5,"Quaker":5.9,"Tostitos":14.9,"Twistos":50.0},
+  {codven:"3",  n:"Ezequiel Hack",          universo:221, "3Ds":55.7,"Cheetos":53.8,"Doritos":68.3,"Lays":57.5,"Pehuamar":37.6,"Pep":45.7,"Quaker":1.4,"Tostitos":13.1,"Twistos":39.4},
+  {codven:"4",  n:"Lucas Giayetto",         universo:234, "3Ds":54.3,"Cheetos":58.5,"Doritos":73.1,"Lays":61.5,"Pehuamar":47.0,"Pep":56.0,"Quaker":7.3,"Tostitos":8.5,"Twistos":39.3},
+  {codven:"5",  n:"Nicolas Martinez",       universo:211, "3Ds":65.9,"Cheetos":63.0,"Doritos":79.1,"Lays":74.9,"Pehuamar":56.4,"Pep":61.1,"Quaker":7.1,"Tostitos":12.8,"Twistos":56.4},
+  {codven:"6",  n:"Camila Martinez",        universo:217, "3Ds":58.1,"Cheetos":56.2,"Doritos":77.0,"Lays":78.3,"Pehuamar":62.2,"Pep":53.0,"Quaker":2.8,"Tostitos":21.2,"Twistos":51.6},
+  {codven:"7",  n:"Ramiro Rando",           universo:224, "3Ds":61.2,"Cheetos":58.0,"Doritos":75.9,"Lays":68.8,"Pehuamar":53.6,"Pep":62.9,"Quaker":3.6,"Tostitos":10.7,"Twistos":45.5},
+  {codven:"8",  n:"Martinica Rodriguez",    universo:253, "3Ds":49.4,"Cheetos":42.3,"Doritos":70.4,"Lays":57.7,"Pehuamar":43.9,"Pep":45.5,"Quaker":3.2,"Tostitos":8.3,"Twistos":44.7},
+  {codven:"9",  n:"Ludmila Aylen Martinez", universo:203, "3Ds":64.5,"Cheetos":62.1,"Doritos":74.9,"Lays":71.9,"Pehuamar":63.5,"Pep":54.7,"Quaker":4.9,"Tostitos":13.3,"Twistos":48.3},
+  {codven:"10", n:"Matias Parada",          universo:215, "3Ds":52.6,"Cheetos":55.8,"Doritos":68.8,"Lays":64.2,"Pehuamar":37.7,"Pep":52.6,"Quaker":3.7,"Tostitos":11.6,"Twistos":47.0},
+  {codven:"11", n:"Melanie Larrama",        universo:201, "3Ds":61.2,"Cheetos":56.7,"Doritos":72.1,"Lays":74.6,"Pehuamar":64.2,"Pep":50.2,"Quaker":2.0,"Tostitos":9.0,"Twistos":48.8},
+  {codven:"12", n:"Agustin Pogorzelski",    universo:203, "3Ds":59.6,"Cheetos":58.1,"Doritos":71.9,"Lays":66.5,"Pehuamar":54.2,"Pep":49.3,"Quaker":3.9,"Tostitos":9.4,"Twistos":53.7},
 ];
 const MARCA_COLS = ["3Ds","Cheetos","Doritos","Lays","Pehuamar","Pep","Quaker","Tostitos","Twistos"];
 const marcaVendTotal = {universo: marcaVendRows.reduce((s,r)=>s+r.universo,0)};
@@ -641,61 +1476,538 @@ function heatColor(v, min, max){
   return {bg:`hsl(${hue},70%,88%)`, fg:`hsl(${hue},65%,28%)`};
 }
 
-const tpRows = [
-  {n:"Maria Noelia Madia",     cumple:51, universo:179, punt:83.4, comboKg:4.208,  comboImp:96000.14,   invKg:27.506, invImp:867500.51},
-  {n:"Julian Nuñez",           cumple:31, universo:189, punt:72.0, comboKg:66.322, comboImp:1508216.69, invKg:32.776, invImp:1005516.59},
-  {n:"Ezequiel Hack",          cumple:76, universo:221, punt:82.6, comboKg:126.299,comboImp:2801218.21, invKg:18.413, invImp:509340.96},
-  {n:"Lucas Giayetto",         cumple:49, universo:232, punt:78.5, comboKg:44.703, comboImp:660001.39,  invKg:32.765, invImp:785143.01},
-  {n:"Nicolas Martinez",       cumple:79, universo:211, punt:84.7, comboKg:74.946, comboImp:1545644.92, invKg:18.151, invImp:513643.05},
-  {n:"Camila Martinez",        cumple:53, universo:214, punt:82.0, comboKg:57.274, comboImp:961501.81,  invKg:19.959, invImp:553973.52},
-  {n:"Ramiro Rando",           cumple:65, universo:223, punt:79.9, comboKg:21.126, comboImp:393000.68,  invKg:43.790, invImp:1291095.62},
-  {n:"Martinica Rodriguez",    cumple:63, universo:252, punt:79.2, comboKg:0,      comboImp:0,          invKg:19.890, invImp:586188.62},
-  {n:"Ludmila Aylen Martinez", cumple:59, universo:203, punt:83.7, comboKg:40.616, comboImp:741001.41,  invKg:14.049, invImp:418214.77},
-  {n:"Matias Parada",          cumple:51, universo:214, punt:70.4, comboKg:8.416,  comboImp:192000.28,  invKg:29.644, invImp:802857.94},
-  {n:"Melanie Larrama",        cumple:50, universo:201, punt:59.2, comboKg:7.909,  comboImp:130500.24,  invKg:25.773, invImp:745929.24},
-  {n:"Agustin Pogorzelski",    cumple:65, universo:203, punt:83.0, comboKg:40.714, comboImp:841001.39,  invKg:21.878, invImp:679786.11},
+let portafolioDetalle = [];
+fetch('oportunidad_portafolio.json').then(r => r.json()).then(data => { portafolioDetalle = data; }).catch(() => {});
+
+function openDrillPortafolio(title, subtitle, list) {
+  document.getElementById('drillDefaultBody').style.display = '';
+  document.getElementById('drillCustomBody').style.display = 'none';
+  document.getElementById('drillTitle').textContent = title;
+  document.getElementById('drillSubtitle').textContent = subtitle;
+  document.getElementById('drillCount').textContent = list.length + (list.length === 1 ? ' cliente' : ' clientes');
+  document.getElementById('drillBody').innerHTML = list.map(c => `
+    <tr>
+      <td>${c.codigo}</td><td>${c.razon}</td><td>${c.direccion}</td><td>${c.localidad}</td>
+      <td>${c.telefono || '—'}</td><td>${c.seg}</td><td>${c.dia || '—'}</td>
+    </tr>
+  `).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--muted)">Sin clientes en esta selección</td></tr>';
+  document.getElementById('drillModal').classList.add('open');
+}
+
+function drillPortDia(vendedor, dia) {
+  const list = dia === 'Total'
+    ? portafolioDetalle.filter(c => c.vendedor === vendedor)
+    : portafolioDetalle.filter(c => c.vendedor === vendedor && c.dia === dia);
+  const sub = dia === 'Total' ? 'Todos los días — Oportunidad de Portafolio (60%-79%)' : `Ruta de ${dia} — Oportunidad de Portafolio (60%-79%)`;
+  openDrillPortafolio(vendedor, sub, list);
+}
+function drillPortSeg(vendedor, seg) {
+  const list = seg === 'Total'
+    ? portafolioDetalle.filter(c => c.vendedor === vendedor)
+    : portafolioDetalle.filter(c => c.vendedor === vendedor && c.seg === seg);
+  const sub = seg === 'Total' ? 'Todos los segmentos — Oportunidad de Portafolio (60%-79%)' : `Segmento ${seg} — Oportunidad de Portafolio (60%-79%)`;
+  openDrillPortafolio(vendedor, sub, list);
+}
+
+const portDiaRows = [
+  {n:"Camila Martinez",        Lunes:[6,28],  Martes:[13,33], Miercoles:[16,37], Jueves:[10,37], Viernes:[6,32],  Sabado:[3,15], totOp:54, totU:182},
+  {n:"Matias Parada",          Lunes:[11,38], Martes:[9,38],  Miercoles:[10,39], Jueves:[5,38],  Viernes:[6,18],  Sabado:[3,17], totOp:44, totU:188},
+  {n:"Maria Noelia Madia",     Lunes:[8,38],  Martes:[6,24],  Miercoles:[10,31], Jueves:[10,27], Viernes:[9,36],  Sabado:[1,7],  totOp:44, totU:163},
+  {n:"Melanie Larrama",        Lunes:[11,32], Martes:[7,30],  Miercoles:[5,16],  Jueves:[7,40],  Viernes:[7,32],  Sabado:[5,22], totOp:42, totU:172},
+  {n:"Julian Nuñez",           Lunes:[9,32],  Martes:[7,37],  Miercoles:[12,30], Jueves:[6,36],  Viernes:[4,28],  Sabado:[3,8],  totOp:41, totU:171},
+  {n:"Ramiro Rando",           Lunes:[4,29],  Martes:[10,34], Miercoles:[8,37],  Jueves:[6,43],  Viernes:[9,34],  Sabado:[4,19], totOp:41, totU:196},
+  {n:"Martinica Rodriguez",    Lunes:[6,40],  Martes:[8,42],  Miercoles:[9,40],  Jueves:[6,41],  Viernes:[6,32],  Sabado:[5,26], totOp:40, totU:221},
+  {n:"Nicolas Martinez",       Lunes:[6,36],  Martes:[7,32],  Miercoles:[8,34],  Jueves:[8,32],  Viernes:[7,31],  Sabado:[1,20], totOp:37, totU:185},
+  {n:"Agustin Pogorzelski",    Lunes:[7,29],  Martes:[9,32],  Miercoles:[12,40], Jueves:[2,36],  Viernes:[5,32],  Sabado:[2,12], totOp:37, totU:181},
+  {n:"Lucas Giayetto",         Lunes:[4,30],  Martes:[3,38],  Miercoles:[7,36],  Jueves:[4,30],  Viernes:[13,53], Sabado:[5,25], totOp:36, totU:212},
+  {n:"Ludmila Aylen Martinez", Lunes:[4,35],  Martes:[9,37],  Miercoles:[10,40], Jueves:[3,29],  Viernes:[6,31],  Sabado:[3,20], totOp:35, totU:192},
+  {n:"Ezequiel Hack",          Lunes:[6,39],  Martes:[7,37],  Miercoles:[8,44],  Jueves:[4,37],  Viernes:[5,28],  Sabado:[1,15], totOp:31, totU:200},
 ];
 
-const marcaRows = [
-  {marca:"PEHUAMAR", kg:3865.2, clientes:1352},
-  {marca:"Doritos",  kg:2836.3, clientes:1773},
-  {marca:"Lays",     kg:2718.7, clientes:1653},
-  {marca:"TWISTOS",  kg:1206.7, clientes:1255},
-  {marca:"Cheetos",  kg:1113.5, clientes:1493},
-  {marca:"PEP",      kg:1043.6, clientes:1329},
-  {marca:"3Ds",      kg:955.1,  clientes:1441},
-  {marca:"QUAKER",   kg:271.5,  clientes:142},
-  {marca:"TOSTITOS", kg:134.3,  clientes:247},
+const portSegRows = [
+  {n:"Camila Martinez",        A:[6,23],  B:[10,28], C:[15,60], D:[23,71],  totOp:54, totU:182},
+  {n:"Matias Parada",          A:[5,30],  B:[7,14],  C:[16,55], D:[16,89],  totOp:44, totU:188},
+  {n:"Maria Noelia Madia",     A:[10,32], B:[12,28], C:[13,53], D:[9,50],   totOp:44, totU:163},
+  {n:"Melanie Larrama",        A:[4,22],  B:[9,28],  C:[11,51], D:[18,71],  totOp:42, totU:172},
+  {n:"Julian Nuñez",           A:[12,39], B:[6,18],  C:[13,49], D:[10,65],  totOp:41, totU:171},
+  {n:"Ramiro Rando",           A:[9,39],  B:[6,34],  C:[15,44], D:[11,79],  totOp:41, totU:196},
+  {n:"Martinica Rodriguez",    A:[8,22],  B:[6,20],  C:[16,54], D:[10,125], totOp:40, totU:221},
+  {n:"Nicolas Martinez",       A:[6,34],  B:[7,28],  C:[16,53], D:[8,70],   totOp:37, totU:185},
+  {n:"Agustin Pogorzelski",    A:[1,25],  B:[5,23],  C:[17,52], D:[14,81],  totOp:37, totU:181},
+  {n:"Lucas Giayetto",         A:[4,41],  B:[7,27],  C:[12,43], D:[13,101], totOp:36, totU:212},
+  {n:"Ludmila Aylen Martinez", A:[4,41],  B:[3,22],  C:[12,54], D:[16,75],  totOp:35, totU:192},
+  {n:"Ezequiel Hack",          A:[2,25],  B:[5,21],  C:[12,51], D:[12,103], totOp:31, totU:200},
 ];
-const UNIVERSO_CLIENTES = 2544;
+function tierOportunidad(p){ return p<=15 ? 'good' : p<=25 ? 'warn' : 'bad'; }
+function fmtCellOp([op,u]){ return `${op}/${u}`; }
+
+const tbodyPortDia = document.getElementById('tbody-portdia');
+tbodyPortDia.innerHTML = portDiaRows.map(r => {
+  const pct = r.totU ? r.totOp/r.totU*100 : 0;
+  return `
+  <tr>
+    <td class="name">${r.n}</td>
+    <td class="clickable" onclick="drillPortDia('${r.n}','Lunes')">${fmtCellOp(r.Lunes)}</td>
+    <td class="clickable" onclick="drillPortDia('${r.n}','Martes')">${fmtCellOp(r.Martes)}</td>
+    <td class="clickable" onclick="drillPortDia('${r.n}','Miercoles')">${fmtCellOp(r.Miercoles)}</td>
+    <td class="clickable" onclick="drillPortDia('${r.n}','Jueves')">${fmtCellOp(r.Jueves)}</td>
+    <td class="clickable" onclick="drillPortDia('${r.n}','Viernes')">${fmtCellOp(r.Viernes)}</td>
+    <td class="clickable" onclick="drillPortDia('${r.n}','Sabado')">${fmtCellOp(r.Sabado)}</td>
+    <td class="clickable" onclick="drillPortDia('${r.n}','Total')"><span class="pill ${tierOportunidad(pct)}">${r.totOp}/${r.totU}</span></td>
+  </tr>
+`;}).join('');
+const totPortDia = {Lunes:[0,0],Martes:[0,0],Miercoles:[0,0],Jueves:[0,0],Viernes:[0,0],Sabado:[0,0],totOp:0,totU:0};
+portDiaRows.forEach(r => {
+  ['Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'].forEach(d => { totPortDia[d][0]+=r[d][0]; totPortDia[d][1]+=r[d][1]; });
+  totPortDia.totOp += r.totOp; totPortDia.totU += r.totU;
+});
+document.getElementById('tfoot-portdia').innerHTML = `
+  <tr>
+    <td class="name">Total PepsiCo</td>
+    <td>${fmtCellOp(totPortDia.Lunes)}</td><td>${fmtCellOp(totPortDia.Martes)}</td><td>${fmtCellOp(totPortDia.Miercoles)}</td>
+    <td>${fmtCellOp(totPortDia.Jueves)}</td><td>${fmtCellOp(totPortDia.Viernes)}</td><td>${fmtCellOp(totPortDia.Sabado)}</td>
+    <td>${fmt(totPortDia.totOp)}/${fmt(totPortDia.totU)}</td>
+  </tr>
+`;
+
+const tbodyPortSeg = document.getElementById('tbody-portseg');
+tbodyPortSeg.innerHTML = portSegRows.map(r => {
+  const pct = r.totU ? r.totOp/r.totU*100 : 0;
+  return `
+  <tr>
+    <td class="name">${r.n}</td>
+    <td class="clickable" onclick="drillPortSeg('${r.n}','A')">${fmtCellOp(r.A)}</td>
+    <td class="clickable" onclick="drillPortSeg('${r.n}','B')">${fmtCellOp(r.B)}</td>
+    <td class="clickable" onclick="drillPortSeg('${r.n}','C')">${fmtCellOp(r.C)}</td>
+    <td class="clickable" onclick="drillPortSeg('${r.n}','D')">${fmtCellOp(r.D)}</td>
+    <td class="clickable" onclick="drillPortSeg('${r.n}','Total')"><span class="pill ${tierOportunidad(pct)}">${r.totOp}/${r.totU}</span></td>
+  </tr>
+`;}).join('');
+const totPortSeg = {A:[0,0],B:[0,0],C:[0,0],D:[0,0],totOp:0,totU:0};
+portSegRows.forEach(r => {
+  ['A','B','C','D'].forEach(s => { totPortSeg[s][0]+=r[s][0]; totPortSeg[s][1]+=r[s][1]; });
+  totPortSeg.totOp += r.totOp; totPortSeg.totU += r.totU;
+});
+document.getElementById('tfoot-portseg').innerHTML = `
+  <tr>
+    <td class="name">Total PepsiCo</td>
+    <td>${fmtCellOp(totPortSeg.A)}</td><td>${fmtCellOp(totPortSeg.B)}</td><td>${fmtCellOp(totPortSeg.C)}</td><td>${fmtCellOp(totPortSeg.D)}</td>
+    <td>${fmt(totPortSeg.totOp)}/${fmt(totPortSeg.totU)}</td>
+  </tr>
+`;
+
+const tpFinalRows = [
+  {n:"Maria Noelia Madia",     A:{obj:21,cumple:16},B:{obj:18,cumple:4}, C:{obj:28,cumple:26},D:{obj:23,cumple:15}},
+  {n:"Julian Nuñez",           A:{obj:26,cumple:26},B:{obj:12,cumple:7}, C:{obj:26,cumple:21},D:{obj:29,cumple:12}},
+  {n:"Ezequiel Hack",          A:{obj:17,cumple:17},B:{obj:14,cumple:9}, C:{obj:27,cumple:21},D:{obj:46,cumple:34}},
+  {n:"Lucas Giayetto",         A:{obj:28,cumple:24},B:{obj:17,cumple:13},C:{obj:23,cumple:9}, D:{obj:46,cumple:7}},
+  {n:"Nicolas Martinez",       A:{obj:23,cumple:23},B:{obj:18,cumple:16},C:{obj:28,cumple:25},D:{obj:32,cumple:18}},
+  {n:"Camila Martinez",        A:{obj:15,cumple:14},B:{obj:18,cumple:8}, C:{obj:32,cumple:21},D:{obj:32,cumple:15}},
+  {n:"Ramiro Rando",           A:{obj:26,cumple:24},B:{obj:22,cumple:13},C:{obj:23,cumple:13},D:{obj:35,cumple:24}},
+  {n:"Martinica Rodriguez",    A:{obj:15,cumple:11},B:{obj:13,cumple:9}, C:{obj:29,cumple:16},D:{obj:56,cumple:39}},
+  {n:"Ludmila Aylen Martinez", A:{obj:27,cumple:28},B:{obj:14,cumple:11},C:{obj:29,cumple:16},D:{obj:34,cumple:14}},
+  {n:"Matias Parada",          A:{obj:21,cumple:19},B:{obj:9, cumple:5}, C:{obj:29,cumple:18},D:{obj:40,cumple:19}},
+  {n:"Melanie Larrama",        A:{obj:15,cumple:16},B:{obj:18,cumple:14},C:{obj:27,cumple:26},D:{obj:32,cumple:21}},
+  {n:"Agustin Pogorzelski",    A:{obj:17,cumple:20},B:{obj:15,cumple:13},C:{obj:27,cumple:22},D:{obj:36,cumple:18}},
+];
+tpFinalRows.forEach(r => {
+  "ABCD".split('').forEach(s => { r[s].avance = r[s].obj ? r[s].cumple/r[s].obj*100 : 0; });
+  r.totObj = r.A.obj+r.B.obj+r.C.obj+r.D.obj;
+  r.totCumple = r.A.cumple+r.B.cumple+r.C.cumple+r.D.cumple;
+  r.totAv = r.totObj ? r.totCumple/r.totObj*100 : 0;
+});
+tpFinalRows.sort((a,b) => a.totAv - b.totAv);
 
 function fmt(n, d=0){ return n.toLocaleString('es-AR', {minimumFractionDigits:d, maximumFractionDigits:d}); }
 function tier(p){ return p>=100 ? 'good' : p>=90 ? 'warn' : 'bad'; }
 function tierShare(p){ return p>=85 ? 'good' : p>=75 ? 'warn' : 'bad'; }
-function tierPunt(p){ return p>=80 ? 'good' : p>=70 ? 'warn' : 'bad'; }
 
 const tbodyTp = document.getElementById('tbody-tp');
-tbodyTp.innerHTML = tpRows.map(r => `
+tbodyTp.innerHTML = tpFinalRows.map(r => `
   <tr>
     <td class="name">${r.n}</td>
-    <td>${r.cumple}/${r.universo} <span class="pill ${tierShare(r.cumple/r.universo*100)}">${fmt(r.cumple/r.universo*100,1)}%</span></td>
-    <td><span class="pill ${tierPunt(r.punt)}">${fmt(r.punt,1)}</span></td>
+    <td>${fmt(r.A.obj)}</td><td>${fmt(r.A.cumple)}</td><td><span class="pill ${tier(r.A.avance)}">${fmt(r.A.avance,1)}%</span></td>
     <td></td>
-    <td>${fmt(r.comboKg,1)}</td><td>${fmt(r.comboImp)}</td>
+    <td>${fmt(r.B.obj)}</td><td>${fmt(r.B.cumple)}</td><td><span class="pill ${tier(r.B.avance)}">${fmt(r.B.avance,1)}%</span></td>
     <td></td>
-    <td>${fmt(r.invKg,1)}</td><td>${fmt(r.invImp)}</td>
+    <td>${fmt(r.C.obj)}</td><td>${fmt(r.C.cumple)}</td><td><span class="pill ${tier(r.C.avance)}">${fmt(r.C.avance,1)}%</span></td>
+    <td></td>
+    <td>${fmt(r.D.obj)}</td><td>${fmt(r.D.cumple)}</td><td><span class="pill ${tier(r.D.avance)}">${fmt(r.D.avance,1)}%</span></td>
+    <td></td>
+    <td>${fmt(r.totObj)}</td><td>${fmt(r.totCumple)}</td><td><span class="pill ${tier(r.totAv)}">${fmt(r.totAv,1)}%</span></td>
   </tr>
 `).join('');
 
-const tbodyMarca = document.getElementById('tbody-marca');
-tbodyMarca.innerHTML = marcaRows.map(r => `
+const invendibleRows = [
+  {n:"Ramiro Rando",           venta:46722890, canje:-1289287},
+  {n:"Maria Noelia Madia",     venta:32494320, canje:-867501},
+  {n:"Julian Nuñez",           venta:43470200, canje:-1005517},
+  {n:"Matias Parada",          venta:34228978, canje:-802858},
+  {n:"Melanie Larrama",        venta:32696376, canje:-745929},
+  {n:"Agustin Pogorzelski",    venta:33752874, canje:-737143},
+  {n:"Lucas Giayetto",         venta:49232551, canje:-785143},
+  {n:"Ezequiel Hack",          venta:38245474, canje:-559929},
+  {n:"Camila Martinez",        venta:37574039, canje:-553974},
+  {n:"Martinica Rodriguez",    venta:42403482, canje:-586189},
+  {n:"Nicolas Martinez",       venta:44663697, canje:-512143},
+  {n:"Ludmila Aylen Martinez", venta:48937656, canje:-418215},
+];
+invendibleRows.forEach(r => { r.pct = r.venta ? Math.abs(r.canje)/r.venta*100 : 0; });
+
+const tbodyInvendible = document.getElementById('tbody-invendible');
+tbodyInvendible.innerHTML = invendibleRows.map(r => `
   <tr>
-    <td class="name">${r.marca}</td>
-    <td>${fmt(r.kg,1)}</td>
-    <td>${fmt(r.clientes)}</td>
-    <td>${fmt(r.clientes/UNIVERSO_CLIENTES*100,1)}%</td>
+    <td class="name clickable" onclick="drillInvendible('${r.n}')">${r.n}</td>
+    <td>$ ${fmt(r.venta)}</td>
+    <td>-$ ${fmt(Math.abs(r.canje))}</td>
+    <td><span class="pill ${r.pct<=1.5?'good':r.pct<=2.5?'warn':'bad'}">${fmt(r.pct,2)}%</span></td>
   </tr>
 `).join('');
+
+const rechazoRows = [
+  {n:"Ezequiel Hack",           venta:38245474, rechazo:-2072275},
+  {n:"Lucas Giayetto",          venta:49232551, rechazo:-1421194},
+  {n:"Camila Martinez",         venta:37574039, rechazo:-1313326},
+  {n:"Nicolas Martinez",        venta:44663697, rechazo:-1214747},
+  {n:"Ludmila Aylen Martinez",  venta:48937656, rechazo:-1136858},
+  {n:"Melanie Larrama",         venta:32696376, rechazo:-847900},
+  {n:"Agustin Pogorzelski",     venta:33752874, rechazo:-709168},
+  {n:"Ramiro Rando",            venta:46722890, rechazo:-699929},
+  {n:"Matias Parada",           venta:34228978, rechazo:-676293},
+  {n:"Julian Nuñez",            venta:43470200, rechazo:-631668},
+  {n:"Maria Noelia Madia",      venta:32494320, rechazo:-81286},
+  {n:"Martinica Rodriguez",     venta:42403482, rechazo:-73143},
+];
+rechazoRows.forEach(r => { r.pct = r.venta ? Math.abs(r.rechazo)/r.venta*100 : 0; });
+rechazoRows.sort((a,b) => b.pct - a.pct);
+const rechazoTot = rechazoRows.reduce((acc,r) => { acc.venta += r.venta; acc.rechazo += r.rechazo; return acc; }, {venta:0, rechazo:0});
+
+const tbodyRechazos = document.getElementById('tbody-rechazos');
+tbodyRechazos.innerHTML = rechazoRows.map(r => `
+  <tr>
+    <td class="name clickable" onclick="drillRechazo('${r.n}')">${r.n}</td>
+    <td>$ ${fmt(r.venta)}</td>
+    <td>-$ ${fmt(Math.abs(r.rechazo))}</td>
+    <td><span class="pill ${r.pct<=1.5?'good':r.pct<=3?'warn':'bad'}">${fmt(r.pct,2)}%</span></td>
+  </tr>
+`).join('');
+document.getElementById('tfoot-rechazos').innerHTML = `
+  <tr>
+    <td class="name">Total PepsiCo</td>
+    <td>$ ${fmt(rechazoTot.venta)}</td>
+    <td>-$ ${fmt(Math.abs(rechazoTot.rechazo))}</td>
+    <td>${fmt(Math.abs(rechazoTot.rechazo)/rechazoTot.venta*100,2)}%</td>
+  </tr>
+`;
+
+const motivoRows = [
+  {motivo:"RECHAZO",                                       cant:337, importe:-3001013},
+  {motivo:"ERROR DE PREVENTA",                              cant:127, importe:-2080744},
+  {motivo:"NO SE CARGÓ",                                    cant:81,  importe:-1794320},
+  {motivo:"CERRADO",                                        cant:179, importe:-1272679},
+  {motivo:"NO ENTREGADO",                                   cant:103, importe:-1134704},
+  {motivo:"SIN DINERO",                                     cant:148, importe:-895058},
+  {motivo:"Error de Armado: Diferencia de unidades",        cant:41,  importe:-383697},
+  {motivo:"SIN STOCK",                                      cant:27,  importe:-299407},
+  {motivo:"Error de Armado: Producto roto o mal estado",    cant:11,  importe:-75664},
+  {motivo:"Rotura",                                         cant:4,   importe:-9286},
+];
+document.getElementById('tbody-motivos').innerHTML = motivoRows.map(r => `
+  <tr>
+    <td class="name">${r.motivo}</td>
+    <td>${fmt(r.cant)}</td>
+    <td>-$ ${fmt(Math.abs(r.importe))}</td>
+  </tr>
+`).join('');
+
+const motivosUltimaFechaRows = [
+  {n:"Lucas Giayetto",  cliente:"744",  razon:"VERONICA ELIZABETH FIGUEROA", motivo:"ERROR DE PREVENTA", cant:8, importe:-788529},
+  {n:"Melanie Larrama", cliente:"1086", razon:"CREMONA SA",                  motivo:"SIN STOCK",         cant:2, importe:-10029},
+];
+document.getElementById('tbody-motivosUltimaFecha').innerHTML = motivosUltimaFechaRows.map(r => `
+  <tr>
+    <td class="name">${r.n}</td>
+    <td>${r.cliente}</td>
+    <td>${r.razon}</td>
+    <td>${r.motivo}</td>
+    <td>${fmt(r.cant)}</td>
+    <td>-$ ${fmt(Math.abs(r.importe))}</td>
+  </tr>
+`).join('');
+
+const comboRows = [
+  {n:"Ezequiel Hack",           combos:69, reconocer:903136.00},
+  {n:"Ludmila Aylen Martinez",  combos:25, reconocer:744732.52},
+  {n:"Lucas Giayetto",          combos:14, reconocer:607992.24},
+  {n:"Camila Martinez",         combos:17, reconocer:482213.49},
+  {n:"Nicolas Martinez",        combos:40, reconocer:433597.81},
+  {n:"Julian Nuñez",            combos:37, reconocer:427433.90},
+  {n:"Agustin Pogorzelski",     combos:16, reconocer:234113.40},
+  {n:"Ramiro Rando",            combos:3,  reconocer:134597.56},
+  {n:"Matias Parada",           combos:6,  reconocer:131254.02},
+  {n:"Maria Noelia Madia",      combos:4,  reconocer:109568.10},
+  {n:"Melanie Larrama",         combos:2,  reconocer:52389.71},
+  {n:"Martinica Rodriguez",     combos:0,  reconocer:0},
+];
+comboRows.sort((a,b) => b.reconocer - a.reconocer);
+const comboTot = comboRows.reduce((acc,r) => { acc.combos += r.combos; acc.reconocer += r.reconocer; return acc; }, {combos:0, reconocer:0});
+document.getElementById('combo-tot-cant').textContent = fmt(comboTot.combos);
+document.getElementById('combo-tot-monto').textContent = '$ ' + fmt(comboTot.reconocer);
+
+const tbodyCombos = document.getElementById('tbody-combos');
+tbodyCombos.innerHTML = comboRows.map(r => `
+  <tr>
+    <td class="name clickable" onclick="drillCombos('${r.n}')">${r.n}</td>
+    <td>${fmt(r.combos)}</td>
+    <td>$ ${fmt(r.reconocer)}</td>
+  </tr>
+`).join('');
+document.getElementById('tfoot-combos').innerHTML = `
+  <tr>
+    <td class="name">Total PepsiCo</td>
+    <td>${fmt(comboTot.combos)}</td>
+    <td>$ ${fmt(comboTot.reconocer)}</td>
+  </tr>
+`;
+
+const comboDetalleRows = [
+  {n:"Ezequiel Hack",           combo:"Combo FDS LB (Lays + Doritos) 12+4", cantidad:46, reconocer:498776.16},
+  {n:"Ezequiel Hack",           combo:"Lays y Pehua MB 33+33",              cantidad:8,  reconocer:349134.38},
+  {n:"Ezequiel Hack",           combo:"GLOBAL MB 12+3",                     cantidad:7,  reconocer:29008.26},
+  {n:"Ezequiel Hack",           combo:"Combo TW MB 8+2",                    cantidad:4,  reconocer:13997.60},
+  {n:"Ezequiel Hack",           combo:"GLOBAL SB 12+3",                     cantidad:4,  reconocer:12219.60},
+  {n:"Ludmila Aylen Martinez",  combo:"Lays y Pehua MB 33+33",              cantidad:15, reconocer:654327.67},
+  {n:"Ludmila Aylen Martinez",  combo:"Combo FDS LB (Lays + Doritos) 12+4", cantidad:7,  reconocer:75900.72},
+  {n:"Ludmila Aylen Martinez",  combo:"GLOBAL MB 12+3",                     cantidad:3,  reconocer:14504.13},
+  {n:"Lucas Giayetto",          combo:"Lays y Pehua MB 33+33",              cantidad:14, reconocer:607992.24},
+  {n:"Camila Martinez",         combo:"Lays y Pehua MB 33+33",              cantidad:9,  reconocer:395469.81},
+  {n:"Camila Martinez",         combo:"Combo FDS LB (Lays + Doritos) 12+4", cantidad:8,  reconocer:86743.68},
+  {n:"Nicolas Martinez",        combo:"Lays y Pehua MB 33+33",              cantidad:5,  reconocer:214916.77},
+  {n:"Nicolas Martinez",        combo:"Combo FDS LB (Lays + Doritos) 12+4", cantidad:12, reconocer:130115.52},
+  {n:"Nicolas Martinez",        combo:"GLOBAL MB 12+3",                     cantidad:13, reconocer:58016.52},
+  {n:"Nicolas Martinez",        combo:"GLOBAL SB 12+3",                     cantidad:10, reconocer:30549.00},
+  {n:"Julian Nuñez",            combo:"Combo FDS LB (Lays + Doritos) 12+4", cantidad:22, reconocer:238545.12},
+  {n:"Julian Nuñez",            combo:"Lays y Pehua MB 33+33",              cantidad:3,  reconocer:129428.93},
+  {n:"Julian Nuñez",            combo:"GLOBAL MB 12+3",                     cantidad:10, reconocer:48347.10},
+  {n:"Julian Nuñez",            combo:"Reg Global MB 20+5",                 cantidad:1,  reconocer:8057.85},
+  {n:"Julian Nuñez",            combo:"GLOBAL SB 12+3",                     cantidad:1,  reconocer:3054.90},
+  {n:"Agustin Pogorzelski",     combo:"Combo FDS LB (Lays + Doritos) 12+4", cantidad:12, reconocer:130115.52},
+  {n:"Agustin Pogorzelski",     combo:"Lays y Pehua MB 33+33",              cantidad:2,  reconocer:87882.18},
+  {n:"Agustin Pogorzelski",     combo:"Reg Global MB 20+5",                 cantidad:2,  reconocer:16115.70},
+  {n:"Ramiro Rando",            combo:"Lays y Pehua MB 33+33",              cantidad:2,  reconocer:83093.50},
+  {n:"Ramiro Rando",            combo:"Combo Mundial Doritos LB 3+1 Cajas", cantidad:1,  reconocer:51504.06},
+  {n:"Matias Parada",           combo:"Lays y Pehua MB 33+33",              cantidad:2,  reconocer:87882.18},
+  {n:"Matias Parada",           combo:"Combo FDS LB (Lays + Doritos) 12+4", cantidad:4,  reconocer:43371.84},
+  {n:"Maria Noelia Madia",      combo:"Lays y Pehua MB 33+33",              cantidad:2,  reconocer:87882.18},
+  {n:"Maria Noelia Madia",      combo:"Combo FDS LB (Lays + Doritos) 12+4", cantidad:2,  reconocer:21685.92},
+  {n:"Melanie Larrama",         combo:"Lays y Pehua MB 33+33",              cantidad:1,  reconocer:41546.75},
+  {n:"Melanie Larrama",         combo:"Combo FDS LB (Lays + Doritos) 12+4", cantidad:1,  reconocer:10842.96},
+];
+const COMBO_TYPES = [
+  "Lays y Pehua MB 33+33",
+  "Combo FDS LB (Lays + Doritos) 12+4",
+  "GLOBAL MB 12+3",
+  "Combo Mundial Doritos LB 3+1 Cajas",
+  "GLOBAL SB 12+3",
+  "Reg Global MB 20+5",
+  "Combo TW MB 8+2",
+];
+const COMBO_LABELS = {
+  "Lays y Pehua MB 33+33": "Lays+Pehua 33+33",
+  "Combo FDS LB (Lays + Doritos) 12+4": "FDS Lays+Dor 12+4",
+  "GLOBAL MB 12+3": "Global MB 12+3",
+  "Combo Mundial Doritos LB 3+1 Cajas": "Doritos Mundial 3+1",
+  "GLOBAL SB 12+3": "Global SB 12+3",
+  "Reg Global MB 20+5": "Reg Global 20+5",
+  "Combo TW MB 8+2": "TW MB 8+2",
+};
+
+const comboPivot = comboRows.map(cr => {
+  const byCombo = {};
+  COMBO_TYPES.forEach(c => { byCombo[c] = {cantidad:0, reconocer:0}; });
+  comboDetalleRows.filter(d => d.n === cr.n).forEach(d => { byCombo[d.combo] = {cantidad:d.cantidad, reconocer:d.reconocer}; });
+  return {n: cr.n, byCombo, totCantidad: cr.combos, totReconocer: cr.reconocer};
+});
+
+document.getElementById('grp-combosDetalle').innerHTML = `
+  <th></th>
+  ${COMBO_TYPES.map(c => `<th colspan="2">${COMBO_LABELS[c]}</th><th></th>`).join('')}
+  <th colspan="2">Total</th>
+`;
+document.getElementById('cols-combosDetalle').innerHTML = `
+  <th class="name-col">Vendedor</th>
+  ${COMBO_TYPES.map(() => `<th>Cant.</th><th>$</th><th></th>`).join('')}
+  <th>Cant.</th><th>$</th>
+`;
+document.getElementById('tbody-combosDetalle').innerHTML = comboPivot.map(r => `
+  <tr>
+    <td class="name">${r.n}</td>
+    ${COMBO_TYPES.map(c => `<td>${r.byCombo[c].cantidad ? fmt(r.byCombo[c].cantidad) : '-'}</td><td>${r.byCombo[c].reconocer ? '$ '+fmt(r.byCombo[c].reconocer) : '-'}</td><td></td>`).join('')}
+    <td>${fmt(r.totCantidad)}</td><td>$ ${fmt(r.totReconocer)}</td>
+  </tr>
+`).join('');
+document.getElementById('tfoot-combosDetalle').innerHTML = `
+  <tr>
+    <td class="name">Total PepsiCo</td>
+    ${COMBO_TYPES.map(c => {
+      const cant = comboPivot.reduce((s,r) => s + r.byCombo[c].cantidad, 0);
+      const rec = comboPivot.reduce((s,r) => s + r.byCombo[c].reconocer, 0);
+      return `<td>${fmt(cant)}</td><td>$ ${fmt(rec)}</td><td></td>`;
+    }).join('')}
+    <td>${fmt(comboTot.combos)}</td><td>$ ${fmt(comboTot.reconocer)}</td>
+  </tr>
+`;
+
+const comboMnRows = [
+  {n:"Nicolas Martinez",       combos:288, reconocer:718244.87},
+  {n:"Ludmila Aylen Martinez", combos:187, reconocer:450338.14},
+  {n:"Lucas Giayetto",         combos:153, reconocer:419420.80},
+  {n:"Ramiro Rando",           combos:208, reconocer:398303.93},
+  {n:"Ezequiel Hack",          combos:121, reconocer:274126.27},
+  {n:"Martinica Rodriguez",    combos:192, reconocer:271783.27},
+  {n:"Matias Parada",          combos:174, reconocer:270656.95},
+  {n:"Agustin Pogorzelski",    combos:204, reconocer:267375.40},
+  {n:"Julian Nuñez",           combos:142, reconocer:238880.69},
+  {n:"Melanie Larrama",        combos:140, reconocer:232159.93},
+  {n:"Maria Noelia Madia",     combos:145, reconocer:219791.56},
+  {n:"Camila Martinez",        combos:213, reconocer:191435.01},
+];
+comboMnRows.sort((a,b) => b.reconocer - a.reconocer);
+const comboMnTot = comboMnRows.reduce((acc,r) => { acc.combos += r.combos; acc.reconocer += r.reconocer; return acc; }, {combos:0, reconocer:0});
+document.getElementById('comboMn-tot-cant').textContent = fmt(comboMnTot.combos);
+document.getElementById('comboMn-tot-monto').textContent = '$ ' + fmt(comboMnTot.reconocer);
+
+const tbodyCombosMn = document.getElementById('tbody-combosMn');
+tbodyCombosMn.innerHTML = comboMnRows.map(r => `
+  <tr>
+    <td class="name">${r.n}</td>
+    <td>${fmt(r.combos)}</td>
+    <td>$ ${fmt(r.reconocer)}</td>
+  </tr>
+`).join('');
+document.getElementById('tfoot-combosMn').innerHTML = `
+  <tr>
+    <td class="name">Total PepsiCo</td>
+    <td>${fmt(comboMnTot.combos)}</td>
+    <td>$ ${fmt(comboMnTot.reconocer)}</td>
+  </tr>
+`;
+
+const comboMnDetalleRows = [
+  {n:"Maria Noelia Madia",     combo:"MB20x5",          cantidad:44, reconocer:153099.15},
+  {n:"Maria Noelia Madia",     combo:"SB20x5",          cantidad:43, reconocer:40732.00},
+  {n:"Maria Noelia Madia",     combo:"TwistosMB8x1",    cantidad:28, reconocer:13997.60},
+  {n:"Maria Noelia Madia",     combo:"TwistosSB8x1",    cantidad:25, reconocer:5091.50},
+  {n:"Maria Noelia Madia",     combo:"MB8x1",           cantidad:3,  reconocer:4834.71},
+  {n:"Maria Noelia Madia",     combo:"SB8x1",           cantidad:2,  reconocer:2036.60},
+  {n:"Julian Nuñez",           combo:"MB20x5",          cantidad:48, reconocer:136983.45},
+  {n:"Julian Nuñez",           combo:"SB20x5",          cantidad:39, reconocer:56006.50},
+  {n:"Julian Nuñez",           combo:"TwistosMB8x1",    cantidad:23, reconocer:19246.70},
+  {n:"Julian Nuñez",           combo:"Sin Descripcion", cantidad:2,  reconocer:13237.90},
+  {n:"Julian Nuñez",           combo:"TwistosSB8x1",    cantidad:27, reconocer:9164.70},
+  {n:"Julian Nuñez",           combo:"MB8x1",           cantidad:2,  reconocer:3223.14},
+  {n:"Julian Nuñez",           combo:"SB8x1",           cantidad:1,  reconocer:1018.30},
+  {n:"Ezequiel Hack",          combo:"MB20x5",          cantidad:34, reconocer:145041.30},
+  {n:"Ezequiel Hack",          combo:"SB20x5",          cantidad:35, reconocer:76372.50},
+  {n:"Ezequiel Hack",          combo:"TwistosMB8x1",    cantidad:17, reconocer:17497.00},
+  {n:"Ezequiel Hack",          combo:"Sin Descripcion", cantidad:2,  reconocer:17311.10},
+  {n:"Ezequiel Hack",          combo:"TwistosSB8x1",    cantidad:30, reconocer:16292.80},
+  {n:"Ezequiel Hack",          combo:"MB8x1",           cantidad:3,  reconocer:1611.57},
+  {n:"Lucas Giayetto",         combo:"MB20x5",          cantidad:46, reconocer:233677.65},
+  {n:"Lucas Giayetto",         combo:"SB20x5",          cantidad:46, reconocer:127287.50},
+  {n:"Lucas Giayetto",         combo:"TwistosMB8x1",    cantidad:25, reconocer:27995.20},
+  {n:"Lucas Giayetto",         combo:"TwistosSB8x1",    cantidad:30, reconocer:21384.30},
+  {n:"Lucas Giayetto",         combo:"MB8x1",           cantidad:5,  reconocer:8057.85},
+  {n:"Lucas Giayetto",         combo:"SB8x1",           cantidad:1,  reconocer:1018.30},
+  {n:"Nicolas Martinez",       combo:"MB20x5",          cantidad:83, reconocer:362603.25},
+  {n:"Nicolas Martinez",       combo:"Sin Descripcion", cantidad:21, reconocer:156641.10},
+  {n:"Nicolas Martinez",       combo:"SB20x5",          cantidad:84, reconocer:137470.50},
+  {n:"Nicolas Martinez",       combo:"TwistosMB8x1",    cantidad:44, reconocer:31494.60},
+  {n:"Nicolas Martinez",       combo:"TwistosSB8x1",    cantidad:50, reconocer:20366.00},
+  {n:"Nicolas Martinez",       combo:"MB8x1",           cantidad:6,  reconocer:9669.42},
+  {n:"Camila Martinez",        combo:"MB20x5",          cantidad:60, reconocer:112809.90},
+  {n:"Camila Martinez",        combo:"SB20x5",          cantidad:59, reconocer:35640.50},
+  {n:"Camila Martinez",        combo:"TwistosMB8x1",    cantidad:34, reconocer:15747.30},
+  {n:"Camila Martinez",        combo:"TwistosSB8x1",    cantidad:53, reconocer:11201.30},
+  {n:"Camila Martinez",        combo:"Sin Descripcion", cantidad:2,  reconocer:10183.00},
+  {n:"Camila Martinez",        combo:"MB8x1",           cantidad:4,  reconocer:4834.71},
+  {n:"Camila Martinez",        combo:"SB8x1",           cantidad:1,  reconocer:1018.30},
+  {n:"Ramiro Rando",           combo:"MB20x5",          cantidad:66, reconocer:233677.65},
+  {n:"Ramiro Rando",           combo:"SB20x5",          cantidad:68, reconocer:122196.00},
+  {n:"Ramiro Rando",           combo:"TwistosMB8x1",    cantidad:39, reconocer:22746.10},
+  {n:"Ramiro Rando",           combo:"TwistosSB8x1",    cantidad:30, reconocer:7128.10},
+  {n:"Ramiro Rando",           combo:"MB8x1",           cantidad:4,  reconocer:6446.28},
+  {n:"Ramiro Rando",           combo:"Sin Descripcion", cantidad:1,  reconocer:6109.80},
+  {n:"Martinica Rodriguez",    combo:"MB20x5",          cantidad:58, reconocer:161157.00},
+  {n:"Martinica Rodriguez",    combo:"SB20x5",          cantidad:57, reconocer:71281.00},
+  {n:"Martinica Rodriguez",    combo:"TwistosMB8x1",    cantidad:33, reconocer:24495.80},
+  {n:"Martinica Rodriguez",    combo:"TwistosSB8x1",    cantidad:42, reconocer:13237.90},
+  {n:"Martinica Rodriguez",    combo:"MB8x1",           cantidad:2,  reconocer:1611.57},
+  {n:"Ludmila Aylen Martinez", combo:"MB20x5",          cantidad:64, reconocer:290082.60},
+  {n:"Ludmila Aylen Martinez", combo:"SB20x5",          cantidad:55, reconocer:106921.50},
+  {n:"Ludmila Aylen Martinez", combo:"TwistosMB8x1",    cantidad:36, reconocer:29744.90},
+  {n:"Ludmila Aylen Martinez", combo:"TwistosSB8x1",    cantidad:27, reconocer:13237.90},
+  {n:"Ludmila Aylen Martinez", combo:"Sin Descripcion", cantidad:3,  reconocer:7128.10},
+  {n:"Ludmila Aylen Martinez", combo:"MB8x1",           cantidad:2,  reconocer:3223.14},
+  {n:"Matias Parada",          combo:"MB20x5",          cantidad:56, reconocer:169214.85},
+  {n:"Matias Parada",          combo:"SB20x5",          cantidad:51, reconocer:71281.00},
+  {n:"Matias Parada",          combo:"TwistosMB8x1",    cantidad:41, reconocer:20996.40},
+  {n:"Matias Parada",          combo:"TwistosSB8x1",    cantidad:25, reconocer:9164.70},
+  {n:"Matias Parada",          combo:"MB8x1",           cantidad:1,  reconocer:0},
+  {n:"Melanie Larrama",        combo:"MB20x5",          cantidad:41, reconocer:153099.15},
+  {n:"Melanie Larrama",        combo:"SB20x5",          cantidad:41, reconocer:50915.00},
+  {n:"Melanie Larrama",        combo:"TwistosMB8x1",    cantidad:22, reconocer:10498.20},
+  {n:"Melanie Larrama",        combo:"MB8x1",           cantidad:4,  reconocer:6446.28},
+  {n:"Melanie Larrama",        combo:"TwistosSB8x1",    cantidad:31, reconocer:6109.80},
+  {n:"Melanie Larrama",        combo:"Sin Descripcion", cantidad:1,  reconocer:5091.50},
+  {n:"Agustin Pogorzelski",    combo:"MB20x5",          cantidad:66, reconocer:161157.00},
+  {n:"Agustin Pogorzelski",    combo:"SB20x5",          cantidad:63, reconocer:81464.00},
+  {n:"Agustin Pogorzelski",    combo:"TwistosSB8x1",    cantidad:43, reconocer:13237.90},
+  {n:"Agustin Pogorzelski",    combo:"TwistosMB8x1",    cantidad:31, reconocer:10498.20},
+  {n:"Agustin Pogorzelski",    combo:"SB8x1",           cantidad:1,  reconocer:1018.30},
+];
+
+const COMBO_MN_TYPES = ["MB20x5", "SB20x5", "TwistosMB8x1", "TwistosSB8x1", "MB8x1", "SB8x1"];
+const COMBO_MN_LABELS = {
+  "MB20x5": "MB 20x5", "SB20x5": "SB 20x5", "TwistosMB8x1": "Twistos MB 8x1",
+  "Sin Descripcion": "Sin descripción", "TwistosSB8x1": "Twistos SB 8x1", "MB8x1": "MB 8x1", "SB8x1": "SB 8x1",
+};
+
+const comboMnPivot = comboMnRows.map(cr => {
+  const byCombo = {};
+  COMBO_MN_TYPES.forEach(c => { byCombo[c] = {cantidad:0, reconocer:0}; });
+  comboMnDetalleRows.filter(d => d.n === cr.n).forEach(d => { byCombo[d.combo] = {cantidad:d.cantidad, reconocer:d.reconocer}; });
+  return {n: cr.n, byCombo, totCantidad: cr.combos, totReconocer: cr.reconocer};
+});
+
+document.getElementById('grp-combosMnDetalle').innerHTML = `
+  <th></th>
+  ${COMBO_MN_TYPES.map(c => `<th colspan="2">${COMBO_MN_LABELS[c]}</th><th></th>`).join('')}
+  <th colspan="2">Total</th>
+`;
+document.getElementById('cols-combosMnDetalle').innerHTML = `
+  <th class="name-col">Vendedor</th>
+  ${COMBO_MN_TYPES.map(() => `<th>Cant.</th><th>$</th><th></th>`).join('')}
+  <th>Cant.</th><th>$</th>
+`;
+document.getElementById('tbody-combosMnDetalle').innerHTML = comboMnPivot.map(r => `
+  <tr>
+    <td class="name">${r.n}</td>
+    ${COMBO_MN_TYPES.map(c => `<td>${r.byCombo[c].cantidad ? fmt(r.byCombo[c].cantidad) : '-'}</td><td>${r.byCombo[c].reconocer ? '$ '+fmt(r.byCombo[c].reconocer) : '-'}</td><td></td>`).join('')}
+    <td>${fmt(r.totCantidad)}</td><td>$ ${fmt(r.totReconocer)}</td>
+  </tr>
+`).join('');
+document.getElementById('tfoot-combosMnDetalle').innerHTML = `
+  <tr>
+    <td class="name">Total PepsiCo</td>
+    ${COMBO_MN_TYPES.map(c => {
+      const cant = comboMnPivot.reduce((s,r) => s + r.byCombo[c].cantidad, 0);
+      const rec = comboMnPivot.reduce((s,r) => s + r.byCombo[c].reconocer, 0);
+      return `<td>${fmt(cant)}</td><td>$ ${fmt(rec)}</td><td></td>`;
+    }).join('')}
+    <td>${fmt(comboMnTot.combos)}</td><td>$ ${fmt(comboMnTot.reconocer)}</td>
+  </tr>
+`;
 
 const marcaColMinMax = {};
 MARCA_COLS.forEach(m => {
@@ -710,7 +2022,7 @@ function heatCell(m, v){
 const tbodyMarcaObj = document.getElementById('tbody-marcaObj');
 tbodyMarcaObj.innerHTML = marcaObjRows.map(r => `
   <tr>
-    <td class="name">${r.marca}</td>
+    <td class="name">${r.marca === 'Pehuamar' ? `<span class="clickable" onclick="drillPehuamar()">${r.marca}</span>` : r.marca === 'Lays' ? `<span class="clickable" onclick="drillLays()">${r.marca}</span>` : r.marca === 'Tostitos' ? `<span class="clickable" onclick="drillTostitos()">${r.marca}</span>` : r.marca}</td>
     <td>${fmt(r.obj,1)}%</td>
     <td>${fmt(r.cob,1)}%</td>
     <td><span class="pill ${tier(r.cump)}">${fmt(r.cump,1)}%</span></td>
@@ -735,18 +2047,18 @@ tfootMarcaVend.innerHTML = `
 `;
 
 const ccc2Rows = [
-  {n:"Ezequiel Hack",           ao:26,ac:25,bo:25,bc:21,co:54,cc:44,do_:92,dc:58},
-  {n:"Martinica Rodriguez",     ao:26,ac:27,bo:23,bc:20,co:58,cc:51,do_:115,dc:69},
-  {n:"Lucas Giayetto",          ao:41,ac:37,bo:32,bc:28,co:44,cc:41,do_:92,dc:54},
-  {n:"Ludmila Aylen Martinez",  ao:39,ac:39,bo:24,bc:22,co:58,cc:40,do_:63,dc:44},
-  {n:"Matias Parada",           ao:31,ac:30,bo:16,bc:15,co:58,cc:51,do_:86,dc:55},
-  {n:"Julian Nuñez",            ao:37,ac:37,bo:20,bc:19,co:50,cc:46,do_:63,dc:39},
-  {n:"Melanie Larrama",         ao:25,ac:24,bo:33,bc:27,co:59,cc:54,do_:65,dc:46},
-  {n:"Agustin Pogorzelski",     ao:25,ac:26,bo:27,bc:24,co:59,cc:55,do_:71,dc:46},
-  {n:"Camila Martinez",         ao:26,ac:24,bo:32,bc:32,co:71,cc:64,do_:68,dc:52},
-  {n:"Ramiro Rando",            ao:42,ac:43,bo:41,bc:38,co:47,cc:45,do_:73,dc:52},
-  {n:"Maria Noelia Madia",      ao:30,ac:31,bo:32,bc:27,co:55,cc:49,do_:47,dc:37},
-  {n:"Nicolas Martinez",        ao:36,ac:38,bo:32,bc:32,co:56,cc:51,do_:68,dc:50},
+  {n:"Ezequiel Hack",           ao:26,ac:25,bo:25,bc:20,co:54,cc:47,do_:92,dc:69},
+  {n:"Martinica Rodriguez",     ao:26,ac:28,bo:23,bc:20,co:58,cc:55,do_:115,dc:90},
+  {n:"Lucas Giayetto",          ao:41,ac:41,bo:32,bc:29,co:44,cc:44,do_:92,dc:72},
+  {n:"Ludmila Aylen Martinez",  ao:39,ac:41,bo:24,bc:22,co:58,cc:49,do_:63,dc:54},
+  {n:"Matias Parada",           ao:31,ac:31,bo:16,bc:15,co:58,cc:53,do_:86,dc:62},
+  {n:"Julian Nuñez",            ao:37,ac:38,bo:20,bc:19,co:50,cc:50,do_:63,dc:44},
+  {n:"Melanie Larrama",         ao:25,ac:24,bo:33,bc:29,co:59,cc:57,do_:65,dc:57},
+  {n:"Agustin Pogorzelski",     ao:26,ac:27,bo:27,bc:24,co:59,cc:55,do_:71,dc:56},
+  {n:"Camila Martinez",         ao:25,ac:25,bo:32,bc:31,co:71,cc:71,do_:68,dc:62},
+  {n:"Ramiro Rando",            ao:42,ac:43,bo:41,bc:38,co:47,cc:47,do_:73,dc:62},
+  {n:"Maria Noelia Madia",      ao:30,ac:30,bo:32,bc:27,co:55,cc:48,do_:47,dc:41},
+  {n:"Nicolas Martinez",        ao:36,ac:38,bo:32,bc:32,co:56,cc:56,do_:68,dc:58},
 ];
 function segAvance(o,c){ return o ? c/o*100 : 0; }
 ccc2Rows.forEach(r => {
@@ -773,18 +2085,18 @@ tbodyCcc2.innerHTML = ccc2Rows.map(r => `
 `).join('');
 
 const noCompraRows = [
-  {n:"Martinica Rodriguez",     lu:[11,43], ma:[16,50], mi:[14,47], ju:[17,42], vi:[15,36], sa:[13,35], totNc:86,  totU:253},
-  {n:"Lucas Giayetto",          lu:[8,32],  ma:[15,43], mi:[11,41], ju:[11,37], vi:[20,55], sa:[9,26],  totNc:74,  totU:234},
-  {n:"Ezequiel Hack",           lu:[12,42], ma:[17,42], mi:[10,49], ju:[17,41], vi:[12,33], sa:[5,14],  totNc:73,  totU:221},
-  {n:"Matias Parada",           lu:[12,45], ma:[11,42], mi:[13,42], ju:[16,42], vi:[7,23],  sa:[5,21],  totNc:64,  totU:215},
-  {n:"Ludmila Aylen Martinez",  lu:[13,40], ma:[9,37],  mi:[9,42],  ju:[9,29],  vi:[7,34],  sa:[11,21], totNc:58,  totU:203},
-  {n:"Agustin Pogorzelski",     lu:[3,32],  ma:[11,33], mi:[16,46], ju:[9,43],  vi:[11,35], sa:[2,14],  totNc:52,  totU:203},
-  {n:"Melanie Larrama",         lu:[9,39],  ma:[6,37],  mi:[6,22],  ju:[13,43], vi:[10,37], sa:[6,23],  totNc:50,  totU:201},
-  {n:"Julian Nuñez",            lu:[6,37],  ma:[7,39],  mi:[7,35],  ju:[11,38], vi:[11,29], sa:[5,10],  totNc:47,  totU:188},
-  {n:"Ramiro Rando",            lu:[9,34],  ma:[8,38],  mi:[3,40],  ju:[10,51], vi:[13,42], sa:[3,19],  totNc:46,  totU:224},
-  {n:"Camila Martinez",         lu:[8,44],  ma:[9,42],  mi:[4,34],  ju:[16,52], vi:[8,36],  sa:[0,9],   totNc:45,  totU:217},
-  {n:"Nicolas Martinez",        lu:[7,40],  ma:[5,39],  mi:[10,37], ju:[6,36],  vi:[7,37],  sa:[5,22],  totNc:40,  totU:211},
-  {n:"Maria Noelia Madia",      lu:[6,39],  ma:[4,28],  mi:[7,33],  ju:[5,29],  vi:[11,38], sa:[2,12],  totNc:35,  totU:179},
+  {n:"Martinica Rodriguez",     lu:[2,43],  ma:[4,50],  mi:[14,47], ju:[16,42], vi:[13,36], sa:[11,35], totNc:60,  totU:253},
+  {n:"Ezequiel Hack",           lu:[5,42],  ma:[15,42], mi:[9,49],  ju:[14,41], vi:[12,33], sa:[5,14],  totNc:60,  totU:221},
+  {n:"Matias Parada",           lu:[12,45], ma:[4,42],  mi:[13,42], ju:[14,42], vi:[6,23],  sa:[5,21],  totNc:54,  totU:215},
+  {n:"Lucas Giayetto",          lu:[2,32],  ma:[4,43],  mi:[11,41], ju:[9,37],  vi:[13,55], sa:[9,26],  totNc:48,  totU:234},
+  {n:"Agustin Pogorzelski",     lu:[5,32],  ma:[2,33],  mi:[16,46], ju:[7,43],  vi:[9,35],  sa:[2,14],  totNc:41,  totU:203},
+  {n:"Julian Nuñez",            lu:[2,37],  ma:[4,39],  mi:[7,35],  ju:[11,38], vi:[8,29],  sa:[5,10],  totNc:37,  totU:188},
+  {n:"Ludmila Aylen Martinez",  lu:[5,40],  ma:[4,37],  mi:[8,42],  ju:[6,29],  vi:[5,34],  sa:[9,21],  totNc:37,  totU:203},
+  {n:"Ramiro Rando",            lu:[2,34],  ma:[8,38],  mi:[3,40],  ju:[9,51],  vi:[9,42],  sa:[3,19],  totNc:34,  totU:224},
+  {n:"Melanie Larrama",         lu:[3,39],  ma:[2,37],  mi:[6,22],  ju:[10,43], vi:[8,37],  sa:[5,23],  totNc:34,  totU:201},
+  {n:"Maria Noelia Madia",      lu:[3,39],  ma:[4,28],  mi:[7,33],  ju:[5,27],  vi:[10,38], sa:[2,12],  totNc:31,  totU:177},
+  {n:"Camila Martinez",         lu:[0,43],  ma:[3,42],  mi:[4,34],  ju:[14,52], vi:[6,36],  sa:[0,9],   totNc:27,  totU:216},
+  {n:"Nicolas Martinez",        lu:[2,40],  ma:[2,39],  mi:[10,37], ju:[5,36],  vi:[3,37],  sa:[5,22],  totNc:27,  totU:211},
 ];
 function tierNoCompra(p){ return p<=20 ? 'good' : p<=28 ? 'warn' : 'bad'; }
 function fmtCell([nc,u]){ return `${nc}/${u}`; }
@@ -809,6 +2121,7 @@ const tbodyMn = document.getElementById('tbody-mn');
 tbodyMn.innerHTML = mnRows.map(r => `
   <tr>
     <td class="name">${r.n}</td>
+    <td>${fmt(r.universo)}</td><td>${fmt(r.registrado)}</td><td>${fmt(r.activos)}</td>
     <td>${fmt(r.mn)}</td><td>${fmt(r.acum)}</td>
     <td>
       <div class="cell-avance">
@@ -816,9 +2129,46 @@ tbodyMn.innerHTML = mnRows.map(r => `
         ${fmt(r.share,1)}%
       </div>
     </td>
-    <td><span class="pill ${tier(r.avanceMn)}">${fmt(r.avanceMn,1)}%</span></td>
+    <td>${fmt(r.fullyDigital)}</td>
   </tr>
 `).join('');
+
+const mnSegRows = [
+  {n:"Ezequiel Hack",           lu:22, ma:24, mi:31, ju:22, vi:14, sa:8,  totNc:121},
+  {n:"Matias Parada",           lu:27, ma:20, mi:17, ju:20, vi:14, sa:9,  totNc:107},
+  {n:"Melanie Larrama",         lu:20, ma:16, mi:10, ju:20, vi:20, sa:16, totNc:102},
+  {n:"Lucas Giayetto",          lu:10, ma:23, mi:16, ju:15, vi:21, sa:16, totNc:101},
+  {n:"Camila Martinez",         lu:19, ma:22, mi:12, ju:28, vi:13, sa:0,  totNc:94},
+  {n:"Nicolas Martinez",        lu:18, ma:10, mi:17, ju:15, vi:17, sa:14, totNc:91},
+  {n:"Martinica Rodriguez",     lu:16, ma:17, mi:18, ju:20, vi:13, sa:6,  totNc:90},
+  {n:"Ludmila Aylen Martinez",  lu:16, ma:24, mi:13, ju:8,  vi:15, sa:10, totNc:86},
+  {n:"Agustin Pogorzelski",     lu:12, ma:13, mi:20, ju:16, vi:18, sa:5,  totNc:84},
+  {n:"Ramiro Rando",            lu:9,  ma:13, mi:12, ju:27, vi:10, sa:10, totNc:81},
+  {n:"Maria Noelia Madia",      lu:15, ma:9,  mi:18, ju:12, vi:20, sa:1,  totNc:75},
+  {n:"Julian Nuñez",            lu:10, ma:8,  mi:14, ju:12, vi:8,  sa:6,  totNc:58},
+];
+document.getElementById('tbody-mnSeg').innerHTML = mnSegRows.map(r => `
+  <tr>
+    <td class="name">${r.n}</td>
+    <td class="clickable" onclick="drillMnSeguimiento('${r.n}','Lunes')">${fmt(r.lu)}</td>
+    <td class="clickable" onclick="drillMnSeguimiento('${r.n}','Martes')">${fmt(r.ma)}</td>
+    <td class="clickable" onclick="drillMnSeguimiento('${r.n}','Miercoles')">${fmt(r.mi)}</td>
+    <td class="clickable" onclick="drillMnSeguimiento('${r.n}','Jueves')">${fmt(r.ju)}</td>
+    <td class="clickable" onclick="drillMnSeguimiento('${r.n}','Viernes')">${fmt(r.vi)}</td>
+    <td class="clickable" onclick="drillMnSeguimiento('${r.n}','Sabado')">${fmt(r.sa)}</td>
+    <td class="clickable" onclick="drillMnSeguimiento('${r.n}','Total')"><span class="pill">${fmt(r.totNc)}</span></td>
+  </tr>
+`).join('');
+const mnSegTot = mnSegRows.reduce((acc,r) => {
+  acc.lu+=r.lu; acc.ma+=r.ma; acc.mi+=r.mi; acc.ju+=r.ju; acc.vi+=r.vi; acc.sa+=r.sa; acc.totNc+=r.totNc;
+  return acc;
+}, {lu:0,ma:0,mi:0,ju:0,vi:0,sa:0,totNc:0});
+document.getElementById('tfoot-mnSeg').innerHTML = `
+  <tr>
+    <td class="name">Total PepsiCo</td>
+    <td>${fmt(mnSegTot.lu)}</td><td>${fmt(mnSegTot.ma)}</td><td>${fmt(mnSegTot.mi)}</td><td>${fmt(mnSegTot.ju)}</td><td>${fmt(mnSegTot.vi)}</td><td>${fmt(mnSegTot.sa)}</td><td>${fmt(mnSegTot.totNc)}</td>
+  </tr>
+`;
 
 const tbody = document.getElementById('tbody');
 tbody.innerHTML = rows.map(r => `
@@ -837,10 +2187,384 @@ tbody.innerHTML = rows.map(r => `
         ${fmt(r.tp,1)}%
       </div>
     </td>
+    <td>${fmt(r.promedio,1)}</td>
+    <td>${fmt(r.medianec,1)}</td>
+    <td>${fmt(r.penult,1)}</td>
+    <td>${fmt(r.ultima,1)}</td>
     <td>${fmt(r.real,1)}</td>
     <td>$ ${fmt(r.venta)}</td>
+    <td></td>
+    <td><input class="compromiso-input" data-vendedor="${r.n}" data-grupo="pg" type="number" step="1" placeholder="kg" /></td>
+    <td><input class="compromiso-input" data-vendedor="${r.n}" data-grupo="sb" type="number" step="1" placeholder="kg" /></td>
+    <td class="compromiso-total" data-vendedor-total="${r.n}">—</td>
   </tr>
 `).join('');
-</script>
 
-</body></html>
+const compromisoRefs = [];
+[...document.querySelectorAll('.compromiso-total')].forEach(totalCell => {
+  try {
+    const vendedor = totalCell.dataset.vendedorTotal;
+    const row = totalCell.closest('tr');
+    const inputPg = row.querySelector('.compromiso-input[data-grupo="pg"]');
+    const inputSb = row.querySelector('.compromiso-input[data-grupo="sb"]');
+    if (!inputPg || !inputSb) { console.error('compromiso: no encontre los inputs para', vendedor); return; }
+    const updateTotal = () => {
+      const pg = Number(inputPg.value) || 0;
+      const sb = Number(inputSb.value) || 0;
+      totalCell.textContent = (inputPg.value === '' && inputSb.value === '') ? '—' : fmt(pg + sb);
+    };
+    inputPg.addEventListener('input', updateTotal);
+    inputSb.addEventListener('input', updateTotal);
+    updateTotal();
+    compromisoRefs.push({ vendedor, inputPg, inputSb, totalCell, updateTotal });
+  } catch (err) {
+    console.error('compromiso row setup failed:', err);
+  }
+});
+
+const compTotalEl = document.getElementById('kpi-compromiso-total');
+const supInput = document.getElementById('compromiso-supervisor-input');
+
+(async () => {
+  let db = null;
+  try {
+    db = await claude.use("db");
+  } catch (err) {
+    console.error('compromiso: claude.use("db") failed:', err);
+  }
+
+  if (!db) {
+    compromisoRefs.forEach(({ inputPg, inputSb, totalCell }) => {
+      [inputPg, inputSb].forEach(i => { i.disabled = true; i.placeholder = 'no disp.'; });
+      if (totalCell.textContent === '—') totalCell.textContent = 'n/d';
+    });
+    compTotalEl.textContent = 'n/d';
+    supInput.disabled = true;
+    supInput.placeholder = 'no disp.';
+    return;
+  }
+
+  const slugVendedor = (v) => v.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9]+/g, '_');
+
+  compromisoRefs.forEach(({ vendedor, inputPg, inputSb, updateTotal }) => {
+    try {
+      const ref = db.doc(`compromiso/${slugVendedor(vendedor)}`);
+      ref.onSnapshot(
+        (snap) => {
+          const data = snap.data() || {};
+          if (document.activeElement !== inputPg) {
+            inputPg.value = typeof data.pg === 'number' ? data.pg : '';
+          }
+          if (document.activeElement !== inputSb) {
+            inputSb.value = typeof data.sb === 'number' ? data.sb : '';
+          }
+          updateTotal();
+        },
+        (err) => { console.error('compromiso subscribe error:', err.code, err.message); }
+      );
+      [inputPg, inputSb].forEach(input => {
+        input.addEventListener('change', () => {
+          const pg = inputPg.value === '' ? null : Number(inputPg.value);
+          const sb = inputSb.value === '' ? null : Number(inputSb.value);
+          if ((pg !== null && Number.isNaN(pg)) || (sb !== null && Number.isNaN(sb))) return;
+          ref.set({ pg, sb, updatedAt: Date.now() }).catch((err) => console.error('compromiso write failed:', err.code, err.message));
+          updateTotal();
+        });
+      });
+    } catch (err) {
+      console.error('compromiso row db-sync failed:', vendedor, err);
+    }
+  });
+
+  db.collection('compromiso').onSnapshot(
+    (snap) => {
+      try {
+        let total = 0;
+        let count = 0;
+        const list = Array.isArray(snap) ? snap : (Array.isArray(snap && snap.docs) ? snap.docs : snap);
+        const each = (fn) => { if (list && typeof list.forEach === 'function') list.forEach(fn); };
+        each((doc) => {
+          if (!doc || doc.id === '_supervisor') return;
+          const data = (typeof doc.data === 'function') ? (doc.data() || {}) : (doc.data || {});
+          const pg = typeof data.pg === 'number' ? data.pg : 0;
+          const sb = typeof data.sb === 'number' ? data.sb : 0;
+          if (typeof data.pg === 'number' || typeof data.sb === 'number') { total += pg + sb; count++; }
+        });
+        const tfootTotalEl = document.getElementById('tfoot-compromiso-total');
+        compTotalEl.innerHTML = count ? `${fmt(total)}<span class="unit">kg</span>` : '—';
+        if (tfootTotalEl) tfootTotalEl.textContent = count ? fmt(total) : '';
+      } catch (err) {
+        console.error('compromiso total render failed:', err);
+      }
+    },
+    (err) => { console.error('compromiso total subscribe error:', err.code, err.message); compTotalEl.textContent = 'error'; }
+  );
+
+  const supRef = db.doc('compromiso/_supervisor');
+  supRef.onSnapshot(
+    (snap) => {
+      const data = snap.data();
+      const value = data && typeof data.value === 'number' ? data.value : null;
+      if (document.activeElement !== supInput) {
+        supInput.value = value === null ? '' : value;
+      }
+    },
+    (err) => { console.error('compromiso supervisor subscribe error:', err.code, err.message); }
+  );
+  supInput.addEventListener('change', () => {
+    if (supInput.value === '') {
+      supRef.set({ value: null, updatedAt: Date.now() }).catch((err) => console.error('compromiso supervisor write failed:', err.code, err.message));
+      return;
+    }
+    const num = Number(supInput.value);
+    if (Number.isNaN(num)) return;
+    supRef.set({ value: num, updatedAt: Date.now() }).catch((err) => console.error('compromiso supervisor write failed:', err.code, err.message));
+  });
+})();
+
+const DIA_KEY_IP = {Lunes:'lu',Martes:'ma',Miercoles:'mi',Jueves:'ju',Viernes:'vi',Sabado:'sa'};
+const DIAS_JS_IP = ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'];
+let hoyDiaIp = DIAS_JS_IP[new Date().getDay()];
+if (hoyDiaIp === 'Domingo') hoyDiaIp = 'Lunes';
+const hoyKeyIp = DIA_KEY_IP[hoyDiaIp];
+const hoyLabelEl = document.getElementById('ip-hoy-label');
+if (hoyLabelEl) hoyLabelEl.textContent = hoyDiaIp;
+
+function findByNameIp(arr, name){ return arr.find(x => x.n === name); }
+
+const pehuamar90BaseByVendedor = {
+  "Ramiro Rando": 48, "Matias Parada": 40, "Agustin Pogorzelski": 37, "Camila Martinez": 37,
+  "Martinica Rodriguez": 37, "Melanie Larrama": 36, "Ezequiel Hack": 35, "Julian Nuñez": 29,
+  "Lucas Giayetto": 27, "Maria Noelia Madia": 24, "Ludmila Aylen Martinez": 21, "Nicolas Martinez": 21
+};
+
+const ipRows = rows.map(r => {
+  const nc = findByNameIp(noCompraRows, r.n);
+  const freqBase = nc ? nc[hoyKeyIp][1] : 0;
+  const port = findByNameIp(portDiaRows, r.n);
+  const portBase = port && port[hoyDiaIp] ? port[hoyDiaIp][0] : 0;
+  const pehuamarBase = pehuamar90BaseByVendedor[r.n] ?? 0;
+  return { n: r.n, freqBase, portBase, pehuamarBase };
+});
+
+let pehuamar90Detalle = [];
+fetch('pehuamar90_no_comprado.json').then(r => r.json()).then(data => { pehuamar90Detalle = data; }).catch(() => {});
+
+function drillPehuamar90(vendedor) {
+  const list = pehuamar90Detalle.filter(c => c.vendedor === vendedor);
+  openDrillPortafolio(vendedor, 'Ruta de hoy — sin compra de Pehuamar 90gr Lisa o Acanalada (01/09-24/09)', list);
+}
+
+const tbodyIp = document.getElementById('tbody-ip');
+tbodyIp.innerHTML = ipRows.map(r => `
+  <tr>
+    <td class="name">${r.n}</td>
+    <td>${fmt(r.freqBase)}</td>
+    <td>
+      <div class="ip-freq-cell">
+        <span class="ip-pct" data-freq-pct="${r.n}">—</span>
+        <input class="ip-input ip-input-sm" data-vendedor="${r.n}" data-metric="frecuencia" data-base="${r.freqBase}" type="number" step="1" placeholder="clientes" />
+      </div>
+    </td>
+    <td></td>
+    <td class="clickable" onclick="drillPortDia('${r.n}','${hoyDiaIp}')">${fmt(r.portBase)}</td>
+    <td><input class="ip-input" data-vendedor="${r.n}" data-metric="portafolio" type="number" step="1" placeholder="clientes" /></td>
+    <td></td>
+    <td class="clickable" onclick="drillPehuamar90('${r.n}')">${fmt(r.pehuamarBase)}</td>
+    <td><input class="ip-input" data-vendedor="${r.n}" data-metric="pehuamar" type="number" step="1" placeholder="clientes" /></td>
+    <td></td>
+    <td><span class="ip-mnbase" data-vendedor-mnbase="${r.n}">—</span></td>
+    <td><input class="ip-input" data-vendedor="${r.n}" data-metric="sellout" type="number" step="1" placeholder="kg" /></td>
+    <td><span class="ip-mnpct" data-vendedor-mnpct="${r.n}">—</span></td>
+  </tr>
+`).join('');
+
+const ipFreqBaseTotal = ipRows.reduce((s,r)=>s+r.freqBase,0);
+const ipPortBaseTotal = ipRows.reduce((s,r)=>s+r.portBase,0);
+const ipPehuamarBaseTotal = ipRows.reduce((s,r)=>s+r.pehuamarBase,0);
+
+document.getElementById('tfoot-ip-freq-base').textContent = fmt(ipFreqBaseTotal);
+document.getElementById('tfoot-ip-port-base').textContent = fmt(ipPortBaseTotal);
+document.getElementById('tfoot-ip-pehuamar-base').textContent = fmt(ipPehuamarBaseTotal);
+
+const ipInputRefs = [];
+[...document.querySelectorAll('.ip-input')].forEach(input => {
+  ipInputRefs.push({ vendedor: input.dataset.vendedor, metric: input.dataset.metric, input });
+  if (input.dataset.metric === 'frecuencia') {
+    const base = Number(input.dataset.base) || 0;
+    const pctEl = input.parentElement.querySelector('.ip-pct');
+    const updateFreqPct = () => {
+      if (!pctEl) return;
+      if (input.value === '' || !base) { pctEl.textContent = '—'; return; }
+      pctEl.textContent = fmt(Number(input.value) / base * 100, 1) + '%';
+    };
+    input.addEventListener('input', updateFreqPct);
+    updateFreqPct();
+  }
+});
+
+(async () => {
+  let db = null;
+  try {
+    db = await claude.use("db");
+  } catch (err) {
+    console.error('ip: claude.use("db") failed:', err);
+  }
+
+  if (!db) {
+    ipInputRefs.forEach(({ input }) => { input.disabled = true; input.placeholder = 'no disp.'; });
+    ['tfoot-ip-freq-comp','tfoot-ip-port-comp','tfoot-ip-pehuamar-comp','tfoot-ip-mn-comp','tfoot-ip-mn-comp-pct','tfoot-ip-mn-base'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.textContent = 'n/d';
+    });
+    document.querySelectorAll('.ip-mnbase, .ip-mnpct').forEach(el => { el.textContent = 'n/d'; });
+    return;
+  }
+
+  const slugIp = (v) => v.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9]+/g, '_');
+
+  const byVendedorIp = {};
+  ipInputRefs.forEach(ref => {
+    if (!byVendedorIp[ref.vendedor]) byVendedorIp[ref.vendedor] = {};
+    byVendedorIp[ref.vendedor][ref.metric] = ref.input;
+  });
+
+  const mnPctEls = {};
+  document.querySelectorAll('.ip-mnpct').forEach(el => { mnPctEls[el.dataset.vendedorMnpct] = el; });
+  const mnBaseValues = {};
+  function updateMnPct(vendedor) {
+    const pctEl = mnPctEls[vendedor];
+    const input = byVendedorIp[vendedor] && byVendedorIp[vendedor].sellout;
+    if (!pctEl || !input) return;
+    const base = mnBaseValues[vendedor];
+    if (!base || input.value === '') { pctEl.textContent = '—'; return; }
+    pctEl.textContent = fmt(Number(input.value) / base * 100, 1) + '%';
+  }
+
+  Object.keys(byVendedorIp).forEach(vendedor => {
+    try {
+      const inputs = byVendedorIp[vendedor];
+      const ref = db.doc(`ipProyeccion/${slugIp(vendedor)}`);
+      ref.onSnapshot(
+        (snap) => {
+          const data = (typeof snap.data === 'function') ? (snap.data() || {}) : (snap && snap.data) || {};
+          ['frecuencia','portafolio','pehuamar','sellout'].forEach(metric => {
+            const input = inputs[metric];
+            if (!input) return;
+            if (document.activeElement !== input) {
+              input.value = typeof data[metric] === 'number' ? data[metric] : '';
+              input.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+          });
+        },
+        (err) => { console.error('ip subscribe error:', vendedor, err.code, err.message); }
+      );
+      const writeAll = () => {
+        const payload = { updatedAt: Date.now() };
+        ['frecuencia','portafolio','pehuamar','sellout'].forEach(metric => {
+          const input = inputs[metric];
+          const v = input && input.value !== '' ? Number(input.value) : null;
+          payload[metric] = (v !== null && Number.isNaN(v)) ? null : v;
+        });
+        ref.set(payload).catch((err) => console.error('ip write failed:', vendedor, err.code, err.message));
+      };
+      ['frecuencia','portafolio','pehuamar','sellout'].forEach(metric => {
+        const input = inputs[metric];
+        if (!input) return;
+        input.addEventListener('change', writeAll);
+      });
+      if (inputs.sellout) {
+        inputs.sellout.addEventListener('input', () => updateMnPct(vendedor));
+      }
+    } catch (err) {
+      console.error('ip row db-sync failed:', vendedor, err);
+    }
+  });
+
+  [...document.querySelectorAll('.ip-mnbase')].forEach(el => {
+    const vendedor = el.dataset.vendedorMnbase;
+    try {
+      const ref = db.doc(`compromiso/${slugIp(vendedor)}`);
+      ref.onSnapshot(
+        (snap) => {
+          const data = (typeof snap.data === 'function') ? (snap.data() || {}) : (snap && snap.data) || {};
+          const pg = typeof data.pg === 'number' ? data.pg : 0;
+          const sb = typeof data.sb === 'number' ? data.sb : 0;
+          const hasVal = typeof data.pg === 'number' || typeof data.sb === 'number';
+          el.textContent = hasVal ? fmt(pg + sb) : '—';
+          mnBaseValues[vendedor] = hasVal ? (pg + sb) : null;
+          updateMnPct(vendedor);
+        },
+        (err) => { console.error('ip mnbase subscribe error:', vendedor, err.code, err.message); }
+      );
+    } catch (err) {
+      console.error('ip mnbase db-sync failed:', vendedor, err);
+    }
+  });
+
+  let totalMnBaseKg = 0;
+  function renderMnCompPct() {
+    const elPct = document.getElementById('tfoot-ip-mn-comp-pct');
+    if (elPct) elPct.textContent = totalMnBaseKg ? fmt(totalSelloutKg / totalMnBaseKg * 100, 1) + '%' : '—';
+  }
+  let totalSelloutKg = 0;
+
+  db.collection('compromiso').onSnapshot(
+    (snap) => {
+      try {
+        let total = 0;
+        const list = Array.isArray(snap) ? snap : (Array.isArray(snap && snap.docs) ? snap.docs : snap);
+        const each = (fn) => { if (list && typeof list.forEach === 'function') list.forEach(fn); };
+        each((doc) => {
+          if (!doc || doc.id === '_supervisor') return;
+          const data = (typeof doc.data === 'function') ? (doc.data() || {}) : (doc.data || {});
+          const pg = typeof data.pg === 'number' ? data.pg : 0;
+          const sb = typeof data.sb === 'number' ? data.sb : 0;
+          if (typeof data.pg === 'number' || typeof data.sb === 'number') total += pg + sb;
+        });
+        const elBase = document.getElementById('tfoot-ip-mn-base');
+        if (elBase) elBase.textContent = fmt(total);
+        totalMnBaseKg = total;
+        renderMnCompPct();
+      } catch (err) {
+        console.error('ip mnbase total render failed:', err);
+      }
+    },
+    (err) => { console.error('ip mnbase total subscribe error:', err.code, err.message); }
+  );
+
+  db.collection('ipProyeccion').onSnapshot(
+    (snap) => {
+      try {
+        let freqTotal = 0, portTotal = 0, pehuamarTotal = 0;
+        let selloutSum = 0, selloutCount = 0;
+        const list = Array.isArray(snap) ? snap : (Array.isArray(snap && snap.docs) ? snap.docs : snap);
+        const each = (fn) => { if (list && typeof list.forEach === 'function') list.forEach(fn); };
+        each((doc) => {
+          if (!doc) return;
+          const data = (typeof doc.data === 'function') ? (doc.data() || {}) : (doc.data || {});
+          if (typeof data.frecuencia === 'number') freqTotal += data.frecuencia;
+          if (typeof data.portafolio === 'number') portTotal += data.portafolio;
+          if (typeof data.pehuamar === 'number') pehuamarTotal += data.pehuamar;
+          if (typeof data.sellout === 'number') { selloutSum += data.sellout; selloutCount++; }
+        });
+        const elFreq = document.getElementById('tfoot-ip-freq-comp');
+        const elPort = document.getElementById('tfoot-ip-port-comp');
+        const elPehuamar = document.getElementById('tfoot-ip-pehuamar-comp');
+        const elMn = document.getElementById('tfoot-ip-mn-comp');
+        if (elFreq) {
+          const pctTxt = ipFreqBaseTotal ? ` <span class="ip-pct">${fmt(freqTotal/ipFreqBaseTotal*100,1)}%</span>` : '';
+          elFreq.innerHTML = fmt(freqTotal) + pctTxt;
+        }
+        if (elPort) elPort.textContent = fmt(portTotal);
+        if (elPehuamar) elPehuamar.textContent = fmt(pehuamarTotal);
+        if (elMn) elMn.textContent = selloutCount ? fmt(selloutSum) : '—';
+        totalSelloutKg = selloutSum;
+        renderMnCompPct();
+      } catch (err) {
+        console.error('ip total render failed:', err);
+      }
+    },
+    (err) => { console.error('ip total subscribe error:', err.code, err.message); }
+  );
+})();
+</script>
