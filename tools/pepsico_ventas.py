@@ -135,38 +135,6 @@ def main():
             "codven": cod((c.get("rutasPreventa") or [{}])[0].get("codigoVendedor")) if c.get("rutasPreventa") else "",
         }
 
-    api = Api()
-
-    # --- DIAGNOSTICO temporal (round 5): la pantalla web del reporte vive en
-    # start/objetivos/reportes. Probar variantes de endpoint bajo el modulo
-    # "objetivos" (con y sin parametros de mes/anio). Se borra al confirmar. ---
-    mes_actual = hoy.month
-    anio_actual = hoy.year
-    candidatos = [
-        ("/data/cmd/objetivos/api/v1/get-reportes", None),
-        ("/data/cmd/objetivos/api/v1/reportes", None),
-        ("/data/cmd/objetivos/api/v1/get-reporte", None),
-        ("/data/cmd/objetivos/api/v1/get-reporte-avance", None),
-        ("/data/cmd/objetivos/api/v1/get-avance", None),
-        ("/data/cmd/objetivos/api/v1/get-avance-ventas", None),
-        ("/data/cmd/objetivos/api/v1/get", None),
-        ("/data/cmd/objetivos/api/v1/get", {"mes": mes_actual, "anio": anio_actual}),
-        ("/data/cmd/objetivos/api/v1/get-objetivos", {"mes": mes_actual, "anio": anio_actual}),
-        ("/data/cmd/objetivos/api/v2/get-objetivos", {"mes": mes_actual, "anio": anio_actual}),
-        ("/data/cmd/objetivos/api/v1/get-vendedores", None),
-        ("/data/cmd/reportes/api/v1/get", None),
-        ("/data/cmd/reportes/objetivos/api/v1/get", None),
-        ("/data/cmd/objetivos/reportes/api/v1/get", None),
-    ]
-    for path, params in candidatos:
-        try:
-            r = api.get(path, params)
-            print("DIAG endpoint OK:", path, params, "-> tipo:", type(r).__name__,
-                  "len:", len(r) if hasattr(r, "__len__") else "?",
-                  "muestra:", json.dumps(r, ensure_ascii=False, default=str)[:500] if r else r)
-        except Exception as e:
-            print("DIAG endpoint FALLO:", path, params, "->", type(e).__name__, str(e)[:150])
-
     vendedores_raw = api.get("/data/cmd/ventas/api/v1/get-vendedores")
     nombre_por_codven = {cod(x.get("codigo")): (x.get("nombre") or "").strip() for x in vendedores_raw}
 
