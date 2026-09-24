@@ -141,6 +141,23 @@ def main():
     nombre_por_codven = {cod(x.get("codigo")): (x.get("nombre") or "").strip() for x in vendedores_raw}
 
     articulos = api.get("/data/cmd/inventario/api/v2/get-articulos")
+    # --- DIAGNOSTICO temporal: para automatizar el kg-avance hace falta saber
+    # si el articulo trae peso por unidad y clasificacion Platino+Gold vs
+    # Silver&Bronze. Se borra esta seccion en cuanto quede confirmado. ---
+    if articulos:
+        print("DIAG campos de un articulo:", list(articulos[0].keys()))
+        ejemplo_pepsico = next((a for a in articulos
+                                if es_pepsico((a.get("descripcion") or "").upper())), None)
+        if ejemplo_pepsico:
+            print("DIAG articulo Pepsico completo:",
+                  json.dumps(ejemplo_pepsico, ensure_ascii=False, default=str)[:3000])
+        campos_peso = [k for k in articulos[0].keys()
+                       if "peso" in k.lower() or "kg" in k.lower() or "gramo" in k.lower()]
+        campos_segmento = [k for k in articulos[0].keys()
+                            if "segment" in k.lower() or "tag" in k.lower() or "categoria" in k.lower()
+                            or "clase" in k.lower() or "rentabilidad" in k.lower()]
+        print("DIAG campos que podrian ser peso:", campos_peso)
+        print("DIAG campos que podrian ser segmento/tag:", campos_segmento)
     es_pepsico_por_clave = {}
     es_pehuamar90_por_clave = {}
     descripcion_por_clave = {}
