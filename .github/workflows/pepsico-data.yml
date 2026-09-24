@@ -1,6 +1,9 @@
 name: Pepsico data refresh
 
 on:
+  schedule:
+    - cron: "0 14 * * 1-6"
+    - cron: "0 18 * * 1-6"
   workflow_dispatch: {}
 
 permissions:
