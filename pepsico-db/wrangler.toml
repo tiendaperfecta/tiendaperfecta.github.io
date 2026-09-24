@@ -1,0 +1,36 @@
+# Depósito de los números que se cargan a mano en el panel Avance PepsiCo.
+#
+# POR QUÉ EXISTE: el panel venía usando claude.use("db"), la API de runtime de
+# los Artifacts de Claude. Esa API sólo existe cuando la página corre publicada
+# como Artifact; servida desde GitHub Pages no existe, así que los campos de
+# Compromiso y de Proyección de IPs quedaban deshabilitados con "no disp.".
+# Este worker los reemplaza con el mismo patrón que ya usan ventas,
+# transferencias y arca-vs-gescom: un worker con KV.
+name = "pepsico-db"
+main = "worker.js"
+compatibility_date = "2026-07-01"
+workers_dev = true
+
+# Dos colecciones, una clave por documento:
+#   compromiso:<vendedor>   -> {pg, sb, updatedAt}
+#   compromiso:_supervisor  -> {value, updatedAt}
+#   ipProyeccion:<vendedor> -> {frecuencia, portafolio, pehuamar, sellout, updatedAt}
+#
+# El valor va TAMBIÉN en la metadata de la clave (son ~60 bytes, el límite es
+# 1024). Así GET /d/:col se resuelve con un solo list() en vez de un get() por
+# vendedor: con 17 vendedores y el panel refrescando cada 15 s, la diferencia
+# es entre ~70 y ~1.200 lecturas de KV por hora y por persona abierta.
+[[kv_namespaces]]
+binding = "DATOS"
+id = "a87015d636aa483ca58da29f0266bbcd"
+
+# SIN CRONS: en esta cuenta de Cloudflare los crons de worker no se ejecutan
+# (probado el 2/9/2026 con el panel de ventas). Acá no hacen falta: no hay nada
+# que refrescar, los datos los escriben las personas desde el panel.
+
+# CLAVE_ESCRITURA es un SECRETO de Cloudflare
+# (Workers > pepsico-db > Settings > Variables and Secrets), fuera del repo.
+# OJO: no es seguridad de verdad. El panel es público, así que la clave viaja
+# en el HTML y cualquiera que lo lea puede escribir. Frena bots y escrituras
+# accidentales de otro origen, nada más. Para protección real hay que poner el
+# panel detrás de un login, como arca-vs-gescom y transferencias.
