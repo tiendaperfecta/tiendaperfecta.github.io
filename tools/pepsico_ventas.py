@@ -219,20 +219,26 @@ def main():
     print("DIAG items de venta Pepsico contados:", items_pepsico_vistos,
           "| clientes con al menos 1 unidad:", len(compra_cliente))
 
+       # Solo los 12 vendedores de calle de Pepsico (codigos 1-12). El cliente
+    # trae a veces otros codigos (deposito, otros canales) que no son parte
+    # de este tablero.
+    VENDEDORES_PEPSICO = {str(i) for i in range(1, 13)}
+
     hoy_key = DIAS_CAP[hoy.weekday()]
     no_compradores = []
     pehuamar_no_comprado = []
     for codigo, c in clientes.items():
-        if not c["dia"] or not c["codven"]:
+        if not c["dia"] or c["codven"] not in VENDEDORES_PEPSICO:
             continue
+        nombre_vend_cli = nombre_por_codven.get(c["codven"], c["codven"])
         if compra_cliente.get(codigo, 0) < 3:
             no_compradores.append({**{k: c[k] for k in
                                     ("codigo", "razon", "localidad", "seg", "dia")},
-                                    "vendedor": c["codven"]})
+                                    "vendedor": nombre_vend_cli})
         if c["dia"] == hoy_key and pehuamar_compra.get(codigo, 0) <= 0:
             pehuamar_no_comprado.append({**{k: c[k] for k in
                                           ("codigo", "razon", "localidad", "seg", "dia")},
-                                          "vendedor": c["codven"]})
+                                          "vendedor": nombre_vend_cli})
 
     escribir("no_compradores_detalle.json", no_compradores)
     escribir("pehuamar90_no_comprado.json", pehuamar_no_comprado)
