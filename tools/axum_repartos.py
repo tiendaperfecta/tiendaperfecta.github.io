@@ -31,6 +31,26 @@ DEVOLUCION_CAMBIO = "DEV-CA"
 # Dias a mirar hacia adelante para juntar las boletas de un reparto.
 VENTANA_FACTURACION = 5
 
+# De quien fue la culpa, segun el motivo que cargaron. Sirve para separar lo que
+# se corrige puertas adentro de lo que depende del cliente.
+NUESTRO = ("ERROR DE ARMADO", "NO SE CARGO", "SIN STOCK", "ERROR DE PREVENTA")
+DEL_CLIENTE = ("CERRADO", "SIN DINERO", "RECHAZO", "NO ENTREGADO")
+
+
+def _sin_acentos(t):
+    import unicodedata
+    return "".join(c for c in unicodedata.normalize("NFD", str(t))
+                   if unicodedata.category(c) != "Mn").upper().strip()
+
+
+def _responsable(motivo):
+    m = _sin_acentos(motivo)
+    if any(m.startswith(x) for x in NUESTRO):
+        return "nuestro"
+    if any(m.startswith(x) for x in DEL_CLIENTE):
+        return "cliente"
+    return "otro"
+
 
 def _fecha(txt):
     """'2026-09-23T00:00:00-03:00' -> '2026-09-23'"""
@@ -133,7 +153,12 @@ def del_dia(fecha, maestro=None):
                 "reparto": rep["codigo"],
                 "fechaReparto": rep["fecha"],
                 "hora": str(v.get("fechaPedido") or "")[11:16],
-                "motivo": str(v.get("codigoMotivoCambio") or ""),
+                # El texto del motivo viene en la venta; el codigo solo por si
+                # hiciera falta cruzarlo con otro sistema.
+                "motivo": (v.get("motivo") or "").strip() or "Sin motivo",
+                "motivoCodigo": str(v.get("codigoMotivoCambio") or ""),
+                "responsable": _responsable(v.get("motivo")),
+                "tipo": (v.get("observacionesInternas") or "").strip(),
                 "importe": round(importe, 2),
                 "bultos": round(bultos, 1),
                 "comprobante": str(v.get("identificador") or ""),
@@ -172,6 +197,26 @@ def del_dia(fecha, maestro=None):
         c["bultos"] = round(c["bultos"], 1)
     clientes.sort(key=lambda c: -c["importe"])
 
+    # Por que nos rechazan: el dato mas accionable de todos.
+    por_motivo = defaultdict(lambda: {"rechazos": 0, "importe": 0.0, "bultos": 0.0})
+    for r in rechazos:
+        m = por_motivo[r["motivo"]]
+        m["rechazos"] += 1
+        m["importe"] += r["importe"]
+        m["bultos"] += r["bultos"]
+        m["responsable"] = r["responsable"]
+    motivos = [dict(motivo=k, **v) for k, v in por_motivo.items()]
+    for m in motivos:
+        m["importe"] = round(m["importe"], 2)
+        m["bultos"] = round(m["bultos"], 1)
+    motivos.sort(key=lambda m: -m["importe"])
+
+    por_resp = defaultdict(lambda: {"rechazos": 0, "importe": 0.0})
+    for r in rechazos:
+        x = por_resp[r["responsable"]]
+        x["rechazos"] += 1
+        x["importe"] += r["importe"]
+
     total_b = sum(r["boletas"] for r in filas)
     total_e = sum(r["entregadas"] for r in filas)
     facturado = sum(1 for r in filas if r["boletas"])
@@ -180,6 +225,10 @@ def del_dia(fecha, maestro=None):
         "repartos": filas,
         "rechazos": rechazos,
         "porCliente": clientes,
+        "porMotivo": motivos,
+        "porResponsable": {k: {"rechazos": v["rechazos"],
+                               "importe": round(v["importe"], 2)}
+                           for k, v in por_resp.items()},
         "totales": {
             "repartos": len(filas),
             "choferes": len({r["chofer"] for r in filas}),

@@ -352,7 +352,7 @@ def armar_dia(gps, fecha, orders, maestro, rutas, con_km=True, con_zona=True,
 # --------------------------------------------------------------------------- #
 # Se sube cuando el dia pasa a guardar algo nuevo: los dias viejos se rehacen
 # solos, de a poco, hasta ponerse al dia.
-VERSION_DIA = 2
+VERSION_DIA = 3
 
 
 def _resumen_indice(dia):

@@ -241,6 +241,13 @@
       <p class="nota" id="rech-nota"></p>
     </div>
     <div class="card" style="margin-top:16px">
+      <h3>Por qué nos rechazan <span class="badge" id="rech-culpa"></span></h3>
+      <div id="t-rech-motivo"></div>
+      <p class="nota">La responsabilidad se deduce del motivo cargado en GesCom:
+        error de armado, no se cargó, sin stock y error de preventa se resuelven
+        puertas adentro; cerrado, sin dinero y rechazo dependen del cliente.</p>
+    </div>
+    <div class="card" style="margin-top:16px">
       <h3>Detalle de cada rechazo</h3>
       <div class="scroll scrollx" id="t-rech-detalle"></div>
     </div>
@@ -584,6 +591,8 @@ function crearMapa(tab, divId, puntos){
       $('#t-rech-detalle').innerHTML = '';
       $('#t-repartos').innerHTML = '';
       $('#rech-total').textContent = '';
+      $('#rech-culpa').textContent = '';
+      $('#t-rech-motivo').innerHTML = '';
       $('#rep-info').textContent = '';
       $('#rech-nota').textContent = '';
       return;
@@ -609,13 +618,31 @@ function crearMapa(tab, divId, puntos){
       {key:'importe',label:'Importe',num:true,fmt:fmtMoney}
     ], R.porCliente, {barCol:'importe'});
 
+    const culpa = {nuestro:'ok', cliente:'warn', otro:''};
+    const P = R.porResponsable || {};
+    const bc = $('#rech-culpa');
+    bc.textContent = (P.nuestro? P.nuestro.rechazos + ' por error propio · ' + fmtMoney(P.nuestro.importe) : '') +
+      (P.nuestro && P.cliente? '   ·   ' : '') +
+      (P.cliente? P.cliente.rechazos + ' del cliente · ' + fmtMoney(P.cliente.importe) : '');
+    bc.className = 'badge warn';
+    $('#t-rech-motivo').innerHTML = table([
+      {key:'motivo',label:'Motivo'},
+      {key:'responsable',label:'De quién',fmt:v=>
+        '<span class="badge ' + (v==='nuestro'?'bad':v==='cliente'?'warn':'') + '">' +
+        (v==='nuestro'?'error propio':v==='cliente'?'del cliente':'sin clasificar') + '</span>'},
+      {key:'rechazos',label:'Rechazos',num:true,fmt:fmtNum},
+      {key:'bultos',label:'Bultos',num:true,fmt:fmtNum},
+      {key:'importe',label:'Importe',num:true,fmt:fmtMoney}
+    ], R.porMotivo, {barCol:'importe'});
+
     $('#t-rech-detalle').innerHTML = table([
       {key:'hora',label:'Hora',num:true,fmt:v=>v||'—'},
       {key:'nombre',label:'Cliente'},
+      {key:'motivo',label:'Motivo'},
+      {key:'tipo',label:'Alcance',fmt:v=>v||'—'},
       {key:'chofer',label:'Chofer'},
       {key:'vehiculo',label:'Vehículo'},
       {key:'reparto',label:'Reparto'},
-      {key:'motivo',label:'Motivo',fmt:v=>v? 'código ' + v : '—'},
       {key:'bultos',label:'Bultos',num:true,fmt:fmtNum},
       {key:'importe',label:'Importe',num:true,fmt:fmtMoney},
       {key:'comprobante',label:'Comprobante'}
