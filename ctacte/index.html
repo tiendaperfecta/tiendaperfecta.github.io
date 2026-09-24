@@ -42,6 +42,19 @@
   .filters input[type=search]{width:220px;max-width:100%}
   .filters label{display:flex;align-items:center;gap:6px;color:var(--ink2);font-size:13px;white-space:nowrap}
   .chipsf{display:flex;gap:6px;flex-wrap:wrap}
+  /* desplegable con casillas (seleccion multiple) */
+  .ms{position:relative}
+  .ms>button{position:relative;background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:6px 26px 6px 8px;min-width:150px;max-width:210px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+  .ms>button::after{content:'▾';position:absolute;right:9px;top:6px;color:var(--mute)}
+  .ms>button.act{border-color:var(--acc);background:#0c4a6e}
+  .ms .pn{display:none;position:absolute;top:calc(100% + 4px);left:0;z-index:40;background:var(--bg2);border:1px solid var(--line);border-radius:8px;min-width:250px;max-height:360px;overflow:auto;padding:6px;box-shadow:0 12px 28px rgb(0 0 0/.45)}
+  .ms.open .pn{display:block}
+  .ms .acts{display:flex;gap:14px;padding:4px 6px 8px;border-bottom:1px solid var(--line);margin-bottom:4px;font-size:12px}
+  .ms .acts a{cursor:pointer}
+  .ms .pn input[type=search]{width:100%;max-width:none;margin:2px 0 6px}
+  .filters .ms .pn label{padding:5px 6px;border-radius:4px;cursor:pointer;font-size:14px;color:var(--ink)}
+  .filters .ms .pn label:hover{background:var(--card2)}
+  .ms .pn input[type=checkbox]{accent-color:#38bdf8;width:15px;height:15px;margin:0}
 
   /* kpis */
   .kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-bottom:16px}
@@ -132,11 +145,11 @@
   <main id="app" hidden>
     <div class="filters">
       <input type="search" id="fQ" placeholder="Buscar cliente, código, CUIT, comprobante…">
-      <select id="fEmp"><option value="">Todas las empresas</option></select>
-      <select id="fVend"><option value="">Todos los vendedores</option></select>
-      <select id="fRuta"><option value="">Todas las rutas</option></select>
-      <select id="fCond"><option value="">Toda condición</option></select>
-      <select id="fLoc"><option value="">Toda localidad</option></select>
+      <div class="ms" id="fEmp" data-ph="Todas las empresas" data-pl="empresas"></div>
+      <div class="ms" id="fVend" data-ph="Todos los vendedores" data-pl="vendedores"></div>
+      <div class="ms" id="fRuta" data-ph="Todas las rutas" data-pl="rutas"></div>
+      <div class="ms" id="fCond" data-ph="Toda condición" data-pl="condiciones"></div>
+      <div class="ms" id="fLoc" data-ph="Toda localidad" data-pl="localidades"></div>
       <select id="fCart" title="Clientes de calle (con ruta de preventa) o sin ruta: mayoristas y saldos históricos">
         <option value="">Toda la cartera</option>
         <option value="calle">Con ruta de preventa</option>
@@ -244,7 +257,7 @@ function init() {
   const gen = new Date(D.generado);
   $('#sub').textContent = `Tienda Perfecta · TP Pex · Rambla — saldos de GesCom al ${gen.toLocaleString('es-AR', {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'})}`;
   D.tramos.forEach(t => { t.dd = dias(t.v); t.bi = bandOf(t.dd); const c = D.clientes[t.c]; t.vend = t.vd || c.vend; t.ruta = t.r || c.ruta; });
-  const opts = (sel, pares) => { const s = $(sel); pares.forEach(([v, n]) => s.insertAdjacentHTML('beforeend', `<option value="${esc(v)}">${esc(n)}</option>`)); };
+  const opts = (sel, pares) => multi($(sel), pares);
   opts('#fEmp', Object.entries(D.empresas));
   const vs = new Set(D.tramos.map(t => t.vend).filter(Boolean));
   opts('#fVend', [...vs].map(v => [v, (D.vendedores[v] || 'Vendedor ' + v)]).sort((a, b) => a[1].localeCompare(b[1])));
@@ -264,17 +277,59 @@ function init() {
   render();
 }
 
+// Desplegable con casillas. Expone el.sel (Set) y el.value (texto, '' = sin filtro),
+// y avisa con un evento 'input' como los <select> que reemplaza.
+function multi(el, pares) {
+  el.sel = new Set();
+  const ph = el.dataset.ph, pl = el.dataset.pl, nom = new Map(pares);
+  el.innerHTML = `<button type="button"></button><div class="pn">
+    ${pares.length > 12 ? '<input type="search" placeholder="Buscar…">' : ''}
+    <div class="acts"><a data-a="all">Todas</a><a data-a="none">Ninguna</a></div>
+    ${pares.map(([v, n]) => `<label><input type="checkbox" value="${esc(v)}"> ${esc(n)}</label>`).join('')}</div>`;
+  const btn = el.querySelector('button'), boxes = [...el.querySelectorAll('input[type=checkbox]')];
+  const sync = () => {
+    boxes.forEach(b => b.checked = el.sel.has(b.value));
+    const n = el.sel.size;
+    const nm = v => nom.get(v) ?? 'Sin asignar';
+    btn.textContent = !n ? ph : n === 1 ? nm([...el.sel][0]) : `${n} ${pl}`;
+    btn.title = [...el.sel].map(nm).join(', ');
+    btn.classList.toggle('act', n > 0);
+  };
+  const avisar = () => { sync(); el.dispatchEvent(new Event('input')); };
+  Object.defineProperty(el, 'value', {
+    get: () => [...el.sel].join('|'),
+    set: v => { el.sel = new Set(Array.isArray(v) ? v : v ? String(v).split('|') : []); sync(); },
+  });
+  btn.onclick = e => {
+    e.stopPropagation();
+    document.querySelectorAll('.ms.open').forEach(o => o !== el && o.classList.remove('open'));
+    el.classList.toggle('open');
+  };
+  el.querySelector('.pn').onclick = e => e.stopPropagation();
+  el.querySelector('.pn').addEventListener('input', e => e.stopPropagation());   // solo cuenta el aviso de abajo
+  boxes.forEach(b => b.onchange = () => { b.checked ? el.sel.add(b.value) : el.sel.delete(b.value); avisar(); });
+  el.querySelectorAll('.acts a').forEach(a => a.onclick = () => {
+    const vis = boxes.filter(b => b.parentNode.style.display !== 'none');
+    vis.forEach(b => a.dataset.a === 'all' ? el.sel.add(b.value) : el.sel.delete(b.value));
+    avisar();
+  });
+  const q = el.querySelector('input[type=search]');
+  if (q) q.oninput = e => { e.stopPropagation(); const t = q.value.toLowerCase(); boxes.forEach(b => b.parentNode.style.display = b.parentNode.textContent.toLowerCase().includes(t) ? '' : 'none'); };
+  sync();
+}
+document.addEventListener('click', () => document.querySelectorAll('.ms.open').forEach(o => o.classList.remove('open')));
+
 // Filtra tramos y arma clientes con lo que queda
 function filtrar() {
-  const q = $('#fQ').value.trim().toLowerCase(), emp = $('#fEmp').value, vend = $('#fVend').value, ruta = $('#fRuta').value,
-    cond = $('#fCond').value, loc = $('#fLoc').value, cart = $('#fCart').value, est = $('#fEst').value, hist = $('#fHist').checked, min = +$('#fMin').value || 0;
+  const q = $('#fQ').value.trim().toLowerCase(), emp = $('#fEmp').sel, vend = $('#fVend').sel, ruta = $('#fRuta').sel,
+    cond = $('#fCond').sel, loc = $('#fLoc').sel, cart = $('#fCart').value, est = $('#fEst').value, hist = $('#fHist').checked, min = +$('#fMin').value || 0;
   let T = D.tramos.filter(t => {
     const c = D.clientes[t.c];
-    if (emp && t.e !== emp) return false;
-    if (vend && t.vend !== vend) return false;
-    if (ruta && t.ruta !== ruta) return false;
-    if (cond && (t.cp || c.cp) !== cond) return false;
-    if (loc && c.loc !== loc) return false;
+    if (emp.size && !emp.has(t.e)) return false;
+    if (vend.size && !vend.has(t.vend)) return false;
+    if (ruta.size && !ruta.has(t.ruta)) return false;
+    if (cond.size && !cond.has(t.cp || c.cp)) return false;
+    if (loc.size && !loc.has(c.loc)) return false;
     if (cart === 'calle' && !c.ruta) return false;
     if (cart === 'sin' && c.ruta) return false;
     if (!hist && t.dd > 90) return false;
@@ -461,7 +516,7 @@ function view() {
     const rows = [...g.values()];
     const onRow = a => {
       const sel = t === 'vend' ? '#fVend' : t === 'ruta' ? '#fRuta' : '#fEmp';
-      $(sel).value = a.k; state.tab = 'cli'; render();
+      $(sel).value = [a.k]; state.tab = 'cli'; render();
     };
     table(t, cols, rows, onRow);
     $('#view').insertAdjacentHTML('afterbegin', `<p class="note" style="margin-top:0">Tocá una fila para ver sus clientes.</p>`);
