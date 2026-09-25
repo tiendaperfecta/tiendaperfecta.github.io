@@ -14,22 +14,22 @@ segmento de cliente. El id de "Objetivo" que pide la API (objetivoId) es
 distinto del numero que se ve en el combo de la UI y hay que verificarlo a
 mano cada tanto (ver OBJETIVO_ID_BASE mas abajo).
 
-Cobertura por marca: matching de marca por substring en la descripcion del
-articulo (no hay campo de marca legible en la API, solo codigoMarca opaco
-tipo "pepsico-15"). Aproximacion, no un campo estructurado.
-
-Validado contra la API real (24/09): No compradores 479 (vs ~490 manual),
-sin Pehuamar 90gr hoy 382 (vs 392 manual).
-
-Tipo de venta confirmado contra datos reales: DEV-CA = Devolucion por Canje,
-DEV-RE = Devolucion por Rechazo. El motivo esta en el campo motivo de la
-venta (no del item).
+No compradores/Cobertura/Subproductos/CCC/Invendible/Rechazos: vienen del
+reporte generico "Detallado de ventas extendido" (report/render, mismo motor
+que Avance kg), filtrado por Fecha de Carga real (columna FechaCarga del
+reporte) -- el endpoint crudo /data/cmd/ventas/api/v2/get NO tiene ese campo
+(solo fechaPedido/fechaEntrega), confirmado con un diagnostico contra datos
+reales (25/09: 0 de 10174 ventas con fechaCarga via ese endpoint). El reporte
+ya trae Proveedor, Marca y PesoKg como campos legibles -- no hace falta cruzar
+contra el catalogo de articulos ni matchear marca por substring.
 
 Credenciales por variables de entorno (GitHub Secrets):
 GESCOM_REALM, GESCOM_CLIENT_ID, GESCOM_USERNAME, GESCOM_PASSWORD
 """
 import calendar
+import csv
 import datetime as dt
+import io
 import json
 import sys
 import time
@@ -42,9 +42,11 @@ import requests
 DIR = Path(__file__).resolve().parent.parent / "pepsico"
 TZ_AR = dt.timezone(dt.timedelta(hours=-3))
 
-MARCAS_PEPSICO = ["3D", "CHEETOS", "DORITOS", "LAYS", "PEHUAMAR", "PEP", "QUAKER", "TOSTITOS", "TWISTOS"]
+# La columna Marca del reporte viene con casing inconsistente segun el
+# proveedor la haya cargado ("Lays" vs "PEHUAMAR"); se normaliza por key en
+# mayusculas al label de exhibicion.
 MARCA_LABEL = {
-    "3D": "3Ds", "CHEETOS": "Cheetos", "DORITOS": "Doritos", "LAYS": "Lays",
+    "3DS": "3Ds", "CHEETOS": "Cheetos", "DORITOS": "Doritos", "LAYS": "Lays",
     "PEHUAMAR": "Pehuamar", "PEP": "Pep", "QUAKER": "Quaker", "TOSTITOS": "Tostitos", "TWISTOS": "Twistos",
 }
 SEGMENTOS = ["A", "B", "C", "D"]
@@ -73,6 +75,13 @@ OBJETIVO_ID_BASE_MES = 9
 def objetivo_id_de(anio, mes):
     return OBJETIVO_ID_BASE + (anio - OBJETIVO_ID_BASE_ANIO) * 12 + (mes - OBJETIVO_ID_BASE_MES)
 
+
+# Detallado de ventas extendido (todos los proveedores, ambas empresas): trae
+# Fecha de Carga real, Proveedor, Marca y PesoKg como columnas legibles.
+# tipoVentaId=2 ("Segun Fecha de Creacion") es el que filtra por FechaCarga,
+# confirmado contra datos reales (25/09: 100% de las filas devueltas traen
+# FechaCarga = fecha pedida). facturadaId=2 = "Todas" (facturadas y no).
+GUID_DETALLE_VENTAS = "d3e26fc0-576a-45aa-aab9-10871a347fc7"
 
 PEHUAMAR_SKUS = {"PEHUA PAPA LISA 90GX22 RM", "PEHUA PAPA ACANA 90GX22 RM"}
 
@@ -110,12 +119,14 @@ SUBPRODUCTOS = {
 DIAS = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"]
 DIAS_CAP = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"]
 
-SIGNO = {
-    "VEN": 1, "AJU-MAS": 1, "DEB": 1, "SC": 1, "COM-P": 1,
-    "DEV-RE": -1, "DEV-CA": -1, "AJU-MEN": -1, "COM-PD": -1,
-}
-TIPO_RECHAZO = "DEV-RE"
-TIPO_CANJE = "DEV-CA"
+# TipoDeVenta tal como lo devuelve el reporte (texto legible, no codigo).
+# Confirmado contra el mes completo (25/09): Venta, Devolucion por Rechazo,
+# Devolucion por Canje, Ajuste por Liquidacion (+/-), Debito, mas dos tipos de
+# Comodato (prestamo/devolucion de heladeras y exhibidores, no son ventas de
+# producto y se ignoran por completo, igual que antes).
+TIPO_VENTA = "Venta"
+TIPO_RECHAZO = "Devolución por Rechazo"
+TIPO_CANJE = "Devolución por Canje"
 
 
 def cod(v):
@@ -129,17 +140,16 @@ def num(v):
         return 0.0
 
 
-def es_pepsico(descripcion):
-    d = (descripcion or "").upper()
-    return any(m in d for m in MARCAS_PEPSICO)
-
-
-def marca_de(descripcion):
-    d = (descripcion or "").upper()
-    for m in MARCAS_PEPSICO:
-        if m in d:
-            return MARCA_LABEL[m]
-    return None
+def num_ar(s):
+    """Numero con formato AR del reporte CSV: '.' separador de miles, ','
+    decimal (ej '12.562,00')."""
+    s = (s or "").strip()
+    if not s:
+        return 0.0
+    try:
+        return float(s.replace(".", "").replace(",", "."))
+    except ValueError:
+        return 0.0
 
 
 class Api:
@@ -191,21 +201,28 @@ class Api:
         body = {"id": report_id, "reportInput": {"filtersInput": {}, "parameters": parameters}}
         return self.post("/data/cmd/report/render", body)
 
-    def ventas(self, desde, hasta_excl):
-        todas, d, fin = [], dt.date.fromisoformat(desde), dt.date.fromisoformat(hasta_excl)
-        while d < fin:
-            h = min(d + dt.timedelta(days=7), fin)
-            skip = 0
-            while True:
-                pag = self.get("/data/cmd/ventas/api/v2/get",
-                               {"fechadesde": d.isoformat(), "fechahasta": h.isoformat(),
-                                "pagesize": 500, "pagestotake": 2, "pagestoskip": skip})
-                todas.extend(pag)
-                if len(pag) < 1000:
+    def render_csv(self, report_id, parameters, timeout=240):
+        """Algunos reportes (los de detalle, con muchas filas) devuelven CSV
+        crudo en vez del JSON con datasources. Viene en CP1252 (los acentos
+        salen mal si se decodifica como UTF-8), separado por ';' y con
+        numeros en formato AR ('12.562,00', usar num_ar para parsear)."""
+        ahora = dt.datetime.now().timestamp()
+        if not self._tok or ahora - self._t > 240:
+            self._tok, self._t = gescom._token(self.s), ahora
+        body = {"id": report_id, "reportInput": {"filtersInput": {}, "parameters": parameters}}
+        for intento in range(4):
+            try:
+                r = self.s.post(gescom.API + "/data/cmd/report/render", json=body, timeout=timeout,
+                                 headers={"Authorization": "Bearer " + self._tok})
+                if r.status_code < 500:
                     break
-                skip += 2
-            d = h
-        return todas
+            except requests.ConnectionError:
+                if intento == 3:
+                    raise
+            time.sleep(10 * (intento + 1))
+        r.raise_for_status()
+        texto = r.content.decode("cp1252")
+        return list(csv.DictReader(io.StringIO(texto), delimiter=";"))
 
 
 def dias_habiles_mes(anio, mes, hasta=None):
@@ -347,43 +364,19 @@ def main():
     vendedores_raw = api.get("/data/cmd/ventas/api/v1/get-vendedores")
     nombre_por_codven = {cod(x.get("codigo")): (x.get("nombre") or "").strip() for x in vendedores_raw}
 
-
-    articulos = api.get("/data/cmd/inventario/api/v2/get-articulos")
-
-
-    es_pepsico_por_clave = {}
-    es_pehuamar90_por_clave = {}
-    descripcion_por_clave = {}
-    todas_claves = set()
-    for a in articulos:
-        clave = (cod(a.get("codigo")), cod(a.get("codigoEmpresa")))
-        todas_claves.add(clave)
-        desc = (a.get("descripcion") or "").strip()
-        descripcion_por_clave[clave] = desc
-        if es_pepsico(desc.upper()):
-            es_pepsico_por_clave[clave] = True
-        if desc.upper() in PEHUAMAR_SKUS:
-            es_pehuamar90_por_clave[clave] = True
-
-    def clave_equivalente(codigo, empresa):
-        e = "1" if empresa == "99" else empresa
-        otra = "2" if e == "1" else "1"
-        return (codigo, e) if (codigo, e) in todas_claves else (codigo, otra)
-
-    def es_articulo_pepsico(codigo, empresa):
-        return es_pepsico_por_clave.get(clave_equivalente(codigo, empresa), False)
-
-    def es_articulo_pehuamar90(codigo, empresa):
-        return es_pehuamar90_por_clave.get(clave_equivalente(codigo, empresa), False)
-
-    def descripcion_de(codigo, empresa):
-        return descripcion_por_clave.get(clave_equivalente(codigo, empresa)) or codigo
-
-    print("Articulos Pepsico encontrados:", len(es_pepsico_por_clave),
-          "| SKUs Pehuamar 90gr:", len(es_pehuamar90_por_clave))
-
-    ventas = api.ventas(inicio_mes.isoformat(), (hoy + dt.timedelta(days=1)).isoformat())
-    print("Ventas traidas (mes en curso):", len(ventas))
+    fin_mes_excl = hoy + dt.timedelta(days=1)
+    filas = api.render_csv(GUID_DETALLE_VENTAS, {
+        "empId": 0,
+        "fechaIni": inicio_mes.isoformat() + "T03:00:00.000Z",
+        "fechaFin": fin_mes_excl.isoformat() + "T03:00:00.000Z",
+        "facturadaId": 2,
+        "supervisorId": 0,
+        "sedeId": 0,
+        "tipoVentaId": 2,
+        "ventaEmpl": 0,
+        "cliActivos": 0,
+    })
+    print("Filas del detalle de ventas (mes en curso, todos los proveedores):", len(filas))
 
     compra_cliente = {}
     compra_cliente_marca = {}
@@ -393,50 +386,41 @@ def main():
     rechazos_por_vend = {}
 
     items_pepsico_vistos = 0
-    for v in ventas:
-        tipo = cod(v.get("codigoTipoVenta"))
-        if cod(v.get("estado")).lower().startswith("anul"):
+    for fila in filas:
+        if "PEPSICO" not in (fila.get("Proveedor") or "").upper():
             continue
-        emp = cod(v.get("codigoEmpresa"))
-        cli = cod(v.get("codigoCliente"))
-        codven = cod(v.get("codigoVendedor"))
-        nombre_vend = nombre_por_codven.get(codven, codven)
-        motivo = (v.get("motivo") or "").strip() or "SIN MOTIVO"
-        signo = SIGNO.get(tipo, 1)
+        tipo = fila.get("TipoDeVenta") or ""
+        cli = cod(fila.get("Cliente"))
+        articulo = (fila.get("Articulo") or "").strip()
+        q = num_ar(fila.get("CantBase"))
 
-        for it in v.get("items") or []:
-            codigo_it = cod(it.get("codigoItem"))
-            q = num(it.get("cantidad")) * num(it.get("unidadFactor") or 1)
-            importe = num(it.get("importeNeto"))
-
-            if tipo == "VEN" and es_articulo_pepsico(codigo_it, emp):
-                compra_cliente[cli] = compra_cliente.get(cli, 0) + q
-                items_pepsico_vistos += 1
-                desc_it = descripcion_de(codigo_it, emp)
-                marca = marca_de(desc_it)
-                if marca:
-                    porcli = compra_cliente_marca.setdefault(cli, {})
-                    porcli[marca] = porcli.get(marca, 0) + q
-            if tipo == "VEN" and es_articulo_pehuamar90(codigo_it, emp):
+        if tipo == TIPO_VENTA:
+            compra_cliente[cli] = compra_cliente.get(cli, 0) + q
+            items_pepsico_vistos += 1
+            marca = MARCA_LABEL.get((fila.get("Marca") or "").strip().upper())
+            if marca:
+                porcli = compra_cliente_marca.setdefault(cli, {})
+                porcli[marca] = porcli.get(marca, 0) + q
+            if articulo.upper() in PEHUAMAR_SKUS:
                 pehuamar_compra[cli] = pehuamar_compra.get(cli, 0) + q
-            if tipo == "VEN":
-                sub = subgrupo_por_desc.get(descripcion_de(codigo_it, emp).upper())
-                if sub:
-                    porcli_sub = compra_cliente_subgrupo.setdefault(cli, {})
-                    porcli_sub[sub] = porcli_sub.get(sub, 0) + q
-
-            if not es_articulo_pepsico(codigo_it, emp):
-                continue
-
+            sub = subgrupo_por_desc.get(articulo.upper())
+            if sub:
+                porcli_sub = compra_cliente_subgrupo.setdefault(cli, {})
+                porcli_sub[sub] = porcli_sub.get(sub, 0) + q
+        elif tipo in (TIPO_CANJE, TIPO_RECHAZO):
+            codven = cod(fila.get("CodVendedor"))
+            nombre_vend = (fila.get("Vendedor") or "").strip() or nombre_por_codven.get(codven, codven)
+            importe = num_ar(fila.get("ImporteNetoItem"))
+            # CantBase/ImporteNetoItem ya vienen negativos en las devoluciones;
+            # se usa abs() para la cantidad (se muestra como unidades retiradas,
+            # no como delta) y el importe tal cual (ya negativo).
             if tipo == TIPO_CANJE:
-                art = descripcion_de(codigo_it, emp)
-                acc = invendible_por_vend.setdefault(nombre_vend, {}).setdefault(art, [0.0, 0.0])
-                acc[0] += q
-                acc[1] += importe * signo
-            elif tipo == TIPO_RECHAZO:
+                acc = invendible_por_vend.setdefault(nombre_vend, {}).setdefault(articulo, [0.0, 0.0])
+            else:
+                motivo = (fila.get("MotivoDevolucion") or "").strip() or "SIN MOTIVO"
                 acc = rechazos_por_vend.setdefault(nombre_vend, {}).setdefault(motivo, [0.0, 0.0])
-                acc[0] += q
-                acc[1] += importe * signo
+            acc[0] += abs(q)
+            acc[1] += importe
 
     print("DIAG items de venta Pepsico contados:", items_pepsico_vistos,
           "| clientes con al menos 1 unidad:", len(compra_cliente))
