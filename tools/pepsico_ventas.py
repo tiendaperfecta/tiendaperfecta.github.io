@@ -228,6 +228,28 @@ def main():
     nombre_por_codven = {cod(x.get("codigo")): (x.get("nombre") or "").strip() for x in vendedores_raw}
 
     articulos = api.get("/data/cmd/inventario/api/v2/get-articulos")
+
+    for path in ["/data/cmd/inventario/api/v1/get-segmentos-margen",
+                 "/data/cmd/inventario/api/v1/get-segmentos",
+                 "/data/cmd/inventario/api/v2/get-segmentos-margen",
+                 "/data/cmd/inventario/api/v1/get-marcas",
+                 "/data/cmd/inventario/api/v1/get-rubros"]:
+        try:
+            r = api.get(path)
+            print("DIAG endpoint OK:", path, "->", json.dumps(r, ensure_ascii=False, default=str)[:500])
+        except Exception as e:
+            print("DIAG endpoint FALLO:", path, "->", type(e).__name__, str(e)[:100])
+
+    muestra = []
+    for a in articulos:
+        desc = (a.get("descripcion") or "").upper()
+        if es_pepsico(desc):
+            muestra.append((desc[:40], a.get("codigoMarca"), a.get("codigoSegmentoMargen"), a.get("codigoRubro")))
+    muestra.sort(key=lambda x: (str(x[2]), x[0]))
+    print("DIAG muestra articulos pepsico (desc, marca, segMargen, rubro):")
+    for m in muestra:
+        print(" ", m)
+
     es_pepsico_por_clave = {}
     es_pehuamar90_por_clave = {}
     descripcion_por_clave = {}
