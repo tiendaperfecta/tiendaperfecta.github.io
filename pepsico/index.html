@@ -1229,22 +1229,20 @@ function drillBySegmento(vendedor, seg) {
   const list = noCompradoresDetalle.filter(c => c.vendedor === vendedor && c.seg === seg);
   openDrill(vendedor, `Segmento ${seg} — no llegaron al CCC (Pepsico > 3 unidades, 01/09-22/09)`, list);
 }
-const pehuamarSubRows = [
-  {codven:"1",  n:"Maria Noelia Madia",     universo:179, Matambrito:23, Chimichurri:15, LisaAcanalada90:19},
-  {codven:"2",  n:"Julian Nuñez",           universo:188, Matambrito:33, Chimichurri:20, LisaAcanalada90:47},
-  {codven:"3",  n:"Ezequiel Hack",          universo:221, Matambrito:25, Chimichurri:11, LisaAcanalada90:28},
-  {codven:"4",  n:"Lucas Giayetto",         universo:234, Matambrito:51, Chimichurri:25, LisaAcanalada90:48},
-  {codven:"5",  n:"Nicolas Martinez",       universo:211, Matambrito:36, Chimichurri:21, LisaAcanalada90:45},
-  {codven:"6",  n:"Camila Martinez",        universo:217, Matambrito:46, Chimichurri:33, LisaAcanalada90:59},
-  {codven:"7",  n:"Ramiro Rando",           universo:224, Matambrito:36, Chimichurri:21, LisaAcanalada90:38},
-  {codven:"8",  n:"Martinica Rodriguez",    universo:253, Matambrito:58, Chimichurri:18, LisaAcanalada90:32},
-  {codven:"9",  n:"Ludmila Aylen Martinez", universo:203, Matambrito:31, Chimichurri:21, LisaAcanalada90:55},
-  {codven:"10", n:"Matias Parada",          universo:215, Matambrito:20, Chimichurri:9,  LisaAcanalada90:23},
-  {codven:"11", n:"Melanie Larrama",        universo:201, Matambrito:62, Chimichurri:23, LisaAcanalada90:55},
-  {codven:"12", n:"Agustin Pogorzelski",    universo:203, Matambrito:44, Chimichurri:22, LisaAcanalada90:41},
-];
+let pehuamarSubRows = [];
+let laysSubRows = [];
+let tostitosSubRows = [];
 const PEHUAMAR_SUB_OBJ = 30;
 const PEHUAMAR_SUB_LABELS = {Matambrito:"Pehuamar Matambrito", Chimichurri:"Pehuamar Chimichurri", LisaAcanalada90:"Pehuamar Lisa + Acanalada x90g"};
+const LAYS_SUB_OBJ = 20;
+const LAYS_SUB_LABELS = {Caprese:"Lays Rústicas Caprese", SalMarina:"Lays Rústicas Sal Marina", LimonHierbas:"Lays Rústicas Limón y Hierbas"};
+const TOSTITOS_SUB_OBJ = 20;
+const TOSTITOS_SUB_LABELS = {G144:"Tostitos Hierbas y Limón 144g", G90:"Tostitos Hierbas y Limón 90g"};
+fetch('subproductos_vendedor.json').then(r => r.json()).then(data => {
+  pehuamarSubRows = data.pehuamar.vendedores;
+  laysSubRows = data.lays.vendedores;
+  tostitosSubRows = data.tostitos.vendedores;
+}).catch(() => {});
 
 function productSubTable(rowsData, key, label, obj){
   const items = rowsData.map(r => {
@@ -1270,51 +1268,17 @@ function productSubTable(rowsData, key, label, obj){
 
 function drillPehuamar(){
   const html = Object.keys(PEHUAMAR_SUB_LABELS).map(k => productSubTable(pehuamarSubRows, k, PEHUAMAR_SUB_LABELS[k], PEHUAMAR_SUB_OBJ)).join('');
-  openDrillCustom('Pehuamar — desglose por producto', 'Cobertura = clientes con 3+ unidades del producto ÷ universo del vendedor · Objetivo 30% por vendedor · período 01/09-22/09', html);
+  openDrillCustom('Pehuamar — desglose por producto', 'Cobertura = clientes con 3+ unidades del producto ÷ universo del vendedor · Objetivo 30% por vendedor · actualizado automáticamente por API dos veces por día', html);
 }
-
-const laysSubRows = [
-  {codven:"1",  n:"Maria Noelia Madia",     universo:179, Caprese:25, SalMarina:37, LimonHierbas:0},
-  {codven:"2",  n:"Julian Nuñez",           universo:188, Caprese:16, SalMarina:44, LimonHierbas:0},
-  {codven:"3",  n:"Ezequiel Hack",          universo:221, Caprese:19, SalMarina:25, LimonHierbas:0},
-  {codven:"4",  n:"Lucas Giayetto",         universo:234, Caprese:19, SalMarina:21, LimonHierbas:0},
-  {codven:"5",  n:"Nicolas Martinez",       universo:211, Caprese:9,  SalMarina:11, LimonHierbas:0},
-  {codven:"6",  n:"Camila Martinez",        universo:217, Caprese:36, SalMarina:49, LimonHierbas:0},
-  {codven:"7",  n:"Ramiro Rando",           universo:224, Caprese:20, SalMarina:29, LimonHierbas:0},
-  {codven:"8",  n:"Martinica Rodriguez",    universo:253, Caprese:21, SalMarina:37, LimonHierbas:0},
-  {codven:"9",  n:"Ludmila Aylen Martinez", universo:203, Caprese:18, SalMarina:26, LimonHierbas:0},
-  {codven:"10", n:"Matias Parada",          universo:215, Caprese:21, SalMarina:45, LimonHierbas:0},
-  {codven:"11", n:"Melanie Larrama",        universo:201, Caprese:9,  SalMarina:12, LimonHierbas:0},
-  {codven:"12", n:"Agustin Pogorzelski",    universo:203, Caprese:12, SalMarina:24, LimonHierbas:0},
-];
-const LAYS_SUB_OBJ = 20;
-const LAYS_SUB_LABELS = {Caprese:"Lays Rústicas Caprese", SalMarina:"Lays Rústicas Sal Marina", LimonHierbas:"Lays Rústicas Limón y Hierbas"};
 
 function drillLays(){
   const html = Object.keys(LAYS_SUB_LABELS).map(k => productSubTable(laysSubRows, k, LAYS_SUB_LABELS[k], LAYS_SUB_OBJ)).join('');
-  openDrillCustom('Lays — Rústicas por sabor', 'Cobertura = clientes con 3+ unidades del sabor ÷ universo del vendedor · Objetivo 20% por vendedor · período 01/09-22/09', html);
+  openDrillCustom('Lays — Rústicas por sabor', 'Cobertura = clientes con 3+ unidades del sabor ÷ universo del vendedor · Objetivo 20% por vendedor · actualizado automáticamente por API dos veces por día', html);
 }
-
-const tostitosSubRows = [
-  {codven:"1",  n:"Maria Noelia Madia",     universo:179, G144:3, G90:28},
-  {codven:"2",  n:"Julian Nuñez",           universo:188, G144:4, G90:16},
-  {codven:"3",  n:"Ezequiel Hack",          universo:221, G144:6, G90:22},
-  {codven:"4",  n:"Lucas Giayetto",         universo:234, G144:2, G90:14},
-  {codven:"5",  n:"Nicolas Martinez",       universo:211, G144:0, G90:3},
-  {codven:"6",  n:"Camila Martinez",        universo:217, G144:2, G90:37},
-  {codven:"7",  n:"Ramiro Rando",           universo:224, G144:2, G90:15},
-  {codven:"8",  n:"Martinica Rodriguez",    universo:253, G144:12, G90:18},
-  {codven:"9",  n:"Ludmila Aylen Martinez", universo:203, G144:0, G90:14},
-  {codven:"10", n:"Matias Parada",          universo:215, G144:0, G90:11},
-  {codven:"11", n:"Melanie Larrama",        universo:201, G144:0, G90:6},
-  {codven:"12", n:"Agustin Pogorzelski",    universo:203, G144:1, G90:5},
-];
-const TOSTITOS_SUB_OBJ = 20;
-const TOSTITOS_SUB_LABELS = {G144:"Tostitos Hierbas y Limón 144g", G90:"Tostitos Hierbas y Limón 90g"};
 
 function drillTostitos(){
   const html = Object.keys(TOSTITOS_SUB_LABELS).map(k => productSubTable(tostitosSubRows, k, TOSTITOS_SUB_LABELS[k], TOSTITOS_SUB_OBJ)).join('');
-  openDrillCustom('Tostitos — Hierbas y Limón por gramaje', 'Cobertura = clientes con 3+ unidades del gramaje ÷ universo del vendedor · Objetivo 20% por vendedor · período 01/09-22/09', html);
+  openDrillCustom('Tostitos — Hierbas y Limón por gramaje', 'Cobertura = clientes con 3+ unidades del gramaje ÷ universo del vendedor · Objetivo 20% por vendedor · actualizado automáticamente por API dos veces por día', html);
 }
 
 function drillByDia(vendedor, dia) {
