@@ -1,40 +1,186 @@
 {
  "date": "2026-09-25",
- "totalNet": 39669.44,
- "totalGross": 48000.02,
- "orders": 9,
+ "totalNet": 1893723.98,
+ "totalGross": 2291406.01,
+ "orders": 32,
  "bySeller": [
+  {
+   "sellerId": "8",
+   "name": "Martinica Rodriguez",
+   "orders": 8,
+   "total": 1091249.24
+  },
+  {
+   "sellerId": "5",
+   "name": "Nicolas Martinez",
+   "orders": 4,
+   "total": 650834.7
+  },
   {
    "sellerId": "1",
    "name": "Maria Noelia Madia",
+   "orders": 3,
+   "total": 195500.02
+  },
+  {
+   "sellerId": "2",
+   "name": "Julian Nuñez",
+   "orders": 2,
+   "total": 179679.05
+  },
+  {
+   "sellerId": "7",
+   "name": "Ramiro Rando",
    "orders": 1,
-   "total": 48000.02
+   "total": 141142.97
+  },
+  {
+   "sellerId": "4",
+   "name": "Lucas Giayetto",
+   "orders": 1,
+   "total": 33000.04
   },
   {
    "sellerId": "20",
    "name": "Deposito",
-   "orders": 8,
+   "orders": 13,
    "total": 0.0
   }
  ],
  "byChannel": [
   {
    "channel": "TRADITIONAL TRADE_A",
+   "orders": 6,
+   "total": 949595.03
+  },
+  {
+   "channel": "TRADITIONAL TRADE_D",
+   "orders": 5,
+   "total": 578855.89
+  },
+  {
+   "channel": "TRADITIONAL TRADE_C",
+   "orders": 5,
+   "total": 377120.23
+  },
+  {
+   "channel": "TRADITIONAL TRADE_B",
+   "orders": 2,
+   "total": 262857.09
+  },
+  {
+   "channel": "PROXIMITY_B",
    "orders": 1,
-   "total": 48000.02
+   "total": 122977.77
   },
   {
    "channel": "s/canal",
-   "orders": 8,
+   "orders": 13,
    "total": 0.0
   }
  ],
  "topClients": [
   {
+   "clientId": "7606",
+   "name": "SAN ALBERTO BALCARCE S R L (Kiosco/Maxikiosco_A)",
+   "orders": 2,
+   "total": 404380.75
+  },
+  {
+   "clientId": "430",
+   "name": "ESTEBAN JAVIER PERERA (Kiosco/Maxikiosco_A)",
+   "orders": 1,
+   "total": 279428.44
+  },
+  {
+   "clientId": "700",
+   "name": "LEONARDO CONDORI BAUTISTA (Almacen/Despensa_D)",
+   "orders": 1,
+   "total": 245551.79
+  },
+  {
+   "clientId": "2222",
+   "name": "SILVA VANINA (Almacen/Despensa_C)",
+   "orders": 2,
+   "total": 179679.05
+  },
+  {
+   "clientId": "435",
+   "name": "COMPAÑIA ALIMENTICIA DE LA COSTA SRL (Kiosco/Maxikiosco_B)",
+   "orders": 1,
+   "total": 167214.23
+  },
+  {
+   "clientId": "1444",
+   "name": "LAFKEN MDQ (Kiosco/Maxikiosco_A)",
+   "orders": 1,
+   "total": 141142.97
+  },
+  {
+   "clientId": "2848",
+   "name": "LA CURVA DE OTAMENDI S.R.L (Estacion de Servicio - NO OFICIALES_B)",
+   "orders": 1,
+   "total": 122977.77
+  },
+  {
+   "clientId": "115",
+   "name": "JUAN MARIA GABILAN COMERCIALIZADORA (Autoservicio Tradicional_C)",
+   "orders": 1,
+   "total": 116928.62
+  },
+  {
+   "clientId": "6442",
+   "name": "CESAR MATIAS CABRAL FARIAS (Autoservicio Tradicional_D)",
+   "orders": 1,
+   "total": 111285.78
+  },
+  {
+   "clientId": "248",
+   "name": "NICOLAS JOSE GERMINO (Kiosco/Maxikiosco_D)",
+   "orders": 1,
+   "total": 107804.03
+  },
+  {
+   "clientId": "3056",
+   "name": "ROBERTO RAMON CONTRERAS (Almacen/Despensa_B)",
+   "orders": 1,
+   "total": 95642.85
+  },
+  {
+   "clientId": "421",
+   "name": "DANIEL HORACIO ATLANTE (Almacen/Despensa_D)",
+   "orders": 1,
+   "total": 81214.26
+  },
+  {
+   "clientId": "1584",
+   "name": "CHOCOCHIA S.A (Kiosco/Maxikiosco_A)",
+   "orders": 1,
+   "total": 76642.86
+  },
+  {
+   "clientId": "1596",
+   "name": "GIMENEZ EMMANUEL (Kiosco/Maxikiosco_C)",
+   "orders": 1,
+   "total": 70857.14
+  },
+  {
    "clientId": "2383",
    "name": "FRUTICEL TOUCH S.R.L. (Kiosco/Maxikiosco_A)",
    "orders": 1,
    "total": 48000.02
+  },
+  {
+   "clientId": "307",
+   "name": "CAMACHO FLORES JAIME (Autoservicio Tradicional_D)",
+   "orders": 1,
+   "total": 33000.04
+  },
+  {
+   "clientId": "2980",
+   "name": "BENJAMIN DIEGO CONDORI GUZMAN (Almacen/Despensa_C)",
+   "orders": 1,
+   "total": 9655.42
   },
   {
    "clientId": "6",
@@ -45,41 +191,11 @@
   {
    "clientId": "15",
    "name": "",
-   "orders": 1,
+   "orders": 2,
    "total": 0.0
   },
   {
    "clientId": "5",
-   "name": "",
-   "orders": 1,
-   "total": 0.0
-  },
-  {
-   "clientId": "4701",
-   "name": "",
-   "orders": 1,
-   "total": 0.0
-  },
-  {
-   "clientId": "1735",
-   "name": "",
-   "orders": 1,
-   "total": 0.0
-  },
-  {
-   "clientId": "50014",
-   "name": "",
-   "orders": 1,
-   "total": 0.0
-  },
-  {
-   "clientId": "1402",
-   "name": "",
-   "orders": 1,
-   "total": 0.0
-  },
-  {
-   "clientId": "3245",
    "name": "",
    "orders": 1,
    "total": 0.0
