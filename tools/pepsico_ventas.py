@@ -2,8 +2,15 @@
 """
 pepsico_ventas.py - datos del panel Avance Pepsico via API de GesCom.
 Genera no_compradores_detalle.json, pehuamar90_no_comprado.json,
-invendible_detalle.json, rechazos_detalle.json, cobertura_marca_vendedor.json
-y ccc_segmento.json.
+invendible_detalle.json, rechazos_detalle.json, cobertura_marca_vendedor.json,
+ccc_segmento.json, subproductos_vendedor.json y avance_kg_vendedor.json.
+
+Avance kg: Objetivo es un valor fijo mensual (KG_OBJETIVO_PG/SB, actualizar a
+mano cuando cambie), prorrateado por vendedor segun composicion de clientes.
+Acumulado sale de factorPeso (peso en gramos) x cantidad vendida este mes.
+Platino+Gold / Silver&Bronze se arma con codigoSegmento A+B / C+D del cliente
+- NO esta confirmado contra la clasificacion original *P01/*P02 del reporte
+Avance de Ventas Pepsico de Gescom, es la mejor aproximacion disponible por API.
 
 Cobertura por marca: matching de marca por substring en la descripcion del
 articulo (no hay campo de marca legible en la API, solo codigoMarca opaco
@@ -39,6 +46,16 @@ MARCA_LABEL = {
 }
 SEGMENTOS = ["A", "B", "C", "D"]
 CCC_OBJETIVO_SEG = {"A": 384, "B": 337, "C": 669, "D": 903}
+
+# Objetivo mensual en kg (Platino+Gold / Silver&Bronze), confirmado por el usuario.
+# Actualizar a mano cuando cambie el objetivo del mes.
+KG_OBJETIVO_PG = 18000.0
+KG_OBJETIVO_SB = 8000.0
+# Segmentos de cliente (codigoSegmento) que arman cada grupo. Asuncion no
+# confirmada contra el reporte original de Gescom (que usa su propia
+# clasificacion *P01/*P02): A+B = Platino+Gold, C+D = Silver&Bronze.
+SEGMENTOS_PG = {"A", "B"}
+SEGMENTOS_SB = {"C", "D"}
 PEHUAMAR_SKUS = {"PEHUA PAPA LISA 90GX22 RM", "PEHUA PAPA ACANA 90GX22 RM"}
 
 # Sub-desglose de "Cobertura por marca": grupo -> {clave de salida -> set de descripciones exactas de SKU}.
@@ -148,6 +165,19 @@ class Api:
         return todas
 
 
+def dias_habiles_mes(anio, mes, hasta=None):
+    """Cuenta dias lunes a sabado (domingo no es habil) del mes. Si `hasta`
+    se pasa, cuenta solo hasta esa fecha inclusive (dias trabajados)."""
+    d = dt.date(anio, mes, 1)
+    total = 0
+    while d.month == mes:
+        if d.weekday() != 6:
+            if hasta is None or d <= hasta:
+                total += 1
+        d += dt.timedelta(days=1)
+    return total
+
+
 def dia_de_ruta(cliente_raw):
     for r in cliente_raw.get("rutasPreventa") or []:
         for i, d in enumerate(DIAS):
@@ -201,12 +231,14 @@ def main():
     es_pepsico_por_clave = {}
     es_pehuamar90_por_clave = {}
     descripcion_por_clave = {}
+    peso_por_clave = {}
     todas_claves = set()
     for a in articulos:
         clave = (cod(a.get("codigo")), cod(a.get("codigoEmpresa")))
         todas_claves.add(clave)
         desc = (a.get("descripcion") or "").strip()
         descripcion_por_clave[clave] = desc
+        peso_por_clave[clave] = num(a.get("factorPeso"))
         if es_pepsico(desc.upper()):
             es_pepsico_por_clave[clave] = True
         if desc.upper() in PEHUAMAR_SKUS:
@@ -226,23 +258,19 @@ def main():
     def descripcion_de(codigo, empresa):
         return descripcion_por_clave.get(clave_equivalente(codigo, empresa)) or codigo
 
+    def peso_de(codigo, empresa):
+        return peso_por_clave.get(clave_equivalente(codigo, empresa), 0.0)
+
     print("Articulos Pepsico encontrados:", len(es_pepsico_por_clave),
           "| SKUs Pehuamar 90gr:", len(es_pehuamar90_por_clave))
 
     ventas = api.ventas(inicio_mes.isoformat(), (hoy + dt.timedelta(days=1)).isoformat())
     print("Ventas traidas (mes en curso):", len(ventas))
-    if ventas:
-        v0 = ventas[-1]
-        campos_fecha = [k for k in v0.keys() if "fecha" in k.lower()]
-        print("DIAG campos de fecha en venta:", campos_fecha)
-        print("DIAG valores:", {k: v0.get(k) for k in campos_fecha})
-        print("DIAG factorPeso en un articulo pepsico:",
-              next((a.get("factorPeso") for a in articulos if es_pepsico((a.get("descripcion") or "").upper())
-                    and a.get("factorPeso")), None))
 
     compra_cliente = {}
     compra_cliente_marca = {}
     compra_cliente_subgrupo = {}
+    kg_por_cliente_fecha = {}
     pehuamar_compra = {}
     invendible_por_vend = {}
     rechazos_por_vend = {}
@@ -258,6 +286,7 @@ def main():
         nombre_vend = nombre_por_codven.get(codven, codven)
         motivo = (v.get("motivo") or "").strip() or "SIN MOTIVO"
         signo = SIGNO.get(tipo, 1)
+        fecha_pedido = (v.get("fechaPedido") or "")[:10]
 
         for it in v.get("items") or []:
             codigo_it = cod(it.get("codigoItem"))
@@ -271,6 +300,10 @@ def main():
                 if marca:
                     porcli = compra_cliente_marca.setdefault(cli, {})
                     porcli[marca] = porcli.get(marca, 0) + q
+                if fecha_pedido:
+                    kg = q * peso_de(codigo_it, emp) / 1000.0
+                    porfecha = kg_por_cliente_fecha.setdefault(cli, {})
+                    porfecha[fecha_pedido] = porfecha.get(fecha_pedido, 0.0) + kg
             if tipo == "VEN" and es_articulo_pehuamar90(codigo_it, emp):
                 pehuamar_compra[cli] = pehuamar_compra.get(cli, 0) + q
             if tipo == "VEN":
@@ -307,6 +340,11 @@ def main():
     marca_cumple_por_vend = {}
     sub_cumple_por_vend = {}
     seg_por_vend = {}
+    kg_acum_por_vend = {}
+    kg_hoy_por_vend = {}
+    kg_ultima_por_vend = {}
+    kg_penult_por_vend = {}
+    hoy_str = hoy.isoformat()
     for codigo, c in clientes.items():
         if not c["dia"] or c["codven"] not in VENDEDORES_PEPSICO:
             continue
@@ -336,6 +374,20 @@ def main():
             segdata[seg]["universo"] += 1
             if compra_cliente.get(codigo, 0) >= 3:
                 segdata[seg]["cumple"] += 1
+
+        fechas_kg = kg_por_cliente_fecha.get(codigo, {})
+        if fechas_kg:
+            kg_pg = sum(v for v in fechas_kg.values()) if seg in SEGMENTOS_PG else 0.0
+            kg_sb = sum(v for v in fechas_kg.values()) if seg in SEGMENTOS_SB else 0.0
+            acc = kg_acum_por_vend.setdefault(codven, {"pg": 0.0, "sb": 0.0})
+            acc["pg"] += kg_pg
+            acc["sb"] += kg_sb
+            kg_hoy_por_vend[codven] = kg_hoy_por_vend.get(codven, 0.0) + fechas_kg.get(hoy_str, 0.0)
+            fechas_ordenadas = sorted((f for f in fechas_kg if f <= hoy_str), reverse=True)
+            if fechas_ordenadas:
+                kg_ultima_por_vend[codven] = kg_ultima_por_vend.get(codven, 0.0) + fechas_kg[fechas_ordenadas[0]]
+            if len(fechas_ordenadas) > 1:
+                kg_penult_por_vend[codven] = kg_penult_por_vend.get(codven, 0.0) + fechas_kg[fechas_ordenadas[1]]
 
     escribir("no_compradores_detalle.json", no_compradores)
     escribir("pehuamar90_no_comprado.json", pehuamar_no_comprado)
@@ -383,6 +435,50 @@ def main():
         ccc_vendedores.append(fila)
     escribir("ccc_segmento.json", {"vendedores": ccc_vendedores})
     print("CCC por segmento: %d vendedores" % len(ccc_vendedores))
+
+    dias_habiles = dias_habiles_mes(hoy.year, hoy.month)
+    dias_trabajados = dias_habiles_mes(hoy.year, hoy.month, hasta=hoy)
+    ratio = dias_trabajados / dias_habiles if dias_habiles else 0
+    universo_pg_total = sum(seg_por_vend.get(cv, {}).get("A", {}).get("universo", 0)
+                             + seg_por_vend.get(cv, {}).get("B", {}).get("universo", 0)
+                             for cv in universo_por_vend)
+    universo_sb_total = sum(seg_por_vend.get(cv, {}).get("C", {}).get("universo", 0)
+                             + seg_por_vend.get(cv, {}).get("D", {}).get("universo", 0)
+                             for cv in universo_por_vend)
+    kg_vendedores = []
+    for codven in sorted(universo_por_vend, key=lambda x: int(x)):
+        segdata = seg_por_vend.get(codven, {})
+        universo_pg = segdata.get("A", {}).get("universo", 0) + segdata.get("B", {}).get("universo", 0)
+        universo_sb = segdata.get("C", {}).get("universo", 0) + segdata.get("D", {}).get("universo", 0)
+        p1o = round(KG_OBJETIVO_PG * universo_pg / universo_pg_total, 2) if universo_pg_total else 0.0
+        p2o = round(KG_OBJETIVO_SB * universo_sb / universo_sb_total, 2) if universo_sb_total else 0.0
+        acc = kg_acum_por_vend.get(codven, {"pg": 0.0, "sb": 0.0})
+        p1a = round(acc["pg"], 2)
+        p2a = round(acc["sb"], 2)
+        p1p = round(p1a / (p1o * ratio) * 100, 2) if p1o and ratio else 0.0
+        p2p = round(p2a / (p2o * ratio) * 100, 2) if p2o and ratio else 0.0
+        to = round(p1o + p2o, 2)
+        ta = round(p1a + p2a, 2)
+        tp = round(ta / (to * ratio) * 100, 2) if to and ratio else 0.0
+        promedio = round(ta / dias_trabajados, 2) if dias_trabajados else 0.0
+        medianec = round((to - ta) / (dias_habiles - dias_trabajados), 2) if dias_habiles > dias_trabajados else 0.0
+        tendencia = round(ta / dias_trabajados * dias_habiles, 2) if dias_trabajados else 0.0
+        kg_vendedores.append({
+            "n": nombre_por_codven.get(codven, codven),
+            "p1o": p1o, "p1a": p1a, "p1p": p1p,
+            "p2o": p2o, "p2a": p2a, "p2p": p2p,
+            "to": to, "ta": ta, "tp": tp,
+            "promedio": promedio, "medianec": medianec, "tendencia": tendencia,
+            "real": round(kg_hoy_por_vend.get(codven, 0.0), 2),
+            "penult": round(kg_penult_por_vend.get(codven, 0.0), 2),
+            "ultima": round(kg_ultima_por_vend.get(codven, 0.0), 2),
+        })
+    escribir("avance_kg_vendedor.json", {
+        "objetivoPG": KG_OBJETIVO_PG, "objetivoSB": KG_OBJETIVO_SB,
+        "diasHabiles": dias_habiles, "diasTrabajados": dias_trabajados,
+        "vendedores": kg_vendedores,
+    })
+    print("Avance kg: %d vendedores | dias %d/%d" % (len(kg_vendedores), dias_trabajados, dias_habiles))
 
     invendible_out = {
         vend: [{"articulo": art, "cant": round(c, 1), "importe": round(i, 2)}
