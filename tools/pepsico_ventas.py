@@ -2,7 +2,12 @@
 """
 pepsico_ventas.py - datos del panel Avance Pepsico via API de GesCom.
 Genera no_compradores_detalle.json, pehuamar90_no_comprado.json,
-invendible_detalle.json y rechazos_detalle.json.
+invendible_detalle.json, rechazos_detalle.json, cobertura_marca_vendedor.json
+y ccc_segmento.json.
+
+Cobertura por marca: matching de marca por substring en la descripcion del
+articulo (no hay campo de marca legible en la API, solo codigoMarca opaco
+tipo "pepsico-15"). Aproximacion, no un campo estructurado.
 
 Validado contra la API real (24/09): No compradores 479 (vs ~490 manual),
 sin Pehuamar 90gr hoy 382 (vs 392 manual).
@@ -27,9 +32,9 @@ import requests
 DIR = Path(__file__).resolve().parent.parent / "pepsico"
 TZ_AR = dt.timezone(dt.timedelta(hours=-3))
 
-MARCAS_PEPSICO = ["3DS", "CHEETOS", "DORITOS", "LAYS", "PEHUAMAR", "PEP", "QUAKER", "TOSTITOS", "TWISTOS"]
+MARCAS_PEPSICO = ["3D", "CHEETOS", "DORITOS", "LAYS", "PEHUAMAR", "PEP", "QUAKER", "TOSTITOS", "TWISTOS"]
 MARCA_LABEL = {
-    "3DS": "3Ds", "CHEETOS": "Cheetos", "DORITOS": "Doritos", "LAYS": "Lays",
+    "3D": "3Ds", "CHEETOS": "Cheetos", "DORITOS": "Doritos", "LAYS": "Lays",
     "PEHUAMAR": "Pehuamar", "PEP": "Pep", "QUAKER": "Quaker", "TOSTITOS": "Tostitos", "TWISTOS": "Twistos",
 }
 SEGMENTOS = ["A", "B", "C", "D"]
@@ -155,10 +160,6 @@ def main():
     nombre_por_codven = {cod(x.get("codigo")): (x.get("nombre") or "").strip() for x in vendedores_raw}
 
     articulos = api.get("/data/cmd/inventario/api/v2/get-articulos")
-    candidatos_3d = sorted({(a.get("descripcion") or "").strip() for a in articulos
-                            if "3D" in (a.get("descripcion") or "").upper()
-                            or "TRID" in (a.get("descripcion") or "").upper()})
-    print("DIAG posibles articulos 3Ds:", candidatos_3d[:30])
     es_pepsico_por_clave = {}
     es_pehuamar90_por_clave = {}
     descripcion_por_clave = {}
