@@ -1,20 +1,26 @@
 {
  "date": "2026-09-25",
- "totalNet": 32517252.66,
- "totalGross": 39345875.75,
- "orders": 456,
+ "totalNet": 33730919.44,
+ "totalGross": 40814412.55,
+ "orders": 475,
  "bySeller": [
   {
    "sellerId": "9",
    "name": "Ludmila Aylen Martinez",
-   "orders": 24,
-   "total": 5080600.24
+   "orders": 27,
+   "total": 5236505.73
   },
   {
    "sellerId": "4",
    "name": "Lucas Giayetto",
-   "orders": 42,
-   "total": 4198060.13
+   "orders": 46,
+   "total": 4557762.56
+  },
+  {
+   "sellerId": "6",
+   "name": "Camila Martinez",
+   "orders": 60,
+   "total": 3722831.35
   },
   {
    "sellerId": "7",
@@ -23,34 +29,28 @@
    "total": 3718118.71
   },
   {
+   "sellerId": "3",
+   "name": "Ezequiel Hack",
+   "orders": 29,
+   "total": 3679774.02
+  },
+  {
    "sellerId": "12",
    "name": "Azul Martinez",
    "orders": 34,
    "total": 3679655.82
   },
   {
-   "sellerId": "3",
-   "name": "Ezequiel Hack",
-   "orders": 27,
-   "total": 3582345.39
-  },
-  {
-   "sellerId": "6",
-   "name": "Camila Martinez",
-   "orders": 55,
-   "total": 3406331.33
-  },
-  {
    "sellerId": "11",
    "name": "Melanie Larrama",
-   "orders": 38,
-   "total": 3322115.99
+   "orders": 39,
+   "total": 3385973.18
   },
   {
    "sellerId": "5",
    "name": "Nicolas Martinez",
-   "orders": 33,
-   "total": 3228346.06
+   "orders": 35,
+   "total": 3352560.39
   },
   {
    "sellerId": "8",
@@ -61,8 +61,8 @@
   {
    "sellerId": "1",
    "name": "Maria Noelia Madia",
-   "orders": 36,
-   "total": 2222915.96
+   "orders": 37,
+   "total": 2500630.34
   },
   {
    "sellerId": "2",
@@ -81,28 +81,34 @@
    "name": "Deposito",
    "orders": 33,
    "total": 74590.98
+  },
+  {
+   "sellerId": "33",
+   "name": "Jonathan Capetola",
+   "orders": 1,
+   "total": 73214.34
   }
  ],
  "byChannel": [
   {
    "channel": "TRADITIONAL TRADE_A",
-   "orders": 86,
-   "total": 15715059.9
+   "orders": 87,
+   "total": 15992774.27
   },
   {
    "channel": "TRADITIONAL TRADE_C",
-   "orders": 130,
-   "total": 8744321.44
+   "orders": 136,
+   "total": 9175737.9
   },
   {
    "channel": "TRADITIONAL TRADE_D",
-   "orders": 110,
-   "total": 5747218.39
+   "orders": 114,
+   "total": 5949481.08
   },
   {
    "channel": "TRADITIONAL TRADE_B",
-   "orders": 66,
-   "total": 5487579.17
+   "orders": 72,
+   "total": 5932079.58
   },
   {
    "channel": "Mayorista_D",
@@ -116,8 +122,8 @@
   },
   {
    "channel": "AWAY FROM HOME_C",
-   "orders": 6,
-   "total": 468830.38
+   "orders": 7,
+   "total": 532687.57
   },
   {
    "channel": "PROXIMITY_A",
@@ -140,6 +146,11 @@
    "total": 172500.03
   },
   {
+   "channel": "PROXIMITY_B",
+   "orders": 2,
+   "total": 171763.44
+  },
+  {
    "channel": "PROXIMITY_C",
    "orders": 2,
    "total": 164226.88
@@ -148,11 +159,6 @@
    "channel": "AWAY FROM HOME_D",
    "orders": 4,
    "total": 137290.45
-  },
-  {
-   "channel": "PROXIMITY_B",
-   "orders": 1,
-   "total": 122977.77
   },
   {
    "channel": "PROXIMITY_D",
