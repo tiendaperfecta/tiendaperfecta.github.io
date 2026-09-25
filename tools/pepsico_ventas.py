@@ -229,28 +229,18 @@ def main():
 
     articulos = api.get("/data/cmd/inventario/api/v2/get-articulos")
 
-    for path in ["/data/cmd/inventario/api/v1/get-familias",
-                 "/data/cmd/inventario/api/v1/get-lineas",
-                 "/data/cmd/objetivos/api/v1/get-grupos",
-                 "/data/cmd/ventas/api/v1/get-grupos",
-                 "/data/cmd/objetivos/api/v1/get-grupos-objetivo",
-                 "/data/cmd/objetivos/api/v1/get-objetivos-grupo",
-                 "/data/cmd/inventario/api/v1/get-grupos"]:
+    for path in ["/data/cmd/metas/api/v1/get",
+                 "/data/cmd/presupuestos/api/v1/get",
+                 "/data/cmd/planeamiento/api/v1/get",
+                 "/data/cmd/ventas/api/v1/get-metas-vendedor",
+                 "/data/cmd/ventas/api/v1/get-presupuestos",
+                 "/data/cmd/objetivos/api/v1/get-metas",
+                 "/data/cmd/objetivos/api/v1/get-presupuestos"]:
         try:
             r = api.get(path)
             print("DIAG endpoint OK:", path, "->", json.dumps(r, ensure_ascii=False, default=str)[:600])
         except Exception as e:
             print("DIAG endpoint FALLO:", path, "->", type(e).__name__, str(e)[:100])
-
-    muestra = []
-    for a in articulos:
-        desc = (a.get("descripcion") or "").upper()
-        if es_pepsico(desc):
-            muestra.append((desc[:40], a.get("codigoMarca"), a.get("codigoLinea"), a.get("codigoFamilia")))
-    muestra.sort(key=lambda x: (str(x[2]), str(x[3]), x[0]))
-    print("DIAG muestra articulos pepsico (desc, marca, linea, familia):")
-    for m in muestra:
-        print(" ", m)
 
     es_pepsico_por_clave = {}
     es_pehuamar90_por_clave = {}
