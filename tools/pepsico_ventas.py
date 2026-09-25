@@ -346,6 +346,15 @@ def main():
     vendedores_raw = api.get("/data/cmd/ventas/api/v1/get-vendedores")
     nombre_por_codven = {cod(x.get("codigo")): (x.get("nombre") or "").strip() for x in vendedores_raw}
 
+    for path in ["/data/cmd/ventas/api/v1/get-combos", "/data/cmd/ventas/api/v2/get-combos",
+                 "/data/cmd/inventario/api/v1/get-combos", "/data/cmd/inventario/api/v2/get-combos",
+                 "/data/cmd/ventas/api/v1/get-combo-componentes"]:
+        try:
+            r = api.get(path)
+            print("DIAG endpoint OK:", path, "->", json.dumps(r, ensure_ascii=False, default=str)[:800])
+        except Exception as e:
+            print("DIAG endpoint FALLO:", path, "->", type(e).__name__, str(e)[:100])
+
     articulos = api.get("/data/cmd/inventario/api/v2/get-articulos")
 
 
