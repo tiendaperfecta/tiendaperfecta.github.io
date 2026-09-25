@@ -32,6 +32,7 @@ el navegador.
 Variables de entorno:
     GESCOM_REALM, GESCOM_CLIENT_ID, GESCOM_USERNAME, GESCOM_PASSWORD
     CTACTE_CLAVE
+    CTACTE_DISPATCH  token para el boton "Actualizar" del panel (opcional)
 
 Salida: ctacte/data.enc.json   (cifrado)
         ctacte/fecha.txt       fecha de actualizacion, para la tarjeta del panel
@@ -242,6 +243,11 @@ def main():
         print("Faltan credenciales de GesCom o CTACTE_CLAVE: no se refresca.")
         return 0
     data = armar(*bajar())
+    # Token de GitHub (fine-grained, solo "Actions: read and write" de este repo)
+    # para el boton "Actualizar" del panel. Viaja dentro del JSON cifrado.
+    disp = os.environ.get("CTACTE_DISPATCH", "").strip()
+    if disp:
+        data["dispatch"] = disp
     OUT.mkdir(exist_ok=True)
     (OUT / "data.enc.json").write_text(json.dumps(cifrar(data, clave)), encoding="utf-8")
     (OUT / "fecha.txt").write_text("Ultima actualizacion: %s\n" % data["hoy"], encoding="utf-8")

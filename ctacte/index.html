@@ -130,6 +130,8 @@
       <div class="sub" id="sub">Tienda Perfecta · TP Pex · Rambla — saldos de GesCom</div>
     </div>
     <div class="hbtns" id="hbtns" hidden>
+      <span class="sub" id="updMsg" style="align-self:center"></span>
+      <button class="btn pri" id="bUpd" hidden title="Trae de GesCom los saldos de este momento">⟳ Actualizar</button>
       <button class="btn" id="bCsv" title="Descarga la vista actual">Exportar CSV</button>
       <button class="btn" onclick="print()">Imprimir</button>
       <button class="btn" id="bOut">Salir</button>
@@ -227,6 +229,7 @@ const bcol = i => `var(--${BANDS[i].k})`;
 const INK_CLARA = new Set([5, 7]);   // franjas oscuras: texto blanco
 const pill = d => { const i = bandOf(d); return `<span class="pill" style="background:${bcol(i)};color:${INK_CLARA.has(i) ? '#fff' : '#0f172a'}">${d > 0 ? d + ' d vencido' : d === 0 ? 'hoy' : 'en ' + (-d) + ' d'}</span>`; };
 
+let CLAVE = '';
 let D, HOY, state = {tab: 'cli', band: null, sort: {}, lim: 150};
 
 // ---------- descifrado ----------
@@ -246,7 +249,7 @@ async function entrar(clave) {
   } catch { $('#gErr').textContent = 'No se pudieron bajar los datos.'; return; }
   try { D = await descifrar(ENV, clave); }
   catch { $('#gErr').textContent = 'Clave incorrecta.'; store.del('ctacte-k'); return; }
-  store.set('ctacte-k', clave);
+  store.set('ctacte-k', clave); CLAVE = clave;
   $('#gate').hidden = true; $('#app').hidden = false; $('#hbtns').hidden = false;
   init();
 }
@@ -256,13 +259,18 @@ const k0 = store.get('ctacte-k'); if (k0) entrar(k0);
 
 // ---------- datos ----------
 const dias = v => Math.round((new Date(HOY + 'T12:00:00') - new Date(v + 'T12:00:00')) / 864e5);
-function init() {
+function preparar() {
   HOY = D.hoy;
   const gen = new Date(D.generado);
   $('#sub').textContent = `Tienda Perfecta · TP Pex · Rambla — saldos de GesCom al ${gen.toLocaleString('es-AR', {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'})}`;
   D.creditos = D.creditos || []; D.padres = D.padres || {};
   D.tramos.forEach(t => { t.dd = dias(t.v); t.bi = bandOf(t.dd); const c = D.clientes[t.c]; t.vend = t.vd || c.vend; t.ruta = t.r || c.ruta; });
   D.creditos.forEach(t => { const c = D.clientes[t.c]; t.vend = t.vd || c.vend; t.ruta = c.ruta; });
+  $('#bUpd').hidden = !D.dispatch;
+}
+function init() {
+  preparar();
+  $('#bUpd').onclick = actualizar;
   $('#bPadre').onclick = () => { state.padre = null; render(); };
   const opts = (sel, pares) => multi($(sel), pares);
   opts('#fEmp', Object.entries(D.empresas));
@@ -327,6 +335,47 @@ function multi(el, pares) {
   sync();
 }
 document.addEventListener('click', () => document.querySelectorAll('.ms.open').forEach(o => o.classList.remove('open')));
+
+// ---------- actualizar desde el panel ----------
+// Dispara la Action ctacte-data (la misma que corre cada hora), espera que
+// termine y trae el JSON nuevo por la API de GitHub (sin esperar a Pages).
+// Los filtros, la solapa y el scroll quedan como estaban.
+const GH = 'https://api.github.com/repos/tiendaperfecta/tiendaperfecta.github.io';
+const esperar = ms => new Promise(r => setTimeout(r, ms));
+async function actualizar() {
+  const b = $('#bUpd'), msg = $('#updMsg');
+  const H = {Authorization: 'Bearer ' + D.dispatch, Accept: 'application/vnd.github+json'};
+  const aviso = t => msg.textContent = t;
+  b.disabled = true; b.textContent = '⟳ Actualizando…';
+  try {
+    const t0 = Date.now() - 15000;
+    const r = await fetch(GH + '/actions/workflows/ctacte-data.yml/dispatches', {method: 'POST', headers: H, body: JSON.stringify({ref: 'main'})});
+    if (r.status !== 204) throw new Error(r.status === 401 || r.status === 403 ? 'GitHub rechazó el permiso del botón' : 'GitHub respondió ' + r.status);
+    aviso('Bajando saldos de GesCom… (1 a 2 minutos)');
+    let run = null;
+    for (let i = 0; i < 60; i++) {           // hasta ~10 minutos
+      await esperar(10000);
+      const j = await (await fetch(GH + '/actions/workflows/ctacte-data.yml/runs?event=workflow_dispatch&per_page=5', {headers: H, cache: 'no-store'})).json();
+      run = (j.workflow_runs || []).find(x => new Date(x.created_at).getTime() >= t0);
+      if (!run) continue;
+      if (run.status === 'queued') aviso('En cola, esperando que termine otra actualización…');
+      if (run.status === 'completed') break;
+    }
+    if (!run || run.status !== 'completed') throw new Error('la actualización está tardando más de lo normal');
+    if (run.conclusion !== 'success') throw new Error('la actualización falló en GitHub');
+    aviso('Descifrando…');
+    const env = await (await fetch(GH + '/contents/ctacte/data.enc.json?ref=main&t=' + Date.now(), {headers: {...H, Accept: 'application/vnd.github.raw'}, cache: 'no-store'})).json();
+    const nuevo = await descifrar(env, CLAVE);
+    if (nuevo.generado === D.generado) { aviso('Sin cambios: ya tenías lo último de GesCom'); return; }
+    D = nuevo; ENV = env; preparar(); render();
+    aviso('Actualizado ✓');
+  } catch (e) {
+    aviso('No se pudo actualizar: ' + e.message);
+  } finally {
+    b.disabled = false; b.textContent = '⟳ Actualizar';
+    setTimeout(() => { if (!b.disabled) msg.textContent = ''; }, 15000);
+  }
+}
 
 // ---------- volver atras ----------
 // Antes de entrar a un detalle se guarda la vista (solapa, filtros, franja,
