@@ -42,6 +42,8 @@
   .filters input[type=search]{width:220px;max-width:100%}
   .filters label{display:flex;align-items:center;gap:6px;color:var(--ink2);font-size:13px;white-space:nowrap}
   .chipsf{display:flex;gap:6px;flex-wrap:wrap}
+  .btn.back{background:#0369a1;border-color:#0369a1;font-weight:700}
+  .btn.back:hover{background:#0284c7}
   /* desplegable con casillas (seleccion multiple) */
   .ms{position:relative}
   .ms>button{position:relative;background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:6px 26px 6px 8px;min-width:150px;max-width:210px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
@@ -144,6 +146,7 @@
 
   <main id="app" hidden>
     <div class="filters">
+      <button class="btn back" id="bBack" hidden title="Volver a la vista anterior, con sus filtros">← Volver</button>
       <input type="search" id="fQ" placeholder="Buscar cliente, código, CUIT, comprobante…">
       <div class="ms" id="fEmp" data-ph="Todas las empresas" data-pl="empresas"></div>
       <div class="ms" id="fVend" data-ph="Todos los vendedores" data-pl="vendedores"></div>
@@ -276,8 +279,10 @@ function init() {
     $('#fHist').checked = true; state.band = null; state.padre = null; render();
   };
   $('#bCsv').onclick = csv;
-  $('#drawer').onclick = e => { if (e.target.id === 'drawer') $('#drawer').classList.remove('on'); };
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#drawer').classList.remove('on'); });
+  $('#drawer').onclick = e => { if (e.target.id === 'drawer') volver(); };
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('#drawer').classList.contains('on')) volver(); });
+  $('#bBack').onclick = volver;
+  window.addEventListener('popstate', alVolver);
   render();
 }
 
@@ -322,6 +327,34 @@ function multi(el, pares) {
   sync();
 }
 document.addEventListener('click', () => document.querySelectorAll('.ms.open').forEach(o => o.classList.remove('open')));
+
+// ---------- volver atras ----------
+// Antes de entrar a un detalle se guarda la vista (solapa, filtros, franja,
+// cuenta madre, orden y scroll). "← Volver", la tecla Esc o el boton atras
+// del navegador/celular la restauran tal cual.
+const FILTROS = ['#fQ', '#fEmp', '#fVend', '#fRuta', '#fCond', '#fLoc', '#fCart', '#fEst', '#fMin'];
+const pila = [];
+const foto = () => ({
+  tab: state.tab, band: state.band, padre: state.padre || null, lim: state.lim,
+  sort: JSON.parse(JSON.stringify(state.sort)), scroll: scrollY,
+  f: FILTROS.map(s => $(s).value), hist: $('#fHist').checked,
+});
+function guardarVista() { pila.push(foto()); history.pushState({vista: pila.length}, ''); }
+function volver() {
+  if (history.state && (history.state.ficha || history.state.vista)) history.back();
+  else alVolver();
+}
+function alVolver() {
+  if ($('#drawer').classList.contains('on')) { $('#drawer').classList.remove('on'); actBack(); return; }
+  const v = pila.pop();
+  if (!v) { actBack(); return; }
+  FILTROS.forEach((s, i) => $(s).value = v.f[i]);
+  $('#fHist').checked = v.hist;
+  Object.assign(state, {tab: v.tab, band: v.band, padre: v.padre, lim: v.lim, sort: v.sort});
+  render();
+  requestAnimationFrame(() => scrollTo(0, v.scroll));
+}
+function actBack() { const b = $('#bBack'); if (b) b.hidden = !pila.length; }
 
 // Filtra tramos y arma clientes con lo que queda
 function filtrar() {
@@ -372,7 +405,7 @@ function filtrar() {
 let F;
 function render() {
   F = filtrar();
-  kpis(); band(); cal(); tabs(); view();
+  kpis(); band(); cal(); tabs(); view(); actBack();
   const bp = $('#bPadre'); bp.hidden = !state.padre; if (state.padre) bp.textContent = `Cuenta madre: ${D.padres[state.padre] || state.padre} ✕`;
   $('#foot').innerHTML = `Fuente: reportes de GesCom <b>Saldo actual detallado por cliente</b> y <b>Saldo detallado por Cliente Asociados</b> ` +
     `(Cta. Cte. Clientes › Reportes), comprobante por comprobante, sin exclusiones. Vencimiento y saldo de cada comprobante tal como los informa GesCom. ` +
@@ -532,6 +565,7 @@ function view() {
     ];
     const rows = [...g.values()];
     const onRow = a => {
+      guardarVista();
       if (t === 'padre') state.padre = a.k;
       else $(t === 'vend' ? '#fVend' : t === 'ruta' ? '#fRuta' : '#fEmp').value = [a.k];
       state.tab = 'cli'; render();
@@ -577,7 +611,7 @@ function ficha(a) {
   $('#dIn').innerHTML = `
     <div style="display:flex;justify-content:space-between;gap:10px"><div><h2>${esc(c.n)}</h2>
     <div class="muted">${esc(a.cod)}${c.rs && c.rs !== c.n ? ' · ' + esc(c.rs) : ''}${c.doc ? ' · ' + esc(c.doc) : ''}</div></div>
-    <button class="btn" onclick="document.getElementById('drawer').classList.remove('on')">Cerrar</button></div>
+    <button class="btn back" id="dBack">← Volver</button></div>
     <div style="margin-top:10px">${todos.length ? pill(maxd) : ''} ${maxd > 5 ? '<span class="pill" style="background:#fca5a5;color:#0f172a">LISTA NEGRA</span>' : ''} ${c.tope && maxd > c.tope ? `<span class="pill" style="background:#fdba74">Excede tope de ${c.tope} días</span>` : ''}</div>
     <div class="facts">
       <div><b>Deuda</b>${money(c.saldo)}</div>
@@ -601,7 +635,10 @@ function ficha(a) {
     <tr><td colspan="5" class="r"><b>Saldo neto</b></td><td class="r"><b>${money(c.neto)}</b></td></tr></tbody></table></div>
     ${asoc.length ? `<h3 style="font-weight:500;font-size:15px;margin-top:16px">Clientes de la misma cuenta madre</h3><div class="tw"><table><tbody>${asoc.map(([k, x]) => `<tr><td>${esc(x.n)} <span class="muted">${esc(k)}</span></td><td class="r">${money(x.neto)}</td></tr>`).join('')}</tbody></table></div>` : ''}
     ${c.tags && c.tags.length ? `<p class="note">Etiquetas: ${c.tags.map(esc).join(', ')}</p>` : ''}`;
+  if (!$('#drawer').classList.contains('on')) history.pushState({ficha: 1}, '');
   $('#drawer').classList.add('on');
+  $('#dBack').onclick = volver;
+  actBack();
 }
 
 function csv() {
