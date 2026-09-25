@@ -385,6 +385,27 @@ def main():
     ventas = api.ventas(inicio_mes.isoformat(), (hoy + dt.timedelta(days=1)).isoformat())
     print("Ventas traidas (mes en curso):", len(ventas))
 
+    # DIAG fecha: confirmar contra que campo de fecha filtra fechadesde/fechahasta
+    # del endpoint get-ventas (nunca se verifico, solo se asumio).
+    hoy_iso = hoy.isoformat()
+    campos_fecha = ["fechaCarga", "fechaPedido", "fechaEntrega", "fechaComprobante", "fechaFiscal"]
+    total_con_campo = {c: 0 for c in campos_fecha}
+    muestra = []
+    for v in ventas:
+        if len(muestra) < 8 and (v.get("fechaPedido") or "")[:10] == hoy_iso:
+            fila = {c: v.get(c) for c in campos_fecha}
+            fila["estado"] = v.get("estado")
+            fila["codigoTipoVenta"] = v.get("codigoTipoVenta")
+            muestra.append(fila)
+        for c in campos_fecha:
+            if v.get(c):
+                total_con_campo[c] += 1
+    print("DIAG fecha - registros por campo presente:", total_con_campo)
+    print("DIAG fecha - muestra (8 ventas con fechaPedido=hoy):", json.dumps(muestra, ensure_ascii=False))
+    ventas_hoy_por_campo = {c: sum(1 for v in ventas if (v.get(c) or "")[:10] == hoy_iso) for c in campos_fecha}
+    print("DIAG fecha - cantidad de ventas con cada campo = hoy (%s):" % hoy_iso, ventas_hoy_por_campo)
+    print("DIAG fecha - total ventas del rango pedido:", len(ventas))
+
     compra_cliente = {}
     compra_cliente_marca = {}
     compra_cliente_subgrupo = {}
