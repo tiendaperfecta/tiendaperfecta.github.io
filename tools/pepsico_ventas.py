@@ -348,11 +348,8 @@ def main():
 
     combos_catalogo = api.get("/data/cmd/ventas/api/v1/get-combos")
     print("DIAG total combos en catalogo:", len(combos_catalogo))
-    for c in combos_catalogo[:3]:
-        print("DIAG combo completo:", json.dumps(c, ensure_ascii=False, default=str))
-    print("DIAG claves de un combo:", list(combos_catalogo[0].keys()) if combos_catalogo else None)
-    print("DIAG claves de un componente:",
-          list(combos_catalogo[0]["componentes"][0].keys()) if combos_catalogo and combos_catalogo[0].get("componentes") else None)
+    for c in combos_catalogo:
+        print("DIAG combo:", c.get("codigo"), c.get("descripcion"), "| condicionJson:", c.get("condicionJson"))
 
     articulos = api.get("/data/cmd/inventario/api/v2/get-articulos")
 
