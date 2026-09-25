@@ -229,18 +229,6 @@ def main():
 
     articulos = api.get("/data/cmd/inventario/api/v2/get-articulos")
 
-    for path in ["/data/cmd/metas/api/v1/get",
-                 "/data/cmd/presupuestos/api/v1/get",
-                 "/data/cmd/planeamiento/api/v1/get",
-                 "/data/cmd/ventas/api/v1/get-metas-vendedor",
-                 "/data/cmd/ventas/api/v1/get-presupuestos",
-                 "/data/cmd/objetivos/api/v1/get-metas",
-                 "/data/cmd/objetivos/api/v1/get-presupuestos"]:
-        try:
-            r = api.get(path)
-            print("DIAG endpoint OK:", path, "->", json.dumps(r, ensure_ascii=False, default=str)[:600])
-        except Exception as e:
-            print("DIAG endpoint FALLO:", path, "->", type(e).__name__, str(e)[:100])
 
     es_pepsico_por_clave = {}
     es_pehuamar90_por_clave = {}
