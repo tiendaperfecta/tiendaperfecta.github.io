@@ -36,6 +36,7 @@ jobs:
           GESCOM_USERNAME: ${{ secrets.GESCOM_USERNAME }}
           GESCOM_PASSWORD: ${{ secrets.GESCOM_PASSWORD }}
           CTACTE_CLAVE: ${{ secrets.CTACTE_CLAVE }}
+          CTACTE_DISPATCH: ${{ secrets.CTACTE_DISPATCH }}
         run: python tools/ctacte.py
 
       - name: Commit data if changed
