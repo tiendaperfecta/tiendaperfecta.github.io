@@ -6235,6 +6235,25 @@
   },
   {
    "fecha": "2026-09-25",
+   "sellerId": "2",
+   "vendedor": "Julian Nuñez",
+   "clientId": "2512",
+   "nombre": "Patricio Mattos",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 29785.72,
+   "fechaVenta": "2026-09-25",
+   "horaVenta": "19:39",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-25",
    "sellerId": "20",
    "vendedor": "Deposito",
    "clientId": "6",
@@ -12089,7 +12108,7 @@
  "resumen": {
   "vendio": 216,
   "paso_sin_vender": 268,
-  "vendio_sin_pasar": 149,
+  "vendio_sin_pasar": 150,
   "sin_visita": 3
  }
 }
