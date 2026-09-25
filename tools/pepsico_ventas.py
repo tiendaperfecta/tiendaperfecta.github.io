@@ -229,14 +229,16 @@ def main():
 
     articulos = api.get("/data/cmd/inventario/api/v2/get-articulos")
 
-    for path in ["/data/cmd/inventario/api/v1/get-segmentos-margen",
-                 "/data/cmd/inventario/api/v1/get-segmentos",
-                 "/data/cmd/inventario/api/v2/get-segmentos-margen",
-                 "/data/cmd/inventario/api/v1/get-marcas",
-                 "/data/cmd/inventario/api/v1/get-rubros"]:
+    for path in ["/data/cmd/inventario/api/v1/get-familias",
+                 "/data/cmd/inventario/api/v1/get-lineas",
+                 "/data/cmd/objetivos/api/v1/get-grupos",
+                 "/data/cmd/ventas/api/v1/get-grupos",
+                 "/data/cmd/objetivos/api/v1/get-grupos-objetivo",
+                 "/data/cmd/objetivos/api/v1/get-objetivos-grupo",
+                 "/data/cmd/inventario/api/v1/get-grupos"]:
         try:
             r = api.get(path)
-            print("DIAG endpoint OK:", path, "->", json.dumps(r, ensure_ascii=False, default=str)[:500])
+            print("DIAG endpoint OK:", path, "->", json.dumps(r, ensure_ascii=False, default=str)[:600])
         except Exception as e:
             print("DIAG endpoint FALLO:", path, "->", type(e).__name__, str(e)[:100])
 
@@ -244,9 +246,9 @@ def main():
     for a in articulos:
         desc = (a.get("descripcion") or "").upper()
         if es_pepsico(desc):
-            muestra.append((desc[:40], a.get("codigoMarca"), a.get("codigoSegmentoMargen"), a.get("codigoRubro")))
-    muestra.sort(key=lambda x: (str(x[2]), x[0]))
-    print("DIAG muestra articulos pepsico (desc, marca, segMargen, rubro):")
+            muestra.append((desc[:40], a.get("codigoMarca"), a.get("codigoLinea"), a.get("codigoFamilia")))
+    muestra.sort(key=lambda x: (str(x[2]), str(x[3]), x[0]))
+    print("DIAG muestra articulos pepsico (desc, marca, linea, familia):")
     for m in muestra:
         print(" ", m)
 
