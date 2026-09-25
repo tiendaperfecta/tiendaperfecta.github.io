@@ -28,6 +28,12 @@ DIR = Path(__file__).resolve().parent.parent / "pepsico"
 TZ_AR = dt.timezone(dt.timedelta(hours=-3))
 
 MARCAS_PEPSICO = ["3DS", "CHEETOS", "DORITOS", "LAYS", "PEHUAMAR", "PEP", "QUAKER", "TOSTITOS", "TWISTOS"]
+MARCA_LABEL = {
+    "3DS": "3Ds", "CHEETOS": "Cheetos", "DORITOS": "Doritos", "LAYS": "Lays",
+    "PEHUAMAR": "Pehuamar", "PEP": "Pep", "QUAKER": "Quaker", "TOSTITOS": "Tostitos", "TWISTOS": "Twistos",
+}
+SEGMENTOS = ["A", "B", "C", "D"]
+CCC_OBJETIVO_SEG = {"A": 384, "B": 337, "C": 669, "D": 903}
 PEHUAMAR_SKUS = {"PEHUA PAPA LISA 90GX22 RM", "PEHUA PAPA ACANA 90GX22 RM"}
 DIAS = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"]
 DIAS_CAP = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"]
@@ -54,6 +60,14 @@ def num(v):
 def es_pepsico(descripcion):
     d = (descripcion or "").upper()
     return any(m in d for m in MARCAS_PEPSICO)
+
+
+def marca_de(descripcion):
+    d = (descripcion or "").upper()
+    for m in MARCAS_PEPSICO:
+        if m in d:
+            return MARCA_LABEL[m]
+    return None
 
 
 class Api:
@@ -135,6 +149,8 @@ def main():
             "codven": cod((c.get("rutasPreventa") or [{}])[0].get("codigoVendedor")) if c.get("rutasPreventa") else "",
         }
 
+    api = Api()
+
     vendedores_raw = api.get("/data/cmd/ventas/api/v1/get-vendedores")
     nombre_por_codven = {cod(x.get("codigo")): (x.get("nombre") or "").strip() for x in vendedores_raw}
 
@@ -174,6 +190,7 @@ def main():
     print("Ventas traidas (mes en curso):", len(ventas))
 
     compra_cliente = {}
+    compra_cliente_marca = {}
     pehuamar_compra = {}
     invendible_por_vend = {}
     rechazos_por_vend = {}
@@ -198,6 +215,10 @@ def main():
             if tipo == "VEN" and es_articulo_pepsico(codigo_it, emp):
                 compra_cliente[cli] = compra_cliente.get(cli, 0) + q
                 items_pepsico_vistos += 1
+                marca = marca_de(descripcion_de(codigo_it, emp))
+                if marca:
+                    porcli = compra_cliente_marca.setdefault(cli, {})
+                    porcli[marca] = porcli.get(marca, 0) + q
             if tipo == "VEN" and es_articulo_pehuamar90(codigo_it, emp):
                 pehuamar_compra[cli] = pehuamar_compra.get(cli, 0) + q
 
@@ -225,6 +246,9 @@ def main():
     hoy_key = DIAS_CAP[hoy.weekday()]
     no_compradores = []
     pehuamar_no_comprado = []
+    universo_por_vend = {}
+    marca_cumple_por_vend = {}
+    seg_por_vend = {}
     for codigo, c in clientes.items():
         if not c["dia"] or c["codven"] not in VENDEDORES_PEPSICO:
             continue
@@ -238,9 +262,51 @@ def main():
                                           ("codigo", "razon", "localidad", "seg", "dia")},
                                           "vendedor": nombre_vend_cli})
 
+        codven = c["codven"]
+        universo_por_vend[codven] = universo_por_vend.get(codven, 0) + 1
+        cumple_marca = marca_cumple_por_vend.setdefault(codven, {})
+        for marca, cant in compra_cliente_marca.get(codigo, {}).items():
+            if cant >= 3:
+                cumple_marca[marca] = cumple_marca.get(marca, 0) + 1
+        seg = c["seg"] if c["seg"] in SEGMENTOS else None
+        if seg:
+            segdata = seg_por_vend.setdefault(codven, {s: {"universo": 0, "cumple": 0} for s in SEGMENTOS})
+            segdata[seg]["universo"] += 1
+            if compra_cliente.get(codigo, 0) >= 3:
+                segdata[seg]["cumple"] += 1
+
     escribir("no_compradores_detalle.json", no_compradores)
     escribir("pehuamar90_no_comprado.json", pehuamar_no_comprado)
     print("No compradores:", len(no_compradores), "| Sin Pehuamar 90gr hoy:", len(pehuamar_no_comprado))
+
+    cobertura_vendedores = []
+    for codven in sorted(universo_por_vend, key=lambda x: int(x)):
+        universo = universo_por_vend[codven]
+        cumple_marca = marca_cumple_por_vend.get(codven, {})
+        fila = {"codven": codven, "n": nombre_por_codven.get(codven, codven), "universo": universo}
+        for label in MARCA_LABEL.values():
+            cant = cumple_marca.get(label, 0)
+            fila[label] = round(cant / universo * 100, 1) if universo else 0.0
+        cobertura_vendedores.append(fila)
+    escribir("cobertura_marca_vendedor.json", {"vendedores": cobertura_vendedores})
+    print("Cobertura por marca: %d vendedores" % len(cobertura_vendedores))
+
+    universo_seg_total = {s: sum(seg_por_vend.get(cv, {}).get(s, {}).get("universo", 0)
+                                  for cv in universo_por_vend) for s in SEGMENTOS}
+    ccc_vendedores = []
+    for codven in sorted(universo_por_vend, key=lambda x: int(x)):
+        segdata = seg_por_vend.get(codven, {s: {"universo": 0, "cumple": 0} for s in SEGMENTOS})
+        fila = {"n": nombre_por_codven.get(codven, codven)}
+        keymap = {"A": ("ao", "ac"), "B": ("bo", "bc"), "C": ("co", "cc"), "D": ("do_", "dc")}
+        for s in SEGMENTOS:
+            ko, kc = keymap[s]
+            uni_total_seg = universo_seg_total[s]
+            uni_v = segdata[s]["universo"]
+            fila[ko] = round(CCC_OBJETIVO_SEG[s] * uni_v / uni_total_seg) if uni_total_seg else 0
+            fila[kc] = segdata[s]["cumple"]
+        ccc_vendedores.append(fila)
+    escribir("ccc_segmento.json", {"vendedores": ccc_vendedores})
+    print("CCC por segmento: %d vendedores" % len(ccc_vendedores))
 
     invendible_out = {
         vend: [{"articulo": art, "cant": round(c, 1), "importe": round(i, 2)}
