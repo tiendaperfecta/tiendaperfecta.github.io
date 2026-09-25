@@ -155,6 +155,10 @@ def main():
     nombre_por_codven = {cod(x.get("codigo")): (x.get("nombre") or "").strip() for x in vendedores_raw}
 
     articulos = api.get("/data/cmd/inventario/api/v2/get-articulos")
+    candidatos_3d = sorted({(a.get("descripcion") or "").strip() for a in articulos
+                            if "3D" in (a.get("descripcion") or "").upper()
+                            or "TRID" in (a.get("descripcion") or "").upper()})
+    print("DIAG posibles articulos 3Ds:", candidatos_3d[:30])
     es_pepsico_por_clave = {}
     es_pehuamar90_por_clave = {}
     descripcion_por_clave = {}
