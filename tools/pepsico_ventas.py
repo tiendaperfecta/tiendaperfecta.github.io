@@ -346,10 +346,6 @@ def main():
     vendedores_raw = api.get("/data/cmd/ventas/api/v1/get-vendedores")
     nombre_por_codven = {cod(x.get("codigo")): (x.get("nombre") or "").strip() for x in vendedores_raw}
 
-    combos_catalogo = api.get("/data/cmd/ventas/api/v1/get-combos")
-    print("DIAG total combos en catalogo:", len(combos_catalogo))
-    for c in combos_catalogo:
-        print("DIAG combo:", c.get("codigo"), c.get("descripcion"), "| condicionJson:", c.get("condicionJson"))
 
     articulos = api.get("/data/cmd/inventario/api/v2/get-articulos")
 
