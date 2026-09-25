@@ -5,12 +5,14 @@ Genera no_compradores_detalle.json, pehuamar90_no_comprado.json,
 invendible_detalle.json, rechazos_detalle.json, cobertura_marca_vendedor.json,
 ccc_segmento.json, subproductos_vendedor.json y avance_kg_vendedor.json.
 
-Avance kg: Objetivo es un valor fijo mensual (KG_OBJETIVO_PG/SB, actualizar a
-mano cuando cambie), prorrateado por vendedor segun composicion de clientes.
-Acumulado sale de factorPeso (peso en gramos) x cantidad vendida este mes.
-Platino+Gold / Silver&Bronze se arma con codigoSegmento A+B / C+D del cliente
-- NO esta confirmado contra la clasificacion original *P01/*P02 del reporte
-Avance de Ventas Pepsico de Gescom, es la mejor aproximacion disponible por API.
+Avance kg: viene directo del reporte "Avance de Ventas Pepsico" de Gescom (el
+mismo motor generico de reportes que usa la UI, /data/cmd/report/render),
+Objetivo/Acumulado/Avance%/Promedio/Media Necesaria/Tendencia/venta real de
+ultimas 2 visitas ya prorrateados y clasificados por el propio sistema en
+Platino+Gold (*P01) / Silver&Bronze (*P02) -- son grupos de PRODUCTO, no de
+segmento de cliente. El id de "Objetivo" que pide la API (objetivoId) es
+distinto del numero que se ve en el combo de la UI y hay que verificarlo a
+mano cada tanto (ver OBJETIVO_ID_BASE mas abajo).
 
 Cobertura por marca: matching de marca por substring en la descripcion del
 articulo (no hay campo de marca legible en la API, solo codigoMarca opaco
@@ -26,6 +28,7 @@ venta (no del item).
 Credenciales por variables de entorno (GitHub Secrets):
 GESCOM_REALM, GESCOM_CLIENT_ID, GESCOM_USERNAME, GESCOM_PASSWORD
 """
+import calendar
 import datetime as dt
 import json
 import sys
@@ -47,134 +50,30 @@ MARCA_LABEL = {
 SEGMENTOS = ["A", "B", "C", "D"]
 CCC_OBJETIVO_SEG = {"A": 384, "B": 337, "C": 669, "D": 903}
 
-# Objetivo mensual en kg (Platino+Gold / Silver&Bronze), confirmado por el usuario.
-# Actualizar a mano cuando cambie el objetivo del mes.
-KG_OBJETIVO_PG = 18000.0
-KG_OBJETIVO_SB = 8000.0
-# Clasificacion de PRODUCTO (no de cliente) en Platino/Gold/Silver/Bronze,
-# confirmada por el usuario contra el reporte "Segmentacion del portafolio"
-# de Gescom. Platino+Gold y Silver+Bronze se arman agrupando estos 4 tiers.
-TIER_POR_DESC = {
-    "PEP COMUN 40GX60 PI": "Platinum",
-    "PEP RUEDITAS 40GX60 PI": "Platinum",
-    "QUAKER AVENA TRADIC 18X280G": "Silver",
-    "QUAKER AVENA EXTRA FINA 18X470G": "Silver",
-    "PEHUAMAR PALIQUESO 90GX36": "Gold",
-    "PEHUAMAR PALISAL 90GX36": "Gold",
-    "PEP COMUN 120GRX21": "Gold",
-    "PEP COMUN 84GRX36": "Platinum",
-    "PEHUAMAR MAICITOS 125GX16": "Silver",
-    "PEP RUEDITAS 74GRX36": "Platinum",
-    "PEP RUEDITAS 120GRX21": "Gold",
-    "TWISTOS MINIT JAMON 155GX20": "Silver",
-    "TWISTOS MINIT QUESO 155GX20": "Silver",
-    "CHEETOS 23GRX108": "Platinum",
-    "LAYS CLASICAS 20GRX76": "Platinum",
-    "3DMEGAQUESO23GX120": "Platinum",
-    "3D QUESO 143GX18X1": "Silver",
-    "3D QUESO 43GX75X1": "Platinum",
-    "QUAKER AVENA INSTANT 18X280G ARG": "Silver",
-    "QUAKER AVENA INSTANT 18X500G ARG": "Silver",
-    "QUAKER AVENA TRADIC 18X550G ARG": "Silver",
-    "PEP RAMITAS QUESO 40GX60": "Platinum",
-    "PEP RAMITAS QUESO 84GX36": "Platinum",
-    "PEP RAMITAS QUESO 120GX21": "Gold",
-    "DORITOS QUESO 40GX70X1": "Platinum",
-    "DORITOS QUESO 40GX58X1 CH": "Platinum",
-    "CHEETOS QUESO 43GX70X1": "Platinum",
-    "LAYS CLASICAS 40GX68X1": "Platinum",
-    "LAYS ONDAS FH 30GX72": "Platinum",
-    "LAYS ONDAS FH 70GX28": "Gold",
-    "LAYS QSO Y CEBOLLA 34GX72": "Platinum",
-    "LAYS JAMON SERRANO 34GX72": "Platinum",
-    "LAYS CLASICAS 85GX25X1": "Gold",
-    "LAYS CLASICAS 330GX9": "Silver",
-    "LAYS JAMON SERRANO 122GX19": "Silver",
-    "DORITOS QUESO 77GX26": "Gold",
-    "DORITOS QUESO 129GX19": "Silver",
-    "DORITOS QUESO 200GX14": "Silver",
-    "PEHUAMAR PAPA LISA 135GX19X1": "Silver",
-    "PEHUAMAR PAPA LISA 230GX14X1": "Bronze",
-    "PEHUAMAR PAPA ACANA 135GX19": "Silver",
-    "PEHUAMAR PALISAL 165GX21X1": "Silver",
-    "PEHUAMAR PALISAL 620GX6X1": "Bronze",
-    "PEHUAMAR PALIQUESO 165GX21X1": "Silver",
-    "PEHUAMAR PALIQUESO 620GX6X1": "Bronze",
-    "LAYS KETCHUP 34GX72X1": "Platinum",
-    "CHEETOS QUESO 85GX24X1": "Gold",
-    "CHEETOS QUESO 140GX18X1": "Silver",
-    "CHEETOS QUESO 229GX12X1": "Silver",
-    "3D QUESO 85GX27X1": "Gold",
-    "MANI SAL CON PIEL 75GX64X1": "Gold",
-    "MANI PELADO 135GX40X1": "Gold",
-    "MANI PELADO 320GX17X1": "Silver",
-    "MANIAX JAPONES JAMON 95GX40X1": "Gold",
-    "MANIAX JAPONES SAL 95GX40X1": "Gold",
-    "MANIAX SAL Y LIMON 95GX60X1": "Gold",
-    "DORITOS QUESO 77GX17 EXP ARG": "Gold",
-    "DORITOS QUESO 129GX17 EXP ARG": "Silver",
-    "CHEETOS QUESO CREMA 43GX66": "Platinum",
-    "CHEETOS QUESO CREMA 85GX24": "Gold",
-    "LAYS PROVOLETA 77GX25X1": "Gold",
-    "PEHUAMAR MAICITOS 265GX10X1": "Bronze",
-    "PEHUAMAR ACANALADA 230GX14X1": "Bronze",
-    "TWISTOS MINIT JAMON 95GX30X1": "Gold",
-    "TWISTOS MINIT QUESO 95GX30X1": "Gold",
-    "MANI SAL PELADO 75GX64X1": "Gold",
-    "TWISTOS MINIT QUESO 40GX112X1": "Platinum",
-    "TWISTOS MINIT JAMON 40GX112X1": "Platinum",
-    "MANI CON PIEL 135GX40X1": "Gold",
-    "DORITOS QUESO 20GX88X1": "Platinum",
-    "DORITOS SWEET CHILI SB 35GX88X1": "Platinum",
-    "DORITOS SWEET CHILI MB 74GX29X1": "Gold",
-    "DORITOS DINAMITA FH 45GX110X1": "Platinum",
-    "DORITOS DINAMITA FH 82GX38X1": "Gold",
-    "PEHUAMAR ACAN CHIMICHURRI 80X25X1": "Gold",
-    "PEHUAMAR ACAN MATAMBRITO 80X25X1": "Gold",
-    "PEHUAMAR ACANALADA 450X9 RM": "Bronze",
-    "PEHUAMAR PAPA LISA 450GX9 RM": "Bronze",
-    "PEHUA PAPA ACANA 90GX22 RM": "Gold",
-    "PEHUA PAPA LISA 90GX22 RM": "Gold",
-    "LAYS PANCETA 77GX25X1": "Gold",
-    "LAYS PANCETA 34GX72X1": "Platinum",
-    "LAYS BARBACOA 77GX25X1": "Gold",
-    "LAYS BARBACOA 34GX72X1": "Platinum",
-    "MANI TUBULAR 40GRS": "Platinum",
-    "LAYS JAMON SERRANO 77GX25X1": "Gold",
-    "PEP RUEDITAS FLAMIN HOT 71G": "Platinum",
-    "DINAMITA EXTRA FLAMIN HOT 45G": "Platinum",
-    "DINAMITA EXTRA FLAMIN HOT 82G": "Gold",
-    "LAYS CLASICAS 134GX18X1": "Silver",
-    "LAYS CLASICAS 230GX13X1": "Silver",
-    "LAYS QUESO Y CEBOLLA 77GX25X1": "Gold",
-    "LAYS KETCHUP 77GX25X1": "Gold",
-    "TOSTITOS ROUNDED SAL 100 GRAMOS": "Gold",
-    "TOSTITOS ROUNDED SAL 160 GRAMOS": "Silver",
-    "TOSTITOS ROUNDED SAL 260 GRAMOS": "Silver",
-    "QUAKER AVENA TRADIC 280GX20 ARG": "Silver",
-    "QUAKER AVENA EXT FINA 470GX12 ARG": "Silver",
-    "QUAKER AVENA INST 280GX20 ARG": "Silver",
-    "QUAKER AVENA INST 500GX10 ARG": "Silver",
-    "QUAKER AVENA TRADIC 550GX12 ARG": "Silver",
-    "LAYS CLASICA 20GX6X10 TIR": "Platinum",
-    "DORITOS QUESO 20GX6X10 TIR": "Platinum",
-    "CHEETOS ONDULADOS KETCHUP 40GX66": "Platinum",
-    "CHEETOS ONDULADOS KETCHUP 80GX24": "Gold",
-    "LAYS CLASICA 40GX6X10 TIR": "Platinum",
-    "DORITOS PIZZA 74X29X1": "Gold",
-    "DORITOS PIZZA 35X88X1": "Platinum",
-    "DORITOS QUESO 40GX6X10 TIR": "Platinum",
-    "LAYS ACAN ASADO 77GX25X1": "Gold",
-    "LAYS ACAN ASADO 34GX72X1 MND": "Platinum",
-    "PEHUAMAR ACANALADA 420X9X1 RM": "Bronze",
-    "PEHUAMAR PAPA LISA 420GX9X1 RM": "Bronze",
-    "TOSTITOS ROUND HIERB Y LIMON 90GX26X1": "Gold",
-    "TOSTITOS ROUND HIERB Y LIMON 144GX19X1": "Silver",
-    "LAYS RUSTICAS SAL MARINA 85 GRAMOS": "Gold",
-    "LAYS RUSTICAS CAPRESE 77 GRAMOS": "Gold",
-    "LAYS RUSTICAS LIMON Y HIERBAS 77 GRAMOS": "Gold",
-}
-TIER_GROUP = {"Platinum": "pg", "Gold": "pg", "Silver": "sb", "Bronze": "sb"}
+# Avance de Ventas Pepsico (kg): reporte generico de Gescom, mismo motor que
+# usa la UI (Reportes > Objetivos > Avance de Ventas Pepsico). Da Objetivo,
+# Acumulado, Avance%, Promedio, Media Necesaria, Tendencia y venta real de las
+# ultimas 2 visitas, ya prorrateado y clasificado por Gescom (Platino+Gold /
+# Silver&Bronze son *P01/*P02 en el reporte, por PRODUCTO, no por cliente).
+GUID_AVANCE_PEPSICO = "81da66a7-03ac-4a5f-bb14-9f85a7844a89"
+
+# El id que pide la API para "objetivoId" NO es el numero que se ve en el
+# combo de la UI ("19 - TN SEPTIEMBRE 2026" se manda como id=31, no como 19):
+# es el id interno de la fila en la tabla de Objetivos de Gescom. Confirmado
+# a mano en la UI: id=31 = Septiembre 2026, y viene subiendo de a 1 por mes
+# sin saltos desde Enero 2026 (23=Ene26 ... 31=Sep26). Si Gescom intercala
+# algun objetivo de otro proveedor (paso alguna vez en 2025) la secuencia se
+# corre; por eso el chequeo de mas abajo no pisa el archivo anterior si el
+# reporte viene vacio, para poder corregir OBJETIVO_ID_BASE a mano.
+OBJETIVO_ID_BASE = 31
+OBJETIVO_ID_BASE_ANIO = 2026
+OBJETIVO_ID_BASE_MES = 9
+
+
+def objetivo_id_de(anio, mes):
+    return OBJETIVO_ID_BASE + (anio - OBJETIVO_ID_BASE_ANIO) * 12 + (mes - OBJETIVO_ID_BASE_MES)
+
+
 PEHUAMAR_SKUS = {"PEHUA PAPA LISA 90GX22 RM", "PEHUA PAPA ACANA 90GX22 RM"}
 
 # Sub-desglose de "Cobertura por marca": grupo -> {clave de salida -> set de descripciones exactas de SKU}.
@@ -267,6 +166,31 @@ class Api:
         d = r.json()
         return d if isinstance(d, list) else (d.get("data") or [])
 
+    def post(self, path, body, timeout=180):
+        ahora = dt.datetime.now().timestamp()
+        if not self._tok or ahora - self._t > 240:
+            self._tok, self._t = gescom._token(self.s), ahora
+        for intento in range(4):
+            try:
+                r = self.s.post(gescom.API + path, json=body, timeout=timeout,
+                                 headers={"Authorization": "Bearer " + self._tok,
+                                          "Accept": "application/json"})
+                if r.status_code < 500:
+                    break
+            except requests.ConnectionError:
+                if intento == 3:
+                    raise
+            time.sleep(10 * (intento + 1))
+        r.raise_for_status()
+        return r.json()
+
+    def render_report(self, report_id, parameters):
+        """Motor generico de reportes de Gescom (el mismo que usa la UI). El
+        cuerpo va anidado en reportInput.parameters -- mandar los parametros
+        sueltos en la raiz devuelve 200 OK pero con las tablas vacias."""
+        body = {"id": report_id, "reportInput": {"filtersInput": {}, "parameters": parameters}}
+        return self.post("/data/cmd/report/render", body)
+
     def ventas(self, desde, hasta_excl):
         todas, d, fin = [], dt.date.fromisoformat(desde), dt.date.fromisoformat(hasta_excl)
         while d < fin:
@@ -295,6 +219,83 @@ def dias_habiles_mes(anio, mes, hasta=None):
                 total += 1
         d += dt.timedelta(days=1)
     return total
+
+
+def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
+    """Trae el Avance de Ventas Pepsico (kg) directo del reporte de Gescom, ya
+    prorrateado y clasificado por el propio sistema (Platino+Gold = *P01,
+    Silver&Bronze = *P02). Reemplaza la aproximacion anterior (objetivo fijo
+    prorrateado por universo de clientes + clasificacion de producto a mano)
+    por los valores exactos que arma Gescom."""
+    ratio = dias_trabajados / dias_habiles if dias_habiles else 0
+    inicio_mes = hoy.replace(day=1)
+    fin_mes = hoy.replace(day=calendar.monthrange(hoy.year, hoy.month)[1])
+    ahora_iso = dt.datetime.now(TZ_AR).isoformat(timespec="milliseconds")
+    parametros = {
+        "fechaInicioVentas": inicio_mes.isoformat() + "T03:00:00.000Z",
+        "fechaFinVentas": fin_mes.isoformat() + "T03:00:00.000Z",
+        "objetivoId": objetivo_id_de(hoy.year, hoy.month),
+        "medidaId": 3,
+        "tipoVentaId": 0,
+        "fechaProxVisita": ahora_iso,
+        "fechaefectividad": ahora_iso,
+        "cantDiasHabiles": dias_habiles,
+        "cantDiasTrabajados": dias_trabajados,
+        "vendedorId": 0, "supervisorId": 0, "proveedorId": 0,
+        "unidadesCCC": 0, "importeCCC": 1, "oportunidad": 0, "objetivocumplimiento": 5,
+    }
+    data = api.render_report(GUID_AVANCE_PEPSICO, parametros)
+    tabla = next((d["table"] for d in data.get("datasources") or [] if d["name"] == "Avance"), None)
+    if not tabla or len(tabla) < 2:
+        raise RuntimeError(
+            "El reporte Avance de Ventas Pepsico vino vacio con objetivoId=%s. "
+            "Probablemente cambio la numeracion del Objetivo del mes: revisar "
+            "a mano en Gescom (Reportes > Objetivos > Avance de Ventas Pepsico, "
+            "combo Objetivo) cual id corresponde y actualizar OBJETIVO_ID_BASE "
+            "en este archivo." % parametros["objetivoId"])
+
+    header = tabla[0]
+    idx = {nombre: i for i, nombre in enumerate(header)}
+    por_vendedor = {}
+    for fila in tabla[1:]:
+        nombre = fila[idx["VendedorNombre"]]
+        acc = por_vendedor.setdefault(nombre, {
+            "codven": cod(fila[idx["VendedorCodigo"]]),
+            "ultima": 0.0, "penult": 0.0, "real": 0.0,
+        })
+        clave = "p1" if fila[idx["GrupoCodigo"]] == "*P01" else "p2"
+        acc[clave + "o"] = num(fila[idx["ValorObjetivo"]])
+        acc[clave + "a"] = num(fila[idx["Acumulado"]])
+        acc[clave + "p"] = num(fila[idx["Avance"]])
+        acc["ultima"] += num(fila[idx["UltimaVisita"]])
+        acc["penult"] += num(fila[idx["PenultimaVisita"]])
+        acc["real"] += num(fila[idx["Real"]])
+
+    kg_vendedores = []
+    for nombre, acc in sorted(por_vendedor.items(), key=lambda kv: int(kv[1]["codven"] or 0)):
+        p1o, p1a = acc.get("p1o", 0.0), acc.get("p1a", 0.0)
+        p2o, p2a = acc.get("p2o", 0.0), acc.get("p2a", 0.0)
+        to, ta = round(p1o + p2o, 2), round(p1a + p2a, 2)
+        kg_vendedores.append({
+            "n": nombre,
+            "p1o": round(p1o, 2), "p1a": round(p1a, 2), "p1p": round(acc.get("p1p", 0.0), 2),
+            "p2o": round(p2o, 2), "p2a": round(p2a, 2), "p2p": round(acc.get("p2p", 0.0), 2),
+            "to": to, "ta": ta,
+            "tp": round(ta / (to * ratio) * 100, 2) if to and ratio else 0.0,
+            "promedio": round(ta / dias_trabajados, 2) if dias_trabajados else 0.0,
+            "medianec": round((to - ta) / (dias_habiles - dias_trabajados), 2) if dias_habiles > dias_trabajados else 0.0,
+            "tendencia": round(ta / dias_trabajados * dias_habiles, 2) if dias_trabajados else 0.0,
+            "real": round(acc["real"], 2),
+            "penult": round(acc["penult"], 2),
+            "ultima": round(acc["ultima"], 2),
+        })
+
+    return {
+        "objetivoPG": round(sum(v["p1o"] for v in kg_vendedores), 2),
+        "objetivoSB": round(sum(v["p2o"] for v in kg_vendedores), 2),
+        "diasHabiles": dias_habiles, "diasTrabajados": dias_trabajados,
+        "vendedores": kg_vendedores,
+    }
 
 
 def dia_de_ruta(cliente_raw):
@@ -353,14 +354,12 @@ def main():
     es_pepsico_por_clave = {}
     es_pehuamar90_por_clave = {}
     descripcion_por_clave = {}
-    peso_por_clave = {}
     todas_claves = set()
     for a in articulos:
         clave = (cod(a.get("codigo")), cod(a.get("codigoEmpresa")))
         todas_claves.add(clave)
         desc = (a.get("descripcion") or "").strip()
         descripcion_por_clave[clave] = desc
-        peso_por_clave[clave] = num(a.get("factorPeso"))
         if es_pepsico(desc.upper()):
             es_pepsico_por_clave[clave] = True
         if desc.upper() in PEHUAMAR_SKUS:
@@ -380,9 +379,6 @@ def main():
     def descripcion_de(codigo, empresa):
         return descripcion_por_clave.get(clave_equivalente(codigo, empresa)) or codigo
 
-    def peso_de(codigo, empresa):
-        return peso_por_clave.get(clave_equivalente(codigo, empresa), 0.0)
-
     print("Articulos Pepsico encontrados:", len(es_pepsico_por_clave),
           "| SKUs Pehuamar 90gr:", len(es_pehuamar90_por_clave))
 
@@ -392,9 +388,6 @@ def main():
     compra_cliente = {}
     compra_cliente_marca = {}
     compra_cliente_subgrupo = {}
-    kg_por_cliente_fecha = {}
-    kg_grupo_por_cliente = {}
-    kg_sin_clasificar = 0.0
     pehuamar_compra = {}
     invendible_por_vend = {}
     rechazos_por_vend = {}
@@ -410,7 +403,6 @@ def main():
         nombre_vend = nombre_por_codven.get(codven, codven)
         motivo = (v.get("motivo") or "").strip() or "SIN MOTIVO"
         signo = SIGNO.get(tipo, 1)
-        fecha_pedido = (v.get("fechaPedido") or "")[:10]
 
         for it in v.get("items") or []:
             codigo_it = cod(it.get("codigoItem"))
@@ -425,17 +417,6 @@ def main():
                 if marca:
                     porcli = compra_cliente_marca.setdefault(cli, {})
                     porcli[marca] = porcli.get(marca, 0) + q
-                if fecha_pedido:
-                    kg = q * peso_de(codigo_it, emp) / 1000.0
-                    porfecha = kg_por_cliente_fecha.setdefault(cli, {})
-                    porfecha[fecha_pedido] = porfecha.get(fecha_pedido, 0.0) + kg
-                    tier = TIER_POR_DESC.get(desc_it.upper())
-                    grupo = TIER_GROUP.get(tier)
-                    if grupo:
-                        porgrupo = kg_grupo_por_cliente.setdefault(cli, {"pg": 0.0, "sb": 0.0})
-                        porgrupo[grupo] += kg
-                    else:
-                        kg_sin_clasificar += kg
             if tipo == "VEN" and es_articulo_pehuamar90(codigo_it, emp):
                 pehuamar_compra[cli] = pehuamar_compra.get(cli, 0) + q
             if tipo == "VEN":
@@ -472,11 +453,6 @@ def main():
     marca_cumple_por_vend = {}
     sub_cumple_por_vend = {}
     seg_por_vend = {}
-    kg_acum_por_vend = {}
-    kg_hoy_por_vend = {}
-    kg_ultima_por_vend = {}
-    kg_penult_por_vend = {}
-    hoy_str = hoy.isoformat()
     for codigo, c in clientes.items():
         if not c["dia"] or c["codven"] not in VENDEDORES_PEPSICO:
             continue
@@ -506,19 +482,6 @@ def main():
             segdata[seg]["universo"] += 1
             if compra_cliente.get(codigo, 0) >= 3:
                 segdata[seg]["cumple"] += 1
-
-        fechas_kg = kg_por_cliente_fecha.get(codigo, {})
-        if fechas_kg:
-            grupo_kg = kg_grupo_por_cliente.get(codigo, {"pg": 0.0, "sb": 0.0})
-            acc = kg_acum_por_vend.setdefault(codven, {"pg": 0.0, "sb": 0.0})
-            acc["pg"] += grupo_kg["pg"]
-            acc["sb"] += grupo_kg["sb"]
-            kg_hoy_por_vend[codven] = kg_hoy_por_vend.get(codven, 0.0) + fechas_kg.get(hoy_str, 0.0)
-            fechas_ordenadas = sorted((f for f in fechas_kg if f <= hoy_str), reverse=True)
-            if fechas_ordenadas:
-                kg_ultima_por_vend[codven] = kg_ultima_por_vend.get(codven, 0.0) + fechas_kg[fechas_ordenadas[0]]
-            if len(fechas_ordenadas) > 1:
-                kg_penult_por_vend[codven] = kg_penult_por_vend.get(codven, 0.0) + fechas_kg[fechas_ordenadas[1]]
 
     escribir("no_compradores_detalle.json", no_compradores)
     escribir("pehuamar90_no_comprado.json", pehuamar_no_comprado)
@@ -569,48 +532,14 @@ def main():
 
     dias_habiles = dias_habiles_mes(hoy.year, hoy.month)
     dias_trabajados = dias_habiles_mes(hoy.year, hoy.month, hasta=hoy)
-    ratio = dias_trabajados / dias_habiles if dias_habiles else 0
-    # El objetivo por vendedor se prorratea segun su participacion en el
-    # universo total de clientes (no hay objetivo individual oficial por
-    # vendedor disponible via API, es una estimacion proporcional; usar el
-    # kg real como base de prorrateo haria que el Avance% de todos cierre
-    # igual, porque se cancela con el Acumulado real).
-    total_universo = sum(universo_por_vend.values())
-    kg_vendedores = []
-    for codven in sorted(universo_por_vend, key=lambda x: int(x)):
-        acc = kg_acum_por_vend.get(codven, {"pg": 0.0, "sb": 0.0})
-        participacion = universo_por_vend[codven] / total_universo if total_universo else 0.0
-        p1o = round(KG_OBJETIVO_PG * participacion, 2)
-        p2o = round(KG_OBJETIVO_SB * participacion, 2)
-        p1a = round(acc["pg"], 2)
-        p2a = round(acc["sb"], 2)
-        p1p = round(p1a / (p1o * ratio) * 100, 2) if p1o and ratio else 0.0
-        p2p = round(p2a / (p2o * ratio) * 100, 2) if p2o and ratio else 0.0
-        to = round(p1o + p2o, 2)
-        ta = round(p1a + p2a, 2)
-        tp = round(ta / (to * ratio) * 100, 2) if to and ratio else 0.0
-        promedio = round(ta / dias_trabajados, 2) if dias_trabajados else 0.0
-        medianec = round((to - ta) / (dias_habiles - dias_trabajados), 2) if dias_habiles > dias_trabajados else 0.0
-        tendencia = round(ta / dias_trabajados * dias_habiles, 2) if dias_trabajados else 0.0
-        kg_vendedores.append({
-            "n": nombre_por_codven.get(codven, codven),
-            "p1o": p1o, "p1a": p1a, "p1p": p1p,
-            "p2o": p2o, "p2a": p2a, "p2p": p2p,
-            "to": to, "ta": ta, "tp": tp,
-            "promedio": promedio, "medianec": medianec, "tendencia": tendencia,
-            "real": round(kg_hoy_por_vend.get(codven, 0.0), 2),
-            "penult": round(kg_penult_por_vend.get(codven, 0.0), 2),
-            "ultima": round(kg_ultima_por_vend.get(codven, 0.0), 2),
-        })
-    escribir("avance_kg_vendedor.json", {
-        "objetivoPG": KG_OBJETIVO_PG, "objetivoSB": KG_OBJETIVO_SB,
-        "diasHabiles": dias_habiles, "diasTrabajados": dias_trabajados,
-        "vendedores": kg_vendedores,
-    })
-    total_pg_kg = sum(a["pg"] for a in kg_acum_por_vend.values())
-    total_sb_kg = sum(a["sb"] for a in kg_acum_por_vend.values())
-    print("Avance kg: %d vendedores | dias %d/%d | total PG %.1f kg | total SB %.1f kg | sin clasificar %.1f kg" %
-          (len(kg_vendedores), dias_trabajados, dias_habiles, total_pg_kg, total_sb_kg, kg_sin_clasificar))
+    try:
+        avance_kg = traer_avance_kg(api, hoy, dias_habiles, dias_trabajados)
+        escribir("avance_kg_vendedor.json", avance_kg)
+        print("Avance kg: %d vendedores | dias %d/%d | objetivo PG %.1f kg | objetivo SB %.1f kg" %
+              (len(avance_kg["vendedores"]), dias_trabajados, dias_habiles,
+               avance_kg["objetivoPG"], avance_kg["objetivoSB"]))
+    except Exception as e:
+        print("ERROR trayendo Avance de Ventas Pepsico (se deja avance_kg_vendedor.json anterior sin tocar):", e)
 
     invendible_out = {
         vend: [{"articulo": art, "cant": round(c, 1), "importe": round(i, 2)}
