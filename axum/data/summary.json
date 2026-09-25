@@ -1,113 +1,118 @@
 {
  "date": "2026-09-25",
- "totalNet": 14598338.67,
- "totalGross": 17663989.85,
- "orders": 182,
+ "totalNet": 17697380.31,
+ "totalGross": 21413830.2,
+ "orders": 249,
  "bySeller": [
   {
    "sellerId": "9",
    "name": "Ludmila Aylen Martinez",
-   "orders": 9,
-   "total": 3496914.05
+   "orders": 12,
+   "total": 3682552.49
   },
   {
    "sellerId": "5",
    "name": "Nicolas Martinez",
-   "orders": 18,
-   "total": 2036669.55
+   "orders": 23,
+   "total": 2441386.98
   },
   {
    "sellerId": "8",
    "name": "Martinica Rodriguez",
-   "orders": 22,
-   "total": 1862869.13
-  },
-  {
-   "sellerId": "3",
-   "name": "Ezequiel Hack",
-   "orders": 8,
-   "total": 1729671.48
+   "orders": 26,
+   "total": 2139928.67
   },
   {
    "sellerId": "7",
    "name": "Ramiro Rando",
-   "orders": 18,
-   "total": 1545085.43
+   "orders": 26,
+   "total": 1970452.82
   },
   {
-   "sellerId": "4",
-   "name": "Lucas Giayetto",
-   "orders": 20,
-   "total": 1439664.74
+   "sellerId": "3",
+   "name": "Ezequiel Hack",
+   "orders": 10,
+   "total": 1916627.19
   },
   {
    "sellerId": "12",
-   "name": "Agustin Pogorzelski",
-   "orders": 6,
-   "total": 1256591.29
+   "name": "Azul Martinez",
+   "orders": 13,
+   "total": 1805493.2
   },
   {
    "sellerId": "6",
    "name": "Camila Martinez",
-   "orders": 19,
-   "total": 1113686.39
+   "orders": 30,
+   "total": 1684264.88
+  },
+  {
+   "sellerId": "4",
+   "name": "Lucas Giayetto",
+   "orders": 21,
+   "total": 1493450.41
   },
   {
    "sellerId": "2",
    "name": "Julian Nuñez",
-   "orders": 12,
-   "total": 898640.2
+   "orders": 21,
+   "total": 1208100.7
   },
   {
    "sellerId": "1",
    "name": "Maria Noelia Madia",
-   "orders": 13,
-   "total": 821952.42
-  },
-  {
-   "sellerId": "10",
-   "name": "Matias Parada",
-   "orders": 10,
-   "total": 737151.32
+   "orders": 21,
+   "total": 1085035.94
   },
   {
    "sellerId": "11",
    "name": "Melanie Larrama",
-   "orders": 9,
-   "total": 725093.85
+   "orders": 14,
+   "total": 1084385.52
+  },
+  {
+   "sellerId": "10",
+   "name": "Matias Parada",
+   "orders": 11,
+   "total": 902151.42
   },
   {
    "sellerId": "20",
    "name": "Deposito",
-   "orders": 18,
+   "orders": 21,
    "total": 0.0
   }
  ],
  "byChannel": [
   {
    "channel": "TRADITIONAL TRADE_A",
-   "orders": 40,
-   "total": 8711211.37
+   "orders": 45,
+   "total": 9198861.51
   },
   {
    "channel": "TRADITIONAL TRADE_C",
-   "orders": 47,
-   "total": 3187938.29
+   "orders": 69,
+   "total": 4314877.25
   },
   {
    "channel": "TRADITIONAL TRADE_D",
-   "orders": 36,
-   "total": 2320797.49
+   "orders": 57,
+   "total": 3041913.04
   },
   {
    "channel": "TRADITIONAL TRADE_B",
-   "orders": 27,
-   "total": 2036054.75
+   "orders": 37,
+   "total": 2870577.66
   },
   {
    "channel": "Mayorista_C",
    "orders": 2,
    "total": 616214.53
+  },
+  {
+   "channel": "AWAY FROM HOME_C",
+   "orders": 4,
+   "total": 369702.5
   },
   {
    "channel": "TRADITIONAL TRADE",
@@ -130,9 +135,24 @@
    "total": 122977.77
   },
   {
-   "channel": "AWAY FROM HOME_C",
-   "orders": 2,
-   "total": 65928.63
+   "channel": "AWAY FROM HOME_A",
+   "orders": 1,
+   "total": 116571.42
+  },
+  {
+   "channel": "Mayorista_D",
+   "orders": 1,
+   "total": 62285.73
+  },
+  {
+   "channel": "LIMPIEZA_B",
+   "orders": 1,
+   "total": 52267.42
+  },
+  {
+   "channel": "AWAY FROM HOME_B",
+   "orders": 1,
+   "total": 44714.33
   },
   {
    "channel": "LIMPIEZA_D",
@@ -146,7 +166,7 @@
   },
   {
    "channel": "s/canal",
-   "orders": 18,
+   "orders": 21,
    "total": 0.0
   }
  ],
@@ -248,6 +268,12 @@
    "total": 242714.47
   },
   {
+   "clientId": "684",
+   "name": "XIMEI HE (Autoservicio Tradicional_B)",
+   "orders": 2,
+   "total": 225678.45
+  },
+  {
    "clientId": "404",
    "name": "VICTOR JOSE HUERTA (Almacen/Despensa_B)",
    "orders": 3,
@@ -264,12 +290,6 @@
    "name": "COMPAÑIA ALIMENTICIA DE LA COSTA SRL (Kiosco/Maxikiosco_B)",
    "orders": 2,
    "total": 210311.19
-  },
-  {
-   "clientId": "353",
-   "name": "NI YOUJUN (Autoservicio Tradicional_B)",
-   "orders": 2,
-   "total": 203529.32
   }
  ]
 }
