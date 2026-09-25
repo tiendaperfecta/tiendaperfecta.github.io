@@ -255,11 +255,83 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
   margin-top:32px; font-family:"IBM Plex Sans",sans-serif; font-style:normal; font-weight:600;
   font-size:clamp(20px,3vw,28px); color:var(--accent); max-width:none;
 }
+
+/* ---------- índice del panel (portada de secciones) ----------------------
+   Mismo patrón que la Central web —grupos con tarjetas— pero con los tokens
+   de este panel, no con los de la central: acá el fondo es cálido y la
+   tipografía es Fraunces/IBM Plex. */
+.indice{margin:0 0 34px}
+.idx-eyebrow{font:600 11px/1 'IBM Plex Sans',system-ui,sans-serif;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.idx-grupo{font:600 13px/1.2 'IBM Plex Sans',system-ui,sans-serif;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--accent);margin:18px 0 8px;border:0;padding:0}
+.idx-grupo:first-of-type{margin-top:0}
+.idx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.idx-card{display:block;padding:10px 12px;border:1px solid var(--border);border-radius:10px;
+  background:var(--panel);text-decoration:none;color:inherit;box-shadow:var(--shadow)}
+.idx-card:hover{border-color:var(--accent);background:var(--accent-soft)}
+.idx-card:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.idx-t{display:block;font:600 13.5px/1.25 'IBM Plex Sans',system-ui,sans-serif;color:var(--text)}
+.idx-d{display:block;margin-top:3px;font:400 11.5px/1.35 'IBM Plex Sans',system-ui,sans-serif;
+  color:var(--muted)}
+/* El ancla no queda pegada al borde al saltar. SIN scroll suave a proposito:
+   el panel mide ~18.700 px y un salto animado entre secciones lejanas tarda
+   varios segundos mirando pasar contenido. El salto directo se entiende mejor. */
+:target{scroll-margin-top:16px}
+@media (max-width:560px){.idx-grid{grid-template-columns:1fr}}
 </style>
 
 <div class="wrap">
+<nav class="indice" aria-label="Secciones del panel">
+  <p class="idx-eyebrow">Índice del panel</p>
+    <h2 class="idx-grupo">Venta</h2>
+    <div class="idx-grid">
+      <a class="idx-card" href="#s-avance-de-venta-diario"><span class="idx-t">Avance de venta diario</span><span class="idx-d">Objetivo en kg, acumulado y avance contra el prorrateo a la fecha</span></a>
+      <a class="idx-card" href="#s-por-vendedor"><span class="idx-t">Por vendedor</span><span class="idx-d">Kg por vendedor, media necesaria y avance individual</span></a>
+      <a class="idx-card" href="#s-proyeccion-de-ips-por-vendedor"><span class="idx-t">Proyección de IPs por vendedor</span><span class="idx-d">Proyección de IPs cargada a mano, por vendedor</span></a>
+    </div>
+    <h2 class="idx-grupo">Mi Negocio+</h2>
+    <div class="idx-grid">
+      <a class="idx-card" href="#s-mi-negocio-por-vendedor"><span class="idx-t">Mi Negocio+ por vendedor</span><span class="idx-d">Kg por la app y participación sobre el total de cada vendedor</span></a>
+      <a class="idx-card" href="#s-seguimiento-mi-negocio-por-dia"><span class="idx-t">Seguimiento Mi Negocio+ por día</span><span class="idx-d">Evolución día a día del volumen cargado por la app</span></a>
+    </div>
+    <h2 class="idx-grupo">Cobertura</h2>
+    <div class="idx-grid">
+      <a class="idx-card" href="#s-cobertura-por-marca-y-vendedor"><span class="idx-t">Cobertura por marca y vendedor</span><span class="idx-d">Clientes cubiertos por marca, vendedor por vendedor</span></a>
+      <a class="idx-card" href="#s-objetivo-de-cobertura-septiembre-2026"><span class="idx-t">Objetivo de cobertura — Septiembre 2026</span><span class="idx-d">Objetivo del mes y cuánto falta para llegar</span></a>
+      <a class="idx-card" href="#s-ccc-por-segmento"><span class="idx-t">CCC por segmento</span><span class="idx-d">Clientes con compra abiertos por segmento</span></a>
+      <a class="idx-card" href="#s-no-compradores-por-dia-de-visita"><span class="idx-t">No compradores por día de visita</span><span class="idx-d">Quiénes no compraron, ordenados por el día que les toca</span></a>
+    </div>
+    <h2 class="idx-grupo">Tienda Perfecta</h2>
+    <div class="idx-grid">
+      <a class="idx-card" href="#s-tienda-perfecta"><span class="idx-t">Tienda Perfecta</span><span class="idx-d">Censo RUMBO: tiendas que cumplen y cuánto falta al objetivo</span></a>
+      <a class="idx-card" href="#s-detalle-por-vendedor"><span class="idx-t">Detalle por vendedor</span><span class="idx-d">La misma foto del censo, abierta por vendedor</span></a>
+    </div>
+    <h2 class="idx-grupo">Portafolio</h2>
+    <div class="idx-grid">
+      <a class="idx-card" href="#s-portafolio"><span class="idx-t">Portafolio</span><span class="idx-d">Compromiso por segmento y cumplimiento del portafolio ideal</span></a>
+      <a class="idx-card" href="#s-oportunidad-de-portafolio-por-dia-de-visita"><span class="idx-t">Oportunidad de portafolio por día de visita</span><span class="idx-d">Clientes entre 60% y 79% de portafolio, por día de visita</span></a>
+      <a class="idx-card" href="#s-oportunidad-de-portafolio-por-segmento-taxonomia"><span class="idx-t">Oportunidad de portafolio por segmento / taxonomía</span><span class="idx-d">La misma oportunidad, abierta por segmento y taxonomía</span></a>
+    </div>
+    <h2 class="idx-grupo">Devoluciones</h2>
+    <div class="idx-grid">
+      <a class="idx-card" href="#s-invendible-vencidos-por-canje"><span class="idx-t">Invendible / Vencidos por Canje</span><span class="idx-d">Producto vencido o dañado que vuelve por canje</span></a>
+      <a class="idx-card" href="#s-rechazos"><span class="idx-t">Rechazos</span><span class="idx-d">Entregas rechazadas, con su detalle</span></a>
+      <a class="idx-card" href="#s-motivos-de-devolucion-total-pepsico"><span class="idx-t">Motivos de devolución — total PepsiCo</span><span class="idx-d">Por qué vuelve la mercadería, acumulado del mes</span></a>
+      <a class="idx-card" href="#s-motivos-de-devolucion-ultima-fecha-22-09"><span class="idx-t">Motivos de devolución — última fecha (22/09)</span><span class="idx-d">Los mismos motivos, sólo de la última fecha</span></a>
+      <a class="idx-card" href="#s-seguimiento-de-frescura"><span class="idx-t">Seguimiento de Frescura</span><span class="idx-d">Cuota de próximos a vencer y cómo va cada vendedor</span></a>
+    </div>
+    <h2 class="idx-grupo">Combos</h2>
+    <div class="idx-grid">
+      <a class="idx-card" href="#s-combos-tradicionales-axum"><span class="idx-t">Combos Tradicionales Axum</span><span class="idx-d">Combos del canal tradicional y su cumplimiento</span></a>
+      <a class="idx-card" href="#s-detalle-de-combos-por-vendedor"><span class="idx-t">Detalle de combos por vendedor</span><span class="idx-d">El mismo cuadro, abierto por vendedor</span></a>
+      <a class="idx-card" href="#s-combos-mi-negocio"><span class="idx-t">Combos Mi Negocio</span><span class="idx-d">Combos vendidos por la app</span></a>
+      <a class="idx-card" href="#s-detalle-de-combos-mi-negocio-por-vendedor"><span class="idx-t">Detalle de combos Mi Negocio por vendedor</span><span class="idx-d">Los combos de la app, por vendedor</span></a>
+    </div>
+</nav>
+
   <p class="eyebrow">PepsiCo · Tienda Perfecta · Objetivo TN Septiembre 2026</p>
-  <h1>Avance de venta diario</h1>
+  <h1 id="s-avance-de-venta-diario">Avance de venta diario</h1>
   <p class="sub">
     Medida en <b>kilogramos</b>. Acumulado del <b>01/09</b> al <b>24/09</b>, con
     <b>21 de 26</b> días hábiles transcurridos (lunes a sábado, domingo no es día hábil). El <b>Avance</b> es
@@ -319,7 +391,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     </div>
   </div>
 
-  <h2 class="section-title">Por vendedor</h2>
+  <h2 class="section-title" id="s-por-vendedor">Por vendedor</h2>
   <p class="section-note">
     Ordenado de menor a mayor avance — los que necesitan más empuje primero. <b>Promedio</b> = kg/día vendidos en
     lo que va del mes, <b>Media Nec.</b> = kg/día necesarios en los días que quedan para llegar al objetivo,
@@ -374,7 +446,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     </table>
   </div>
 
-  <h3 class="subsection-title">Proyección de IPs por vendedor</h3>
+  <h3 class="subsection-title" id="s-proyeccion-de-ips-por-vendedor">Proyección de IPs por vendedor</h3>
   <p class="section-note">
     Cada vendedor proyecta su objetivo en 4 indicadores clave. <b>Base</b> es el dato de partida (no editable);
     <b>Compromiso</b> es editable y queda guardado para todos. <b>Frecuencia con Compra</b>: Base = universo de
@@ -465,7 +537,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
   </div>
 
   <div class="section-title-row">
-    <h2 class="section-title">Mi Negocio+ por vendedor</h2>
+    <h2 class="section-title" id="s-mi-negocio-por-vendedor">Mi Negocio+ por vendedor</h2>
     <img src="logo_mi_negocio.png" alt="Mi Negocio+" class="mn-logo">
   </div>
   <p class="section-note">
@@ -494,7 +566,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
   </div>
 
   <div class="section-title-row">
-    <h3 class="subsection-title" style="margin:0">Seguimiento Mi Negocio+ por día</h3>
+    <h3 class="subsection-title" style="margin:0" id="s-seguimiento-mi-negocio-por-dia">Seguimiento Mi Negocio+ por día</h3>
     <img src="logo_mi_negocio.png" alt="Mi Negocio+" class="mn-logo">
   </div>
   <p class="section-note">
@@ -521,7 +593,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     <code>Clientes Claude.xlsx</code>.
   </p>
 
-  <h2 class="section-title">Cobertura por marca y vendedor</h2>
+  <h2 class="section-title" id="s-cobertura-por-marca-y-vendedor">Cobertura por marca y vendedor</h2>
   <p class="section-note">
     Cobertura = clientes con 3 o más unidades de la marca en el período ÷ universo de clientes del vendedor.
     Período 01/09-25/09, actualizado automáticamente por API dos veces por día. Color relativo por columna
@@ -543,7 +615,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     </table>
   </div>
 
-  <h3 class="subsection-title">Objetivo de cobertura — Septiembre 2026</h3>
+  <h3 class="subsection-title" id="s-objetivo-de-cobertura-septiembre-2026">Objetivo de cobertura — Septiembre 2026</h3>
   <p class="section-note">
     Cobertura total PepsiCo (todos los vendedores) contra el objetivo de Septiembre por marca. Cump. % = Cobertura ÷ Objetivo.
   </p>
@@ -571,7 +643,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     objetivo en $.
   </p>
 
-  <h2 class="section-title">CCC por segmento</h2>
+  <h2 class="section-title" id="s-ccc-por-segmento">CCC por segmento</h2>
   <p class="section-note">
     CCC = clientes con compra sobre el universo asignado, por segmento de cliente (A/B/C/D). Objetivo total
     Tienda Perfecta: A 384 · B 337 · C 669 · D 903 (2.293 clientes) — prorrateado por vendedor según su
@@ -639,7 +711,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     automáticamente dos veces por día.
   </p>
 
-  <h3 class="subsection-title">No compradores por día de visita</h3>
+  <h3 class="subsection-title" id="s-no-compradores-por-dia-de-visita">No compradores por día de visita</h3>
   <p class="section-note">
     Clientes que <b>no</b> llegaron al CCC (compra de Pepsico &gt; 3 unidades en el período), agrupados por el día
     de la semana de su ruta de preventa. Formato de celda: no compradores / universo de ese día. Ordenado de mayor
@@ -672,7 +744,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     (2.293) es un prorrateo oficial y no tiene por qué coincidir con el universo real con ruta asignada (2.546).
   </p>
 
-  <h2 class="section-title">Tienda Perfecta</h2>
+  <h2 class="section-title" id="s-tienda-perfecta">Tienda Perfecta</h2>
   <p class="section-note">
     Universo: clientes de subcanal Kiosco/Maxikiosco, Almacén/Despensa, Autoservicio Tradicional, Estación de
     Servicio - No Oficiales y Fiambrería. Tienda Perfecta = 80% o más de cobertura de portafolio <b>y</b>
@@ -735,7 +807,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     </div>
   </div>
 
-  <h3 class="subsection-title">Detalle por vendedor</h3>
+  <h3 class="subsection-title" id="s-detalle-por-vendedor">Detalle por vendedor</h3>
   <p class="section-note">
     Objetivo prorrateado por vendedor según su participación de clientes en cada segmento (universo TP). Ordenado
     de menor a mayor avance total.
@@ -798,7 +870,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     objetivo oficial cargado en Gescom.
   </p>
 
-  <h2 class="section-title">Portafolio</h2>
+  <h2 class="section-title" id="s-portafolio">Portafolio</h2>
   <p class="section-note">
     Cobertura de portafolio sobre el universo de Tienda Perfecta (2.260 clientes). Oportunidad de Portafolio =
     clientes con cobertura entre 60% y 79% (ya tienen buena parte del portafolio pero no llegan al 80% que define
@@ -817,7 +889,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     </div>
   </div>
 
-  <h3 class="subsection-title">Oportunidad de portafolio por día de visita</h3>
+  <h3 class="subsection-title" id="s-oportunidad-de-portafolio-por-dia-de-visita">Oportunidad de portafolio por día de visita</h3>
   <p class="section-note">
     Formato de celda: clientes con oportunidad de portafolio / universo de ese día. Ordenado de mayor a menor
     cantidad de clientes con oportunidad.
@@ -836,7 +908,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     </table>
   </div>
 
-  <h3 class="subsection-title">Oportunidad de portafolio por segmento / taxonomía</h3>
+  <h3 class="subsection-title" id="s-oportunidad-de-portafolio-por-segmento-taxonomia">Oportunidad de portafolio por segmento / taxonomía</h3>
   <p class="section-note">
     Formato de celda: clientes con oportunidad de portafolio / universo de ese segmento. Ordenado de mayor a menor
     cantidad de clientes con oportunidad.
@@ -861,7 +933,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     (4 clientes sin ruta asignada quedan fuera de la tabla por día, pero sí en la de segmento).
   </p>
 
-  <h2 class="section-title">Invendible / Vencidos por Canje</h2>
+  <h2 class="section-title" id="s-invendible-vencidos-por-canje">Invendible / Vencidos por Canje</h2>
   <p class="section-note">
     Productos vencidos o dañados retirados de los clientes este mes. <b>Venta $</b> = filas con
     <code>TipoDeVenta = Venta</code>. <b>Retirado por Canje</b> = filas con
@@ -894,7 +966,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     <code>TipoDeVenta</code> en lugar de sumar todos los tipos juntos.
   </p>
 
-  <h2 class="section-title">Rechazos</h2>
+  <h2 class="section-title" id="s-rechazos">Rechazos</h2>
   <p class="section-note">
     Pedidos rechazados o no entregados este mes. <b>Venta $</b> = filas con <code>TipoDeVenta = Venta</code>.
     <b>Devolución por Rechazo</b> = filas con <code>TipoDeVenta = Devolución por Rechazo</code> (viene en
@@ -916,7 +988,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     </table>
   </div>
 
-  <h3 class="subsection-title">Motivos de devolución — total PepsiCo</h3>
+  <h3 class="subsection-title" id="s-motivos-de-devolucion-total-pepsico">Motivos de devolución — total PepsiCo</h3>
   <p class="section-note">Desglose de todas las devoluciones por rechazo, ordenado por importe.</p>
 
   <div class="table-scroll">
@@ -931,7 +1003,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     </table>
   </div>
 
-  <h3 class="subsection-title">Motivos de devolución — última fecha (22/09)</h3>
+  <h3 class="subsection-title" id="s-motivos-de-devolucion-ultima-fecha-22-09">Motivos de devolución — última fecha (22/09)</h3>
   <p class="section-note">
     Devoluciones por rechazo del último día con datos, por <code>FechaComprobante</code> (no
     <code>FechaCarga</code>).
@@ -956,7 +1028,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     campo <code>MotivoDevolucion</code>.
   </p>
 
-  <h2 class="section-title">Seguimiento de Frescura</h2>
+  <h2 class="section-title" id="s-seguimiento-de-frescura">Seguimiento de Frescura</h2>
   <p class="section-note">
     Productos de fecha corta de Pepsico (Tienda Perfecta y Rambla de los Lobos), semana del 21/09 al 27/09.
     <b>Cuota fija toda la semana</b>: foto del depósito tomada el 21/09, artículos que vencen dentro de 50 días,
@@ -998,7 +1070,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     <code>frescura.tienda-perfecta.workers.dev</code>.
   </p>
 
-  <h2 class="section-title">Combos Tradicionales Axum</h2>
+  <h2 class="section-title" id="s-combos-tradicionales-axum">Combos Tradicionales Axum</h2>
   <p class="section-note">
     Combos usados por vendedor, período 02/09 al 25/09. <b>Combos vendidos</b> = cantidad de combos aplicados.
     <b>A Reconocer</b> = monto en $ que Axum reconoce por esos combos. Ordenado de mayor a menor $.
@@ -1027,7 +1099,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     </table>
   </div>
 
-  <h3 class="subsection-title">Detalle de combos por vendedor</h3>
+  <h3 class="subsection-title" id="s-detalle-de-combos-por-vendedor">Detalle de combos por vendedor</h3>
   <p class="section-note">
     Cada combo con su columna de <b>Cant.</b> (combos vendidos) y <b>$</b> (a reconocer). Ordenado de mayor a
     menor total $.
@@ -1050,7 +1122,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
   </p>
 
   <div class="section-title-row">
-    <h2 class="section-title">Combos Mi Negocio</h2>
+    <h2 class="section-title" id="s-combos-mi-negocio">Combos Mi Negocio</h2>
     <img src="logo_mi_negocio.png" alt="Mi Negocio+" class="mn-logo">
   </div>
   <p class="section-note">
@@ -1080,7 +1152,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     </table>
   </div>
 
-  <h3 class="subsection-title">Detalle de combos Mi Negocio por vendedor</h3>
+  <h3 class="subsection-title" id="s-detalle-de-combos-mi-negocio-por-vendedor">Detalle de combos Mi Negocio por vendedor</h3>
   <p class="section-note">
     Cada combo con su columna de <b>Cant.</b> (combos vendidos) y <b>$</b> (a reconocer). Ordenado de mayor a
     menor total $.
