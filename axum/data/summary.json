@@ -1,14 +1,20 @@
 {
  "date": "2026-09-25",
- "totalNet": 33730919.44,
- "totalGross": 40814412.55,
- "orders": 475,
+ "totalNet": 49174945.53,
+ "totalGross": 59501684.12,
+ "orders": 494,
  "bySeller": [
+  {
+   "sellerId": "1176",
+   "name": "Vendedor",
+   "orders": 1,
+   "total": 18152619.83
+  },
   {
    "sellerId": "9",
    "name": "Ludmila Aylen Martinez",
-   "orders": 27,
-   "total": 5236505.73
+   "orders": 29,
+   "total": 5346933.87
   },
   {
    "sellerId": "4",
@@ -41,22 +47,22 @@
    "total": 3679655.82
   },
   {
+   "sellerId": "5",
+   "name": "Nicolas Martinez",
+   "orders": 37,
+   "total": 3623703.4
+  },
+  {
    "sellerId": "11",
    "name": "Melanie Larrama",
    "orders": 39,
    "total": 3385973.18
   },
   {
-   "sellerId": "5",
-   "name": "Nicolas Martinez",
-   "orders": 35,
-   "total": 3352560.39
-  },
-  {
    "sellerId": "8",
    "name": "Martinica Rodriguez",
-   "orders": 33,
-   "total": 2805314.64
+   "orders": 37,
+   "total": 3031609.58
   },
   {
    "sellerId": "1",
@@ -79,21 +85,20 @@
   {
    "sellerId": "20",
    "name": "Deposito",
-   "orders": 33,
+   "orders": 44,
    "total": 74590.98
-  },
-  {
-   "sellerId": "33",
-   "name": "Jonathan Capetola",
-   "orders": 1,
-   "total": 73214.34
   }
  ],
  "byChannel": [
   {
+   "channel": "s/canal",
+   "orders": 45,
+   "total": 18227210.81
+  },
+  {
    "channel": "TRADITIONAL TRADE_A",
-   "orders": 87,
-   "total": 15992774.27
+   "orders": 88,
+   "total": 16132774.38
   },
   {
    "channel": "TRADITIONAL TRADE_C",
@@ -102,13 +107,13 @@
   },
   {
    "channel": "TRADITIONAL TRADE_D",
-   "orders": 114,
-   "total": 5949481.08
+   "orders": 116,
+   "total": 6117837.77
   },
   {
    "channel": "TRADITIONAL TRADE_B",
-   "orders": 72,
-   "total": 5932079.58
+   "orders": 73,
+   "total": 6023003.21
   },
   {
    "channel": "Mayorista_D",
@@ -132,13 +137,18 @@
   },
   {
    "channel": "AWAY FROM HOME_A",
-   "orders": 4,
-   "total": 309592.25
+   "orders": 5,
+   "total": 348150.52
   },
   {
    "channel": "TRADITIONAL TRADE",
    "orders": 1,
    "total": 255604.97
+  },
+  {
+   "channel": "AWAY FROM HOME_D",
+   "orders": 6,
+   "total": 234103.48
   },
   {
    "channel": "AWAY FROM HOME_B",
@@ -156,19 +166,9 @@
    "total": 164226.88
   },
   {
-   "channel": "AWAY FROM HOME_D",
-   "orders": 4,
-   "total": 137290.45
-  },
-  {
    "channel": "PROXIMITY_D",
    "orders": 2,
    "total": 91571.39
-  },
-  {
-   "channel": "s/canal",
-   "orders": 33,
-   "total": 74590.98
   },
   {
    "channel": "LIMPIEZA_B",
@@ -187,6 +187,12 @@
   }
  ],
  "topClients": [
+  {
+   "clientId": "3155",
+   "name": "",
+   "orders": 1,
+   "total": 18152619.83
+  },
   {
    "clientId": "2551",
    "name": "ROJOLUEM S.A (Autoservicio Tradicional_A)",
@@ -300,12 +306,6 @@
    "name": "Eliodoro Galeano (Almacen/Despensa_C)",
    "orders": 2,
    "total": 322151.39
-  },
-  {
-   "clientId": "2515",
-   "name": "Leranoz Sergio Alejandro (Autoservicio Tradicional_C)",
-   "orders": 2,
-   "total": 321697.84
   }
  ]
 }
