@@ -40,6 +40,38 @@ MARCA_LABEL = {
 SEGMENTOS = ["A", "B", "C", "D"]
 CCC_OBJETIVO_SEG = {"A": 384, "B": 337, "C": 669, "D": 903}
 PEHUAMAR_SKUS = {"PEHUA PAPA LISA 90GX22 RM", "PEHUA PAPA ACANA 90GX22 RM"}
+
+# Sub-desglose de "Cobertura por marca": grupo -> {clave de salida -> set de descripciones exactas de SKU}.
+SUBPRODUCTOS = {
+    "pehuamar": {
+        "obj": 30,
+        "labels": {"Matambrito": "Pehuamar Matambrito", "Chimichurri": "Pehuamar Chimichurri",
+                   "LisaAcanalada90": "Pehuamar Lisa + Acanalada x90g"},
+        "skus": {
+            "Matambrito": {"PEHUAMAR ACAN MATAMBRITO 80X25X1"},
+            "Chimichurri": {"PEHUAMAR ACAN CHIMICHURRI 80X25X1"},
+            "LisaAcanalada90": PEHUAMAR_SKUS,
+        },
+    },
+    "lays": {
+        "obj": 20,
+        "labels": {"Caprese": "Lays Rústicas Caprese", "SalMarina": "Lays Rústicas Sal Marina",
+                   "LimonHierbas": "Lays Rústicas Limón y Hierbas"},
+        "skus": {
+            "Caprese": {"Lays Rusticas Caprese 77 GRAMOS"},
+            "SalMarina": {"Lays Rusticas Sal Marina 85 GRAMOS"},
+            "LimonHierbas": set(),
+        },
+    },
+    "tostitos": {
+        "obj": 20,
+        "labels": {"G144": "Tostitos Hierbas y Limón 144g", "G90": "Tostitos Hierbas y Limón 90g"},
+        "skus": {
+            "G144": {"TOSTITOS ROUND HIERB Y LIMON 144GX19X1"},
+            "G90": {"TOSTITOS ROUND HIERB Y LIMON 90GX26X1"},
+        },
+    },
+}
 DIAS = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"]
 DIAS_CAP = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"]
 
@@ -154,17 +186,18 @@ def main():
             "codven": cod((c.get("rutasPreventa") or [{}])[0].get("codigoVendedor")) if c.get("rutasPreventa") else "",
         }
 
+    subgrupo_por_desc = {}
+    for grupo, cfg in SUBPRODUCTOS.items():
+        for clave, skus in cfg["skus"].items():
+            for sku in skus:
+                subgrupo_por_desc[sku.upper()] = (grupo, clave)
+
     api = Api()
 
     vendedores_raw = api.get("/data/cmd/ventas/api/v1/get-vendedores")
     nombre_por_codven = {cod(x.get("codigo")): (x.get("nombre") or "").strip() for x in vendedores_raw}
 
     articulos = api.get("/data/cmd/inventario/api/v2/get-articulos")
-    kws = ["MATAMBRITO", "CHIMICHURRI", "CAPRESE", "MARINA", "TOSTITOS"]
-    for kw in kws:
-        found = sorted({(a.get("descripcion") or "").strip() for a in articulos
-                        if kw in (a.get("descripcion") or "").upper()})
-        print("DIAG %s:" % kw, found[:20])
     es_pepsico_por_clave = {}
     es_pehuamar90_por_clave = {}
     descripcion_por_clave = {}
@@ -201,6 +234,7 @@ def main():
 
     compra_cliente = {}
     compra_cliente_marca = {}
+    compra_cliente_subgrupo = {}
     pehuamar_compra = {}
     invendible_por_vend = {}
     rechazos_por_vend = {}
@@ -229,6 +263,10 @@ def main():
                 if marca:
                     porcli = compra_cliente_marca.setdefault(cli, {})
                     porcli[marca] = porcli.get(marca, 0) + q
+                sub = subgrupo_por_desc.get(descripcion_de(codigo_it, emp).upper())
+                if sub:
+                    porcli_sub = compra_cliente_subgrupo.setdefault(cli, {})
+                    porcli_sub[sub] = porcli_sub.get(sub, 0) + q
             if tipo == "VEN" and es_articulo_pehuamar90(codigo_it, emp):
                 pehuamar_compra[cli] = pehuamar_compra.get(cli, 0) + q
 
@@ -258,6 +296,7 @@ def main():
     pehuamar_no_comprado = []
     universo_por_vend = {}
     marca_cumple_por_vend = {}
+    sub_cumple_por_vend = {}
     seg_por_vend = {}
     for codigo, c in clientes.items():
         if not c["dia"] or c["codven"] not in VENDEDORES_PEPSICO:
@@ -278,6 +317,10 @@ def main():
         for marca, cant in compra_cliente_marca.get(codigo, {}).items():
             if cant >= 3:
                 cumple_marca[marca] = cumple_marca.get(marca, 0) + 1
+        cumple_sub = sub_cumple_por_vend.setdefault(codven, {})
+        for sub, cant in compra_cliente_subgrupo.get(codigo, {}).items():
+            if cant >= 3:
+                cumple_sub[sub] = cumple_sub.get(sub, 0) + 1
         seg = c["seg"] if c["seg"] in SEGMENTOS else None
         if seg:
             segdata = seg_por_vend.setdefault(codven, {s: {"universo": 0, "cumple": 0} for s in SEGMENTOS})
@@ -299,6 +342,20 @@ def main():
             fila[label] = round(cant / universo * 100, 1) if universo else 0.0
         cobertura_vendedores.append(fila)
     escribir("cobertura_marca_vendedor.json", {"vendedores": cobertura_vendedores})
+
+    subproductos_out = {}
+    for grupo, cfg in SUBPRODUCTOS.items():
+        filas = []
+        for codven in sorted(universo_por_vend, key=lambda x: int(x)):
+            universo = universo_por_vend[codven]
+            cumple_sub = sub_cumple_por_vend.get(codven, {})
+            fila = {"codven": codven, "n": nombre_por_codven.get(codven, codven), "universo": universo}
+            for clave in cfg["labels"]:
+                fila[clave] = cumple_sub.get((grupo, clave), 0)
+            filas.append(fila)
+        subproductos_out[grupo] = {"obj": cfg["obj"], "labels": cfg["labels"], "vendedores": filas}
+    escribir("subproductos_vendedor.json", subproductos_out)
+    print("Subproductos: %d grupos" % len(subproductos_out))
     print("Cobertura por marca: %d vendedores" % len(cobertura_vendedores))
 
     universo_seg_total = {s: sum(seg_por_vend.get(cv, {}).get(s, {}).get("universo", 0)
