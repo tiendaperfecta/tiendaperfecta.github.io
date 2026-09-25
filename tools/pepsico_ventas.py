@@ -569,16 +569,18 @@ def main():
     dias_habiles = dias_habiles_mes(hoy.year, hoy.month)
     dias_trabajados = dias_habiles_mes(hoy.year, hoy.month, hasta=hoy)
     ratio = dias_trabajados / dias_habiles if dias_habiles else 0
-    # El objetivo por vendedor se prorratea segun su participacion real en los
-    # kg vendidos de cada grupo este mes (no hay objetivo individual oficial
-    # por vendedor disponible via API, es una estimacion proporcional).
-    total_pg_kg = sum(a["pg"] for a in kg_acum_por_vend.values())
-    total_sb_kg = sum(a["sb"] for a in kg_acum_por_vend.values())
+    # El objetivo por vendedor se prorratea segun su participacion en el
+    # universo total de clientes (no hay objetivo individual oficial por
+    # vendedor disponible via API, es una estimacion proporcional; usar el
+    # kg real como base de prorrateo haria que el Avance% de todos cierre
+    # igual, porque se cancela con el Acumulado real).
+    total_universo = sum(universo_por_vend.values())
     kg_vendedores = []
     for codven in sorted(universo_por_vend, key=lambda x: int(x)):
         acc = kg_acum_por_vend.get(codven, {"pg": 0.0, "sb": 0.0})
-        p1o = round(KG_OBJETIVO_PG * acc["pg"] / total_pg_kg, 2) if total_pg_kg else 0.0
-        p2o = round(KG_OBJETIVO_SB * acc["sb"] / total_sb_kg, 2) if total_sb_kg else 0.0
+        participacion = universo_por_vend[codven] / total_universo if total_universo else 0.0
+        p1o = round(KG_OBJETIVO_PG * participacion, 2)
+        p2o = round(KG_OBJETIVO_SB * participacion, 2)
         p1a = round(acc["pg"], 2)
         p2a = round(acc["sb"], 2)
         p1p = round(p1a / (p1o * ratio) * 100, 2) if p1o and ratio else 0.0
@@ -604,6 +606,8 @@ def main():
         "diasHabiles": dias_habiles, "diasTrabajados": dias_trabajados,
         "vendedores": kg_vendedores,
     })
+    total_pg_kg = sum(a["pg"] for a in kg_acum_por_vend.values())
+    total_sb_kg = sum(a["sb"] for a in kg_acum_por_vend.values())
     print("Avance kg: %d vendedores | dias %d/%d | total PG %.1f kg | total SB %.1f kg | sin clasificar %.1f kg" %
           (len(kg_vendedores), dias_trabajados, dias_habiles, total_pg_kg, total_sb_kg, kg_sin_clasificar))
 
