@@ -194,6 +194,22 @@ def main():
 
     api = Api()
 
+    # --- DIAGNOSTICO temporal: buscar endpoint del censo Tienda Perfecta y de
+    # combos (reportes canned, no transaccionales). Se borra al confirmar. ---
+    candidatos_tp = [
+        "/data/cmd/tiendaperfecta/api/v1/get",
+        "/data/cmd/censo/api/v1/get",
+        "/data/cmd/rumbopepsico/api/v1/get",
+        "/data/cmd/ventas/api/v1/get-censo-tienda-perfecta",
+        "/data/cmd/reportes/api/v1/get-censo",
+    ]
+    for path in candidatos_tp:
+        try:
+            r = api.get(path)
+            print("DIAG endpoint TP OK:", path, "len:", len(r) if hasattr(r, "__len__") else "?")
+        except Exception as e:
+            print("DIAG endpoint TP FALLO:", path, "->", type(e).__name__, str(e)[:120])
+
     vendedores_raw = api.get("/data/cmd/ventas/api/v1/get-vendedores")
     nombre_por_codven = {cod(x.get("codigo")): (x.get("nombre") or "").strip() for x in vendedores_raw}
 
@@ -255,6 +271,13 @@ def main():
             codigo_it = cod(it.get("codigoItem"))
             q = num(it.get("cantidad")) * num(it.get("unidadFactor") or 1)
             importe = num(it.get("importeNeto"))
+
+            if not globals().get("_DIAG_ITEM_DONE"):
+                print("DIAG campos de un item de venta:", list(it.keys()))
+                print("DIAG venta completa (campos):", list(v.keys()))
+                globals()["_DIAG_ITEM_DONE"] = True
+            if it.get("comboCodigo") or it.get("comboDescripcion") or it.get("codigoCombo"):
+                print("DIAG item con combo:", json.dumps(it, ensure_ascii=False, default=str)[:800])
 
             if tipo == "VEN" and es_articulo_pepsico(codigo_it, emp):
                 compra_cliente[cli] = compra_cliente.get(cli, 0) + q
