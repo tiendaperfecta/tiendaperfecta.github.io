@@ -9430,6 +9430,44 @@
   },
   {
    "fecha": "2026-09-25",
+   "sellerId": "5",
+   "vendedor": "Nicolas Martinez",
+   "clientId": "2974",
+   "nombre": "BALMACEDA EMILIANO",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 2,
+   "monto": 170268.91,
+   "fechaVenta": "2026-09-25",
+   "horaVenta": "17:38",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-25",
+   "sellerId": "5",
+   "vendedor": "Nicolas Martinez",
+   "clientId": "619",
+   "nombre": "AUTOSERVICO SIGLO XXI",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Autoservicio Tradicional_C",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 94642.92,
+   "fechaVenta": "2026-09-25",
+   "horaVenta": "17:56",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-25",
    "sellerId": "6",
    "vendedor": "Camila Martinez",
    "clientId": "1342",
@@ -12204,6 +12242,25 @@
   },
   {
    "fecha": "2026-09-25",
+   "sellerId": "8",
+   "vendedor": "Martinica Rodriguez",
+   "clientId": "7620",
+   "nombre": "PAOLA ESTHER MARUCCI",
+   "localidad": "BALCARCE",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 90785.74,
+   "fechaVenta": "2026-09-25",
+   "horaVenta": "17:02",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-25",
    "sellerId": "9",
    "vendedor": "Ludmila Aylen Martinez",
    "clientId": "2551",
@@ -12605,7 +12662,7 @@
  "resumen": {
   "vendio": 216,
   "paso_sin_vender": 268,
-  "vendio_sin_pasar": 146,
+  "vendio_sin_pasar": 149,
   "sin_visita": 3
  },
  "bySeller": [
@@ -12762,8 +12819,8 @@
    "visitas": 30,
    "minutosTotal": 211.4,
    "minutosPromedio": 7.0,
-   "pedidos": 37,
-   "monto": 3623703.4,
+   "pedidos": 40,
+   "monto": 3888615.23,
    "pasoSinVender": 9,
    "km": 66.0,
    "llegoTarde": false,
@@ -12922,8 +12979,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 37,
-   "monto": 3031609.58,
+   "pedidos": 38,
+   "monto": 3122395.32,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -16984,7 +17041,7 @@
  "totales": {
   "visitas": 484,
   "minutos": 2233.7,
-  "pedidos": 497,
-  "monto": 59787539.1
+  "pedidos": 501,
+  "monto": 60143236.67
  }
 }
