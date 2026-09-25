@@ -51,11 +51,130 @@ CCC_OBJETIVO_SEG = {"A": 384, "B": 337, "C": 669, "D": 903}
 # Actualizar a mano cuando cambie el objetivo del mes.
 KG_OBJETIVO_PG = 18000.0
 KG_OBJETIVO_SB = 8000.0
-# Segmentos de cliente (codigoSegmento) que arman cada grupo. Asuncion no
-# confirmada contra el reporte original de Gescom (que usa su propia
-# clasificacion *P01/*P02): A+B = Platino+Gold, C+D = Silver&Bronze.
-SEGMENTOS_PG = {"A", "B"}
-SEGMENTOS_SB = {"C", "D"}
+# Clasificacion de PRODUCTO (no de cliente) en Platino/Gold/Silver/Bronze,
+# confirmada por el usuario contra el reporte "Segmentacion del portafolio"
+# de Gescom. Platino+Gold y Silver+Bronze se arman agrupando estos 4 tiers.
+TIER_POR_DESC = {
+    "PEP COMUN 40GX60 PI": "Platinum",
+    "PEP RUEDITAS 40GX60 PI": "Platinum",
+    "QUAKER AVENA TRADIC 18X280G": "Silver",
+    "QUAKER AVENA EXTRA FINA 18X470G": "Silver",
+    "PEHUAMAR PALIQUESO 90GX36": "Gold",
+    "PEHUAMAR PALISAL 90GX36": "Gold",
+    "PEP COMUN 120GRX21": "Gold",
+    "PEP COMUN 84GRX36": "Platinum",
+    "PEHUAMAR MAICITOS 125GX16": "Silver",
+    "PEP RUEDITAS 74GRX36": "Platinum",
+    "PEP RUEDITAS 120GRX21": "Gold",
+    "TWISTOS MINIT JAMON 155GX20": "Silver",
+    "TWISTOS MINIT QUESO 155GX20": "Silver",
+    "CHEETOS 23GRX108": "Platinum",
+    "LAYS CLASICAS 20GRX76": "Platinum",
+    "3DMEGAQUESO23GX120": "Platinum",
+    "3D QUESO 143GX18X1": "Silver",
+    "3D QUESO 43GX75X1": "Platinum",
+    "QUAKER AVENA INSTANT 18X280G ARG": "Silver",
+    "QUAKER AVENA INSTANT 18X500G ARG": "Silver",
+    "QUAKER AVENA TRADIC 18X550G ARG": "Silver",
+    "PEP RAMITAS QUESO 40GX60": "Platinum",
+    "PEP RAMITAS QUESO 84GX36": "Platinum",
+    "PEP RAMITAS QUESO 120GX21": "Gold",
+    "DORITOS QUESO 40GX70X1": "Platinum",
+    "DORITOS QUESO 40GX58X1 CH": "Platinum",
+    "CHEETOS QUESO 43GX70X1": "Platinum",
+    "LAYS CLASICAS 40GX68X1": "Platinum",
+    "LAYS ONDAS FH 30GX72": "Platinum",
+    "LAYS ONDAS FH 70GX28": "Gold",
+    "LAYS QSO Y CEBOLLA 34GX72": "Platinum",
+    "LAYS JAMON SERRANO 34GX72": "Platinum",
+    "LAYS CLASICAS 85GX25X1": "Gold",
+    "LAYS CLASICAS 330GX9": "Silver",
+    "LAYS JAMON SERRANO 122GX19": "Silver",
+    "DORITOS QUESO 77GX26": "Gold",
+    "DORITOS QUESO 129GX19": "Silver",
+    "DORITOS QUESO 200GX14": "Silver",
+    "PEHUAMAR PAPA LISA 135GX19X1": "Silver",
+    "PEHUAMAR PAPA LISA 230GX14X1": "Bronze",
+    "PEHUAMAR PAPA ACANA 135GX19": "Silver",
+    "PEHUAMAR PALISAL 165GX21X1": "Silver",
+    "PEHUAMAR PALISAL 620GX6X1": "Bronze",
+    "PEHUAMAR PALIQUESO 165GX21X1": "Silver",
+    "PEHUAMAR PALIQUESO 620GX6X1": "Bronze",
+    "LAYS KETCHUP 34GX72X1": "Platinum",
+    "CHEETOS QUESO 85GX24X1": "Gold",
+    "CHEETOS QUESO 140GX18X1": "Silver",
+    "CHEETOS QUESO 229GX12X1": "Silver",
+    "3D QUESO 85GX27X1": "Gold",
+    "MANI SAL CON PIEL 75GX64X1": "Gold",
+    "MANI PELADO 135GX40X1": "Gold",
+    "MANI PELADO 320GX17X1": "Silver",
+    "MANIAX JAPONES JAMON 95GX40X1": "Gold",
+    "MANIAX JAPONES SAL 95GX40X1": "Gold",
+    "MANIAX SAL Y LIMON 95GX60X1": "Gold",
+    "DORITOS QUESO 77GX17 EXP ARG": "Gold",
+    "DORITOS QUESO 129GX17 EXP ARG": "Silver",
+    "CHEETOS QUESO CREMA 43GX66": "Platinum",
+    "CHEETOS QUESO CREMA 85GX24": "Gold",
+    "LAYS PROVOLETA 77GX25X1": "Gold",
+    "PEHUAMAR MAICITOS 265GX10X1": "Bronze",
+    "PEHUAMAR ACANALADA 230GX14X1": "Bronze",
+    "TWISTOS MINIT JAMON 95GX30X1": "Gold",
+    "TWISTOS MINIT QUESO 95GX30X1": "Gold",
+    "MANI SAL PELADO 75GX64X1": "Gold",
+    "TWISTOS MINIT QUESO 40GX112X1": "Platinum",
+    "TWISTOS MINIT JAMON 40GX112X1": "Platinum",
+    "MANI CON PIEL 135GX40X1": "Gold",
+    "DORITOS QUESO 20GX88X1": "Platinum",
+    "DORITOS SWEET CHILI SB 35GX88X1": "Platinum",
+    "DORITOS SWEET CHILI MB 74GX29X1": "Gold",
+    "DORITOS DINAMITA FH 45GX110X1": "Platinum",
+    "DORITOS DINAMITA FH 82GX38X1": "Gold",
+    "PEHUAMAR ACAN CHIMICHURRI 80X25X1": "Gold",
+    "PEHUAMAR ACAN MATAMBRITO 80X25X1": "Gold",
+    "PEHUAMAR ACANALADA 450X9 RM": "Bronze",
+    "PEHUAMAR PAPA LISA 450GX9 RM": "Bronze",
+    "PEHUA PAPA ACANA 90GX22 RM": "Gold",
+    "PEHUA PAPA LISA 90GX22 RM": "Gold",
+    "LAYS PANCETA 77GX25X1": "Gold",
+    "LAYS PANCETA 34GX72X1": "Platinum",
+    "LAYS BARBACOA 77GX25X1": "Gold",
+    "LAYS BARBACOA 34GX72X1": "Platinum",
+    "MANI TUBULAR 40GRS": "Platinum",
+    "LAYS JAMON SERRANO 77GX25X1": "Gold",
+    "PEP RUEDITAS FLAMIN HOT 71G": "Platinum",
+    "DINAMITA EXTRA FLAMIN HOT 45G": "Platinum",
+    "DINAMITA EXTRA FLAMIN HOT 82G": "Gold",
+    "LAYS CLASICAS 134GX18X1": "Silver",
+    "LAYS CLASICAS 230GX13X1": "Silver",
+    "LAYS QUESO Y CEBOLLA 77GX25X1": "Gold",
+    "LAYS KETCHUP 77GX25X1": "Gold",
+    "TOSTITOS ROUNDED SAL 100 GRAMOS": "Gold",
+    "TOSTITOS ROUNDED SAL 160 GRAMOS": "Silver",
+    "TOSTITOS ROUNDED SAL 260 GRAMOS": "Silver",
+    "QUAKER AVENA TRADIC 280GX20 ARG": "Silver",
+    "QUAKER AVENA EXT FINA 470GX12 ARG": "Silver",
+    "QUAKER AVENA INST 280GX20 ARG": "Silver",
+    "QUAKER AVENA INST 500GX10 ARG": "Silver",
+    "QUAKER AVENA TRADIC 550GX12 ARG": "Silver",
+    "LAYS CLASICA 20GX6X10 TIR": "Platinum",
+    "DORITOS QUESO 20GX6X10 TIR": "Platinum",
+    "CHEETOS ONDULADOS KETCHUP 40GX66": "Platinum",
+    "CHEETOS ONDULADOS KETCHUP 80GX24": "Gold",
+    "LAYS CLASICA 40GX6X10 TIR": "Platinum",
+    "DORITOS PIZZA 74X29X1": "Gold",
+    "DORITOS PIZZA 35X88X1": "Platinum",
+    "DORITOS QUESO 40GX6X10 TIR": "Platinum",
+    "LAYS ACAN ASADO 77GX25X1": "Gold",
+    "LAYS ACAN ASADO 34GX72X1 MND": "Platinum",
+    "PEHUAMAR ACANALADA 420X9X1 RM": "Bronze",
+    "PEHUAMAR PAPA LISA 420GX9X1 RM": "Bronze",
+    "TOSTITOS ROUND HIERB Y LIMON 90GX26X1": "Gold",
+    "TOSTITOS ROUND HIERB Y LIMON 144GX19X1": "Silver",
+    "LAYS RUSTICAS SAL MARINA 85 GRAMOS": "Gold",
+    "LAYS RUSTICAS CAPRESE 77 GRAMOS": "Gold",
+    "LAYS RUSTICAS LIMON Y HIERBAS 77 GRAMOS": "Gold",
+}
+TIER_GROUP = {"Platinum": "pg", "Gold": "pg", "Silver": "sb", "Bronze": "sb"}
 PEHUAMAR_SKUS = {"PEHUA PAPA LISA 90GX22 RM", "PEHUA PAPA ACANA 90GX22 RM"}
 
 # Sub-desglose de "Cobertura por marca": grupo -> {clave de salida -> set de descripciones exactas de SKU}.
@@ -273,6 +392,8 @@ def main():
     compra_cliente_marca = {}
     compra_cliente_subgrupo = {}
     kg_por_cliente_fecha = {}
+    kg_grupo_por_cliente = {}
+    kg_sin_clasificar = 0.0
     pehuamar_compra = {}
     invendible_por_vend = {}
     rechazos_por_vend = {}
@@ -298,7 +419,8 @@ def main():
             if tipo == "VEN" and es_articulo_pepsico(codigo_it, emp):
                 compra_cliente[cli] = compra_cliente.get(cli, 0) + q
                 items_pepsico_vistos += 1
-                marca = marca_de(descripcion_de(codigo_it, emp))
+                desc_it = descripcion_de(codigo_it, emp)
+                marca = marca_de(desc_it)
                 if marca:
                     porcli = compra_cliente_marca.setdefault(cli, {})
                     porcli[marca] = porcli.get(marca, 0) + q
@@ -306,6 +428,13 @@ def main():
                     kg = q * peso_de(codigo_it, emp) / 1000.0
                     porfecha = kg_por_cliente_fecha.setdefault(cli, {})
                     porfecha[fecha_pedido] = porfecha.get(fecha_pedido, 0.0) + kg
+                    tier = TIER_POR_DESC.get(desc_it.upper())
+                    grupo = TIER_GROUP.get(tier)
+                    if grupo:
+                        porgrupo = kg_grupo_por_cliente.setdefault(cli, {"pg": 0.0, "sb": 0.0})
+                        porgrupo[grupo] += kg
+                    else:
+                        kg_sin_clasificar += kg
             if tipo == "VEN" and es_articulo_pehuamar90(codigo_it, emp):
                 pehuamar_compra[cli] = pehuamar_compra.get(cli, 0) + q
             if tipo == "VEN":
@@ -379,11 +508,10 @@ def main():
 
         fechas_kg = kg_por_cliente_fecha.get(codigo, {})
         if fechas_kg:
-            kg_pg = sum(v for v in fechas_kg.values()) if seg in SEGMENTOS_PG else 0.0
-            kg_sb = sum(v for v in fechas_kg.values()) if seg in SEGMENTOS_SB else 0.0
+            grupo_kg = kg_grupo_por_cliente.get(codigo, {"pg": 0.0, "sb": 0.0})
             acc = kg_acum_por_vend.setdefault(codven, {"pg": 0.0, "sb": 0.0})
-            acc["pg"] += kg_pg
-            acc["sb"] += kg_sb
+            acc["pg"] += grupo_kg["pg"]
+            acc["sb"] += grupo_kg["sb"]
             kg_hoy_por_vend[codven] = kg_hoy_por_vend.get(codven, 0.0) + fechas_kg.get(hoy_str, 0.0)
             fechas_ordenadas = sorted((f for f in fechas_kg if f <= hoy_str), reverse=True)
             if fechas_ordenadas:
@@ -441,20 +569,16 @@ def main():
     dias_habiles = dias_habiles_mes(hoy.year, hoy.month)
     dias_trabajados = dias_habiles_mes(hoy.year, hoy.month, hasta=hoy)
     ratio = dias_trabajados / dias_habiles if dias_habiles else 0
-    universo_pg_total = sum(seg_por_vend.get(cv, {}).get("A", {}).get("universo", 0)
-                             + seg_por_vend.get(cv, {}).get("B", {}).get("universo", 0)
-                             for cv in universo_por_vend)
-    universo_sb_total = sum(seg_por_vend.get(cv, {}).get("C", {}).get("universo", 0)
-                             + seg_por_vend.get(cv, {}).get("D", {}).get("universo", 0)
-                             for cv in universo_por_vend)
+    # El objetivo por vendedor se prorratea segun su participacion real en los
+    # kg vendidos de cada grupo este mes (no hay objetivo individual oficial
+    # por vendedor disponible via API, es una estimacion proporcional).
+    total_pg_kg = sum(a["pg"] for a in kg_acum_por_vend.values())
+    total_sb_kg = sum(a["sb"] for a in kg_acum_por_vend.values())
     kg_vendedores = []
     for codven in sorted(universo_por_vend, key=lambda x: int(x)):
-        segdata = seg_por_vend.get(codven, {})
-        universo_pg = segdata.get("A", {}).get("universo", 0) + segdata.get("B", {}).get("universo", 0)
-        universo_sb = segdata.get("C", {}).get("universo", 0) + segdata.get("D", {}).get("universo", 0)
-        p1o = round(KG_OBJETIVO_PG * universo_pg / universo_pg_total, 2) if universo_pg_total else 0.0
-        p2o = round(KG_OBJETIVO_SB * universo_sb / universo_sb_total, 2) if universo_sb_total else 0.0
         acc = kg_acum_por_vend.get(codven, {"pg": 0.0, "sb": 0.0})
+        p1o = round(KG_OBJETIVO_PG * acc["pg"] / total_pg_kg, 2) if total_pg_kg else 0.0
+        p2o = round(KG_OBJETIVO_SB * acc["sb"] / total_sb_kg, 2) if total_sb_kg else 0.0
         p1a = round(acc["pg"], 2)
         p2a = round(acc["sb"], 2)
         p1p = round(p1a / (p1o * ratio) * 100, 2) if p1o and ratio else 0.0
@@ -480,7 +604,8 @@ def main():
         "diasHabiles": dias_habiles, "diasTrabajados": dias_trabajados,
         "vendedores": kg_vendedores,
     })
-    print("Avance kg: %d vendedores | dias %d/%d" % (len(kg_vendedores), dias_trabajados, dias_habiles))
+    print("Avance kg: %d vendedores | dias %d/%d | total PG %.1f kg | total SB %.1f kg | sin clasificar %.1f kg" %
+          (len(kg_vendedores), dias_trabajados, dias_habiles, total_pg_kg, total_sb_kg, kg_sin_clasificar))
 
     invendible_out = {
         vend: [{"articulo": art, "cant": round(c, 1), "importe": round(i, 2)}
