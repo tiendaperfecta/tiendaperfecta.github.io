@@ -194,22 +194,6 @@ def main():
 
     api = Api()
 
-    # --- DIAGNOSTICO temporal: buscar endpoint del censo Tienda Perfecta y de
-    # combos (reportes canned, no transaccionales). Se borra al confirmar. ---
-    candidatos_tp = [
-        "/data/cmd/tiendaperfecta/api/v1/get",
-        "/data/cmd/censo/api/v1/get",
-        "/data/cmd/rumbopepsico/api/v1/get",
-        "/data/cmd/ventas/api/v1/get-censo-tienda-perfecta",
-        "/data/cmd/reportes/api/v1/get-censo",
-    ]
-    for path in candidatos_tp:
-        try:
-            r = api.get(path)
-            print("DIAG endpoint TP OK:", path, "len:", len(r) if hasattr(r, "__len__") else "?")
-        except Exception as e:
-            print("DIAG endpoint TP FALLO:", path, "->", type(e).__name__, str(e)[:120])
-
     vendedores_raw = api.get("/data/cmd/ventas/api/v1/get-vendedores")
     nombre_por_codven = {cod(x.get("codigo")): (x.get("nombre") or "").strip() for x in vendedores_raw}
 
@@ -272,12 +256,13 @@ def main():
             q = num(it.get("cantidad")) * num(it.get("unidadFactor") or 1)
             importe = num(it.get("importeNeto"))
 
-            if not globals().get("_DIAG_ITEM_DONE"):
-                print("DIAG campos de un item de venta:", list(it.keys()))
-                print("DIAG venta completa (campos):", list(v.keys()))
-                globals()["_DIAG_ITEM_DONE"] = True
-            if it.get("comboCodigo") or it.get("comboDescripcion") or it.get("codigoCombo"):
-                print("DIAG item con combo:", json.dumps(it, ensure_ascii=False, default=str)[:800])
+            if tipo == "VEN" and it.get("codigoCombo"):
+                cvend = cod(v.get("codigoVendedor"))
+                cnom = nombre_por_codven.get(cvend, cvend)
+                acc = globals().setdefault("_DIAG_COMBO_DESC", {})
+                acc[cnom] = acc.get(cnom, 0.0) + num(it.get("descuentoFinal"))
+                acc2 = globals().setdefault("_DIAG_COMBO_NETO", {})
+                acc2[cnom] = acc2.get(cnom, 0.0) + num(it.get("descuentoNeto"))
 
             if tipo == "VEN" and es_articulo_pepsico(codigo_it, emp):
                 compra_cliente[cli] = compra_cliente.get(cli, 0) + q
@@ -309,6 +294,8 @@ def main():
 
     print("DIAG items de venta Pepsico contados:", items_pepsico_vistos,
           "| clientes con al menos 1 unidad:", len(compra_cliente))
+    print("DIAG combos por descuentoFinal:", globals().get("_DIAG_COMBO_DESC"))
+    print("DIAG combos por descuentoNeto:", globals().get("_DIAG_COMBO_NETO"))
 
        # Solo los 12 vendedores de calle de Pepsico (codigos 1-12). El cliente
     # trae a veces otros codigos (deposito, otros canales) que no son parte
