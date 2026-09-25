@@ -160,6 +160,11 @@ def main():
     nombre_por_codven = {cod(x.get("codigo")): (x.get("nombre") or "").strip() for x in vendedores_raw}
 
     articulos = api.get("/data/cmd/inventario/api/v2/get-articulos")
+    kws = ["MATAMBRITO", "CHIMICHURRI", "CAPRESE", "MARINA", "TOSTITOS"]
+    for kw in kws:
+        found = sorted({(a.get("descripcion") or "").strip() for a in articulos
+                        if kw in (a.get("descripcion") or "").upper()})
+        print("DIAG %s:" % kw, found[:20])
     es_pepsico_por_clave = {}
     es_pehuamar90_por_clave = {}
     descripcion_por_clave = {}
