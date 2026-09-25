@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
 pepsico_ventas.py - datos del panel Avance Pepsico via API de GesCom.
-Genera no_compradores_detalle.json, pehuamar90_no_comprado.json,
-invendible_detalle.json, rechazos_detalle.json, cobertura_marca_vendedor.json,
-ccc_segmento.json, subproductos_vendedor.json y avance_kg_vendedor.json.
+Genera no_compradores_detalle.json, no_compradores_por_dia.json,
+pehuamar90_no_comprado.json, invendible_detalle.json, rechazos_detalle.json,
+cobertura_marca_vendedor.json, ccc_segmento.json, subproductos_vendedor.json,
+venta_vendedor.json y avance_kg_vendedor.json.
 
 Avance kg: viene directo del reporte "Avance de Ventas Pepsico" de Gescom (el
 mismo motor generico de reportes que usa la UI, /data/cmd/report/render),
@@ -384,6 +385,7 @@ def main():
     pehuamar_compra = {}
     invendible_por_vend = {}
     rechazos_por_vend = {}
+    venta_importe_por_vend = {}
 
     items_pepsico_vistos = 0
     for fila in filas:
@@ -393,6 +395,8 @@ def main():
         cli = cod(fila.get("Cliente"))
         articulo = (fila.get("Articulo") or "").strip()
         q = num_ar(fila.get("CantBase"))
+        codven = cod(fila.get("CodVendedor"))
+        nombre_vend = (fila.get("Vendedor") or "").strip() or nombre_por_codven.get(codven, codven)
 
         if tipo == TIPO_VENTA:
             compra_cliente[cli] = compra_cliente.get(cli, 0) + q
@@ -407,9 +411,8 @@ def main():
             if sub:
                 porcli_sub = compra_cliente_subgrupo.setdefault(cli, {})
                 porcli_sub[sub] = porcli_sub.get(sub, 0) + q
+            venta_importe_por_vend[nombre_vend] = venta_importe_por_vend.get(nombre_vend, 0.0) + num_ar(fila.get("ImporteNetoItem"))
         elif tipo in (TIPO_CANJE, TIPO_RECHAZO):
-            codven = cod(fila.get("CodVendedor"))
-            nombre_vend = (fila.get("Vendedor") or "").strip() or nombre_por_codven.get(codven, codven)
             importe = num_ar(fila.get("ImporteNetoItem"))
             # CantBase/ImporteNetoItem ya vienen negativos en las devoluciones;
             # se usa abs() para la cantidad (se muestra como unidades retiradas,
@@ -430,6 +433,9 @@ def main():
     # de este tablero.
     VENDEDORES_PEPSICO = {str(i) for i in range(1, 13)}
 
+    DIA_CLAVE = {"Lunes": "lu", "Martes": "ma", "Miercoles": "mi",
+                 "Jueves": "ju", "Viernes": "vi", "Sabado": "sa"}
+
     hoy_key = DIAS_CAP[hoy.weekday()]
     no_compradores = []
     pehuamar_no_comprado = []
@@ -437,11 +443,13 @@ def main():
     marca_cumple_por_vend = {}
     sub_cumple_por_vend = {}
     seg_por_vend = {}
+    nc_dia_por_vend = {}
     for codigo, c in clientes.items():
         if not c["dia"] or c["codven"] not in VENDEDORES_PEPSICO:
             continue
         nombre_vend_cli = nombre_por_codven.get(c["codven"], c["codven"])
-        if compra_cliente.get(codigo, 0) < 3:
+        es_no_comprador = compra_cliente.get(codigo, 0) < 3
+        if es_no_comprador:
             no_compradores.append({**{k: c[k] for k in
                                     ("codigo", "razon", "localidad", "seg", "dia")},
                                     "vendedor": nombre_vend_cli})
@@ -466,10 +474,31 @@ def main():
             segdata[seg]["universo"] += 1
             if compra_cliente.get(codigo, 0) >= 3:
                 segdata[seg]["cumple"] += 1
+        clave_dia = DIA_CLAVE.get(c["dia"])
+        if clave_dia:
+            nc_dia = nc_dia_por_vend.setdefault(codven, {k: [0, 0] for k in DIA_CLAVE.values()})
+            nc_dia[clave_dia][1] += 1
+            if es_no_comprador:
+                nc_dia[clave_dia][0] += 1
 
     escribir("no_compradores_detalle.json", no_compradores)
     escribir("pehuamar90_no_comprado.json", pehuamar_no_comprado)
     print("No compradores:", len(no_compradores), "| Sin Pehuamar 90gr hoy:", len(pehuamar_no_comprado))
+
+    no_compradores_dia_out = []
+    for codven in sorted(nc_dia_por_vend, key=lambda x: int(x)):
+        dias = nc_dia_por_vend[codven]
+        fila = {"n": nombre_por_codven.get(codven, codven)}
+        fila.update(dias)
+        fila["totNc"] = sum(v[0] for v in dias.values())
+        fila["totU"] = sum(v[1] for v in dias.values())
+        no_compradores_dia_out.append(fila)
+    escribir("no_compradores_por_dia.json", {"vendedores": no_compradores_dia_out})
+
+    venta_vendedor_out = {n: round(v, 2) for n, v in venta_importe_por_vend.items()}
+    escribir("venta_vendedor.json", venta_vendedor_out)
+    print("Venta $ por vendedor: %d vendedores, total $ %.0f" %
+          (len(venta_vendedor_out), sum(venta_vendedor_out.values())))
 
     cobertura_vendedores = []
     for codven in sorted(universo_por_vend, key=lambda x: int(x)):
