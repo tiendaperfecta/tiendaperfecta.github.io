@@ -263,12 +263,13 @@ def main():
                 if marca:
                     porcli = compra_cliente_marca.setdefault(cli, {})
                     porcli[marca] = porcli.get(marca, 0) + q
+            if tipo == "VEN" and es_articulo_pehuamar90(codigo_it, emp):
+                pehuamar_compra[cli] = pehuamar_compra.get(cli, 0) + q
+            if tipo == "VEN":
                 sub = subgrupo_por_desc.get(descripcion_de(codigo_it, emp).upper())
                 if sub:
                     porcli_sub = compra_cliente_subgrupo.setdefault(cli, {})
                     porcli_sub[sub] = porcli_sub.get(sub, 0) + q
-            if tipo == "VEN" and es_articulo_pehuamar90(codigo_it, emp):
-                pehuamar_compra[cli] = pehuamar_compra.get(cli, 0) + q
 
             if not es_articulo_pepsico(codigo_it, emp):
                 continue
