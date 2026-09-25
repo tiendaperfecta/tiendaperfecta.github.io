@@ -256,14 +256,6 @@ def main():
             q = num(it.get("cantidad")) * num(it.get("unidadFactor") or 1)
             importe = num(it.get("importeNeto"))
 
-            if tipo == "VEN" and it.get("codigoCombo"):
-                cvend = cod(v.get("codigoVendedor"))
-                cnom = nombre_por_codven.get(cvend, cvend)
-                acc = globals().setdefault("_DIAG_COMBO_DESC", {})
-                acc[cnom] = acc.get(cnom, 0.0) + num(it.get("descuentoFinal"))
-                acc2 = globals().setdefault("_DIAG_COMBO_NETO", {})
-                acc2[cnom] = acc2.get(cnom, 0.0) + num(it.get("descuentoNeto"))
-
             if tipo == "VEN" and es_articulo_pepsico(codigo_it, emp):
                 compra_cliente[cli] = compra_cliente.get(cli, 0) + q
                 items_pepsico_vistos += 1
@@ -294,8 +286,6 @@ def main():
 
     print("DIAG items de venta Pepsico contados:", items_pepsico_vistos,
           "| clientes con al menos 1 unidad:", len(compra_cliente))
-    print("DIAG combos por descuentoFinal:", globals().get("_DIAG_COMBO_DESC"))
-    print("DIAG combos por descuentoNeto:", globals().get("_DIAG_COMBO_NETO"))
 
        # Solo los 12 vendedores de calle de Pepsico (codigos 1-12). El cliente
     # trae a veces otros codigos (deposito, otros canales) que no son parte
