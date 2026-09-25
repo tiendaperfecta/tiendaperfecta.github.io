@@ -266,7 +266,7 @@ function preparar() {
   D.creditos = D.creditos || []; D.padres = D.padres || {};
   D.tramos.forEach(t => { t.dd = dias(t.v); t.bi = bandOf(t.dd); const c = D.clientes[t.c]; t.vend = t.vd || c.vend; t.ruta = t.r || c.ruta; });
   D.creditos.forEach(t => { const c = D.clientes[t.c]; t.vend = t.vd || c.vend; t.ruta = c.ruta; });
-  $('#bUpd').hidden = !D.dispatch;
+  $('#bUpd').hidden = false;
 }
 function init() {
   preparar();
@@ -344,21 +344,29 @@ const GH = 'https://api.github.com/repos/tiendaperfecta/tiendaperfecta.github.io
 const esperar = ms => new Promise(r => setTimeout(r, ms));
 async function actualizar() {
   const b = $('#bUpd'), msg = $('#updMsg');
-  const H = {Authorization: 'Bearer ' + D.dispatch, Accept: 'application/vnd.github+json'};
+  // Con token (secret CTACTE_DISPATCH) la dispara el panel; sin token se abre
+  // GitHub para tocar "Run workflow" y el panel espera igual (API publica).
+  const H = D.dispatch ? {Authorization: 'Bearer ' + D.dispatch, Accept: 'application/vnd.github+json'} : {Accept: 'application/vnd.github+json'};
   const aviso = t => msg.textContent = t;
   b.disabled = true; b.textContent = '⟳ Actualizando…';
   try {
     const t0 = Date.now() - 15000;
-    const r = await fetch(GH + '/actions/workflows/ctacte-data.yml/dispatches', {method: 'POST', headers: H, body: JSON.stringify({ref: 'main'})});
-    if (r.status !== 204) throw new Error(r.status === 401 || r.status === 403 ? 'GitHub rechazó el permiso del botón' : 'GitHub respondió ' + r.status);
-    aviso('Bajando saldos de GesCom… (1 a 2 minutos)');
+    if (D.dispatch) {
+      const r = await fetch(GH + '/actions/workflows/ctacte-data.yml/dispatches', {method: 'POST', headers: H, body: JSON.stringify({ref: 'main'})});
+      if (r.status !== 204) throw new Error(r.status === 401 || r.status === 403 ? 'GitHub rechazó el permiso del botón' : 'GitHub respondió ' + r.status);
+      aviso('Bajando saldos de GesCom… (1 a 2 minutos)');
+    } else {
+      window.open('https://github.com/tiendaperfecta/tiendaperfecta.github.io/actions/workflows/ctacte-data.yml', '_blank', 'noopener');
+      aviso('En GitHub tocá "Run workflow" → "Run workflow". El panel se actualiza solo cuando termine.');
+    }
     let run = null;
     for (let i = 0; i < 60; i++) {           // hasta ~10 minutos
-      await esperar(10000);
+      await esperar(D.dispatch ? 10000 : 15000);   // sin token: API publica, 60 consultas/hora
       const j = await (await fetch(GH + '/actions/workflows/ctacte-data.yml/runs?event=workflow_dispatch&per_page=5', {headers: H, cache: 'no-store'})).json();
       run = (j.workflow_runs || []).find(x => new Date(x.created_at).getTime() >= t0);
       if (!run) continue;
       if (run.status === 'queued') aviso('En cola, esperando que termine otra actualización…');
+      else if (run.status === 'in_progress') aviso('Bajando saldos de GesCom… (1 a 2 minutos)');
       if (run.status === 'completed') break;
     }
     if (!run || run.status !== 'completed') throw new Error('la actualización está tardando más de lo normal');
