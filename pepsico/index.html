@@ -255,89 +255,17 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
   margin-top:32px; font-family:"IBM Plex Sans",sans-serif; font-style:normal; font-weight:600;
   font-size:clamp(20px,3vw,28px); color:var(--accent); max-width:none;
 }
-
-/* ---------- índice del panel (portada de secciones) ----------------------
-   Mismo patrón que la Central web —grupos con tarjetas— pero con los tokens
-   de este panel, no con los de la central: acá el fondo es cálido y la
-   tipografía es Fraunces/IBM Plex. */
-.indice{margin:0 0 34px}
-.idx-eyebrow{font:600 11px/1 'IBM Plex Sans',system-ui,sans-serif;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--muted);margin:0 0 12px}
-.idx-grupo{font:600 13px/1.2 'IBM Plex Sans',system-ui,sans-serif;letter-spacing:.06em;
-  text-transform:uppercase;color:var(--accent);margin:18px 0 8px;border:0;padding:0}
-.idx-grupo:first-of-type{margin-top:0}
-.idx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
-.idx-card{display:block;padding:10px 12px;border:1px solid var(--border);border-radius:10px;
-  background:var(--panel);text-decoration:none;color:inherit;box-shadow:var(--shadow)}
-.idx-card:hover{border-color:var(--accent);background:var(--accent-soft)}
-.idx-card:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.idx-t{display:block;font:600 13.5px/1.25 'IBM Plex Sans',system-ui,sans-serif;color:var(--text)}
-.idx-d{display:block;margin-top:3px;font:400 11.5px/1.35 'IBM Plex Sans',system-ui,sans-serif;
-  color:var(--muted)}
-/* El ancla no queda pegada al borde al saltar. SIN scroll suave a proposito:
-   el panel mide ~18.700 px y un salto animado entre secciones lejanas tarda
-   varios segundos mirando pasar contenido. El salto directo se entiende mejor. */
-:target{scroll-margin-top:16px}
-@media (max-width:560px){.idx-grid{grid-template-columns:1fr}}
 </style>
 
 <div class="wrap">
-<nav class="indice" aria-label="Secciones del panel">
-  <p class="idx-eyebrow">Índice del panel</p>
-    <h2 class="idx-grupo">Venta</h2>
-    <div class="idx-grid">
-      <a class="idx-card" href="#s-avance-de-venta-diario"><span class="idx-t">Avance de venta diario</span><span class="idx-d">Objetivo en kg, acumulado y avance contra el prorrateo a la fecha</span></a>
-      <a class="idx-card" href="#s-por-vendedor"><span class="idx-t">Por vendedor</span><span class="idx-d">Kg por vendedor, media necesaria y avance individual</span></a>
-      <a class="idx-card" href="#s-proyeccion-de-ips-por-vendedor"><span class="idx-t">Proyección de IPs por vendedor</span><span class="idx-d">Proyección de IPs cargada a mano, por vendedor</span></a>
-    </div>
-    <h2 class="idx-grupo">Mi Negocio+</h2>
-    <div class="idx-grid">
-      <a class="idx-card" href="#s-mi-negocio-por-vendedor"><span class="idx-t">Mi Negocio+ por vendedor</span><span class="idx-d">Kg por la app y participación sobre el total de cada vendedor</span></a>
-      <a class="idx-card" href="#s-seguimiento-mi-negocio-por-dia"><span class="idx-t">Seguimiento Mi Negocio+ por día</span><span class="idx-d">Evolución día a día del volumen cargado por la app</span></a>
-    </div>
-    <h2 class="idx-grupo">Cobertura</h2>
-    <div class="idx-grid">
-      <a class="idx-card" href="#s-cobertura-por-marca-y-vendedor"><span class="idx-t">Cobertura por marca y vendedor</span><span class="idx-d">Clientes cubiertos por marca, vendedor por vendedor</span></a>
-      <a class="idx-card" href="#s-objetivo-de-cobertura-septiembre-2026"><span class="idx-t">Objetivo de cobertura — Septiembre 2026</span><span class="idx-d">Objetivo del mes y cuánto falta para llegar</span></a>
-      <a class="idx-card" href="#s-ccc-por-segmento"><span class="idx-t">CCC por segmento</span><span class="idx-d">Clientes con compra abiertos por segmento</span></a>
-      <a class="idx-card" href="#s-no-compradores-por-dia-de-visita"><span class="idx-t">No compradores por día de visita</span><span class="idx-d">Quiénes no compraron, ordenados por el día que les toca</span></a>
-    </div>
-    <h2 class="idx-grupo">Tienda Perfecta</h2>
-    <div class="idx-grid">
-      <a class="idx-card" href="#s-tienda-perfecta"><span class="idx-t">Tienda Perfecta</span><span class="idx-d">Censo RUMBO: tiendas que cumplen y cuánto falta al objetivo</span></a>
-      <a class="idx-card" href="#s-detalle-por-vendedor"><span class="idx-t">Detalle por vendedor</span><span class="idx-d">La misma foto del censo, abierta por vendedor</span></a>
-    </div>
-    <h2 class="idx-grupo">Portafolio</h2>
-    <div class="idx-grid">
-      <a class="idx-card" href="#s-portafolio"><span class="idx-t">Portafolio</span><span class="idx-d">Compromiso por segmento y cumplimiento del portafolio ideal</span></a>
-      <a class="idx-card" href="#s-oportunidad-de-portafolio-por-dia-de-visita"><span class="idx-t">Oportunidad de portafolio por día de visita</span><span class="idx-d">Clientes entre 60% y 79% de portafolio, por día de visita</span></a>
-      <a class="idx-card" href="#s-oportunidad-de-portafolio-por-segmento-taxonomia"><span class="idx-t">Oportunidad de portafolio por segmento / taxonomía</span><span class="idx-d">La misma oportunidad, abierta por segmento y taxonomía</span></a>
-    </div>
-    <h2 class="idx-grupo">Devoluciones</h2>
-    <div class="idx-grid">
-      <a class="idx-card" href="#s-invendible-vencidos-por-canje"><span class="idx-t">Invendible / Vencidos por Canje</span><span class="idx-d">Producto vencido o dañado que vuelve por canje</span></a>
-      <a class="idx-card" href="#s-rechazos"><span class="idx-t">Rechazos</span><span class="idx-d">Entregas rechazadas, con su detalle</span></a>
-      <a class="idx-card" href="#s-motivos-de-devolucion-total-pepsico"><span class="idx-t">Motivos de devolución — total PepsiCo</span><span class="idx-d">Por qué vuelve la mercadería, acumulado del mes</span></a>
-      <a class="idx-card" href="#s-motivos-de-devolucion-ultima-fecha-22-09"><span class="idx-t">Motivos de devolución — última fecha (22/09)</span><span class="idx-d">Los mismos motivos, sólo de la última fecha</span></a>
-      <a class="idx-card" href="#s-seguimiento-de-frescura"><span class="idx-t">Seguimiento de Frescura</span><span class="idx-d">Cuota de próximos a vencer y cómo va cada vendedor</span></a>
-    </div>
-    <h2 class="idx-grupo">Combos</h2>
-    <div class="idx-grid">
-      <a class="idx-card" href="#s-combos-tradicionales-axum"><span class="idx-t">Combos Tradicionales Axum</span><span class="idx-d">Combos del canal tradicional y su cumplimiento</span></a>
-      <a class="idx-card" href="#s-detalle-de-combos-por-vendedor"><span class="idx-t">Detalle de combos por vendedor</span><span class="idx-d">El mismo cuadro, abierto por vendedor</span></a>
-      <a class="idx-card" href="#s-combos-mi-negocio"><span class="idx-t">Combos Mi Negocio</span><span class="idx-d">Combos vendidos por la app</span></a>
-      <a class="idx-card" href="#s-detalle-de-combos-mi-negocio-por-vendedor"><span class="idx-t">Detalle de combos Mi Negocio por vendedor</span><span class="idx-d">Los combos de la app, por vendedor</span></a>
-    </div>
-</nav>
-
   <p class="eyebrow">PepsiCo · Tienda Perfecta · Objetivo TN Septiembre 2026</p>
-  <h1 id="s-avance-de-venta-diario">Avance de venta diario</h1>
+  <h1>Avance de venta diario</h1>
   <p class="sub">
-    Medida en <b>kilogramos</b>. Acumulado del <b>01/09</b> al <b>24/09</b>, con
-    <b>21 de 26</b> días hábiles transcurridos (lunes a sábado, domingo no es día hábil). El <b>Avance</b> es
+    Medida en <b>kilogramos</b>. Acumulado del <b>01/09</b> hasta hoy, actualizado automáticamente por API dos
+    veces por día (días hábiles = lunes a sábado, domingo no es día hábil). El <b>Avance</b> es
     contra el objetivo prorrateado a la fecha, no contra el objetivo total del mes.
-    Columna <b>Real</b> = venta del día de la última visita teórica (hoy, 24/09), traída
-    en vivo del reporte <b>Avance de Ventas Pepsico</b> del módulo Objetivos de Gescom.
+    Columna <b>Real</b> = kg vendidos hoy. <b>Platino+Gold</b> y <b>Silver&amp;Bronze</b> se arman por
+    clasificación de producto (no de cliente), según la segmentación de portafolio confirmada.
     <b>Media necesaria</b> = suma de los kg/día que necesita cada vendedor en los días que quedan para llegar al
     objetivo. <b>Compromiso vendedores</b> = suma en vivo de lo que cada vendedor cargó en la tabla de abajo.
     <b>Compromiso supervisor</b> es editable y queda guardado para todos.
@@ -346,27 +274,27 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
   <div class="kpis">
     <div class="kpi accent">
       <div class="label">Objetivo mes</div>
-      <div class="value">26.000<span class="unit">kg</span></div>
+      <div class="value" id="kpi-objetivo-mes">—</div>
     </div>
     <div class="kpi">
       <div class="label">Acumulado</div>
-      <div class="value">19.741<span class="unit">kg</span></div>
+      <div class="value" id="kpi-acumulado">—</div>
     </div>
     <div class="kpi">
       <div class="label">Avance a la fecha</div>
-      <div class="value">94,0<span class="unit">%</span></div>
+      <div class="value" id="kpi-avance-fecha">—</div>
     </div>
     <div class="kpi">
       <div class="label">Tendencia cierre</div>
-      <div class="value">24.441<span class="unit">kg</span></div>
+      <div class="value" id="kpi-tendencia">—</div>
     </div>
     <div class="kpi">
       <div class="label">Venta real hoy</div>
-      <div class="value">1.079<span class="unit">kg</span></div>
+      <div class="value" id="kpi-real-hoy">—</div>
     </div>
     <div class="kpi">
       <div class="label">Media necesaria</div>
-      <div class="value">1.251,9<span class="unit">kg/día</span></div>
+      <div class="value" id="kpi-media-necesaria">—</div>
     </div>
     <div class="kpi">
       <div class="label">Compromiso vendedores</div>
@@ -380,18 +308,18 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
 
   <div class="segments">
     <div class="seg">
-      <div class="seg-head"><span class="name">Platino + Gold</span><span class="pct">96,0%</span></div>
-      <div class="bar-track"><div class="bar-fill" style="width:96%"></div></div>
-      <div class="seg-foot"><span>Objetivo 18.000 kg</span><span>Acumulado 13.957 kg</span></div>
+      <div class="seg-head"><span class="name">Platino + Gold</span><span class="pct" id="seg-pg-pct">—</span></div>
+      <div class="bar-track"><div class="bar-fill" id="seg-pg-bar" style="width:0%"></div></div>
+      <div class="seg-foot"><span id="seg-pg-obj">Objetivo — kg</span><span id="seg-pg-acum">Acumulado — kg</span></div>
     </div>
     <div class="seg">
-      <div class="seg-head"><span class="name">Silver &amp; Bronze</span><span class="pct">89,5%</span></div>
-      <div class="bar-track"><div class="bar-fill" style="width:89.5%"></div></div>
-      <div class="seg-foot"><span>Objetivo 8.000 kg</span><span>Acumulado 5.784 kg</span></div>
+      <div class="seg-head"><span class="name">Silver &amp; Bronze</span><span class="pct" id="seg-sb-pct">—</span></div>
+      <div class="bar-track"><div class="bar-fill" id="seg-sb-bar" style="width:0%"></div></div>
+      <div class="seg-foot"><span id="seg-sb-obj">Objetivo — kg</span><span id="seg-sb-acum">Acumulado — kg</span></div>
     </div>
   </div>
 
-  <h2 class="section-title" id="s-por-vendedor">Por vendedor</h2>
+  <h2 class="section-title">Por vendedor</h2>
   <p class="section-note">
     Ordenado de menor a mayor avance — los que necesitan más empuje primero. <b>Promedio</b> = kg/día vendidos en
     lo que va del mes, <b>Media Nec.</b> = kg/día necesarios en los días que quedan para llegar al objetivo,
@@ -433,12 +361,10 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
         </tr>
       </thead>
       <tbody id="tbody"></tbody>
-      <tfoot>
+      <tfoot id="tfoot-main">
         <tr>
           <td class="name">Total PepsiCo</td>
-          <td>18.000</td><td>13.957</td><td>96,0%</td><td></td>
-          <td>8.000</td><td>5.784</td><td>89,5%</td><td></td>
-          <td>26.000</td><td>19.741</td><td>94,0%</td><td>940,0</td><td>1.251,9</td><td>939,9</td><td>633,0</td><td>1.079</td><td>$ 484.422.537</td>
+          <td colspan="16" style="text-align:center">—</td>
           <td></td>
           <td></td><td></td><td id="tfoot-compromiso-total"></td>
         </tr>
@@ -446,7 +372,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     </table>
   </div>
 
-  <h3 class="subsection-title" id="s-proyeccion-de-ips-por-vendedor">Proyección de IPs por vendedor</h3>
+  <h3 class="subsection-title">Proyección de IPs por vendedor</h3>
   <p class="section-note">
     Cada vendedor proyecta su objetivo en 4 indicadores clave. <b>Base</b> es el dato de partida (no editable);
     <b>Compromiso</b> es editable y queda guardado para todos. <b>Frecuencia con Compra</b>: Base = universo de
@@ -537,7 +463,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
   </div>
 
   <div class="section-title-row">
-    <h2 class="section-title" id="s-mi-negocio-por-vendedor">Mi Negocio+ por vendedor</h2>
+    <h2 class="section-title">Mi Negocio+ por vendedor</h2>
     <img src="logo_mi_negocio.png" alt="Mi Negocio+" class="mn-logo">
   </div>
   <p class="section-note">
@@ -566,7 +492,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
   </div>
 
   <div class="section-title-row">
-    <h3 class="subsection-title" style="margin:0" id="s-seguimiento-mi-negocio-por-dia">Seguimiento Mi Negocio+ por día</h3>
+    <h3 class="subsection-title" style="margin:0">Seguimiento Mi Negocio+ por día</h3>
     <img src="logo_mi_negocio.png" alt="Mi Negocio+" class="mn-logo">
   </div>
   <p class="section-note">
@@ -593,7 +519,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     <code>Clientes Claude.xlsx</code>.
   </p>
 
-  <h2 class="section-title" id="s-cobertura-por-marca-y-vendedor">Cobertura por marca y vendedor</h2>
+  <h2 class="section-title">Cobertura por marca y vendedor</h2>
   <p class="section-note">
     Cobertura = clientes con 3 o más unidades de la marca en el período ÷ universo de clientes del vendedor.
     Período 01/09-25/09, actualizado automáticamente por API dos veces por día. Color relativo por columna
@@ -615,7 +541,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     </table>
   </div>
 
-  <h3 class="subsection-title" id="s-objetivo-de-cobertura-septiembre-2026">Objetivo de cobertura — Septiembre 2026</h3>
+  <h3 class="subsection-title">Objetivo de cobertura — Septiembre 2026</h3>
   <p class="section-note">
     Cobertura total PepsiCo (todos los vendedores) contra el objetivo de Septiembre por marca. Cump. % = Cobertura ÷ Objetivo.
   </p>
@@ -643,7 +569,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     objetivo en $.
   </p>
 
-  <h2 class="section-title" id="s-ccc-por-segmento">CCC por segmento</h2>
+  <h2 class="section-title">CCC por segmento</h2>
   <p class="section-note">
     CCC = clientes con compra sobre el universo asignado, por segmento de cliente (A/B/C/D). Objetivo total
     Tienda Perfecta: A 384 · B 337 · C 669 · D 903 (2.293 clientes) — prorrateado por vendedor según su
@@ -711,7 +637,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     automáticamente dos veces por día.
   </p>
 
-  <h3 class="subsection-title" id="s-no-compradores-por-dia-de-visita">No compradores por día de visita</h3>
+  <h3 class="subsection-title">No compradores por día de visita</h3>
   <p class="section-note">
     Clientes que <b>no</b> llegaron al CCC (compra de Pepsico &gt; 3 unidades en el período), agrupados por el día
     de la semana de su ruta de preventa. Formato de celda: no compradores / universo de ese día. Ordenado de mayor
@@ -744,7 +670,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     (2.293) es un prorrateo oficial y no tiene por qué coincidir con el universo real con ruta asignada (2.546).
   </p>
 
-  <h2 class="section-title" id="s-tienda-perfecta">Tienda Perfecta</h2>
+  <h2 class="section-title">Tienda Perfecta</h2>
   <p class="section-note">
     Universo: clientes de subcanal Kiosco/Maxikiosco, Almacén/Despensa, Autoservicio Tradicional, Estación de
     Servicio - No Oficiales y Fiambrería. Tienda Perfecta = 80% o más de cobertura de portafolio <b>y</b>
@@ -807,7 +733,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     </div>
   </div>
 
-  <h3 class="subsection-title" id="s-detalle-por-vendedor">Detalle por vendedor</h3>
+  <h3 class="subsection-title">Detalle por vendedor</h3>
   <p class="section-note">
     Objetivo prorrateado por vendedor según su participación de clientes en cada segmento (universo TP). Ordenado
     de menor a mayor avance total.
@@ -870,7 +796,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     objetivo oficial cargado en Gescom.
   </p>
 
-  <h2 class="section-title" id="s-portafolio">Portafolio</h2>
+  <h2 class="section-title">Portafolio</h2>
   <p class="section-note">
     Cobertura de portafolio sobre el universo de Tienda Perfecta (2.260 clientes). Oportunidad de Portafolio =
     clientes con cobertura entre 60% y 79% (ya tienen buena parte del portafolio pero no llegan al 80% que define
@@ -889,7 +815,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     </div>
   </div>
 
-  <h3 class="subsection-title" id="s-oportunidad-de-portafolio-por-dia-de-visita">Oportunidad de portafolio por día de visita</h3>
+  <h3 class="subsection-title">Oportunidad de portafolio por día de visita</h3>
   <p class="section-note">
     Formato de celda: clientes con oportunidad de portafolio / universo de ese día. Ordenado de mayor a menor
     cantidad de clientes con oportunidad.
@@ -908,7 +834,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     </table>
   </div>
 
-  <h3 class="subsection-title" id="s-oportunidad-de-portafolio-por-segmento-taxonomia">Oportunidad de portafolio por segmento / taxonomía</h3>
+  <h3 class="subsection-title">Oportunidad de portafolio por segmento / taxonomía</h3>
   <p class="section-note">
     Formato de celda: clientes con oportunidad de portafolio / universo de ese segmento. Ordenado de mayor a menor
     cantidad de clientes con oportunidad.
@@ -933,7 +859,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     (4 clientes sin ruta asignada quedan fuera de la tabla por día, pero sí en la de segmento).
   </p>
 
-  <h2 class="section-title" id="s-invendible-vencidos-por-canje">Invendible / Vencidos por Canje</h2>
+  <h2 class="section-title">Invendible / Vencidos por Canje</h2>
   <p class="section-note">
     Productos vencidos o dañados retirados de los clientes este mes. <b>Venta $</b> = filas con
     <code>TipoDeVenta = Venta</code>. <b>Retirado por Canje</b> = filas con
@@ -966,7 +892,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     <code>TipoDeVenta</code> en lugar de sumar todos los tipos juntos.
   </p>
 
-  <h2 class="section-title" id="s-rechazos">Rechazos</h2>
+  <h2 class="section-title">Rechazos</h2>
   <p class="section-note">
     Pedidos rechazados o no entregados este mes. <b>Venta $</b> = filas con <code>TipoDeVenta = Venta</code>.
     <b>Devolución por Rechazo</b> = filas con <code>TipoDeVenta = Devolución por Rechazo</code> (viene en
@@ -988,7 +914,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     </table>
   </div>
 
-  <h3 class="subsection-title" id="s-motivos-de-devolucion-total-pepsico">Motivos de devolución — total PepsiCo</h3>
+  <h3 class="subsection-title">Motivos de devolución — total PepsiCo</h3>
   <p class="section-note">Desglose de todas las devoluciones por rechazo, ordenado por importe.</p>
 
   <div class="table-scroll">
@@ -1003,7 +929,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     </table>
   </div>
 
-  <h3 class="subsection-title" id="s-motivos-de-devolucion-ultima-fecha-22-09">Motivos de devolución — última fecha (22/09)</h3>
+  <h3 class="subsection-title">Motivos de devolución — última fecha (22/09)</h3>
   <p class="section-note">
     Devoluciones por rechazo del último día con datos, por <code>FechaComprobante</code> (no
     <code>FechaCarga</code>).
@@ -1028,7 +954,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     campo <code>MotivoDevolucion</code>.
   </p>
 
-  <h2 class="section-title" id="s-seguimiento-de-frescura">Seguimiento de Frescura</h2>
+  <h2 class="section-title">Seguimiento de Frescura</h2>
   <p class="section-note">
     Productos de fecha corta de Pepsico (Tienda Perfecta y Rambla de los Lobos), semana del 21/09 al 27/09.
     <b>Cuota fija toda la semana</b>: foto del depósito tomada el 21/09, artículos que vencen dentro de 50 días,
@@ -1070,7 +996,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     <code>frescura.tienda-perfecta.workers.dev</code>.
   </p>
 
-  <h2 class="section-title" id="s-combos-tradicionales-axum">Combos Tradicionales Axum</h2>
+  <h2 class="section-title">Combos Tradicionales Axum</h2>
   <p class="section-note">
     Combos usados por vendedor, período 02/09 al 25/09. <b>Combos vendidos</b> = cantidad de combos aplicados.
     <b>A Reconocer</b> = monto en $ que Axum reconoce por esos combos. Ordenado de mayor a menor $.
@@ -1099,7 +1025,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     </table>
   </div>
 
-  <h3 class="subsection-title" id="s-detalle-de-combos-por-vendedor">Detalle de combos por vendedor</h3>
+  <h3 class="subsection-title">Detalle de combos por vendedor</h3>
   <p class="section-note">
     Cada combo con su columna de <b>Cant.</b> (combos vendidos) y <b>$</b> (a reconocer). Ordenado de mayor a
     menor total $.
@@ -1122,7 +1048,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
   </p>
 
   <div class="section-title-row">
-    <h2 class="section-title" id="s-combos-mi-negocio">Combos Mi Negocio</h2>
+    <h2 class="section-title">Combos Mi Negocio</h2>
     <img src="logo_mi_negocio.png" alt="Mi Negocio+" class="mn-logo">
   </div>
   <p class="section-note">
@@ -1152,7 +1078,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     </table>
   </div>
 
-  <h3 class="subsection-title" id="s-detalle-de-combos-mi-negocio-por-vendedor">Detalle de combos Mi Negocio por vendedor</h3>
+  <h3 class="subsection-title">Detalle de combos Mi Negocio por vendedor</h3>
   <p class="section-note">
     Cada combo con su columna de <b>Cant.</b> (combos vendidos) y <b>$</b> (a reconocer). Ordenado de mayor a
     menor total $.
@@ -1206,10 +1132,6 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
   </div>
 </div>
 
-<!-- Reemplazo de claude.use("db"), que solo existe corriendo como Artifact de Claude.
-     Vive en db.js aparte a proposito: si se regenera index.html desde otra PC, lo unico
-     que hay que conservar es esta linea. Ver pepsico-db/README.md. -->
-<script src="db.js"></script>
 <script>
 let noCompradoresDetalle = [];
 fetch('no_compradores_detalle.json').then(r => r.json()).then(data => { noCompradoresDetalle = data; }).catch(() => {});
@@ -1445,20 +1367,20 @@ function drillFrescura(codigo) {
   openDrillCustom(a.descripcion, `Código ${a.codigo} — objetivo y vendido por vendedor`, html);
 }
 
-const rows = [
-  {n:"Julian Nuñez",            p1o:1772.69,p1a:1208.80,p1p:84.43, p2o:957.44, p2a:628.84,p2p:81.32, to:2730.13,ta:1837.64,tp:83.34, real:87.49, venta:43470200, promedio:87.50,medianec:178.50,penult:116.97,ultima:62.05},
-  {n:"Maria Noelia Madia",      p1o:1347.05,p1a:945.38, p1p:86.89, p2o:509.50, p2a:316.10,p2p:76.81, to:1856.55,ta:1261.48,tp:84.12, real:47.40, venta:32494320, promedio:60.07,medianec:119.01,penult:63.87,ultima:42.09},
-  {n:"Ludmila Aylen Martinez",  p1o:1842.82,p1a:1428.44,p1p:95.97, p2o:1185.19,p2a:655.49,p2p:68.47, to:3028.01,ta:2083.93,tp:85.21, real:130.81, venta:48937656, promedio:99.23,medianec:188.82,penult:31.44,ultima:80.34},
-  {n:"Melanie Larrama",         p1o:1309.56,p1a:911.87, p1p:86.21, p2o:659.77, p2a:481.16,p2p:90.29, to:1969.33,ta:1393.03,tp:87.58, real:70.51, venta:32696376, promedio:66.33,medianec:115.26,penult:44.17,ultima:37.69},
-  {n:"Ezequiel Hack",           p1o:1382.44,p1a:1025.49,p1p:91.84, p2o:637.89, p2a:472.54,p2p:91.72, to:2020.33,ta:1498.03,tp:91.80, real:76.35, venta:38245474, promedio:71.33,medianec:104.46,penult:58.08,ultima:44.80},
-  {n:"Agustin Pogorzelski",     p1o:1321.55,p1a:1014.42,p1p:95.04, p2o:499.27, p2a:373.29,p2p:92.57, to:1820.82,ta:1387.71,tp:94.36, real:123.82, venta:33752874, promedio:66.09,medianec:86.63,penult:70.28,ultima:55.15},
-  {n:"Camila Martinez",         p1o:1299.88,p1a:1030.30,p1p:98.13, p2o:550.79, p2a:392.85,p2p:88.31, to:1850.67,ta:1423.15,tp:95.21, real:72.03, venta:37574039, promedio:67.77,medianec:85.51,penult:94.38,ultima:37.76},
-  {n:"Matias Parada",           p1o:1270.48,p1a:1000.75,p1p:97.52, p2o:488.19, p2a:371.16,p2p:94.13, to:1758.67,ta:1371.91,tp:96.58, real:95.62, venta:34228978, promedio:65.32,medianec:77.36,penult:74.74,ultima:32.92},
-  {n:"Nicolas Martinez",        p1o:1594.06,p1a:1325.02,p1p:102.91,p2o:625.71, p2a:478.63,p2p:94.71, to:2219.77,ta:1803.65,tp:100.60, real:63.21, venta:44663697, promedio:85.89,medianec:83.23,penult:79.81,ultima:53.49},
-  {n:"Ramiro Rando",            p1o:1670.92,p1a:1406.36,p1p:104.21,p2o:570.34, p2a:427.64,p2p:92.83, to:2241.26,ta:1834.00,tp:101.31, real:116.25, venta:46722890, promedio:87.33,medianec:81.45,penult:139.46,ultima:40.25},
-  {n:"Lucas Giayetto",          p1o:1764.64,p1a:1466.34,p1p:102.88,p2o:641.37, p2a:517.92,p2p:99.98, to:2406.01,ta:1984.26,tp:102.11, real:66.46, venta:49232551, promedio:94.49,medianec:84.35,penult:94.24,ultima:86.73},
-  {n:"Martinica Rodriguez",     p1o:1423.91,p1a:1193.51,p1p:103.78,p2o:674.54, p2a:668.21,p2p:122.65,to:2098.45,ta:1861.72,tp:109.85, real:129.34, venta:42403482, promedio:88.65,medianec:47.35,penult:72.47,ultima:59.70},
-];
+let rows = [];
+const VENTA_POR_VENDEDOR = {
+  "Julian Nuñez": 43470200, "Maria Noelia Madia": 32494320, "Ludmila Aylen Martinez": 48937656,
+  "Melanie Larrama": 32696376, "Ezequiel Hack": 38245474, "Agustin Pogorzelski": 33752874,
+  "Camila Martinez": 37574039, "Matias Parada": 34228978, "Nicolas Martinez": 44663697,
+  "Ramiro Rando": 46722890, "Lucas Giayetto": 49232551, "Martinica Rodriguez": 42403482,
+};
+let kgAvanceMeta = null;
+fetch('avance_kg_vendedor.json').then(r => r.json()).then(data => {
+  kgAvanceMeta = data;
+  rows = data.vendedores.map(v => ({...v, venta: VENTA_POR_VENDEDOR[v.n] || 0}));
+  rows.sort((a,b) => a.tp - b.tp);
+  renderMainTable();
+}).catch(() => {});
 
 const mnRows = [
   {n:"Ezequiel Hack",           mn:981.90,  acum:1498.03, share:65.55, avanceMn:75.29, universo:221, registrado:188, activos:80,  fullyDigital:67},
@@ -2200,6 +2122,52 @@ document.getElementById('tfoot-mnSeg').innerHTML = `
   </tr>
 `;
 
+function renderMainTable(){
+if (!rows.length) return;
+if (kgAvanceMeta) {
+  const m = kgAvanceMeta;
+  const totPG = rows.reduce((s,r)=>s+r.p1o,0), acumPG = rows.reduce((s,r)=>s+r.p1a,0);
+  const totSB = rows.reduce((s,r)=>s+r.p2o,0), acumSB = rows.reduce((s,r)=>s+r.p2a,0);
+  const totTo = rows.reduce((s,r)=>s+r.to,0), totTa = rows.reduce((s,r)=>s+r.ta,0);
+  const ratio = m.diasHabiles ? m.diasTrabajados/m.diasHabiles : 0;
+  const pctPG = totPG && ratio ? acumPG/(totPG*ratio)*100 : 0;
+  const pctSB = totSB && ratio ? acumSB/(totSB*ratio)*100 : 0;
+  const pctTo = totTo && ratio ? totTa/(totTo*ratio)*100 : 0;
+  document.getElementById('kpi-objetivo-mes').innerHTML = `${fmt(totTo)}<span class="unit">kg</span>`;
+  document.getElementById('kpi-acumulado').innerHTML = `${fmt(totTa)}<span class="unit">kg</span>`;
+  document.getElementById('kpi-avance-fecha').innerHTML = `${fmt(pctTo,1)}<span class="unit">%</span>`;
+  const tendTotal = rows.reduce((s,r)=>s+r.tendencia,0);
+  document.getElementById('kpi-tendencia').innerHTML = `${fmt(tendTotal)}<span class="unit">kg</span>`;
+  const realTotal = rows.reduce((s,r)=>s+r.real,0);
+  document.getElementById('kpi-real-hoy').innerHTML = `${fmt(realTotal)}<span class="unit">kg</span>`;
+  const medianecTotal = rows.reduce((s,r)=>s+r.medianec,0);
+  document.getElementById('kpi-media-necesaria').innerHTML = `${fmt(medianecTotal,1)}<span class="unit">kg/día</span>`;
+  document.getElementById('seg-pg-pct').textContent = fmt(pctPG,1) + '%';
+  document.getElementById('seg-pg-bar').style.width = Math.min(pctPG,100) + '%';
+  document.getElementById('seg-pg-obj').textContent = `Objetivo ${fmt(totPG)} kg`;
+  document.getElementById('seg-pg-acum').textContent = `Acumulado ${fmt(acumPG)} kg`;
+  document.getElementById('seg-sb-pct').textContent = fmt(pctSB,1) + '%';
+  document.getElementById('seg-sb-bar').style.width = Math.min(pctSB,100) + '%';
+  document.getElementById('seg-sb-obj').textContent = `Objetivo ${fmt(totSB)} kg`;
+  document.getElementById('seg-sb-acum').textContent = `Acumulado ${fmt(acumSB)} kg`;
+  const ventaTotal = rows.reduce((s,r)=>s+r.venta,0);
+  document.getElementById('tfoot-main').innerHTML = `
+    <tr>
+      <td class="name">Total PepsiCo</td>
+      <td>${fmt(totPG)}</td><td>${fmt(acumPG)}</td><td>${fmt(pctPG,1)}%</td><td></td>
+      <td>${fmt(totSB)}</td><td>${fmt(acumSB)}</td><td>${fmt(pctSB,1)}%</td><td></td>
+      <td>${fmt(totTo)}</td><td>${fmt(totTa)}</td><td>${fmt(pctTo,1)}%</td>
+      <td>${fmt(rows.reduce((s,r)=>s+r.promedio,0),1)}</td>
+      <td>${fmt(medianecTotal,1)}</td>
+      <td>${fmt(rows.reduce((s,r)=>s+r.penult,0),1)}</td>
+      <td>${fmt(rows.reduce((s,r)=>s+r.ultima,0),1)}</td>
+      <td>${fmt(realTotal,1)}</td>
+      <td>$ ${fmt(ventaTotal)}</td>
+      <td></td>
+      <td></td><td></td><td id="tfoot-compromiso-total"></td>
+    </tr>
+  `;
+}
 const tbody = document.getElementById('tbody');
 tbody.innerHTML = rows.map(r => `
   <tr>
@@ -2258,7 +2226,7 @@ const supInput = document.getElementById('compromiso-supervisor-input');
 (async () => {
   let db = null;
   try {
-    db = await abrirDb();
+    db = await claude.use("db");
   } catch (err) {
     console.error('compromiso: claude.use("db") failed:', err);
   }
@@ -2351,6 +2319,7 @@ const supInput = document.getElementById('compromiso-supervisor-input');
     supRef.set({ value: num, updatedAt: Date.now() }).catch((err) => console.error('compromiso supervisor write failed:', err.code, err.message));
   });
 })();
+}
 
 const DIA_KEY_IP = {Lunes:'lu',Martes:'ma',Miercoles:'mi',Jueves:'ju',Viernes:'vi',Sabado:'sa'};
 const DIAS_JS_IP = ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'];
@@ -2436,7 +2405,7 @@ const ipInputRefs = [];
 (async () => {
   let db = null;
   try {
-    db = await abrirDb();
+    db = await claude.use("db");
   } catch (err) {
     console.error('ip: claude.use("db") failed:', err);
   }
