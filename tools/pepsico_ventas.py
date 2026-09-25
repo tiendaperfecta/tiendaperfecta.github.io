@@ -231,6 +231,14 @@ def main():
 
     ventas = api.ventas(inicio_mes.isoformat(), (hoy + dt.timedelta(days=1)).isoformat())
     print("Ventas traidas (mes en curso):", len(ventas))
+    if ventas:
+        v0 = ventas[-1]
+        campos_fecha = [k for k in v0.keys() if "fecha" in k.lower()]
+        print("DIAG campos de fecha en venta:", campos_fecha)
+        print("DIAG valores:", {k: v0.get(k) for k in campos_fecha})
+        print("DIAG factorPeso en un articulo pepsico:",
+              next((a.get("factorPeso") for a in articulos if es_pepsico((a.get("descripcion") or "").upper())
+                    and a.get("factorPeso")), None))
 
     compra_cliente = {}
     compra_cliente_marca = {}
