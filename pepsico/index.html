@@ -878,12 +878,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
         </tr>
       </thead>
       <tbody id="tbody-invendible"></tbody>
-      <tfoot>
-        <tr>
-          <td class="name">Total PepsiCo</td>
-          <td>$ 484.422.537</td><td>-$ 8.863.826</td><td>1,83%</td>
-        </tr>
-      </tfoot>
+      <tfoot id="tfoot-invendible"></tfoot>
     </table>
   </div>
 
@@ -1137,13 +1132,19 @@ let noCompradoresDetalle = [];
 fetch('no_compradores_detalle.json').then(r => r.json()).then(data => { noCompradoresDetalle = data; }).catch(() => {});
 
 let invendibleDetalle = {};
-fetch('invendible_detalle.json').then(r => r.json()).then(data => { invendibleDetalle = data; }).catch(() => {});
+const invendibleDetallePromise = fetch('invendible_detalle.json').then(r => r.json())
+  .then(data => { invendibleDetalle = data; return data; }).catch(() => ({}));
 
 let combosDetalle = {};
 fetch('combos_detalle.json').then(r => r.json()).then(data => { combosDetalle = data; }).catch(() => {});
 
 let rechazosDetalle = {};
-fetch('rechazos_detalle.json').then(r => r.json()).then(data => { rechazosDetalle = data; }).catch(() => {});
+const rechazosDetallePromise = fetch('rechazos_detalle.json').then(r => r.json())
+  .then(data => { rechazosDetalle = data; return data; }).catch(() => ({}));
+
+let ventaPorVendedor = {};
+const ventaVendedorPromise = fetch('venta_vendedor.json').then(r => r.json())
+  .then(data => { ventaPorVendedor = data; return data; }).catch(() => ({}));
 
 let mnSeguimientoDetalle = [];
 fetch('mn_seguimiento.json').then(r => r.json()).then(data => { mnSeguimientoDetalle = data; }).catch(() => {});
@@ -1368,16 +1369,13 @@ function drillFrescura(codigo) {
 }
 
 let rows = [];
-const VENTA_POR_VENDEDOR = {
-  "Julian Nuñez": 43470200, "Maria Noelia Madia": 32494320, "Ludmila Aylen Martinez": 48937656,
-  "Melanie Larrama": 32696376, "Ezequiel Hack": 38245474, "Agustin Pogorzelski": 33752874,
-  "Camila Martinez": 37574039, "Matias Parada": 34228978, "Nicolas Martinez": 44663697,
-  "Ramiro Rando": 46722890, "Lucas Giayetto": 49232551, "Martinica Rodriguez": 42403482,
-};
 let kgAvanceMeta = null;
-fetch('avance_kg_vendedor.json').then(r => r.json()).then(data => {
+Promise.all([
+  fetch('avance_kg_vendedor.json').then(r => r.json()),
+  ventaVendedorPromise,
+]).then(([data, venta]) => {
   kgAvanceMeta = data;
-  rows = data.vendedores.map(v => ({...v, venta: VENTA_POR_VENDEDOR[v.n] || 0}));
+  rows = data.vendedores.map(v => ({...v, venta: venta[v.n] || 0}));
   rows.sort((a,b) => a.tp - b.tp);
   renderMainTable();
 }).catch(() => {});
@@ -1583,24 +1581,16 @@ tbodyTp.innerHTML = tpFinalRows.map(r => `
   </tr>
 `).join('');
 
-const invendibleRows = [
-  {n:"Ramiro Rando",           venta:46722890, canje:-949528},
-  {n:"Maria Noelia Madia",     venta:32494320, canje:-648524},
-  {n:"Julian Nuñez",           venta:43470200, canje:-732036},
-  {n:"Matias Parada",          venta:34228978, canje:-577923},
-  {n:"Melanie Larrama",        venta:32696376, canje:-563814},
-  {n:"Agustin Pogorzelski",    venta:33752874, canje:-562751},
-  {n:"Lucas Giayetto",         venta:49232551, canje:-596930},
-  {n:"Ezequiel Hack",          venta:38245474, canje:-420839},
-  {n:"Camila Martinez",        venta:37574039, canje:-419636},
-  {n:"Martinica Rodriguez",    venta:42403482, canje:-441124},
-  {n:"Nicolas Martinez",       venta:44663697, canje:-367769},
-  {n:"Ludmila Aylen Martinez", venta:48937656, canje:-306022},
-];
-invendibleRows.forEach(r => { r.pct = r.venta ? Math.abs(r.canje)/r.venta*100 : 0; });
+Promise.all([invendibleDetallePromise, ventaVendedorPromise]).then(([detalle, venta]) => {
+  const invendibleRows = Object.keys(detalle).map(n => {
+    const canje = detalle[n].reduce((s, x) => s + x.importe, 0);
+    const v = venta[n] || 0;
+    return { n, venta: v, canje, pct: v ? Math.abs(canje) / v * 100 : 0 };
+  });
+  invendibleRows.sort((a, b) => b.pct - a.pct);
+  const tot = invendibleRows.reduce((acc, r) => { acc.venta += r.venta; acc.canje += r.canje; return acc; }, { venta: 0, canje: 0 });
 
-const tbodyInvendible = document.getElementById('tbody-invendible');
-tbodyInvendible.innerHTML = invendibleRows.map(r => `
+  document.getElementById('tbody-invendible').innerHTML = invendibleRows.map(r => `
   <tr>
     <td class="name clickable" onclick="drillInvendible('${r.n}')">${r.n}</td>
     <td>$ ${fmt(r.venta)}</td>
@@ -1608,27 +1598,26 @@ tbodyInvendible.innerHTML = invendibleRows.map(r => `
     <td><span class="pill ${r.pct<=1.5?'good':r.pct<=2.5?'warn':'bad'}">${fmt(r.pct,2)}%</span></td>
   </tr>
 `).join('');
+  document.getElementById('tfoot-invendible').innerHTML = `
+  <tr>
+    <td class="name">Total PepsiCo</td>
+    <td>$ ${fmt(tot.venta)}</td>
+    <td>-$ ${fmt(Math.abs(tot.canje))}</td>
+    <td>${fmt(tot.venta ? Math.abs(tot.canje)/tot.venta*100 : 0,2)}%</td>
+  </tr>
+`;
+}).catch(() => {});
 
-const rechazoRows = [
-  {n:"Ezequiel Hack",           venta:38245474, rechazo:-1552089},
-  {n:"Lucas Giayetto",          venta:49232551, rechazo:-1116541},
-  {n:"Camila Martinez",         venta:37574039, rechazo:-956456},
-  {n:"Nicolas Martinez",        venta:44663697, rechazo:-993409},
-  {n:"Ludmila Aylen Martinez",  venta:48937656, rechazo:-819717},
-  {n:"Melanie Larrama",         venta:32696376, rechazo:-597031},
-  {n:"Agustin Pogorzelski",     venta:33752874, rechazo:-535080},
-  {n:"Ramiro Rando",            venta:46722890, rechazo:-597816},
-  {n:"Matias Parada",           venta:34228978, rechazo:-493808},
-  {n:"Julian Nuñez",            venta:43470200, rechazo:-484803},
-  {n:"Maria Noelia Madia",      venta:32494320, rechazo:-99823},
-  {n:"Martinica Rodriguez",     venta:42403482, rechazo:-353421},
-];
-rechazoRows.forEach(r => { r.pct = r.venta ? Math.abs(r.rechazo)/r.venta*100 : 0; });
-rechazoRows.sort((a,b) => b.pct - a.pct);
-const rechazoTot = rechazoRows.reduce((acc,r) => { acc.venta += r.venta; acc.rechazo += r.rechazo; return acc; }, {venta:0, rechazo:0});
+Promise.all([rechazosDetallePromise, ventaVendedorPromise]).then(([detalle, venta]) => {
+  const rechazoRows = Object.keys(detalle).map(n => {
+    const rechazo = detalle[n].reduce((s, x) => s + x.importe, 0);
+    const v = venta[n] || 0;
+    return { n, venta: v, rechazo, pct: v ? Math.abs(rechazo) / v * 100 : 0 };
+  });
+  rechazoRows.sort((a, b) => b.pct - a.pct);
+  const rechazoTot = rechazoRows.reduce((acc, r) => { acc.venta += r.venta; acc.rechazo += r.rechazo; return acc; }, { venta: 0, rechazo: 0 });
 
-const tbodyRechazos = document.getElementById('tbody-rechazos');
-tbodyRechazos.innerHTML = rechazoRows.map(r => `
+  document.getElementById('tbody-rechazos').innerHTML = rechazoRows.map(r => `
   <tr>
     <td class="name clickable" onclick="drillRechazo('${r.n}')">${r.n}</td>
     <td>$ ${fmt(r.venta)}</td>
@@ -1636,14 +1625,15 @@ tbodyRechazos.innerHTML = rechazoRows.map(r => `
     <td><span class="pill ${r.pct<=1.5?'good':r.pct<=3?'warn':'bad'}">${fmt(r.pct,2)}%</span></td>
   </tr>
 `).join('');
-document.getElementById('tfoot-rechazos').innerHTML = `
+  document.getElementById('tfoot-rechazos').innerHTML = `
   <tr>
     <td class="name">Total PepsiCo</td>
     <td>$ ${fmt(rechazoTot.venta)}</td>
     <td>-$ ${fmt(Math.abs(rechazoTot.rechazo))}</td>
-    <td>${fmt(Math.abs(rechazoTot.rechazo)/rechazoTot.venta*100,2)}%</td>
+    <td>${fmt(rechazoTot.venta ? Math.abs(rechazoTot.rechazo)/rechazoTot.venta*100 : 0,2)}%</td>
   </tr>
 `;
+}).catch(() => {});
 
 const motivoRows = [
   {motivo:"RECHAZO",                                       cant:1189, importe:-2214724},
@@ -2018,6 +2008,13 @@ function renderCcc2Section(){
     r.totAv = segAvance(r.totObj, r.totCumple);
   });
   ccc2Rows.sort((a,b) => a.totAv - b.totAv);
+  const ccc2Tot = ccc2Rows.reduce((acc,r) => {
+    acc.ao+=r.ao; acc.ac+=r.ac; acc.bo+=r.bo; acc.bc+=r.bc;
+    acc.co+=r.co; acc.cc+=r.cc; acc.do_+=r.do_; acc.dc+=r.dc;
+    return acc;
+  }, {ao:0,ac:0,bo:0,bc:0,co:0,cc:0,do_:0,dc:0});
+  const ccc2TotObj = ccc2Tot.ao+ccc2Tot.bo+ccc2Tot.co+ccc2Tot.do_;
+  const ccc2TotCumple = ccc2Tot.ac+ccc2Tot.bc+ccc2Tot.cc+ccc2Tot.dc;
 
   const tbodyCcc2 = document.getElementById('tbody-ccc2');
   tbodyCcc2.innerHTML = ccc2Rows.map(r => `
@@ -2034,29 +2031,33 @@ function renderCcc2Section(){
     <td>${fmt(r.totObj)}</td><td>${fmt(r.totCumple)}</td><td><span class="pill ${tier(r.totAv)}">${fmt(r.totAv,1)}%</span></td>
   </tr>
 `).join('');
+  document.querySelector('#tbody-ccc2').closest('table').querySelector('tfoot').innerHTML = `
+  <tr>
+    <td class="name">Total PepsiCo</td>
+    <td>${fmt(ccc2Tot.ao)}</td><td>${fmt(ccc2Tot.ac)}</td><td>${fmt(segAvance(ccc2Tot.ao,ccc2Tot.ac),1)}%</td><td></td>
+    <td>${fmt(ccc2Tot.bo)}</td><td>${fmt(ccc2Tot.bc)}</td><td>${fmt(segAvance(ccc2Tot.bo,ccc2Tot.bc),1)}%</td><td></td>
+    <td>${fmt(ccc2Tot.co)}</td><td>${fmt(ccc2Tot.cc)}</td><td>${fmt(segAvance(ccc2Tot.co,ccc2Tot.cc),1)}%</td><td></td>
+    <td>${fmt(ccc2Tot.do_)}</td><td>${fmt(ccc2Tot.dc)}</td><td>${fmt(segAvance(ccc2Tot.do_,ccc2Tot.dc),1)}%</td><td></td>
+    <td>${fmt(ccc2TotObj)}</td><td>${fmt(ccc2TotCumple)}</td><td>${fmt(segAvance(ccc2TotObj,ccc2TotCumple),1)}%</td>
+  </tr>
+`;
 }
 
-const noCompraRows = [
-  {n:"Matias Parada",           lu:[11,45], ma:[3,42],  mi:[3,42],  ju:[13,42], vi:[6,23],  sa:[5,21],  totNc:41,  totU:215},
-  {n:"Ezequiel Hack",           lu:[4,42],  ma:[4,42],  mi:[3,49],  ju:[12,41], vi:[12,33], sa:[5,14],  totNc:40,  totU:221},
-  {n:"Martinica Rodriguez",     lu:[2,43],  ma:[4,50],  mi:[2,47],  ju:[5,42],  vi:[13,36], sa:[11,35], totNc:37,  totU:253},
-  {n:"Lucas Giayetto",          lu:[1,32],  ma:[2,43],  mi:[2,41],  ju:[8,37],  vi:[13,55], sa:[7,26],  totNc:33,  totU:234},
-  {n:"Melanie Larrama",         lu:[3,39],  ma:[0,37],  mi:[1,22],  ju:[9,43],  vi:[8,37],  sa:[4,23],  totNc:25,  totU:201},
-  {n:"Julian Nuñez",            lu:[0,37],  ma:[0,39],  mi:[2,35],  ju:[9,38],  vi:[8,29],  sa:[5,10],  totNc:24,  totU:188},
-  {n:"Ludmila Aylen Martinez",  lu:[5,40],  ma:[2,37],  mi:[1,42],  ju:[1,29],  vi:[5,34],  sa:[9,21],  totNc:23,  totU:203},
-  {n:"Agustin Pogorzelski",     lu:[5,32],  ma:[2,33],  mi:[4,46],  ju:[1,43],  vi:[9,35],  sa:[2,14],  totNc:23,  totU:203},
-  {n:"Camila Martinez",         lu:[0,43],  ma:[3,42],  mi:[0,34],  ju:[11,52], vi:[6,36],  sa:[0,9],   totNc:20,  totU:216},
-  {n:"Ramiro Rando",            lu:[2,34],  ma:[2,38],  mi:[0,40],  ju:[7,51],  vi:[4,42],  sa:[3,19],  totNc:18,  totU:224},
-  {n:"Nicolas Martinez",        lu:[2,40],  ma:[1,39],  mi:[3,37],  ju:[3,36],  vi:[3,37],  sa:[4,22],  totNc:16,  totU:211},
-  {n:"Maria Noelia Madia",      lu:[3,39],  ma:[1,28],  mi:[1,33],  ju:[0,27],  vi:[9,38],  sa:[2,12],  totNc:16,  totU:177},
-];
+let noCompraRows = [];
+fetch('no_compradores_por_dia.json').then(r => r.json()).then(data => {
+  noCompraRows = data.vendedores;
+  renderNoCompraSection();
+}).catch(() => {});
+
 function tierNoCompra(p){ return p<=20 ? 'good' : p<=28 ? 'warn' : 'bad'; }
 function fmtCell([nc,u]){ return `${nc}/${u}`; }
 
-const tbodyNc = document.getElementById('tbody-nocompra');
-tbodyNc.innerHTML = noCompraRows.map(r => {
-  const pct = r.totU ? r.totNc/r.totU*100 : 0;
-  return `
+function renderNoCompraSection(){
+  if (!noCompraRows.length) return;
+  const tbodyNc = document.getElementById('tbody-nocompra');
+  tbodyNc.innerHTML = noCompraRows.map(r => {
+    const pct = r.totU ? r.totNc/r.totU*100 : 0;
+    return `
   <tr>
     <td class="name">${r.n}</td>
     <td class="clickable" onclick="drillByDia('${r.n}','Lunes')">${fmtCell(r.lu)}</td>
@@ -2068,6 +2069,20 @@ tbodyNc.innerHTML = noCompraRows.map(r => {
     <td class="clickable" onclick="drillByDia('${r.n}','Total')"><span class="pill ${tierNoCompra(pct)}">${r.totNc}/${r.totU}</span></td>
   </tr>
 `;}).join('');
+  const tot = noCompraRows.reduce((acc,r) => {
+    for (const k of ['lu','ma','mi','ju','vi','sa']) { acc[k][0]+=r[k][0]; acc[k][1]+=r[k][1]; }
+    acc.totNc += r.totNc; acc.totU += r.totU;
+    return acc;
+  }, {lu:[0,0],ma:[0,0],mi:[0,0],ju:[0,0],vi:[0,0],sa:[0,0],totNc:0,totU:0});
+  document.querySelector('#tbody-nocompra').closest('table').querySelector('tfoot').innerHTML = `
+  <tr>
+    <td class="name">Total PepsiCo</td>
+    <td>${fmtCell(tot.lu)}</td><td>${fmtCell(tot.ma)}</td><td>${fmtCell(tot.mi)}</td>
+    <td>${fmtCell(tot.ju)}</td><td>${fmtCell(tot.vi)}</td><td>${fmtCell(tot.sa)}</td>
+    <td>${tot.totNc}/${tot.totU}</td>
+  </tr>
+`;
+}
 
 const tbodyMn = document.getElementById('tbody-mn');
 tbodyMn.innerHTML = mnRows.map(r => `
