@@ -524,7 +524,8 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
   <h2 class="section-title">Cobertura por marca y vendedor</h2>
   <p class="section-note">
     Cobertura = clientes con 3 o mÃ¡s unidades de la marca en el perÃ­odo Ã· universo de clientes del vendedor.
-    PerÃ­odo 01/09-22/09. Color relativo por columna (rojo = mÃ¡s bajo, verde = mÃ¡s alto dentro de esa marca).
+    PerÃ­odo 01/09-25/09, actualizado automÃ¡ticamente por API dos veces por dÃ­a. Color relativo por columna
+    (rojo = mÃ¡s bajo, verde = mÃ¡s alto dentro de esa marca).
   </p>
 
   <div class="table-scroll">
@@ -560,9 +561,9 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
   </div>
 
   <p class="foot-note">
-    Fuente: <code>Detallado de ventas extendido Pepsico</code> (campo <code>Marca</code>, <code>CantBase</code> por
-    cliente, <code>FechaCarga</code> 01/09-22/09, empresas Tienda Perfecta + Pex, proveedor Pepsico de
-    Argentina SRL) cruzado con el universo de clientes por vendedor de <code>Clientes Claude.xlsx</code>. La columna
+    Fuente: GesCom API â€” marca detectada por coincidencia de texto contra la descripciÃ³n del artÃ­culo (la API no
+    trae un campo de marca legible, asÃ­ que es una aproximaciÃ³n, no un campo estructurado). Universo = clientes
+    con ruta asignada y vendedor entre los 12 de calle. Actualizado automÃ¡ticamente dos veces por dÃ­a. La columna
     <b>Venta $</b> de la tabla "Por vendedor" sale de una exportaciÃ³n manual mÃ¡s reciente de
     <code>Detallado de ventas extendido Pepsico</code> (22/09), filtrado por <code>FechaCarga</code> entre el
     <b>01/09 y el 22/09</b>, sumando <code>ImporteItem</code> tal cual viene en el archivo (los tipos de venta que
@@ -574,10 +575,11 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
   <p class="section-note">
     CCC = clientes con compra sobre el universo asignado, por segmento de cliente (A/B/C/D). Objetivo total
     Tienda Perfecta: A 384 Â· B 337 Â· C 669 Â· D 903 (2.293 clientes) â€” prorrateado por vendedor segÃºn su
-    participaciÃ³n de clientes en cada segmento y redondeado a nÃºmeros enteros (por eso la suma de cada
-    segmento cierra exacto contra el objetivo oficial). Cumple = cliente con compra de Pepsico y mÃ¡s de 3
-    unidades entre el 01/09 y el 22/09. Ordenado de menor a mayor avance total. Click en el % de Avance de
-    cada segmento para ver el detalle de los clientes que todavÃ­a no compraron.
+    participaciÃ³n de clientes en cada segmento y redondeado a nÃºmeros enteros (el redondeo por vendedor puede
+    no cerrar exacto contra el objetivo oficial; el total de la tabla usa siempre el oficial). Cumple = cliente
+    con compra de Pepsico y mÃ¡s de 3 unidades entre el 01/09 y el 25/09, actualizado automÃ¡ticamente por API dos
+    veces por dÃ­a. Ordenado de menor a mayor avance total. Click en el % de Avance de cada segmento para ver el
+    detalle de los clientes que todavÃ­a no compraron.
   </p>
 
   <div class="table-scroll">
@@ -620,22 +622,21 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
       <tfoot>
         <tr>
           <td class="name">Total PepsiCo</td>
-          <td>384</td><td>391</td><td>101,8%</td><td></td>
-          <td>337</td><td>306</td><td>90,8%</td><td></td>
-          <td>669</td><td>632</td><td>94,5%</td><td></td>
-          <td>903</td><td>727</td><td>80,5%</td><td></td>
-          <td>2.293</td><td>2.056</td><td>89,7%</td>
+          <td>384</td><td>386</td><td>100,5%</td><td></td>
+          <td>337</td><td>296</td><td>87,8%</td><td></td>
+          <td>669</td><td>650</td><td>97,2%</td><td></td>
+          <td>903</td><td>862</td><td>95,5%</td><td></td>
+          <td>2.293</td><td>2.194</td><td>95,7%</td>
         </tr>
       </tfoot>
     </table>
   </div>
 
   <p class="foot-note">
-    Fuente: segmento y vendedor de <code>Clientes Claude.xlsx</code> (base propia, columnas SegmentoClienteCodigo
-    y Vendedor) cruzada con <code>Detallado de ventas extendido Pepsico</code> (unidades por cliente,
-    <code>FechaCarga</code> 01/09-22/09, empresas Tienda Perfecta + Pex, proveedor Pepsico). El objetivo
-    global (384/337/669/903) es el que confirmaste; el reparto por vendedor es una estimaciÃ³n proporcional, no un
-    objetivo oficial cargado en Gescom.
+    Fuente: GesCom API (segmento y vendedor del cliente, unidades vendidas del mes en curso). El objetivo
+    global (384/337/669/903) es el que confirmaste; el reparto por vendedor es una estimaciÃ³n proporcional segÃºn
+    la composiciÃ³n real de clientes por segmento, no un objetivo oficial cargado en Gescom. Actualizado
+    automÃ¡ticamente dos veces por dÃ­a.
   </p>
 
   <h3 class="subsection-title">No compradores por dÃ­a de visita</h3>
@@ -1434,25 +1435,8 @@ const mnRows = [
   {n:"Julian NuÃ±ez",            mn:1590.21, acum:1837.64, share:86.54, avanceMn:89.30, universo:190, registrado:173, activos:133, fullyDigital:115},
 ];
 
-const marcaVendRows = [
-  {codven:"1",  n:"Maria Noelia Madia",     universo:179, "3Ds":57.0,"Cheetos":51.4,"Doritos":68.7,"Lays":70.9,"Pehuamar":58.1,"Pep":58.1,"Quaker":5.0,"Tostitos":16.8,"Twistos":58.7},
-  {codven:"2",  n:"Julian NuÃ±ez",           universo:188, "3Ds":53.2,"Cheetos":53.2,"Doritos":69.1,"Lays":70.7,"Pehuamar":53.7,"Pep":50.5,"Quaker":5.9,"Tostitos":14.9,"Twistos":50.0},
-  {codven:"3",  n:"Ezequiel Hack",          universo:221, "3Ds":55.7,"Cheetos":53.8,"Doritos":68.3,"Lays":57.5,"Pehuamar":37.6,"Pep":45.7,"Quaker":1.4,"Tostitos":13.1,"Twistos":39.4},
-  {codven:"4",  n:"Lucas Giayetto",         universo:234, "3Ds":54.3,"Cheetos":58.5,"Doritos":73.1,"Lays":61.5,"Pehuamar":47.0,"Pep":56.0,"Quaker":7.3,"Tostitos":8.5,"Twistos":39.3},
-  {codven:"5",  n:"Nicolas Martinez",       universo:211, "3Ds":65.9,"Cheetos":63.0,"Doritos":79.1,"Lays":74.9,"Pehuamar":56.4,"Pep":61.1,"Quaker":7.1,"Tostitos":12.8,"Twistos":56.4},
-  {codven:"6",  n:"Camila Martinez",        universo:217, "3Ds":58.1,"Cheetos":56.2,"Doritos":77.0,"Lays":78.3,"Pehuamar":62.2,"Pep":53.0,"Quaker":2.8,"Tostitos":21.2,"Twistos":51.6},
-  {codven:"7",  n:"Ramiro Rando",           universo:224, "3Ds":61.2,"Cheetos":58.0,"Doritos":75.9,"Lays":68.8,"Pehuamar":53.6,"Pep":62.9,"Quaker":3.6,"Tostitos":10.7,"Twistos":45.5},
-  {codven:"8",  n:"Martinica Rodriguez",    universo:253, "3Ds":49.4,"Cheetos":42.3,"Doritos":70.4,"Lays":57.7,"Pehuamar":43.9,"Pep":45.5,"Quaker":3.2,"Tostitos":8.3,"Twistos":44.7},
-  {codven:"9",  n:"Ludmila Aylen Martinez", universo:203, "3Ds":64.5,"Cheetos":62.1,"Doritos":74.9,"Lays":71.9,"Pehuamar":63.5,"Pep":54.7,"Quaker":4.9,"Tostitos":13.3,"Twistos":48.3},
-  {codven:"10", n:"Matias Parada",          universo:215, "3Ds":52.6,"Cheetos":55.8,"Doritos":68.8,"Lays":64.2,"Pehuamar":37.7,"Pep":52.6,"Quaker":3.7,"Tostitos":11.6,"Twistos":47.0},
-  {codven:"11", n:"Melanie Larrama",        universo:201, "3Ds":61.2,"Cheetos":56.7,"Doritos":72.1,"Lays":74.6,"Pehuamar":64.2,"Pep":50.2,"Quaker":2.0,"Tostitos":9.0,"Twistos":48.8},
-  {codven:"12", n:"Agustin Pogorzelski",    universo:203, "3Ds":59.6,"Cheetos":58.1,"Doritos":71.9,"Lays":66.5,"Pehuamar":54.2,"Pep":49.3,"Quaker":3.9,"Tostitos":9.4,"Twistos":53.7},
-];
+let marcaVendRows = [];
 const MARCA_COLS = ["3Ds","Cheetos","Doritos","Lays","Pehuamar","Pep","Quaker","Tostitos","Twistos"];
-const marcaVendTotal = {universo: marcaVendRows.reduce((s,r)=>s+r.universo,0)};
-MARCA_COLS.forEach(m => {
-  marcaVendTotal[m] = Math.round(marcaVendRows.reduce((s,r)=>s+r[m]*r.universo,0) / marcaVendTotal.universo * 10) / 10;
-});
 const marcaObjRows = [
   {marca:"3Ds",      obj:72.98},
   {marca:"Cheetos",  obj:70.79},
@@ -1464,10 +1448,10 @@ const marcaObjRows = [
   {marca:"Tostitos", obj:14.02},
   {marca:"Twistos",  obj:54.71},
 ];
-marcaObjRows.forEach(r => {
-  r.cob = marcaVendTotal[r.marca];
-  r.cump = r.obj ? r.cob / r.obj * 100 : 0;
-});
+fetch('cobertura_marca_vendedor.json').then(r => r.json()).then(data => {
+  marcaVendRows = data.vendedores;
+  renderMarcaSection();
+}).catch(() => {});
 
 function heatColor(v, min, max){
   const t = max > min ? (v - min) / (max - min) : 0.5;
@@ -2008,67 +1992,73 @@ document.getElementById('tfoot-combosMnDetalle').innerHTML = `
   </tr>
 `;
 
-const marcaColMinMax = {};
-MARCA_COLS.forEach(m => {
-  const vals = marcaVendRows.map(r => r[m]);
-  marcaColMinMax[m] = {min: Math.min(...vals), max: Math.max(...vals)};
-});
-function heatCell(m, v){
-  const {min,max} = marcaColMinMax[m];
-  const {bg,fg} = heatColor(v, min, max);
-  return `<td style="background:${bg};color:${fg};font-weight:600">${fmt(v,1)}%</td>`;
+function renderMarcaSection(){
+  if (!marcaVendRows.length) return;
+  const marcaVendTotal = {universo: marcaVendRows.reduce((s,r)=>s+r.universo,0)};
+  MARCA_COLS.forEach(m => {
+    marcaVendTotal[m] = Math.round(marcaVendRows.reduce((s,r)=>s+r[m]*r.universo,0) / marcaVendTotal.universo * 10) / 10;
+  });
+  marcaObjRows.forEach(r => {
+    r.cob = marcaVendTotal[r.marca];
+    r.cump = r.obj ? r.cob / r.obj * 100 : 0;
+  });
+
+  const marcaColMinMax = {};
+  MARCA_COLS.forEach(m => {
+    const vals = marcaVendRows.map(r => r[m]);
+    marcaColMinMax[m] = {min: Math.min(...vals), max: Math.max(...vals)};
+  });
+  function heatCell(m, v){
+    const {min,max} = marcaColMinMax[m];
+    const {bg,fg} = heatColor(v, min, max);
+    return `<td style="background:${bg};color:${fg};font-weight:600">${fmt(v,1)}%</td>`;
+  }
+  const tbodyMarcaObj = document.getElementById('tbody-marcaObj');
+  tbodyMarcaObj.innerHTML = marcaObjRows.map(r => `
+    <tr>
+      <td class="name">${r.marca === 'Pehuamar' ? `<span class="clickable" onclick="drillPehuamar()">${r.marca}</span>` : r.marca === 'Lays' ? `<span class="clickable" onclick="drillLays()">${r.marca}</span>` : r.marca === 'Tostitos' ? `<span class="clickable" onclick="drillTostitos()">${r.marca}</span>` : r.marca}</td>
+      <td>${fmt(r.obj,1)}%</td>
+      <td>${fmt(r.cob,1)}%</td>
+      <td><span class="pill ${tier(r.cump)}">${fmt(r.cump,1)}%</span></td>
+    </tr>
+  `).join('');
+
+  const tbodyMarcaVend = document.getElementById('tbody-marcaVend');
+  tbodyMarcaVend.innerHTML = marcaVendRows.map(r => `
+    <tr>
+      <td class="name">${r.codven} - ${r.n}</td>
+      <td>${fmt(r.universo)}</td>
+      ${MARCA_COLS.map(m => heatCell(m, r[m])).join('')}
+    </tr>
+  `).join('');
+  const tfootMarcaVend = document.getElementById('tfoot-marcaVend');
+  tfootMarcaVend.innerHTML = `
+    <tr>
+      <td class="name">Total PepsiCo</td>
+      <td>${fmt(marcaVendTotal.universo)}</td>
+      ${MARCA_COLS.map(m => `<td>${fmt(marcaVendTotal[m],1)}%</td>`).join('')}
+    </tr>
+  `;
 }
-const tbodyMarcaObj = document.getElementById('tbody-marcaObj');
-tbodyMarcaObj.innerHTML = marcaObjRows.map(r => `
-  <tr>
-    <td class="name">${r.marca === 'Pehuamar' ? `<span class="clickable" onclick="drillPehuamar()">${r.marca}</span>` : r.marca === 'Lays' ? `<span class="clickable" onclick="drillLays()">${r.marca}</span>` : r.marca === 'Tostitos' ? `<span class="clickable" onclick="drillTostitos()">${r.marca}</span>` : r.marca}</td>
-    <td>${fmt(r.obj,1)}%</td>
-    <td>${fmt(r.cob,1)}%</td>
-    <td><span class="pill ${tier(r.cump)}">${fmt(r.cump,1)}%</span></td>
-  </tr>
-`).join('');
 
-const tbodyMarcaVend = document.getElementById('tbody-marcaVend');
-tbodyMarcaVend.innerHTML = marcaVendRows.map(r => `
-  <tr>
-    <td class="name">${r.codven} - ${r.n}</td>
-    <td>${fmt(r.universo)}</td>
-    ${MARCA_COLS.map(m => heatCell(m, r[m])).join('')}
-  </tr>
-`).join('');
-const tfootMarcaVend = document.getElementById('tfoot-marcaVend');
-tfootMarcaVend.innerHTML = `
-  <tr>
-    <td class="name">Total PepsiCo</td>
-    <td>${fmt(marcaVendTotal.universo)}</td>
-    ${MARCA_COLS.map(m => `<td>${fmt(marcaVendTotal[m],1)}%</td>`).join('')}
-  </tr>
-`;
-
-const ccc2Rows = [
-  {n:"Ezequiel Hack",           ao:26,ac:25,bo:25,bc:20,co:54,cc:47,do_:92,dc:69},
-  {n:"Martinica Rodriguez",     ao:26,ac:28,bo:23,bc:20,co:58,cc:55,do_:115,dc:90},
-  {n:"Lucas Giayetto",          ao:41,ac:41,bo:32,bc:29,co:44,cc:44,do_:92,dc:72},
-  {n:"Ludmila Aylen Martinez",  ao:39,ac:41,bo:24,bc:22,co:58,cc:49,do_:63,dc:54},
-  {n:"Matias Parada",           ao:31,ac:31,bo:16,bc:15,co:58,cc:53,do_:86,dc:62},
-  {n:"Julian NuÃ±ez",            ao:37,ac:38,bo:20,bc:19,co:50,cc:50,do_:63,dc:44},
-  {n:"Melanie Larrama",         ao:25,ac:24,bo:33,bc:29,co:59,cc:57,do_:65,dc:57},
-  {n:"Agustin Pogorzelski",     ao:26,ac:27,bo:27,bc:24,co:59,cc:55,do_:71,dc:56},
-  {n:"Camila Martinez",         ao:25,ac:25,bo:32,bc:31,co:71,cc:71,do_:68,dc:62},
-  {n:"Ramiro Rando",            ao:42,ac:43,bo:41,bc:38,co:47,cc:47,do_:73,dc:62},
-  {n:"Maria Noelia Madia",      ao:30,ac:30,bo:32,bc:27,co:55,cc:48,do_:47,dc:41},
-  {n:"Nicolas Martinez",        ao:36,ac:38,bo:32,bc:32,co:56,cc:56,do_:68,dc:58},
-];
+let ccc2Rows = [];
 function segAvance(o,c){ return o ? c/o*100 : 0; }
-ccc2Rows.forEach(r => {
-  r.aAv = segAvance(r.ao,r.ac); r.bAv = segAvance(r.bo,r.bc); r.cAv = segAvance(r.co,r.cc); r.dAv = segAvance(r.do_,r.dc);
-  r.totObj = r.ao+r.bo+r.co+r.do_; r.totCumple = r.ac+r.bc+r.cc+r.dc;
-  r.totAv = segAvance(r.totObj, r.totCumple);
-});
-ccc2Rows.sort((a,b) => a.totAv - b.totAv);
+fetch('ccc_segmento.json').then(r => r.json()).then(data => {
+  ccc2Rows = data.vendedores;
+  renderCcc2Section();
+}).catch(() => {});
 
-const tbodyCcc2 = document.getElementById('tbody-ccc2');
-tbodyCcc2.innerHTML = ccc2Rows.map(r => `
+function renderCcc2Section(){
+  if (!ccc2Rows.length) return;
+  ccc2Rows.forEach(r => {
+    r.aAv = segAvance(r.ao,r.ac); r.bAv = segAvance(r.bo,r.bc); r.cAv = segAvance(r.co,r.cc); r.dAv = segAvance(r.do_,r.dc);
+    r.totObj = r.ao+r.bo+r.co+r.do_; r.totCumple = r.ac+r.bc+r.cc+r.dc;
+    r.totAv = segAvance(r.totObj, r.totCumple);
+  });
+  ccc2Rows.sort((a,b) => a.totAv - b.totAv);
+
+  const tbodyCcc2 = document.getElementById('tbody-ccc2');
+  tbodyCcc2.innerHTML = ccc2Rows.map(r => `
   <tr>
     <td class="name">${r.n}</td>
     <td>${fmt(r.ao)}</td><td>${fmt(r.ac)}</td><td class="clickable" onclick="drillBySegmento('${r.n}','A')"><span class="pill ${tier(r.aAv)}">${fmt(r.aAv,1)}%</span></td>
@@ -2082,6 +2072,7 @@ tbodyCcc2.innerHTML = ccc2Rows.map(r => `
     <td>${fmt(r.totObj)}</td><td>${fmt(r.totCumple)}</td><td><span class="pill ${tier(r.totAv)}">${fmt(r.totAv,1)}%</span></td>
   </tr>
 `).join('');
+}
 
 const noCompraRows = [
   {n:"Matias Parada",           lu:[11,45], ma:[3,42],  mi:[3,42],  ju:[13,42], vi:[6,23],  sa:[5,21],  totNc:41,  totU:215},
