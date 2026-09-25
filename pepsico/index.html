@@ -1206,6 +1206,10 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
   </div>
 </div>
 
+<!-- Reemplazo de claude.use("db"), que solo existe corriendo como Artifact de Claude.
+     Vive en db.js aparte a proposito: si se regenera index.html desde otra PC, lo unico
+     que hay que conservar es esta linea. Ver pepsico-db/README.md. -->
+<script src="db.js"></script>
 <script>
 let noCompradoresDetalle = [];
 fetch('no_compradores_detalle.json').then(r => r.json()).then(data => { noCompradoresDetalle = data; }).catch(() => {});
@@ -2254,7 +2258,7 @@ const supInput = document.getElementById('compromiso-supervisor-input');
 (async () => {
   let db = null;
   try {
-    db = await claude.use("db");
+    db = await abrirDb();
   } catch (err) {
     console.error('compromiso: claude.use("db") failed:', err);
   }
@@ -2432,7 +2436,7 @@ const ipInputRefs = [];
 (async () => {
   let db = null;
   try {
-    db = await claude.use("db");
+    db = await abrirDb();
   } catch (err) {
     console.error('ip: claude.use("db") failed:', err);
   }

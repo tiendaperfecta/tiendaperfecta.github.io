@@ -12,10 +12,24 @@ deshabilitados con "no disp." y los totales en `n/d`. Este worker los reemplaza
 con el mismo patrón que ya usan `ventas`, `transferencias` y `arca-vs-gescom`:
 un worker con KV.
 
-Del lado del panel, el reemplazo es un shim de ~140 líneas dentro de
-`pepsico/index.html` que expone la misma superficie que usaba el código
-(`doc().onSnapshot()`, `doc().set()`, `collection().onSnapshot()`), así no hubo
-que tocar nada más: sólo cambiaron las dos llamadas a `claude.use("db")`.
+Del lado del panel, el reemplazo es `pepsico/db.js`: expone la misma superficie
+que usaba el código (`doc().onSnapshot()`, `doc().set()`,
+`collection().onSnapshot()`), así no hay que tocar nada más.
+
+## Si regenerás index.html desde otra PC, leé esto
+
+El 25/09/2026 una regeneración del panel desde la otra PC **borró este
+reemplazo** y los campos volvieron a quedar en "no disp." durante unas horas,
+sin que nada lo avisara. Por eso el código vive en `db.js` aparte y no inyectado:
+lo único que hay que conservar en `index.html` son **dos cosas**, y si se pierden
+el panel no falla de forma visible, simplemente deja de guardar.
+
+1. La etiqueta, antes del `<script>` del panel:
+   `<script src="db.js"></script>`
+2. Las dos llamadas: `await abrirDb()` en lugar de `await claude.use("db")`.
+
+Lo correcto es que el generador que arma `index.html` en esa PC emita las dos
+cosas. Mientras no las emita, cada regeneración va a volver a romperlo.
 
 ## API
 
