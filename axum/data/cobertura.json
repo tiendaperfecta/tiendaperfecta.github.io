@@ -3,6 +3,15 @@
  "diaSemana": "sabado",
  "bySeller": [
   {
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "ruta": 26,
+   "visitadosDeRuta": 17,
+   "pendientes": 9,
+   "fueraDeRuta": 9,
+   "pct": 65.4
+  },
+  {
    "sellerId": "7",
    "vendedor": "Ramiro Rando",
    "ruta": 19,
@@ -12,13 +21,13 @@
    "pct": 63.2
   },
   {
-   "sellerId": "4",
-   "vendedor": "Lucas Giayetto",
-   "ruta": 26,
-   "visitadosDeRuta": 16,
-   "pendientes": 10,
-   "fueraDeRuta": 9,
-   "pct": 61.5
+   "sellerId": "6",
+   "vendedor": "Camila Martinez",
+   "ruta": 15,
+   "visitadosDeRuta": 9,
+   "pendientes": 6,
+   "fueraDeRuta": 55,
+   "pct": 60.0
   },
   {
    "sellerId": "12",
@@ -30,21 +39,12 @@
    "pct": 35.7
   },
   {
-   "sellerId": "6",
-   "vendedor": "Camila Martinez",
-   "ruta": 15,
-   "visitadosDeRuta": 4,
-   "pendientes": 11,
-   "fueraDeRuta": 45,
-   "pct": 26.7
-  },
-  {
    "sellerId": "2",
    "vendedor": "Julian Nuñez",
    "ruta": 11,
    "visitadosDeRuta": 2,
    "pendientes": 9,
-   "fueraDeRuta": 53,
+   "fueraDeRuta": 58,
    "pct": 18.2
   },
   {
@@ -62,7 +62,7 @@
    "ruta": 22,
    "visitadosDeRuta": 0,
    "pendientes": 22,
-   "fueraDeRuta": 36,
+   "fueraDeRuta": 37,
    "pct": 0.0
   },
   {
@@ -89,7 +89,7 @@
    "ruta": 15,
    "visitadosDeRuta": 0,
    "pendientes": 15,
-   "fueraDeRuta": 26,
+   "fueraDeRuta": 27,
    "pct": 0.0
   },
   {
@@ -852,12 +852,6 @@
     "nombre": "GODOY AMADEO RAUL",
     "localidad": "Mar del Plata",
     "taxonomia": "Autoservicio Tradicional_D"
-   },
-   {
-    "clientId": "996",
-    "nombre": "DAVID EMANUEL GOMEZ",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_D"
    }
   ],
   "5": [
@@ -996,24 +990,6 @@
   ],
   "6": [
    {
-    "clientId": "1175",
-    "nombre": "REFINERIA BAHIA BLANCA S.A.U",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Estacion de Servicio - NO OFICIALES_D"
-   },
-   {
-    "clientId": "1390",
-    "nombre": "MARTINEZ FERNANDO",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_A"
-   },
-   {
-    "clientId": "1484",
-    "nombre": "SUARPI SA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Estacion de Servicio - NO OFICIALES_D"
-   },
-   {
     "clientId": "1859",
     "nombre": "KIOSMDQ",
     "localidad": "Mar del Plata",
@@ -1024,18 +1000,6 @@
     "nombre": "CASCIOTTI GUSTAVO CLAUDIO",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Autoservicio Tradicional_C"
-   },
-   {
-    "clientId": "2068",
-    "nombre": "GUASAPA KIOSKOS SA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_B"
-   },
-   {
-    "clientId": "3168",
-    "nombre": "CHOCOCHIA S.A.",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_B"
    },
    {
     "clientId": "4466",
