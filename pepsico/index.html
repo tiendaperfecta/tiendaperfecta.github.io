@@ -2271,14 +2271,16 @@ const compTotalEl = document.getElementById('kpi-compromiso-total');
 const supInput = document.getElementById('compromiso-supervisor-input');
 
 (async () => {
-  let db = null;
+  const COMPROMISO_API = 'https://script.google.com/macros/s/AKfycby29cOLAt2nSOU-jbpaLxwRSiK1_eG-0eWhKrbitGks8U7eJzqdkPBsI7kwkxsT6-K0/exec';
+  let data = null;
   try {
-    db = await claude.use("db");
+    const r = await fetch(COMPROMISO_API);
+    data = await r.json();
   } catch (err) {
-    console.error('compromiso: claude.use("db") failed:', err);
+    console.error('compromiso: fetch failed:', err);
   }
 
-  if (!db) {
+  if (!data || !data.ok) {
     compromisoRefs.forEach(({ inputPg, inputSb, totalCell }) => {
       [inputPg, inputSb].forEach(i => { i.disabled = true; i.placeholder = 'no disp.'; });
       if (totalCell.textContent === '—') totalCell.textContent = 'n/d';
@@ -2289,81 +2291,55 @@ const supInput = document.getElementById('compromiso-supervisor-input');
     return;
   }
 
-  const slugVendedor = (v) => v.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9]+/g, '_');
+  function postear(body) {
+    fetch(COMPROMISO_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(body),
+    }).catch((err) => console.error('compromiso write failed:', err));
+  }
+
+  function recomputeTotal() {
+    let total = 0;
+    let count = 0;
+    compromisoRefs.forEach(({ inputPg, inputSb }) => {
+      const pg = inputPg.value === '' ? null : Number(inputPg.value);
+      const sb = inputSb.value === '' ? null : Number(inputSb.value);
+      if (pg !== null || sb !== null) { total += (pg || 0) + (sb || 0); count++; }
+    });
+    const tfootTotalEl = document.getElementById('tfoot-compromiso-total');
+    compTotalEl.innerHTML = count ? `${fmt(total)}<span class="unit">kg</span>` : '—';
+    if (tfootTotalEl) tfootTotalEl.textContent = count ? fmt(total) : '';
+  }
 
   compromisoRefs.forEach(({ vendedor, inputPg, inputSb, updateTotal }) => {
-    try {
-      const ref = db.doc(`compromiso/${slugVendedor(vendedor)}`);
-      ref.onSnapshot(
-        (snap) => {
-          const data = snap.data() || {};
-          if (document.activeElement !== inputPg) {
-            inputPg.value = typeof data.pg === 'number' ? data.pg : '';
-          }
-          if (document.activeElement !== inputSb) {
-            inputSb.value = typeof data.sb === 'number' ? data.sb : '';
-          }
-          updateTotal();
-        },
-        (err) => { console.error('compromiso subscribe error:', err.code, err.message); }
-      );
-      [inputPg, inputSb].forEach(input => {
-        input.addEventListener('change', () => {
-          const pg = inputPg.value === '' ? null : Number(inputPg.value);
-          const sb = inputSb.value === '' ? null : Number(inputSb.value);
-          if ((pg !== null && Number.isNaN(pg)) || (sb !== null && Number.isNaN(sb))) return;
-          ref.set({ pg, sb, updatedAt: Date.now() }).catch((err) => console.error('compromiso write failed:', err.code, err.message));
-          updateTotal();
-        });
+    const saved = data.compromisos[vendedor] || {};
+    inputPg.value = typeof saved.pg === 'number' ? saved.pg : '';
+    inputSb.value = typeof saved.sb === 'number' ? saved.sb : '';
+    updateTotal();
+    [inputPg, inputSb].forEach(input => {
+      input.addEventListener('change', () => {
+        const pg = inputPg.value === '' ? null : Number(inputPg.value);
+        const sb = inputSb.value === '' ? null : Number(inputSb.value);
+        if ((pg !== null && Number.isNaN(pg)) || (sb !== null && Number.isNaN(sb))) return;
+        postear({ vendedor, pg, sb });
+        updateTotal();
+        recomputeTotal();
       });
-    } catch (err) {
-      console.error('compromiso row db-sync failed:', vendedor, err);
-    }
+    });
   });
 
-  db.collection('compromiso').onSnapshot(
-    (snap) => {
-      try {
-        let total = 0;
-        let count = 0;
-        const list = Array.isArray(snap) ? snap : (Array.isArray(snap && snap.docs) ? snap.docs : snap);
-        const each = (fn) => { if (list && typeof list.forEach === 'function') list.forEach(fn); };
-        each((doc) => {
-          if (!doc || doc.id === '_supervisor') return;
-          const data = (typeof doc.data === 'function') ? (doc.data() || {}) : (doc.data || {});
-          const pg = typeof data.pg === 'number' ? data.pg : 0;
-          const sb = typeof data.sb === 'number' ? data.sb : 0;
-          if (typeof data.pg === 'number' || typeof data.sb === 'number') { total += pg + sb; count++; }
-        });
-        const tfootTotalEl = document.getElementById('tfoot-compromiso-total');
-        compTotalEl.innerHTML = count ? `${fmt(total)}<span class="unit">kg</span>` : '—';
-        if (tfootTotalEl) tfootTotalEl.textContent = count ? fmt(total) : '';
-      } catch (err) {
-        console.error('compromiso total render failed:', err);
-      }
-    },
-    (err) => { console.error('compromiso total subscribe error:', err.code, err.message); compTotalEl.textContent = 'error'; }
-  );
+  recomputeTotal();
 
-  const supRef = db.doc('compromiso/_supervisor');
-  supRef.onSnapshot(
-    (snap) => {
-      const data = snap.data();
-      const value = data && typeof data.value === 'number' ? data.value : null;
-      if (document.activeElement !== supInput) {
-        supInput.value = value === null ? '' : value;
-      }
-    },
-    (err) => { console.error('compromiso supervisor subscribe error:', err.code, err.message); }
-  );
+  supInput.value = typeof data.supervisor === 'number' ? data.supervisor : '';
   supInput.addEventListener('change', () => {
     if (supInput.value === '') {
-      supRef.set({ value: null, updatedAt: Date.now() }).catch((err) => console.error('compromiso supervisor write failed:', err.code, err.message));
+      postear({ supervisor: null });
       return;
     }
     const num = Number(supInput.value);
     if (Number.isNaN(num)) return;
-    supRef.set({ value: num, updatedAt: Date.now() }).catch((err) => console.error('compromiso supervisor write failed:', err.code, err.message));
+    postear({ supervisor: num });
   });
 })();
 }
