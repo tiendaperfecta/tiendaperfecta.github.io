@@ -381,6 +381,38 @@ def main():
 
     api = Api()
 
+    # DIAG Tienda Perfecta: explorar el reporte "Censo Tienda Perfecta" para
+    # ver que parametros pide y que columnas devuelve.
+    GUID_TP = "81221fe2-5545-47ec-a149-6c95d47afb44"
+    info = api.post("/data/cmd/report/info", {"id": GUID_TP})
+    print("DIAG TP info:", json.dumps(info, ensure_ascii=False)[:6000])
+    try:
+        params_default = {}
+        for grupo in info.get("parametersGroups") or []:
+            for p in grupo.get("parameters") or []:
+                if p.get("default") is not None:
+                    params_default[p["name"]] = p["default"]
+        print("DIAG TP params por default:", json.dumps(params_default, ensure_ascii=False))
+        ahora = dt.datetime.now().timestamp()
+        if not api._tok or ahora - api._t > 240:
+            api._tok, api._t = gescom._token(api.s), ahora
+        body = {"id": GUID_TP, "reportInput": {"filtersInput": {}, "parameters": params_default}}
+        r = api.s.post(gescom.API + "/data/cmd/report/render", json=body, timeout=240,
+                        headers={"Authorization": "Bearer " + api._tok})
+        ct = r.headers.get("Content-Type", "")
+        print("DIAG TP render status:", r.status_code, "content-type:", ct, "len:", len(r.content))
+        if "json" in ct:
+            data = r.json()
+            print("DIAG TP datasources:", [(d.get("name"), len(d.get("table", []))) for d in data.get("datasources") or []])
+            for d in data.get("datasources") or []:
+                print("DIAG TP", d.get("name"), "header:", d.get("table", [[]])[0] if d.get("table") else None)
+        else:
+            texto = r.content.decode("cp1252", errors="replace")
+            print("DIAG TP CSV primera linea:", texto.split(chr(13))[0][:2000])
+            print("DIAG TP CSV total lineas:", texto.count(chr(10)))
+    except Exception as e:
+        print("DIAG TP render error:", type(e).__name__, e)
+
     vendedores_raw = api.get("/data/cmd/ventas/api/v1/get-vendedores")
     nombre_por_codven = {cod(x.get("codigo")): (x.get("nombre") or "").strip() for x in vendedores_raw}
 
