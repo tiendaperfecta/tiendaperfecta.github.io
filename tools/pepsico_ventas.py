@@ -349,6 +349,88 @@ def escribir(nombre, data):
     print("Guardado", ruta)
 
 
+# Censo Tienda Perfecta: mismo motor generico de reportes, sin rango de
+# fechas (es una foto del estado actual, no un acumulado del mes). Gescom ya
+# calcula el flag "TiendaPerfecta" (Si/No, >=80% portafolio + validacion) y
+# "SupOk" (si el supervisor ya lo valido) -- no hace falta recalcular la
+# logica de negocio, solo agregar por segmento y vendedor.
+GUID_TIENDA_PERFECTA = "81221fe2-5545-47ec-a149-6c95d47afb44"
+# Subcanales que entran en el universo de Tienda Perfecta (confirmado por el
+# usuario). El censo trae TODOS los subcanales (incluye Mayoristas, Colegios,
+# Hotel, etc.) que no son parte de este universo.
+SUBCANALES_TP = {"Kiosco/Maxikiosco", "Almacen/Despensa", "Autoservicio Tradicional",
+                  "Estacion de Servicio - NO OFICIALES", "Fiambreria"}
+TP_OBJETIVO_SEG = {"A": 251, "B": 188, "C": 328, "D": 441}
+
+
+def es_si(v):
+    return (v or "").strip().lower() == "si"
+
+
+def traer_tienda_perfecta(api, nombre_por_codven):
+    data = api.render_report(GUID_TIENDA_PERFECTA, {"sedeId": 0, "soloTP": 0})
+    tabla = next((d["table"] for d in data.get("datasources") or [] if d["name"] == "Principal"), None)
+    if not tabla or len(tabla) < 2:
+        raise RuntimeError("El censo Tienda Perfecta vino vacio.")
+    header = tabla[0]
+    filas = [dict(zip(header, fila)) for fila in tabla[1:]]
+    universo = [f for f in filas if (f.get("SubCanal") or "").strip() in SUBCANALES_TP]
+
+    por_seg = {s: {"universo": 0, "tp": 0, "validar": 0} for s in SEGMENTOS}
+    por_vend_seg = {}
+    for f in universo:
+        seg = (f.get("Segmento") or "").strip()
+        if seg not in SEGMENTOS:
+            continue
+        es_tp = es_si(f.get("TiendaPerfecta"))
+        sup_ok = es_si(f.get("SupOk"))
+        por_seg[seg]["universo"] += 1
+        if es_tp:
+            por_seg[seg]["tp"] += 1
+            if not sup_ok:
+                por_seg[seg]["validar"] += 1
+        codven = cod(f.get("Vendedor_ID"))
+        acc = por_vend_seg.setdefault(codven, {s: {"universo": 0, "tp": 0} for s in SEGMENTOS})
+        acc[seg]["universo"] += 1
+        if es_tp:
+            acc[seg]["tp"] += 1
+
+    universo_total = sum(v["universo"] for v in por_seg.values())
+    tp_total = sum(v["tp"] for v in por_seg.values())
+    validar_total = sum(v["validar"] for v in por_seg.values())
+
+    keymap = {"A": ("ao", "ac"), "B": ("bo", "bc"), "C": ("co", "cc"), "D": ("do_", "dc")}
+    universo_seg_total_vend = {s: sum(v.get(s, {}).get("universo", 0)
+                                       for cv, v in por_vend_seg.items() if cv in VENDEDORES_PEPSICO)
+                                for s in SEGMENTOS}
+    vendedores_out = []
+    for codven in sorted(por_vend_seg, key=lambda x: int(x) if x.isdigit() else 999):
+        if codven not in VENDEDORES_PEPSICO:
+            continue
+        fila = {"n": nombre_por_codven.get(codven, codven)}
+        acc = por_vend_seg[codven]
+        for s in SEGMENTOS:
+            ko, kc = keymap[s]
+            uni_total_seg = universo_seg_total_vend[s]
+            uni_v = acc[s]["universo"]
+            fila[ko] = round(TP_OBJETIVO_SEG[s] * uni_v / uni_total_seg) if uni_total_seg else 0
+            fila[kc] = acc[s]["tp"]
+        vendedores_out.append(fila)
+
+    objetivo_oficial = dict(TP_OBJETIVO_SEG)
+    objetivo_oficial["total"] = sum(TP_OBJETIVO_SEG.values())
+
+    return {
+        "universoTotal": universo_total,
+        "tpTotal": tp_total,
+        "noTpTotal": universo_total - tp_total,
+        "validarTotal": validar_total,
+        "objetivoOficial": objetivo_oficial,
+        "porSegmento": por_seg,
+        "vendedores": vendedores_out,
+    }
+
+
 def main():
     if not gescom.hay_credenciales():
         print("Sin credenciales de GesCom: no se corre.")
@@ -381,55 +463,17 @@ def main():
 
     api = Api()
 
-    # DIAG Tienda Perfecta: explorar el reporte "Censo Tienda Perfecta" para
-    # ver que parametros pide y que columnas devuelve.
-    GUID_TP = "81221fe2-5545-47ec-a149-6c95d47afb44"
-    info = api.post("/data/cmd/report/info", {"id": GUID_TP})
-    print("DIAG TP info:", json.dumps(info, ensure_ascii=False)[:6000])
-    try:
-        params_default = {}
-        for grupo in info.get("parametersGroups") or []:
-            for p in grupo.get("parameters") or []:
-                if p.get("default") is not None:
-                    params_default[p["name"]] = p["default"]
-        print("DIAG TP params por default:", json.dumps(params_default, ensure_ascii=False))
-        ahora = dt.datetime.now().timestamp()
-        if not api._tok or ahora - api._t > 240:
-            api._tok, api._t = gescom._token(api.s), ahora
-        body = {"id": GUID_TP, "reportInput": {"filtersInput": {}, "parameters": params_default}}
-        r = api.s.post(gescom.API + "/data/cmd/report/render", json=body, timeout=240,
-                        headers={"Authorization": "Bearer " + api._tok})
-        ct = r.headers.get("Content-Type", "")
-        print("DIAG TP render status:", r.status_code, "content-type:", ct, "len:", len(r.content))
-        if "json" in ct:
-            data = r.json()
-            print("DIAG TP datasources:", [(d.get("name"), len(d.get("table", []))) for d in data.get("datasources") or []])
-            for d in data.get("datasources") or []:
-                tabla = d.get("table") or []
-                print("DIAG TP", d.get("name"), "header:", tabla[0] if tabla else None)
-                if len(tabla) > 2:
-                    print("DIAG TP", d.get("name"), "fila1:", tabla[1])
-                    print("DIAG TP", d.get("name"), "fila2:", tabla[2])
-                # valores distintos de columnas clave para entender el formato
-                if tabla:
-                    header = tabla[0]
-                    for col in ("TiendaPerfecta", "SupOk", "Segmento", "SubCanal", "SubCanalTiendaPerfecta", "Vendedor_ID"):
-                        if col in header:
-                            i = header.index(col)
-                            valores = {}
-                            for fila in tabla[1:]:
-                                v = fila[i]
-                                valores[v] = valores.get(v, 0) + 1
-                            print("DIAG TP valores de", col, ":", valores)
-        else:
-            texto = r.content.decode("cp1252", errors="replace")
-            print("DIAG TP CSV primera linea:", texto.split(chr(13))[0][:2000])
-            print("DIAG TP CSV total lineas:", texto.count(chr(10)))
-    except Exception as e:
-        print("DIAG TP render error:", type(e).__name__, e)
-
     vendedores_raw = api.get("/data/cmd/ventas/api/v1/get-vendedores")
     nombre_por_codven = {cod(x.get("codigo")): (x.get("nombre") or "").strip() for x in vendedores_raw}
+
+    try:
+        tienda_perfecta = traer_tienda_perfecta(api, nombre_por_codven)
+        escribir("tienda_perfecta.json", tienda_perfecta)
+        print("Tienda Perfecta: universo %d | TP %d | no TP %d | a validar %d" %
+              (tienda_perfecta["universoTotal"], tienda_perfecta["tpTotal"],
+               tienda_perfecta["noTpTotal"], tienda_perfecta["validarTotal"]))
+    except Exception as e:
+        print("ERROR trayendo censo Tienda Perfecta (se deja tienda_perfecta.json anterior sin tocar):", e)
 
     fin_mes_excl = hoy + dt.timedelta(days=1)
     filas = api.render_csv(GUID_DETALLE_VENTAS, {
