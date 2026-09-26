@@ -3,12 +3,21 @@
  "diaSemana": "sabado",
  "bySeller": [
   {
+   "sellerId": "7",
+   "vendedor": "Ramiro Rando",
+   "ruta": 19,
+   "visitadosDeRuta": 6,
+   "pendientes": 13,
+   "fueraDeRuta": 29,
+   "pct": 31.6
+  },
+  {
    "sellerId": "6",
    "vendedor": "Camila Martinez",
    "ruta": 15,
    "visitadosDeRuta": 4,
    "pendientes": 11,
-   "fueraDeRuta": 21,
+   "fueraDeRuta": 29,
    "pct": 26.7
   },
   {
@@ -17,8 +26,17 @@
    "ruta": 14,
    "visitadosDeRuta": 3,
    "pendientes": 11,
-   "fueraDeRuta": 29,
+   "fueraDeRuta": 38,
    "pct": 21.4
+  },
+  {
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "ruta": 26,
+   "visitadosDeRuta": 3,
+   "pendientes": 23,
+   "fueraDeRuta": 9,
+   "pct": 11.5
   },
   {
    "sellerId": "2",
@@ -30,31 +48,13 @@
    "pct": 9.1
   },
   {
-   "sellerId": "4",
-   "vendedor": "Lucas Giayetto",
-   "ruta": 26,
-   "visitadosDeRuta": 2,
-   "pendientes": 24,
-   "fueraDeRuta": 6,
-   "pct": 7.7
-  },
-  {
-   "sellerId": "7",
-   "vendedor": "Ramiro Rando",
-   "ruta": 19,
-   "visitadosDeRuta": 1,
-   "pendientes": 18,
-   "fueraDeRuta": 24,
-   "pct": 5.3
-  },
-  {
    "sellerId": "1",
    "vendedor": "Maria Noelia Madia",
    "ruta": 13,
-   "visitadosDeRuta": 0,
-   "pendientes": 13,
-   "fueraDeRuta": 21,
-   "pct": 0.0
+   "visitadosDeRuta": 1,
+   "pendientes": 12,
+   "fueraDeRuta": 26,
+   "pct": 7.7
   },
   {
    "sellerId": "10",
@@ -62,7 +62,7 @@
    "ruta": 22,
    "visitadosDeRuta": 0,
    "pendientes": 22,
-   "fueraDeRuta": 17,
+   "fueraDeRuta": 25,
    "pct": 0.0
   },
   {
@@ -71,8 +71,17 @@
    "ruta": 23,
    "visitadosDeRuta": 0,
    "pendientes": 23,
-   "fueraDeRuta": 16,
+   "fueraDeRuta": 21,
    "pct": 0.0
+  },
+  {
+   "sellerId": "20",
+   "vendedor": "Deposito",
+   "ruta": 0,
+   "visitadosDeRuta": 0,
+   "pendientes": 0,
+   "fueraDeRuta": 0,
+   "pct": null
   },
   {
    "sellerId": "3",
@@ -80,7 +89,7 @@
    "ruta": 15,
    "visitadosDeRuta": 0,
    "pendientes": 15,
-   "fueraDeRuta": 10,
+   "fueraDeRuta": 16,
    "pct": 0.0
   },
   {
@@ -107,7 +116,7 @@
    "ruta": 22,
    "visitadosDeRuta": 0,
    "pendientes": 22,
-   "fueraDeRuta": 10,
+   "fueraDeRuta": 13,
    "pct": 0.0
   },
   {
@@ -152,12 +161,6 @@
    {
     "clientId": "1493",
     "nombre": "MILKI MDQ SA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_A"
-   },
-   {
-    "clientId": "1584",
-    "nombre": "CHOCOCHIA S.A.",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Kiosco/Maxikiosco_A"
    },
@@ -614,6 +617,7 @@
     "taxonomia": "Kiosco/Maxikiosco_D"
    }
   ],
+  "20": [],
   "3": [
    {
     "clientId": "1078",
@@ -854,12 +858,6 @@
     "nombre": "CLAUDIA ANAHI MARCOVECCHIO",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Carniceria/Granja_C"
-   },
-   {
-    "clientId": "2522",
-    "nombre": "LUCIA ANDREA GONZALEZ Y JULIETA NATALIA GONZALEZ S",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
     "clientId": "2534",
@@ -1180,12 +1178,6 @@
     "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
-    "clientId": "1665",
-    "nombre": "Javier Alcides Orellana",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Autoservicio Tradicional_D"
-   },
-   {
     "clientId": "1717",
     "nombre": "Fabiana casavalle",
     "localidad": "Mar del Plata",
@@ -1202,12 +1194,6 @@
     "nombre": "NATALIA CELESTE AGUILAR",
     "localidad": "Mar del Plata",
     "taxonomia": "Kiosco/Maxikiosco_A"
-   },
-   {
-    "clientId": "2769",
-    "nombre": "GRUPO XXF SOCIEDAD DE RESPONSABILIDAD LIMITADA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_A"
    },
    {
     "clientId": "3613",
@@ -1238,24 +1224,6 @@
     "nombre": "MONICA ANTONIA BODLOVICH",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Autoservicio Tradicional_D"
-   },
-   {
-    "clientId": "645",
-    "nombre": "LAURIANA ESTHER BAEZ",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_C"
-   },
-   {
-    "clientId": "648",
-    "nombre": "SILVANA ALMADA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_D"
-   },
-   {
-    "clientId": "719",
-    "nombre": "campomor laura lorena",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Almacen/Despensa_D"
    },
    {
     "clientId": "840",

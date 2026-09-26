@@ -1,122 +1,139 @@
 {
  "date": "2026-09-26",
- "totalNet": 11964304.83,
- "totalGross": 14476808.82,
- "orders": 123,
+ "totalNet": 18578105.74,
+ "totalGross": 22479507.95,
+ "orders": 194,
  "bySeller": [
   {
    "sellerId": "7",
    "name": "Ramiro Rando",
-   "orders": 12,
-   "total": 3348403.52
+   "orders": 16,
+   "total": 3765803.21
+  },
+  {
+   "sellerId": "12",
+   "name": "Agustin Pogorzelski",
+   "orders": 22,
+   "total": 2687711.12
   },
   {
    "sellerId": "8",
    "name": "Martinica Rodriguez",
-   "orders": 16,
-   "total": 1932652.53
+   "orders": 21,
+   "total": 2396742.07
   },
   {
    "sellerId": "3",
    "name": "Ezequiel Hack",
-   "orders": 10,
-   "total": 1755244.2
+   "orders": 13,
+   "total": 2261347.71
   },
   {
    "sellerId": "5",
    "name": "Nicolas Martinez",
-   "orders": 7,
-   "total": 1469119.07
-  },
-  {
-   "sellerId": "12",
-   "name": "Azul Martinez",
-   "orders": 15,
-   "total": 1298215.59
+   "orders": 13,
+   "total": 2145233.93
   },
   {
    "sellerId": "9",
    "name": "Ludmila Aylen Martinez",
-   "orders": 9,
-   "total": 1205748.47
-  },
-  {
-   "sellerId": "11",
-   "name": "Melanie Larrama",
-   "orders": 10,
-   "total": 818866.19
-  },
-  {
-   "sellerId": "2",
-   "name": "Julian Nuñez",
-   "orders": 11,
-   "total": 740042.91
-  },
-  {
-   "sellerId": "6",
-   "name": "Camila Martinez",
-   "orders": 9,
-   "total": 536706.46
-  },
-  {
-   "sellerId": "1",
-   "name": "Maria Noelia Madia",
-   "orders": 12,
-   "total": 477631.77
-  },
-  {
-   "sellerId": "10",
-   "name": "Matias Parada",
-   "orders": 6,
-   "total": 462392.39
+   "orders": 17,
+   "total": 1840692.97
   },
   {
    "sellerId": "4",
    "name": "Lucas Giayetto",
-   "orders": 6,
-   "total": 431785.73
+   "orders": 14,
+   "total": 1619133.3
+  },
+  {
+   "sellerId": "11",
+   "name": "Melanie Larrama",
+   "orders": 15,
+   "total": 1121293.91
+  },
+  {
+   "sellerId": "2",
+   "name": "Julian Nuñez",
+   "orders": 15,
+   "total": 965443.75
+  },
+  {
+   "sellerId": "6",
+   "name": "Camila Martinez",
+   "orders": 16,
+   "total": 930475.78
+  },
+  {
+   "sellerId": "1",
+   "name": "Maria Noelia Madia",
+   "orders": 19,
+   "total": 771166.13
+  },
+  {
+   "sellerId": "31",
+   "name": "FLOR",
+   "orders": 1,
+   "total": 685285.75
+  },
+  {
+   "sellerId": "10",
+   "name": "Matias Parada",
+   "orders": 9,
+   "total": 670321.12
+  },
+  {
+   "sellerId": "20",
+   "name": "Deposito",
+   "orders": 3,
+   "total": 618857.2
   }
  ],
  "byChannel": [
   {
    "channel": "TRADITIONAL TRADE_A",
-   "orders": 54,
-   "total": 9199021.36
+   "orders": 77,
+   "total": 13002375.77
   },
   {
    "channel": "TRADITIONAL TRADE_C",
-   "orders": 24,
-   "total": 2251545.99
+   "orders": 38,
+   "total": 3239812.05
   },
   {
    "channel": "TRADITIONAL TRADE_B",
-   "orders": 20,
-   "total": 1534033.34
+   "orders": 35,
+   "total": 2918911.28
   },
   {
    "channel": "TRADITIONAL TRADE_D",
-   "orders": 16,
-   "total": 1102010.82
+   "orders": 30,
+   "total": 2657473.64
   },
   {
    "channel": "AWAY FROM HOME_C",
-   "orders": 6,
-   "total": 264268.71
-  },
-  {
-   "channel": "Mayorista_D",
-   "orders": 1,
-   "total": 66500.08
+   "orders": 7,
+   "total": 313149.42
   },
   {
    "channel": "AWAY FROM HOME_B",
-   "orders": 1,
-   "total": 33142.87
+   "orders": 3,
+   "total": 196857.2
+  },
+  {
+   "channel": "Mayorista_D",
+   "orders": 2,
+   "total": 118428.67
   },
   {
    "channel": "PROXIMITY_D",
    "orders": 1,
    "total": 26285.65
+  },
+  {
+   "channel": "AWAY FROM HOME_D",
+   "orders": 1,
+   "total": 6214.28
   }
  ],
  "topClients": [
@@ -127,10 +144,22 @@
    "total": 2750410.16
   },
   {
+   "clientId": "1109",
+   "name": "JIANG HONGXIA (Autoservicio Tradicional_A)",
+   "orders": 2,
+   "total": 980634.53
+  },
+  {
    "clientId": "508",
    "name": "SUPER SICILIA S.A EN FORMACION  (Autoservicio Tradicional_A)",
    "orders": 2,
    "total": 687692.75
+  },
+  {
+   "clientId": "5053",
+   "name": "WANZHEN NI (Autoservicio Tradicional_A)",
+   "orders": 1,
+   "total": 685285.75
   },
   {
    "clientId": "349",
@@ -151,16 +180,46 @@
    "total": 568333.19
   },
   {
+   "clientId": "269",
+   "name": "CHEN XUEPING (Autoservicio Tradicional_C)",
+   "orders": 2,
+   "total": 438563.37
+  },
+  {
    "clientId": "270",
    "name": "SHIZHEN DENG (Autoservicio Tradicional_C)",
    "orders": 1,
    "total": 417857.44
   },
   {
+   "clientId": "183",
+   "name": "AGUSTINA NADER (Almacen/Despensa_D)",
+   "orders": 2,
+   "total": 377310.79
+  },
+  {
+   "clientId": "420",
+   "name": "ZHENG JINRUI (Autoservicio Tradicional_B)",
+   "orders": 2,
+   "total": 353779.0
+  },
+  {
    "clientId": "193",
    "name": "DOMINGO OSCAR GOPAR (Autoservicio Tradicional_C)",
    "orders": 2,
    "total": 338449.62
+  },
+  {
+   "clientId": "2769",
+   "name": "GRUPO XXF SOCIEDAD DE RESPONSABILIDAD LIMITADA (Autoservicio Tradicional_A)",
+   "orders": 1,
+   "total": 335428.5
+  },
+  {
+   "clientId": "571",
+   "name": "LUCENA ELIZABET ROMINA (Almacen/Despensa_D)",
+   "orders": 1,
+   "total": 323942.36
   },
   {
    "clientId": "3676",
@@ -197,48 +256,6 @@
    "name": "GIORELLO JOSE ARIEL (Fiambreria_A)",
    "orders": 1,
    "total": 252143.02
-  },
-  {
-   "clientId": "552",
-   "name": "MARIANA ELIZABET HAURIE (Almacen/Despensa_A)",
-   "orders": 2,
-   "total": 227571.57
-  },
-  {
-   "clientId": "1100",
-   "name": "Naihao li (Almacen/Despensa_A)",
-   "orders": 2,
-   "total": 213168.64
-  },
-  {
-   "clientId": "2526",
-   "name": "CHOCOCHIA S. A. (Kiosco/Maxikiosco_A)",
-   "orders": 2,
-   "total": 210981.05
-  },
-  {
-   "clientId": "4834",
-   "name": "SHI AICHUN (Kiosco/Maxikiosco_B)",
-   "orders": 1,
-   "total": 205357.28
-  },
-  {
-   "clientId": "367",
-   "name": "HERNAN LOSTRA (Kiosco/Maxikiosco_A)",
-   "orders": 1,
-   "total": 204428.62
-  },
-  {
-   "clientId": "1041",
-   "name": "YAN LI (Autoservicio Tradicional_A)",
-   "orders": 1,
-   "total": 184214.27
-  },
-  {
-   "clientId": "187",
-   "name": "COOPERATIVA DE TRABAJO MARSUR LIMITADA (Autoservicio Tradicional_D)",
-   "orders": 1,
-   "total": 177142.94
   }
  ]
 }
