@@ -2312,21 +2312,40 @@ const supInput = document.getElementById('compromiso-supervisor-input');
     if (tfootTotalEl) tfootTotalEl.textContent = count ? fmt(total) : '';
   }
 
+  const NOMBRE_GRUPO = { pg: 'Platino+Gold', sb: 'Silver&Bronze' };
+
   compromisoRefs.forEach(({ vendedor, inputPg, inputSb, updateTotal }) => {
     const saved = data.compromisos[vendedor] || {};
     inputPg.value = typeof saved.pg === 'number' ? saved.pg : '';
     inputSb.value = typeof saved.sb === 'number' ? saved.sb : '';
+    inputPg.dataset.last = inputPg.value;
+    inputSb.dataset.last = inputSb.value;
     updateTotal();
-    [inputPg, inputSb].forEach(input => {
+
+    function attach(input, grupo) {
       input.addEventListener('change', () => {
+        const anterior = input.dataset.last;
+        const nuevo = input.value;
+        if (anterior !== '' && nuevo !== anterior) {
+          const ok = confirm(
+            `Ya cargaste ${anterior} kg (${NOMBRE_GRUPO[grupo]}) para ${vendedor} hoy.\n¿Lo querés corregir por ${nuevo === '' ? '(vacío)' : nuevo + ' kg'}?`
+          );
+          if (!ok) {
+            input.value = anterior;
+            return;
+          }
+        }
         const pg = inputPg.value === '' ? null : Number(inputPg.value);
         const sb = inputSb.value === '' ? null : Number(inputSb.value);
         if ((pg !== null && Number.isNaN(pg)) || (sb !== null && Number.isNaN(sb))) return;
         postear({ vendedor, pg, sb });
+        input.dataset.last = input.value;
         updateTotal();
         recomputeTotal();
       });
-    });
+    }
+    attach(inputPg, 'pg');
+    attach(inputSb, 'sb');
   });
 
   recomputeTotal();
