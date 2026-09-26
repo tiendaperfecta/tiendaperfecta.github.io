@@ -2291,12 +2291,18 @@ const supInput = document.getElementById('compromiso-supervisor-input');
     return;
   }
 
-  function postear(body) {
-    fetch(COMPROMISO_API, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(body),
-    }).catch((err) => console.error('compromiso write failed:', err));
+  function guardarVendedor(vendedor, pg, sb) {
+    const params = new URLSearchParams({
+      action: 'guardar', vendedor,
+      pg: pg === null ? '' : pg,
+      sb: sb === null ? '' : sb,
+    });
+    return fetch(COMPROMISO_API + '?' + params.toString()).then((r) => r.json());
+  }
+
+  function guardarSupervisor(valor) {
+    const params = new URLSearchParams({ action: 'guardarSupervisor', valor: valor === null ? '' : valor });
+    return fetch(COMPROMISO_API + '?' + params.toString()).then((r) => r.json());
   }
 
   function recomputeTotal() {
@@ -2312,53 +2318,53 @@ const supInput = document.getElementById('compromiso-supervisor-input');
     if (tfootTotalEl) tfootTotalEl.textContent = count ? fmt(total) : '';
   }
 
-  const NOMBRE_GRUPO = { pg: 'Platino+Gold', sb: 'Silver&Bronze' };
+  function bloquear(input) {
+    input.disabled = true;
+    input.title = 'Ya pasaron los 15 minutos para corregir. Se vuelve a habilitar mañana.';
+  }
 
   compromisoRefs.forEach(({ vendedor, inputPg, inputSb, updateTotal }) => {
     const saved = data.compromisos[vendedor] || {};
     inputPg.value = typeof saved.pg === 'number' ? saved.pg : '';
     inputSb.value = typeof saved.sb === 'number' ? saved.sb : '';
-    inputPg.dataset.last = inputPg.value;
-    inputSb.dataset.last = inputSb.value;
+    if (saved.bloqueado) {
+      bloquear(inputPg);
+      bloquear(inputSb);
+    }
     updateTotal();
 
-    function attach(input, grupo) {
-      input.addEventListener('change', () => {
-        const anterior = input.dataset.last;
-        const nuevo = input.value;
-        if (anterior !== '' && nuevo !== anterior) {
-          const ok = confirm(
-            `Ya cargaste ${anterior} kg (${NOMBRE_GRUPO[grupo]}) para ${vendedor} hoy.\n¿Lo querés corregir por ${nuevo === '' ? '(vacío)' : nuevo + ' kg'}?`
-          );
-          if (!ok) {
-            input.value = anterior;
-            return;
-          }
-        }
+    function attach(input) {
+      input.addEventListener('change', async () => {
         const pg = inputPg.value === '' ? null : Number(inputPg.value);
         const sb = inputSb.value === '' ? null : Number(inputSb.value);
         if ((pg !== null && Number.isNaN(pg)) || (sb !== null && Number.isNaN(sb))) return;
-        postear({ vendedor, pg, sb });
-        input.dataset.last = input.value;
+        const res = await guardarVendedor(vendedor, pg, sb).catch((err) => {
+          console.error('compromiso write failed:', err);
+          return { ok: false };
+        });
+        if (!res.ok) {
+          if (res.error) {
+            alert(res.error);
+            bloquear(inputPg);
+            bloquear(inputSb);
+          }
+          return;
+        }
         updateTotal();
         recomputeTotal();
       });
     }
-    attach(inputPg, 'pg');
-    attach(inputSb, 'sb');
+    attach(inputPg);
+    attach(inputSb);
   });
 
   recomputeTotal();
 
   supInput.value = typeof data.supervisor === 'number' ? data.supervisor : '';
   supInput.addEventListener('change', () => {
-    if (supInput.value === '') {
-      postear({ supervisor: null });
-      return;
-    }
-    const num = Number(supInput.value);
-    if (Number.isNaN(num)) return;
-    postear({ supervisor: num });
+    const valor = supInput.value === '' ? null : Number(supInput.value);
+    if (valor !== null && Number.isNaN(valor)) return;
+    guardarSupervisor(valor).catch((err) => console.error('compromiso supervisor write failed:', err));
   });
 })();
 }
