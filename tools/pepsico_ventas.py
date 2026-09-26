@@ -120,6 +120,11 @@ SUBPRODUCTOS = {
 DIAS = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"]
 DIAS_CAP = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"]
 
+# Solo los 12 vendedores de calle de Pepsico (codigos 1-12). El cliente trae
+# a veces otros codigos (deposito, mayorista, otros canales) que no son parte
+# de este tablero.
+VENDEDORES_PEPSICO = {str(i) for i in range(1, 13)}
+
 # TipoDeVenta tal como lo devuelve el reporte (texto legible, no codigo).
 # Confirmado contra el mes completo (25/09): Venta, Devolucion por Rechazo,
 # Devolucion por Canje, Ajuste por Liquidacion (+/-), Debito, mas dos tipos de
@@ -316,12 +321,25 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
     }
 
 
-def dia_de_ruta(cliente_raw):
+def ruta_de(cliente_raw):
+    """(dia, codven) de la ruta de preventa del cliente. Un cliente puede
+    tener mas de una ruta cargada (ej. calle + mayorista/deposito, o dos
+    vendedores de calle distintos); tomar siempre la primera entrada del
+    array (como se hacia antes) mezclaba el dia de una ruta con el vendedor
+    de OTRA. Ahora se saca el (dia, codven) de la MISMA entrada, y si hay
+    varias se prioriza la que tenga un vendedor de los 12 de calle."""
+    candidatos = []
     for r in cliente_raw.get("rutasPreventa") or []:
         for i, d in enumerate(DIAS):
             if r.get(d):
-                return DIAS_CAP[i]
-    return None
+                candidatos.append((DIAS_CAP[i], cod(r.get("codigoVendedor"))))
+                break
+    if not candidatos:
+        return None, ""
+    for dia, codven in candidatos:
+        if codven in VENDEDORES_PEPSICO:
+            return dia, codven
+    return candidatos[0]
 
 
 def escribir(nombre, data):
@@ -345,13 +363,14 @@ def main():
         codigo = cod(c.get("codigo"))
         if not codigo:
             continue
+        dia, codven = ruta_de(c)
         clientes[codigo] = {
             "codigo": codigo,
             "razon": (c.get("nombre") or c.get("razonSocial") or "").strip(),
             "localidad": (c.get("localidad") or "").strip(),
             "seg": cod(c.get("codigoSegmento")).upper(),
-            "dia": dia_de_ruta(c),
-            "codven": cod((c.get("rutasPreventa") or [{}])[0].get("codigoVendedor")) if c.get("rutasPreventa") else "",
+            "dia": dia,
+            "codven": codven,
         }
 
     subgrupo_por_desc = {}
@@ -427,11 +446,6 @@ def main():
 
     print("DIAG items de venta Pepsico contados:", items_pepsico_vistos,
           "| clientes con al menos 1 unidad:", len(compra_cliente))
-
-       # Solo los 12 vendedores de calle de Pepsico (codigos 1-12). El cliente
-    # trae a veces otros codigos (deposito, otros canales) que no son parte
-    # de este tablero.
-    VENDEDORES_PEPSICO = {str(i) for i in range(1, 13)}
 
     DIA_CLAVE = {"Lunes": "lu", "Martes": "ma", "Miercoles": "mi",
                  "Jueves": "ju", "Viernes": "vi", "Sabado": "sa"}
