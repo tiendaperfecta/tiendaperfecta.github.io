@@ -51,7 +51,7 @@ MARCA_LABEL = {
     "PEHUAMAR": "Pehuamar", "PEP": "Pep", "QUAKER": "Quaker", "TOSTITOS": "Tostitos", "TWISTOS": "Twistos",
 }
 SEGMENTOS = ["A", "B", "C", "D"]
-CCC_OBJETIVO_SEG = {"A": 384, "B": 337, "C": 669, "D": 903}
+CCC_OBJETIVO_SEG = {"A": 384, "B": 337, "C": 669, "D": 904}
 
 # Avance de Ventas Pepsico (kg): reporte generico de Gescom, mismo motor que
 # usa la UI (Reportes > Objetivos > Avance de Ventas Pepsico). Da Objetivo,
@@ -554,7 +554,9 @@ def main():
             fila[ko] = round(CCC_OBJETIVO_SEG[s] * uni_v / uni_total_seg) if uni_total_seg else 0
             fila[kc] = segdata[s]["cumple"]
         ccc_vendedores.append(fila)
-    escribir("ccc_segmento.json", {"vendedores": ccc_vendedores})
+    objetivo_oficial = dict(CCC_OBJETIVO_SEG)
+    objetivo_oficial["total"] = sum(CCC_OBJETIVO_SEG.values())
+    escribir("ccc_segmento.json", {"vendedores": ccc_vendedores, "objetivoOficial": objetivo_oficial})
     print("CCC por segmento: %d vendedores" % len(ccc_vendedores))
 
     dias_habiles = dias_habiles_mes(hoy.year, hoy.month)
