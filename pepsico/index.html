@@ -572,7 +572,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
   <h2 class="section-title">CCC por segmento</h2>
   <p class="section-note">
     CCC = clientes con compra sobre el universo asignado, por segmento de cliente (A/B/C/D). Objetivo total
-    Tienda Perfecta: A 384 · B 337 · C 669 · D 903 (2.293 clientes) — prorrateado por vendedor según su
+    Tienda Perfecta: A 384 · B 337 · C 669 · D 904 (2.294 clientes) — prorrateado por vendedor según su
     participación de clientes en cada segmento y redondeado a números enteros (el redondeo por vendedor puede
     no cerrar exacto contra el objetivo oficial; el total de la tabla usa siempre el oficial). Cumple = cliente
     con compra de Pepsico y más de 3 unidades entre el 01/09 y el 25/09, actualizado automáticamente por API dos
@@ -632,7 +632,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
 
   <p class="foot-note">
     Fuente: GesCom API (segmento y vendedor del cliente, unidades vendidas del mes en curso). El objetivo
-    global (384/337/669/903) es el que confirmaste; el reparto por vendedor es una estimación proporcional según
+    global (384/337/669/904) es el que confirmaste; el reparto por vendedor es una estimación proporcional según
     la composición real de clientes por segmento, no un objetivo oficial cargado en Gescom. Actualizado
     automáticamente dos veces por día.
   </p>
@@ -667,7 +667,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
   <p class="foot-note">
     El universo por día sale de la ruta de preventa asignada en <code>Clientes Claude.xlsx</code> (el nombre de la
     ruta empieza con el día, ej. "Viernes V4"). Un cliente sin ruta cargada no entra en esta tabla; el objetivo CCC
-    (2.293) es un prorrateo oficial y no tiene por qué coincidir con el universo real con ruta asignada (2.546).
+    (2.294) es un prorrateo oficial y no tiene por qué coincidir con el universo real con ruta asignada (2.546).
   </p>
 
   <h2 class="section-title">Tienda Perfecta</h2>
@@ -1995,8 +1995,10 @@ function renderMarcaSection(){
 
 let ccc2Rows = [];
 function segAvance(o,c){ return o ? c/o*100 : 0; }
+let ccc2ObjetivoOficial = null;
 fetch('ccc_segmento.json').then(r => r.json()).then(data => {
   ccc2Rows = data.vendedores;
+  ccc2ObjetivoOficial = data.objetivoOficial || null;
   renderCcc2Section();
 }).catch(() => {});
 
@@ -2013,8 +2015,12 @@ function renderCcc2Section(){
     acc.co+=r.co; acc.cc+=r.cc; acc.do_+=r.do_; acc.dc+=r.dc;
     return acc;
   }, {ao:0,ac:0,bo:0,bc:0,co:0,cc:0,do_:0,dc:0});
-  const ccc2TotObj = ccc2Tot.ao+ccc2Tot.bo+ccc2Tot.co+ccc2Tot.do_;
   const ccc2TotCumple = ccc2Tot.ac+ccc2Tot.bc+ccc2Tot.cc+ccc2Tot.dc;
+  // El reparto por vendedor es una estimacion redondeada por vendedor; el
+  // Objetivo del total SIEMPRE muestra el oficial fijo, no la suma de las
+  // filas redondeadas (que puede arrastrar un par de unidades de diferencia).
+  const oo = ccc2ObjetivoOficial || {A:ccc2Tot.ao, B:ccc2Tot.bo, C:ccc2Tot.co, D:ccc2Tot.do_, total:ccc2Tot.ao+ccc2Tot.bo+ccc2Tot.co+ccc2Tot.do_};
+  const ccc2TotObj = oo.total;
 
   const tbodyCcc2 = document.getElementById('tbody-ccc2');
   tbodyCcc2.innerHTML = ccc2Rows.map(r => `
@@ -2034,10 +2040,10 @@ function renderCcc2Section(){
   document.querySelector('#tbody-ccc2').closest('table').querySelector('tfoot').innerHTML = `
   <tr>
     <td class="name">Total PepsiCo</td>
-    <td>${fmt(ccc2Tot.ao)}</td><td>${fmt(ccc2Tot.ac)}</td><td>${fmt(segAvance(ccc2Tot.ao,ccc2Tot.ac),1)}%</td><td></td>
-    <td>${fmt(ccc2Tot.bo)}</td><td>${fmt(ccc2Tot.bc)}</td><td>${fmt(segAvance(ccc2Tot.bo,ccc2Tot.bc),1)}%</td><td></td>
-    <td>${fmt(ccc2Tot.co)}</td><td>${fmt(ccc2Tot.cc)}</td><td>${fmt(segAvance(ccc2Tot.co,ccc2Tot.cc),1)}%</td><td></td>
-    <td>${fmt(ccc2Tot.do_)}</td><td>${fmt(ccc2Tot.dc)}</td><td>${fmt(segAvance(ccc2Tot.do_,ccc2Tot.dc),1)}%</td><td></td>
+    <td>${fmt(oo.A)}</td><td>${fmt(ccc2Tot.ac)}</td><td>${fmt(segAvance(oo.A,ccc2Tot.ac),1)}%</td><td></td>
+    <td>${fmt(oo.B)}</td><td>${fmt(ccc2Tot.bc)}</td><td>${fmt(segAvance(oo.B,ccc2Tot.bc),1)}%</td><td></td>
+    <td>${fmt(oo.C)}</td><td>${fmt(ccc2Tot.cc)}</td><td>${fmt(segAvance(oo.C,ccc2Tot.cc),1)}%</td><td></td>
+    <td>${fmt(oo.D)}</td><td>${fmt(ccc2Tot.dc)}</td><td>${fmt(segAvance(oo.D,ccc2Tot.dc),1)}%</td><td></td>
     <td>${fmt(ccc2TotObj)}</td><td>${fmt(ccc2TotCumple)}</td><td>${fmt(segAvance(ccc2TotObj,ccc2TotCumple),1)}%</td>
   </tr>
 `;
