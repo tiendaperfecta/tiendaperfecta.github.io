@@ -1,7 +1,7 @@
 {
  "date": "2026-09-26",
  "diaSemana": "sabado",
- "jornadaCerrada": false,
+ "jornadaCerrada": true,
  "umbrales": {
   "llegada": "09:00",
   "salida": "14:00"
@@ -11,38 +11,38 @@
    "sellerId": "12",
    "vendedor": "Agustin Pogorzelski",
    "inicioJornada": "08:42",
-   "finJornada": "12:55",
+   "finJornada": "13:58",
    "entradaZona": "08:42",
-   "salidaZona": "08:44",
+   "salidaZona": "13:58",
    "zonaConfiable": true,
    "primera": "08:59",
-   "ultima": "12:55",
-   "visitas": 56,
-   "minutosTotal": 168.6,
-   "minutosPromedio": 3.0,
-   "pedidos": 25,
-   "monto": 3026925.61,
-   "pasoSinVender": 45,
-   "km": 25.0,
+   "ultima": "13:53",
+   "visitas": 59,
+   "minutosTotal": 173.5,
+   "minutosPromedio": 2.9,
+   "pedidos": 28,
+   "monto": 3198068.49,
+   "pasoSinVender": 46,
+   "km": 32.0,
    "llegoTarde": false,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "2",
    "vendedor": "Julian Nuñez",
    "inicioJornada": "08:53",
-   "finJornada": "12:59",
+   "finJornada": "14:01",
    "entradaZona": "08:53",
-   "salidaZona": "12:59",
+   "salidaZona": "14:01",
    "zonaConfiable": true,
    "primera": "08:57",
-   "ultima": "12:59",
+   "ultima": "13:29",
    "visitas": 55,
-   "minutosTotal": 145.4,
-   "minutosPromedio": 2.6,
-   "pedidos": 20,
-   "monto": 1136128.97,
-   "pasoSinVender": 42,
+   "minutosTotal": 177.5,
+   "minutosPromedio": 3.2,
+   "pedidos": 29,
+   "monto": 2762621.71,
+   "pasoSinVender": 37,
    "km": 6.0,
    "llegoTarde": false,
    "salioTemprano": false
@@ -51,39 +51,19 @@
    "sellerId": "6",
    "vendedor": "Camila Martinez",
    "inicioJornada": "08:51",
-   "finJornada": "12:51",
+   "finJornada": "14:01",
    "entradaZona": "08:51",
-   "salidaZona": "11:50",
+   "salidaZona": "14:01",
    "zonaConfiable": true,
    "primera": "08:51",
-   "ultima": "12:51",
-   "visitas": 41,
-   "minutosTotal": 179.8,
-   "minutosPromedio": 4.4,
-   "pedidos": 21,
-   "monto": 1409398.97,
-   "pasoSinVender": 30,
-   "km": 15.0,
-   "llegoTarde": false,
-   "salioTemprano": false
-  },
-  {
-   "sellerId": "7",
-   "vendedor": "Ramiro Rando",
-   "inicioJornada": "08:44",
-   "finJornada": "12:39",
-   "entradaZona": "08:44",
-   "salidaZona": "12:04",
-   "zonaConfiable": true,
-   "primera": "08:44",
-   "ultima": "12:39",
-   "visitas": 40,
-   "minutosTotal": 180.9,
-   "minutosPromedio": 4.5,
-   "pedidos": 23,
-   "monto": 4582268.64,
-   "pasoSinVender": 23,
-   "km": 24.0,
+   "ultima": "13:50",
+   "visitas": 49,
+   "minutosTotal": 197.5,
+   "minutosPromedio": 4.0,
+   "pedidos": 28,
+   "monto": 1729290.6,
+   "pasoSinVender": 32,
+   "km": 17.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -91,121 +71,141 @@
    "sellerId": "1",
    "vendedor": "Maria Noelia Madia",
    "inicioJornada": "09:34",
-   "finJornada": "13:00",
+   "finJornada": "14:00",
    "entradaZona": "09:34",
-   "salidaZona": "13:00",
+   "salidaZona": "14:00",
    "zonaConfiable": true,
    "primera": "09:34",
-   "ultima": "12:57",
-   "visitas": 37,
-   "minutosTotal": 130.2,
+   "ultima": "13:55",
+   "visitas": 46,
+   "minutosTotal": 160.3,
    "minutosPromedio": 3.5,
-   "pedidos": 27,
-   "monto": 1726037.54,
-   "pasoSinVender": 21,
-   "km": 40.0,
+   "pedidos": 29,
+   "monto": 1799537.58,
+   "pasoSinVender": 26,
+   "km": 41.0,
    "llegoTarde": true,
    "salioTemprano": false
+  },
+  {
+   "sellerId": "7",
+   "vendedor": "Ramiro Rando",
+   "inicioJornada": "08:44",
+   "finJornada": "13:31",
+   "entradaZona": "08:44",
+   "salidaZona": "13:31",
+   "zonaConfiable": true,
+   "primera": "08:44",
+   "ultima": "13:09",
+   "visitas": 41,
+   "minutosTotal": 209.6,
+   "minutosPromedio": 5.1,
+   "pedidos": 25,
+   "monto": 4923801.8,
+   "pasoSinVender": 22,
+   "km": 32.0,
+   "llegoTarde": false,
+   "salioTemprano": true
   },
   {
    "sellerId": "10",
    "vendedor": "Matias Parada",
    "inicioJornada": "08:55",
-   "finJornada": "12:59",
+   "finJornada": "13:26",
    "entradaZona": "08:55",
    "salidaZona": "12:58",
    "zonaConfiable": true,
    "primera": "08:59",
-   "ultima": "12:59",
-   "visitas": 35,
-   "minutosTotal": 150.6,
-   "minutosPromedio": 4.3,
-   "pedidos": 14,
-   "monto": 874169.03,
-   "pasoSinVender": 25,
-   "km": 16.0,
+   "ultima": "13:26",
+   "visitas": 37,
+   "minutosTotal": 163.8,
+   "minutosPromedio": 4.4,
+   "pedidos": 21,
+   "monto": 1788650.29,
+   "pasoSinVender": 22,
+   "km": 18.0,
    "llegoTarde": false,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "11",
    "vendedor": "Melanie Larrama",
    "inicioJornada": "09:04",
-   "finJornada": "13:02",
+   "finJornada": "13:35",
    "entradaZona": "09:04",
-   "salidaZona": "13:02",
+   "salidaZona": "13:35",
    "zonaConfiable": true,
-   "primera": "09:06",
-   "ultima": "12:54",
-   "visitas": 27,
-   "minutosTotal": 124.2,
-   "minutosPromedio": 4.6,
-   "pedidos": 20,
-   "monto": 1600486.06,
-   "pasoSinVender": 11,
-   "km": 9.0,
+   "primera": "09:07",
+   "ultima": "13:35",
+   "visitas": 30,
+   "minutosTotal": 147.1,
+   "minutosPromedio": 4.9,
+   "pedidos": 26,
+   "monto": 2729272.11,
+   "pasoSinVender": 10,
+   "km": 11.0,
    "llegoTarde": true,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "3",
    "vendedor": "Ezequiel Hack",
    "inicioJornada": "08:58",
-   "finJornada": "13:02",
+   "finJornada": "13:45",
    "entradaZona": "08:58",
-   "salidaZona": "13:02",
+   "salidaZona": "13:30",
    "zonaConfiable": true,
    "primera": "09:03",
-   "ultima": "12:42",
-   "visitas": 22,
-   "minutosTotal": 136.7,
-   "minutosPromedio": 6.2,
-   "pedidos": 14,
-   "monto": 2339063.82,
+   "ultima": "13:45",
+   "visitas": 26,
+   "minutosTotal": 179.8,
+   "minutosPromedio": 6.9,
+   "pedidos": 19,
+   "monto": 2755051.19,
    "pasoSinVender": 13,
    "km": 15.0,
    "llegoTarde": false,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "4",
    "vendedor": "Lucas Giayetto",
    "inicioJornada": "09:14",
-   "finJornada": "12:59",
+   "finJornada": "13:55",
    "entradaZona": "09:14",
    "salidaZona": "09:18",
    "zonaConfiable": true,
    "primera": "09:22",
-   "ultima": "12:59",
-   "visitas": 16,
-   "minutosTotal": 96.2,
-   "minutosPromedio": 6.0,
-   "pedidos": 23,
-   "monto": 3581123.87,
-   "pasoSinVender": 7,
-   "km": 17.0,
+   "ultima": "13:55",
+   "visitas": 25,
+   "minutosTotal": 120.6,
+   "minutosPromedio": 4.8,
+   "pedidos": 31,
+   "monto": 4219066.72,
+   "pasoSinVender": 12,
+   "km": 20.0,
    "llegoTarde": true,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "5",
    "vendedor": "Nicolas Martinez",
    "inicioJornada": "09:03",
-   "finJornada": "12:59",
+   "finJornada": "13:45",
    "entradaZona": null,
    "salidaZona": null,
    "zonaConfiable": false,
    "primera": "09:03",
-   "ultima": "12:59",
-   "visitas": 16,
-   "minutosTotal": 119.5,
-   "minutosPromedio": 7.5,
-   "pedidos": 16,
-   "monto": 2508234.0,
-   "pasoSinVender": 8,
-   "km": 55.0,
+   "ultima": "13:45",
+   "visitas": 23,
+   "minutosTotal": 143.5,
+   "minutosPromedio": 6.2,
+   "pedidos": 22,
+   "monto": 3404939.02,
+   "pasoSinVender": 11,
+   "km": 61.0,
    "llegoTarde": true,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "20",
@@ -220,28 +220,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 5,
-   "monto": 310961.01,
-   "pasoSinVender": 0,
-   "km": 0.0,
-   "llegoTarde": false,
-   "salioTemprano": false
-  },
-  {
-   "sellerId": "30",
-   "vendedor": "Agostina Gauna",
-   "inicioJornada": null,
-   "finJornada": null,
-   "entradaZona": null,
-   "salidaZona": null,
-   "zonaConfiable": false,
-   "primera": null,
-   "ultima": null,
-   "visitas": 0,
-   "minutosTotal": 0.0,
-   "minutosPromedio": 0,
-   "pedidos": 1,
-   "monto": 92500.0,
+   "pedidos": 4,
+   "monto": 0.0,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -529,6 +509,11 @@
     "hora": "12:39",
     "clientId": "1717",
     "nombre": "Fabiana casavalle"
+   },
+   {
+    "hora": "13:07",
+    "clientId": "4431",
+    "nombre": "Ariel Raúl Alcoba"
    }
   ],
   "": [
@@ -613,11 +598,6 @@
     "nombre": "NICADELO"
    },
    {
-    "hora": "12:46",
-    "clientId": "842",
-    "nombre": "SCHLEGEL POZZONI S.A."
-   },
-   {
     "hora": "12:49",
     "clientId": "2476",
     "nombre": "HECTOR OMAR BOMBINO"
@@ -626,6 +606,11 @@
     "hora": "12:52",
     "clientId": "1336",
     "nombre": "MARINO GABRIEL ALEJANDRO"
+   },
+   {
+    "hora": "13:22",
+    "clientId": "1745",
+    "nombre": "GARCIA FERNANDO"
    }
   ],
   "12": [
@@ -898,6 +883,16 @@
     "hora": "12:52",
     "clientId": "1324",
     "nombre": "Locaba polirrubro S.A"
+   },
+   {
+    "hora": "13:09",
+    "clientId": "1926",
+    "nombre": "AXIÓN TRAVEL SOCIEDAD DE RES"
+   },
+   {
+    "hora": "13:11",
+    "clientId": "1470",
+    "nombre": "ZARAGOZA NELIDA ADELA"
    }
   ],
   "6": [
@@ -1105,6 +1100,46 @@
     "hora": "12:31",
     "clientId": "1433",
     "nombre": "CAÑADAS SANDRA SABINA"
+   },
+   {
+    "hora": "13:00",
+    "clientId": "1764",
+    "nombre": "APREA GABRIELA ALEJANDRA"
+   },
+   {
+    "hora": "13:03",
+    "clientId": "2321",
+    "nombre": "GNONI GABRIEL"
+   },
+   {
+    "hora": "13:03",
+    "clientId": "1740",
+    "nombre": "DENEGRI LUCIA MARIA"
+   },
+   {
+    "hora": "13:08",
+    "clientId": "2313",
+    "nombre": "CANTARELLA MAXIMO AUGUSTO"
+   },
+   {
+    "hora": "13:10",
+    "clientId": "1049",
+    "nombre": "YANG CHENQUN"
+   },
+   {
+    "hora": "13:26",
+    "clientId": "2939",
+    "nombre": "ANGEL JOSE NAPOLITANO"
+   },
+   {
+    "hora": "13:27",
+    "clientId": "3628",
+    "nombre": "PEDRO REGINO FASSA"
+   },
+   {
+    "hora": "13:28",
+    "clientId": "2593",
+    "nombre": "GUILLERMO CESA GIOLA"
    }
   ],
   "2": [
@@ -1369,6 +1404,11 @@
     "nombre": "DUVAL ST.  ALMACEN S. R. L."
    },
    {
+    "hora": "12:46",
+    "clientId": "842",
+    "nombre": "SCHLEGEL POZZONI S.A."
+   },
+   {
     "hora": "12:47",
     "clientId": "1610",
     "nombre": "VALLARTA SA"
@@ -1554,6 +1594,11 @@
     "hora": "12:58",
     "clientId": "1309",
     "nombre": "Lucas Leandro Telechea"
+   },
+   {
+    "hora": "13:26",
+    "clientId": "1935",
+    "nombre": "CREMONA SA"
    }
   ],
   "5": [
@@ -1636,6 +1681,41 @@
     "hora": "12:59",
     "clientId": "390",
     "nombre": "Jura Leandro Gaston"
+   },
+   {
+    "hora": "13:02",
+    "clientId": "394",
+    "nombre": "Despensa el melli"
+   },
+   {
+    "hora": "13:10",
+    "clientId": "860",
+    "nombre": "Natalia farias"
+   },
+   {
+    "hora": "13:12",
+    "clientId": "869",
+    "nombre": "Daniel Jonathan Gabriel  lespade"
+   },
+   {
+    "hora": "13:16",
+    "clientId": "866",
+    "nombre": "Medina Karina Alejandra"
+   },
+   {
+    "hora": "13:42",
+    "clientId": "1310",
+    "nombre": "Panadería la nueva espiga de Maipú"
+   },
+   {
+    "hora": "13:43",
+    "clientId": "418",
+    "nombre": "Mcdo.el vas quito sa"
+   },
+   {
+    "hora": "13:45",
+    "clientId": "342",
+    "nombre": "MERLO JAVIER HORACIO"
    }
   ],
   "3": [
@@ -1748,6 +1828,26 @@
     "hora": "12:42",
     "clientId": "1994",
     "nombre": "CORREA NOELIA ALEJANDRA"
+   },
+   {
+    "hora": "13:03",
+    "clientId": "3028",
+    "nombre": "KAREN ISABEL ROMANO"
+   },
+   {
+    "hora": "13:29",
+    "clientId": "1930",
+    "nombre": "LIU LIANG"
+   },
+   {
+    "hora": "13:29",
+    "clientId": "3094",
+    "nombre": "Estacion de servicio"
+   },
+   {
+    "hora": "13:30",
+    "clientId": "656",
+    "nombre": "MARIA JOSE MURACA"
    }
   ],
   "11": [
@@ -1824,7 +1924,7 @@
    {
     "hora": "10:21",
     "clientId": "1893",
-    "nombre": "LIMAYLA VELI CEPINA"
+    "nombre": "DAMAS HUAMAN DANIEL"
    },
    {
     "hora": "10:24",
@@ -1885,6 +1985,21 @@
     "hora": "12:54",
     "clientId": "1020",
     "nombre": "ZAMZOE SA"
+   },
+   {
+    "hora": "13:01",
+    "clientId": "3215",
+    "nombre": "MIHDI ROMINA ELIZABET"
+   },
+   {
+    "hora": "13:07",
+    "clientId": "2034",
+    "nombre": "FABIAN ALBERTO SOTELO"
+   },
+   {
+    "hora": "13:27",
+    "clientId": "3269",
+    "nombre": "Cesmil cabello"
    }
   ],
   "4": [
@@ -1967,6 +2082,51 @@
     "hora": "12:59",
     "clientId": "174",
     "nombre": "DANIELA BEATRIZ RIVERO"
+   },
+   {
+    "hora": "13:00",
+    "clientId": "171",
+    "nombre": "MARIA NATALIA NUÑEZ"
+   },
+   {
+    "hora": "13:22",
+    "clientId": "973",
+    "nombre": "Fernando campos"
+   },
+   {
+    "hora": "13:27",
+    "clientId": "565",
+    "nombre": "ANA MARIA ALVAREZ"
+   },
+   {
+    "hora": "13:33",
+    "clientId": "1988",
+    "nombre": "ALIVIO MARKET SA"
+   },
+   {
+    "hora": "13:33",
+    "clientId": "3912",
+    "nombre": "ALEJANDRO NICOLAS RICARDO"
+   },
+   {
+    "hora": "13:34",
+    "clientId": "3021",
+    "nombre": "FRANCO MATIAS LAZARTE"
+   },
+   {
+    "hora": "13:35",
+    "clientId": "974",
+    "nombre": "JOSE GONZALO SCORDIA"
+   },
+   {
+    "hora": "13:46",
+    "clientId": "5031",
+    "nombre": "RAUL OSCAR GARCIA"
+   },
+   {
+    "hora": "13:48",
+    "clientId": "655",
+    "nombre": "CRISTINA GABRIELA BERNARD"
    }
   ],
   "1": [
@@ -2154,6 +2314,51 @@
     "hora": "12:46",
     "clientId": "2147",
     "nombre": "D URSO VICENTE"
+   },
+   {
+    "hora": "13:06",
+    "clientId": "1190",
+    "nombre": "NICADELO S.A."
+   },
+   {
+    "hora": "13:12",
+    "clientId": "1754",
+    "nombre": "MIÑO NATALIA"
+   },
+   {
+    "hora": "13:16",
+    "clientId": "1761",
+    "nombre": "CIRKOV CRISTIAN DAMIAN"
+   },
+   {
+    "hora": "13:17",
+    "clientId": "3335",
+    "nombre": "CHOCOCHIA S.A."
+   },
+   {
+    "hora": "13:22",
+    "clientId": "1577",
+    "nombre": "KIOSMDQ"
+   },
+   {
+    "hora": "13:36",
+    "clientId": "972",
+    "nombre": "NICADELO S.A."
+   },
+   {
+    "hora": "13:36",
+    "clientId": "2150",
+    "nombre": "GOMEZ MEDICI GONZALO JOAQUIN"
+   },
+   {
+    "hora": "13:43",
+    "clientId": "2754",
+    "nombre": "KIOSMDQ"
+   },
+   {
+    "hora": "13:52",
+    "clientId": "3125",
+    "nombre": "ROBERTO EMANUEL VALOR LIZARRAGA"
    }
   ]
  }
