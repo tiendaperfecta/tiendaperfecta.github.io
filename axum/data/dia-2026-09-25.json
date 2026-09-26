@@ -9487,6 +9487,25 @@
   },
   {
    "fecha": "2026-09-25",
+   "sellerId": "5",
+   "vendedor": "Nicolas Martinez",
+   "clientId": "3389",
+   "nombre": "Mariano Dumas",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 61785.73,
+   "fechaVenta": "2026-09-25",
+   "horaVenta": "20:00",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-25",
    "sellerId": "6",
    "vendedor": "Camila Martinez",
    "clientId": "1342",
@@ -12681,7 +12700,7 @@
  "resumen": {
   "vendio": 216,
   "paso_sin_vender": 268,
-  "vendio_sin_pasar": 150,
+  "vendio_sin_pasar": 151,
   "sin_visita": 3
  },
  "bySeller": [
@@ -12838,8 +12857,8 @@
    "visitas": 30,
    "minutosTotal": 211.4,
    "minutosPromedio": 7.0,
-   "pedidos": 41,
-   "monto": 3988630.77,
+   "pedidos": 42,
+   "monto": 4050416.51,
    "pasoSinVender": 9,
    "km": 66.0,
    "llegoTarde": false,
@@ -15479,6 +15498,11 @@
     "hora": "17:52",
     "clientId": "619",
     "nombre": "AUTOSERVICO SIGLO XXI"
+   },
+   {
+    "hora": "18:04",
+    "clientId": "3355",
+    "nombre": "autoservicio camet"
    }
   ]
  },
@@ -17065,7 +17089,7 @@
  "totales": {
   "visitas": 484,
   "minutos": 2233.7,
-  "pedidos": 503,
-  "monto": 60273037.93
+  "pedidos": 504,
+  "monto": 60334823.67
  }
 }

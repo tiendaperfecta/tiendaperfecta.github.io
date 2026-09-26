@@ -8914,6 +8914,25 @@
   },
   {
    "fecha": "2026-09-25",
+   "sellerId": "5",
+   "vendedor": "Nicolas Martinez",
+   "clientId": "3389",
+   "nombre": "Mariano Dumas",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 61785.73,
+   "fechaVenta": "2026-09-25",
+   "horaVenta": "20:00",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-25",
    "sellerId": "6",
    "vendedor": "Camila Martinez",
    "clientId": "1342",
@@ -12108,7 +12127,7 @@
  "resumen": {
   "vendio": 216,
   "paso_sin_vender": 268,
-  "vendio_sin_pasar": 150,
+  "vendio_sin_pasar": 151,
   "sin_visita": 3
  }
 }
