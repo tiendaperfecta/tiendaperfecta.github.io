@@ -6,10 +6,28 @@
    "sellerId": "7",
    "vendedor": "Ramiro Rando",
    "ruta": 19,
-   "visitadosDeRuta": 6,
-   "pendientes": 13,
+   "visitadosDeRuta": 11,
+   "pendientes": 8,
    "fueraDeRuta": 29,
-   "pct": 31.6
+   "pct": 57.9
+  },
+  {
+   "sellerId": "12",
+   "vendedor": "Agustin Pogorzelski",
+   "ruta": 14,
+   "visitadosDeRuta": 4,
+   "pendientes": 10,
+   "fueraDeRuta": 49,
+   "pct": 28.6
+  },
+  {
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "ruta": 26,
+   "visitadosDeRuta": 7,
+   "pendientes": 19,
+   "fueraDeRuta": 9,
+   "pct": 26.9
   },
   {
    "sellerId": "6",
@@ -17,35 +35,17 @@
    "ruta": 15,
    "visitadosDeRuta": 4,
    "pendientes": 11,
-   "fueraDeRuta": 29,
+   "fueraDeRuta": 37,
    "pct": 26.7
-  },
-  {
-   "sellerId": "12",
-   "vendedor": "Agustin Pogorzelski",
-   "ruta": 14,
-   "visitadosDeRuta": 3,
-   "pendientes": 11,
-   "fueraDeRuta": 38,
-   "pct": 21.4
-  },
-  {
-   "sellerId": "4",
-   "vendedor": "Lucas Giayetto",
-   "ruta": 26,
-   "visitadosDeRuta": 3,
-   "pendientes": 23,
-   "fueraDeRuta": 9,
-   "pct": 11.5
   },
   {
    "sellerId": "2",
    "vendedor": "Julian Nuñez",
    "ruta": 11,
-   "visitadosDeRuta": 1,
-   "pendientes": 10,
-   "fueraDeRuta": 35,
-   "pct": 9.1
+   "visitadosDeRuta": 2,
+   "pendientes": 9,
+   "fueraDeRuta": 52,
+   "pct": 18.2
   },
   {
    "sellerId": "1",
@@ -53,7 +53,7 @@
    "ruta": 13,
    "visitadosDeRuta": 1,
    "pendientes": 12,
-   "fueraDeRuta": 26,
+   "fueraDeRuta": 36,
    "pct": 7.7
   },
   {
@@ -62,7 +62,7 @@
    "ruta": 22,
    "visitadosDeRuta": 0,
    "pendientes": 22,
-   "fueraDeRuta": 25,
+   "fueraDeRuta": 35,
    "pct": 0.0
   },
   {
@@ -71,7 +71,7 @@
    "ruta": 23,
    "visitadosDeRuta": 0,
    "pendientes": 23,
-   "fueraDeRuta": 21,
+   "fueraDeRuta": 27,
    "pct": 0.0
   },
   {
@@ -89,8 +89,17 @@
    "ruta": 15,
    "visitadosDeRuta": 0,
    "pendientes": 15,
-   "fueraDeRuta": 16,
+   "fueraDeRuta": 22,
    "pct": 0.0
+  },
+  {
+   "sellerId": "30",
+   "vendedor": "Agostina Gauna",
+   "ruta": 0,
+   "visitadosDeRuta": 0,
+   "pendientes": 0,
+   "fueraDeRuta": 0,
+   "pct": null
   },
   {
    "sellerId": "31",
@@ -116,7 +125,7 @@
    "ruta": 22,
    "visitadosDeRuta": 0,
    "pendientes": 22,
-   "fueraDeRuta": 13,
+   "fueraDeRuta": 16,
    "pct": 0.0
   },
   {
@@ -525,12 +534,6 @@
     "taxonomia": "Rotiseria_B"
    },
    {
-    "clientId": "1714",
-    "nombre": "fruticel touch srl",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Kiosco/Maxikiosco_C"
-   },
-   {
     "clientId": "2037",
     "nombre": "FIGINI LLUL ANTONELA",
     "localidad": "MAR DEL PLATA",
@@ -561,12 +564,6 @@
     "nombre": "NIETO SILVANA BEATRIZ",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Almacen/Despensa_C"
-   },
-   {
-    "clientId": "1096",
-    "nombre": "MARCELO ALEJANDRO BORELLI",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_D"
    },
    {
     "clientId": "1607",
@@ -710,6 +707,7 @@
     "taxonomia": "Almacen/Despensa_D"
    }
   ],
+  "30": [],
   "31": [
    {
     "clientId": "1008",
@@ -818,12 +816,6 @@
   ],
   "4": [
    {
-    "clientId": "140",
-    "nombre": "CAWZ MDP S.A.",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Autoservicio Tradicional_A"
-   },
-   {
     "clientId": "170",
     "nombre": "YANYUN WANG",
     "localidad": "MAR DEL PLATA",
@@ -834,12 +826,6 @@
     "nombre": "MARIA NATALIA NUÑEZ",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Autoservicio Tradicional_D"
-   },
-   {
-    "clientId": "174",
-    "nombre": "DANIELA BEATRIZ RIVERO",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
     "clientId": "1896",
@@ -866,12 +852,6 @@
     "taxonomia": "Autoservicio Tradicional_D"
    },
    {
-    "clientId": "2863",
-    "nombre": "D IPOLITO VERONICA LILIANA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Fiambreria_B"
-   },
-   {
     "clientId": "3021",
     "nombre": "FRANCO MATIAS LAZARTE",
     "localidad": "MAR DEL PLATA",
@@ -894,12 +874,6 @@
     "nombre": "MARTA SUSANA BERARDO",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Kiosco/Maxikiosco_A"
-   },
-   {
-    "clientId": "5030",
-    "nombre": "ROXANA ELIZABETH MARISCAL",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_C"
    },
    {
     "clientId": "5031",
@@ -1160,30 +1134,6 @@
   ],
   "7": [
    {
-    "clientId": "1488",
-    "nombre": "HERRERA CECILIA",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Almacen/Despensa_D"
-   },
-   {
-    "clientId": "1530",
-    "nombre": "LORENA NOEMI JUAREZ",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
-    "clientId": "1598",
-    "nombre": "GIANETTA YESICA SOLEDAD",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
-    "clientId": "1717",
-    "nombre": "Fabiana casavalle",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Almacen/Despensa_C"
-   },
-   {
     "clientId": "173",
     "nombre": "DANIELA VICTORIA ROJAS",
     "localidad": "Mar del Plata",
@@ -1204,12 +1154,6 @@
    {
     "clientId": "4431",
     "nombre": "Ariel Raúl Alcoba",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_C"
-   },
-   {
-    "clientId": "4685",
-    "nombre": "STELLA MARIS HERRERA",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Almacen/Despensa_C"
    },
