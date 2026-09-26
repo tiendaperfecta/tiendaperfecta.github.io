@@ -1,9 +1,86 @@
 {
  "date": "2026-09-26",
- "totalNet": 0,
- "totalGross": 0,
- "orders": 0,
- "bySeller": [],
- "byChannel": [],
- "topClients": []
+ "totalNet": 710591.0,
+ "totalGross": 859815.1,
+ "orders": 6,
+ "bySeller": [
+  {
+   "sellerId": "8",
+   "name": "Martinica Rodriguez",
+   "orders": 3,
+   "total": 679315.05
+  },
+  {
+   "sellerId": "1",
+   "name": "Maria Noelia Madia",
+   "orders": 1,
+   "total": 73785.74
+  },
+  {
+   "sellerId": "7",
+   "name": "Ramiro Rando",
+   "orders": 1,
+   "total": 66500.08
+  },
+  {
+   "sellerId": "3",
+   "name": "Ezequiel Hack",
+   "orders": 1,
+   "total": 40214.23
+  }
+ ],
+ "byChannel": [
+  {
+   "channel": "TRADITIONAL TRADE_A",
+   "orders": 2,
+   "total": 501814.92
+  },
+  {
+   "channel": "TRADITIONAL TRADE_B",
+   "orders": 2,
+   "total": 251285.87
+  },
+  {
+   "channel": "Mayorista_D",
+   "orders": 1,
+   "total": 66500.08
+  },
+  {
+   "channel": "TRADITIONAL TRADE_D",
+   "orders": 1,
+   "total": 40214.23
+  }
+ ],
+ "topClients": [
+  {
+   "clientId": "192",
+   "name": "KEES MARTIN ANDRES (Kiosco/Maxikiosco_A)",
+   "orders": 2,
+   "total": 501814.92
+  },
+  {
+   "clientId": "186",
+   "name": "SUPER LICHARDI S.R.L. (Autoservicio Tradicional_B)",
+   "orders": 1,
+   "total": 177500.12
+  },
+  {
+   "clientId": "2723",
+   "name": "NICADELO SA (Kiosco/Maxikiosco_B)",
+   "orders": 1,
+   "total": 73785.74
+  },
+  {
+   "clientId": "1087",
+   "name": "CREMONA SA (Mayoristas_D)",
+   "orders": 1,
+   "total": 66500.08
+  },
+  {
+   "clientId": "4942",
+   "name": "CARLOS ANDRES TARABORRELLI (Kiosco/Maxikiosco_D)",
+   "orders": 1,
+   "total": 40214.23
+  }
+ ]
 }

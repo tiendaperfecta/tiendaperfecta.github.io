@@ -1,215 +1,115 @@
 {
- "date": "2026-09-25",
- "diaSemana": "viernes",
- "jornadaCerrada": true,
+ "date": "2026-09-26",
+ "diaSemana": "sabado",
+ "jornadaCerrada": false,
  "umbrales": {
   "llegada": "09:00",
   "salida": "14:00"
  },
  "bySeller": [
   {
-   "sellerId": "1",
-   "vendedor": "Maria Noelia Madia",
-   "inicioJornada": "09:45",
-   "finJornada": "15:21",
-   "entradaZona": null,
-   "salidaZona": null,
-   "zonaConfiable": false,
-   "primera": "09:45",
-   "ultima": "15:21",
-   "visitas": 96,
-   "minutosTotal": 247.8,
-   "minutosPromedio": 2.6,
-   "pedidos": 38,
-   "monto": 2639413.73,
-   "pasoSinVender": 67,
-   "km": 48.0,
-   "llegoTarde": true,
+   "sellerId": "7",
+   "vendedor": "Ramiro Rando",
+   "inicioJornada": "08:44",
+   "finJornada": "09:00",
+   "entradaZona": "08:44",
+   "salidaZona": "09:00",
+   "zonaConfiable": true,
+   "primera": "08:44",
+   "ultima": "08:59",
+   "visitas": 12,
+   "minutosTotal": 11.9,
+   "minutosPromedio": 1.0,
+   "pedidos": 1,
+   "monto": 66500.08,
+   "pasoSinVender": 11,
+   "km": 6.0,
+   "llegoTarde": false,
    "salioTemprano": false
   },
   {
    "sellerId": "2",
    "vendedor": "Julian Nuñez",
-   "inicioJornada": "08:42",
-   "finJornada": "14:16",
-   "entradaZona": "08:42",
-   "salidaZona": "14:09",
+   "inicioJornada": "08:53",
+   "finJornada": "08:59",
+   "entradaZona": "08:53",
+   "salidaZona": "08:59",
    "zonaConfiable": true,
-   "primera": "08:56",
-   "ultima": "14:16",
-   "visitas": 75,
-   "minutosTotal": 194.5,
-   "minutosPromedio": 2.6,
-   "pedidos": 38,
-   "monto": 2122231.11,
-   "pasoSinVender": 53,
-   "km": 35.0,
+   "primera": "08:54",
+   "ultima": "08:59",
+   "visitas": 9,
+   "minutosTotal": 4.5,
+   "minutosPromedio": 0.5,
+   "pedidos": 0,
+   "monto": 0.0,
+   "pasoSinVender": 9,
+   "km": 1.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
+   "sellerId": "12",
+   "vendedor": "Agustin Pogorzelski",
+   "inicioJornada": "08:42",
+   "finJornada": "08:59",
+   "entradaZona": "08:42",
+   "salidaZona": "08:44",
+   "zonaConfiable": true,
+   "primera": "08:46",
+   "ultima": "08:59",
+   "visitas": 3,
+   "minutosTotal": 0.4,
+   "minutosPromedio": 0.1,
+   "pedidos": 0,
+   "monto": 0.0,
+   "pasoSinVender": 3,
+   "km": 6.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
   {
    "sellerId": "6",
    "vendedor": "Camila Martinez",
-   "inicioJornada": "08:56",
-   "finJornada": "14:46",
-   "entradaZona": "08:56",
-   "salidaZona": "13:59",
+   "inicioJornada": "08:51",
+   "finJornada": "09:00",
+   "entradaZona": "08:51",
+   "salidaZona": "09:00",
    "zonaConfiable": true,
-   "primera": "08:57",
-   "ultima": "14:46",
-   "visitas": 65,
-   "minutosTotal": 238.3,
-   "minutosPromedio": 3.7,
-   "pedidos": 61,
-   "monto": 3817402.92,
-   "pasoSinVender": 36,
-   "km": 15.0,
-   "llegoTarde": false,
-   "salioTemprano": false
-  },
-  {
-   "sellerId": "11",
-   "vendedor": "Melanie Larrama",
-   "inicioJornada": "08:37",
-   "finJornada": "15:01",
-   "entradaZona": "08:37",
-   "salidaZona": "15:01",
-   "zonaConfiable": true,
-   "primera": "08:37",
-   "ultima": "15:01",
-   "visitas": 63,
-   "minutosTotal": 268.7,
-   "minutosPromedio": 4.3,
-   "pedidos": 39,
-   "monto": 3385973.18,
-   "pasoSinVender": 37,
-   "km": 18.0,
+   "primera": "08:51",
+   "ultima": "08:53",
+   "visitas": 3,
+   "minutosTotal": 6.1,
+   "minutosPromedio": 2.0,
+   "pedidos": 0,
+   "monto": 0.0,
+   "pasoSinVender": 3,
+   "km": 5.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
   {
    "sellerId": "10",
    "vendedor": "Matias Parada",
-   "inicioJornada": "08:42",
-   "finJornada": "16:14",
-   "entradaZona": "08:42",
-   "salidaZona": "08:44",
+   "inicioJornada": "08:55",
+   "finJornada": "08:59",
+   "entradaZona": "08:55",
+   "salidaZona": "08:59",
    "zonaConfiable": true,
-   "primera": "08:50",
-   "ultima": "16:14",
-   "visitas": 40,
-   "minutosTotal": 235.0,
-   "minutosPromedio": 5.9,
-   "pedidos": 28,
-   "monto": 1935035.1,
-   "pasoSinVender": 21,
-   "km": 35.0,
-   "llegoTarde": false,
-   "salioTemprano": false
-  },
-  {
-   "sellerId": "4",
-   "vendedor": "Lucas Giayetto",
-   "inicioJornada": "08:32",
-   "finJornada": "14:58",
-   "entradaZona": null,
-   "salidaZona": null,
-   "zonaConfiable": false,
-   "primera": "08:32",
-   "ultima": "14:58",
-   "visitas": 35,
-   "minutosTotal": 244.5,
-   "minutosPromedio": 7.0,
-   "pedidos": 46,
-   "monto": 4557762.56,
-   "pasoSinVender": 14,
-   "km": 37.0,
-   "llegoTarde": false,
-   "salioTemprano": false
-  },
-  {
-   "sellerId": "3",
-   "vendedor": "Ezequiel Hack",
-   "inicioJornada": "09:03",
-   "finJornada": "14:58",
-   "entradaZona": "10:45",
-   "salidaZona": "12:09",
-   "zonaConfiable": true,
-   "primera": "09:03",
-   "ultima": "14:58",
-   "visitas": 32,
-   "minutosTotal": 175.8,
-   "minutosPromedio": 5.5,
-   "pedidos": 29,
-   "monto": 3679774.02,
-   "pasoSinVender": 11,
-   "km": 27.0,
-   "llegoTarde": true,
-   "salioTemprano": false
-  },
-  {
-   "sellerId": "5",
-   "vendedor": "Nicolas Martinez",
-   "inicioJornada": "08:10",
-   "finJornada": "13:47",
-   "entradaZona": "08:10",
-   "salidaZona": "13:47",
-   "zonaConfiable": true,
-   "primera": "08:52",
-   "ultima": "13:14",
-   "visitas": 30,
-   "minutosTotal": 211.4,
-   "minutosPromedio": 7.0,
-   "pedidos": 42,
-   "monto": 4050416.51,
-   "pasoSinVender": 9,
-   "km": 66.0,
-   "llegoTarde": false,
-   "salioTemprano": true
-  },
-  {
-   "sellerId": "12",
-   "vendedor": "Agustin Pogorzelski",
-   "inicioJornada": "08:44",
-   "finJornada": "14:05",
-   "entradaZona": "08:44",
-   "salidaZona": "08:48",
-   "zonaConfiable": true,
-   "primera": "09:55",
-   "ultima": "14:05",
-   "visitas": 24,
-   "minutosTotal": 208.8,
-   "minutosPromedio": 8.7,
-   "pedidos": 35,
-   "monto": 3732155.83,
-   "pasoSinVender": 11,
-   "km": 26.0,
-   "llegoTarde": false,
-   "salioTemprano": false
-  },
-  {
-   "sellerId": "7",
-   "vendedor": "Ramiro Rando",
-   "inicioJornada": "08:59",
-   "finJornada": "13:41",
-   "entradaZona": null,
-   "salidaZona": null,
-   "zonaConfiable": false,
    "primera": "08:59",
-   "ultima": "13:41",
-   "visitas": 24,
-   "minutosTotal": 208.9,
-   "minutosPromedio": 8.7,
-   "pedidos": 36,
-   "monto": 3718118.71,
-   "pasoSinVender": 9,
-   "km": 18.0,
+   "ultima": "08:59",
+   "visitas": 1,
+   "minutosTotal": 0.2,
+   "minutosPromedio": 0.2,
+   "pedidos": 0,
+   "monto": 0.0,
+   "pasoSinVender": 1,
+   "km": 8.0,
    "llegoTarde": false,
-   "salioTemprano": true
+   "salioTemprano": false
   },
   {
-   "sellerId": "1176",
-   "vendedor": "Vendedor",
+   "sellerId": "1",
+   "vendedor": "Maria Noelia Madia",
    "inicioJornada": null,
    "finJornada": null,
    "entradaZona": null,
@@ -221,35 +121,15 @@
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
    "pedidos": 1,
-   "monto": 18152619.83,
+   "monto": 73785.74,
    "pasoSinVender": 0,
-   "km": 0.0,
+   "km": 22.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
   {
-   "sellerId": "20",
-   "vendedor": "Deposito",
-   "inicioJornada": null,
-   "finJornada": null,
-   "entradaZona": null,
-   "salidaZona": null,
-   "zonaConfiable": false,
-   "primera": null,
-   "ultima": null,
-   "visitas": 0,
-   "minutosTotal": 0.0,
-   "minutosPromedio": 0,
-   "pedidos": 44,
-   "monto": 74590.98,
-   "pasoSinVender": 0,
-   "km": 0.0,
-   "llegoTarde": false,
-   "salioTemprano": false
-  },
-  {
-   "sellerId": "30",
-   "vendedor": "Agostina Gauna",
+   "sellerId": "11",
+   "vendedor": "Melanie Larrama",
    "inicioJornada": null,
    "finJornada": null,
    "entradaZona": null,
@@ -263,7 +143,27 @@
    "pedidos": 0,
    "monto": 0.0,
    "pasoSinVender": 0,
-   "km": 0.0,
+   "km": 2.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
+   "sellerId": "3",
+   "vendedor": "Ezequiel Hack",
+   "inicioJornada": "08:58",
+   "finJornada": "09:00",
+   "entradaZona": "08:58",
+   "salidaZona": "09:00",
+   "zonaConfiable": true,
+   "primera": null,
+   "ultima": null,
+   "visitas": 0,
+   "minutosTotal": 0.0,
+   "minutosPromedio": 0,
+   "pedidos": 1,
+   "monto": 40214.23,
+   "pasoSinVender": 0,
+   "km": 7.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -308,6 +208,46 @@
    "salioTemprano": false
   },
   {
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "inicioJornada": null,
+   "finJornada": null,
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": null,
+   "ultima": null,
+   "visitas": 0,
+   "minutosTotal": 0.0,
+   "minutosPromedio": 0,
+   "pedidos": 0,
+   "monto": 0.0,
+   "pasoSinVender": 0,
+   "km": 4.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
+   "sellerId": "5",
+   "vendedor": "Nicolas Martinez",
+   "inicioJornada": null,
+   "finJornada": null,
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": null,
+   "ultima": null,
+   "visitas": 0,
+   "minutosTotal": 0.0,
+   "minutosPromedio": 0,
+   "pedidos": 0,
+   "monto": 0.0,
+   "pasoSinVender": 0,
+   "km": 10.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
    "sellerId": "8",
    "vendedor": "Martinica Rodriguez",
    "inicioJornada": null,
@@ -320,8 +260,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 38,
-   "monto": 3122395.32,
+   "pedidos": 3,
+   "monto": 679315.05,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -340,8 +280,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 29,
-   "monto": 5346933.87,
+   "pedidos": 0,
+   "monto": 0.0,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -349,2463 +289,181 @@
   }
  ],
  "timeline": {
-  "5": [
-   {
-    "hora": "08:12",
-    "clientId": "579",
-    "nombre": "ARIEL SEBASTIAN FRANCUCCI"
-   },
-   {
-    "hora": "08:17",
-    "clientId": "439",
-    "nombre": "LUIS ALBERTO PIGLIACAMPI"
-   },
-   {
-    "hora": "08:28",
-    "clientId": "2848",
-    "nombre": "LA CURVA DE OTAMENDI S.R.L"
-   },
-   {
-    "hora": "08:52",
-    "clientId": "421",
-    "nombre": "DANIEL HORACIO ATLANTE"
-   },
-   {
-    "hora": "09:08",
-    "clientId": "653",
-    "nombre": "JAVIER DAMIAN RODRIGUEZ"
-   },
-   {
-    "hora": "09:23",
-    "clientId": "561",
-    "nombre": "LUCIANA MARIA PARODI"
-   },
-   {
-    "hora": "09:23",
-    "clientId": "428",
-    "nombre": "ROJOLUEM S.A"
-   },
-   {
-    "hora": "10:15",
-    "clientId": "773",
-    "nombre": "LUIS RODOLFO MANSILLA"
-   },
-   {
-    "hora": "10:17",
-    "clientId": "4471",
-    "nombre": "SANTA CRUZ MARCELO JAVIER"
-   },
-   {
-    "hora": "10:17",
-    "clientId": "657",
-    "nombre": "FRANCISCO CENTURION"
-   },
-   {
-    "hora": "10:48",
-    "clientId": "429",
-    "nombre": "MARIO FABIAN LUCHETTA"
-   },
-   {
-    "hora": "10:48",
-    "clientId": "433",
-    "nombre": "ROMINA MICAELA BRAVO"
-   },
-   {
-    "hora": "11:21",
-    "clientId": "3353",
-    "nombre": "Dora Liliana Bravo"
-   },
-   {
-    "hora": "11:31",
-    "clientId": "731",
-    "nombre": "MARIA AMPARO RODRIGUEZ"
-   },
-   {
-    "hora": "11:36",
-    "clientId": "3150",
-    "nombre": "Jorge Luis tello"
-   },
-   {
-    "hora": "11:39",
-    "clientId": "977",
-    "nombre": "MARIA ALEJANDRA ROMERO"
-   },
-   {
-    "hora": "11:42",
-    "clientId": "459",
-    "nombre": "RIPOLL SEBASTIAN"
-   },
-   {
-    "hora": "12:35",
-    "clientId": "454",
-    "nombre": "PEDRO MARCELINO SIMIAN"
-   },
-   {
-    "hora": "12:58",
-    "clientId": "728",
-    "nombre": "ANILDO RUBEN BASABE"
-   }
-  ],
-  "4": [
-   {
-    "hora": "08:32",
-    "clientId": "634",
-    "nombre": "MARYURY BARCO YEPES"
-   },
-   {
-    "hora": "08:58",
-    "clientId": "1848",
-    "nombre": "Mendez María Luis"
-   },
-   {
-    "hora": "09:02",
-    "clientId": "4806",
-    "nombre": "YESICA ANDREA BELEN LILLO"
-   },
-   {
-    "hora": "09:05",
-    "clientId": "407",
-    "nombre": "LAURA ELVIRA IARRAR"
-   },
-   {
-    "hora": "09:05",
-    "clientId": "404",
-    "nombre": "VICTOR JOSE HUERTA"
-   },
-   {
-    "hora": "09:28",
-    "clientId": "3468",
-    "nombre": "MARIO ABEL FERNANDEZ FERNANDEZ"
-   },
-   {
-    "hora": "09:38",
-    "clientId": "647",
-    "nombre": "EL TRIO"
-   },
-   {
-    "hora": "09:52",
-    "clientId": "639",
-    "nombre": "MARIA VICTORIA SOFIA ESTORS"
-   },
-   {
-    "hora": "10:00",
-    "clientId": "1230",
-    "nombre": "ROSA NATALIA CURILEF JARAMILLO"
-   },
-   {
-    "hora": "10:03",
-    "clientId": "528",
-    "nombre": "SEBASTIAN GONZALO SENDON"
-   },
-   {
-    "hora": "10:08",
-    "clientId": "880",
-    "nombre": "MIGUEL ANGEL ABRAHAM"
-   },
-   {
-    "hora": "10:20",
-    "clientId": "718",
-    "nombre": "VIVIANA DEL CARMEN SABUGAL"
-   },
-   {
-    "hora": "10:41",
-    "clientId": "879",
-    "nombre": "GONZALEZ LEONARDO JAVIER"
-   },
-   {
-    "hora": "10:43",
-    "clientId": "720",
-    "nombre": "JOAQUINA MAMANI ARILE"
-   },
-   {
-    "hora": "10:59",
-    "clientId": "918",
-    "nombre": "SOLEDAD VERTIZ"
-   },
-   {
-    "hora": "11:01",
-    "clientId": "535",
-    "nombre": "CRACCO RAMON OCTAVIO"
-   },
-   {
-    "hora": "11:05",
-    "clientId": "2122",
-    "nombre": "MERCEDES LAURA CHANDIA"
-   },
-   {
-    "hora": "11:12",
-    "clientId": "2910",
-    "nombre": "Silvia Elizabeth Silva"
-   },
-   {
-    "hora": "11:22",
-    "clientId": "3531",
-    "nombre": "GLADYS ANDREA MELLA"
-   },
-   {
-    "hora": "11:30",
-    "clientId": "534",
-    "nombre": "AGUSTIN DIAZ"
-   },
-   {
-    "hora": "11:45",
-    "clientId": "537",
-    "nombre": "JOSE LUIS TORRES"
-   },
-   {
-    "hora": "11:47",
-    "clientId": "2947",
-    "nombre": "MARIA SOLEDAD VAZQUEZ"
-   },
-   {
-    "hora": "11:56",
-    "clientId": "4921",
-    "nombre": "IGNACIO ISMAEL JADUR"
-   },
-   {
-    "hora": "11:56",
-    "clientId": "881",
-    "nombre": "CRISTINA VALERIA TORRES"
-   },
-   {
-    "hora": "12:05",
-    "clientId": "530",
-    "nombre": "CAROLINA NELDA LORENA YLICICH"
-   },
-   {
-    "hora": "12:25",
-    "clientId": "767",
-    "nombre": "GRACIELA DEL CARMEN SUBIABRE"
-   },
-   {
-    "hora": "12:29",
-    "clientId": "2894",
-    "nombre": "NELDA JENHY SOTO SOTO"
-   },
-   {
-    "hora": "12:36",
-    "clientId": "713",
-    "nombre": "MARIA DE LOS ANGELES AITTA"
-   },
-   {
-    "hora": "13:05",
-    "clientId": "400",
-    "nombre": "Franco Fernandez Asuncion"
-   },
-   {
-    "hora": "13:09",
-    "clientId": "1453",
-    "nombre": "Macarena Loza"
-   },
-   {
-    "hora": "13:09",
-    "clientId": "2376",
-    "nombre": "DAIANA ELISA CRUZ"
-   },
-   {
-    "hora": "13:49",
-    "clientId": "3801",
-    "nombre": "SUSANA GABRIELA MARUSO"
-   },
-   {
-    "hora": "14:08",
-    "clientId": "633",
-    "nombre": "MAURICIO  NICOLAS SASSOU"
-   },
-   {
-    "hora": "15:28",
-    "clientId": "3633",
-    "nombre": "GONZALEZ LEONARDO JAVIER"
-   }
-  ],
-  "11": [
-   {
-    "hora": "08:37",
-    "clientId": "1239",
-    "nombre": "LABRUNEE MICAELA"
-   },
-   {
-    "hora": "08:37",
-    "clientId": "4576",
-    "nombre": "CHOCOCHIA S. A."
-   },
-   {
-    "hora": "08:41",
-    "clientId": "2847",
-    "nombre": "GOMEZ PAULA ANDREA"
-   },
-   {
-    "hora": "08:41",
-    "clientId": "1044",
-    "nombre": "PAPELERA CAMOGA S A"
-   },
-   {
-    "hora": "08:42",
-    "clientId": "2414",
-    "nombre": "NICADELO SA"
-   },
-   {
-    "hora": "08:42",
-    "clientId": "2187",
-    "nombre": "ARCIDIACONO MARIA DEL CARMEN"
-   },
-   {
-    "hora": "08:42",
-    "clientId": "2190",
-    "nombre": "SWEET GROUP MDP"
-   },
-   {
-    "hora": "08:43",
-    "clientId": "1659",
-    "nombre": "FRUTICEL TOUCH S.R.L."
-   },
-   {
-    "hora": "08:43",
-    "clientId": "3812",
-    "nombre": "JIMENA LAURA PRADO"
-   },
-   {
-    "hora": "08:43",
-    "clientId": "2403",
-    "nombre": "NICADELO SA"
-   },
-   {
-    "hora": "08:43",
-    "clientId": "1634",
-    "nombre": "BOGADO RUBEN DARIO"
-   },
-   {
-    "hora": "08:43",
-    "clientId": "1645",
-    "nombre": "KIOSMDQ"
-   },
-   {
-    "hora": "09:03",
-    "clientId": "1642",
-    "nombre": "Juan Manuel ballesteros"
-   },
-   {
-    "hora": "09:04",
-    "clientId": "1708",
-    "nombre": "Alejandra Pippi"
-   },
-   {
-    "hora": "09:19",
-    "clientId": "1085",
-    "nombre": "CHEN WEILI"
-   },
-   {
-    "hora": "09:21",
-    "clientId": "1563",
-    "nombre": "ALDAY ROBERTO ADRIAN"
-   },
-   {
-    "hora": "09:23",
-    "clientId": "1086",
-    "nombre": "CREMONA SA"
-   },
-   {
-    "hora": "10:21",
-    "clientId": "1173",
-    "nombre": "MOREL TOBIAS ANDRES"
-   },
-   {
-    "hora": "10:44",
-    "clientId": "1249",
-    "nombre": "FRUTICEL TOUCH S.R.L."
-   },
-   {
-    "hora": "10:51",
-    "clientId": "3281",
-    "nombre": "CARLA BELEN CORREA"
-   },
-   {
-    "hora": "10:56",
-    "clientId": "1657",
-    "nombre": "PISCICELLI PAOLA"
-   },
-   {
-    "hora": "10:59",
-    "clientId": "3425",
-    "nombre": "MABEL RUIZ"
-   },
-   {
-    "hora": "11:03",
-    "clientId": "1635",
-    "nombre": "CAPAMADJIAN ANDRES"
-   },
-   {
-    "hora": "11:04",
-    "clientId": "1656",
-    "nombre": "PACHECO MARCELO HECTOR"
-   },
-   {
-    "hora": "11:21",
-    "clientId": "2196",
-    "nombre": "MONTENEGRO JOSE MATIAS"
-   },
-   {
-    "hora": "11:23",
-    "clientId": "1641",
-    "nombre": "FAIERMAN NORMA"
-   },
-   {
-    "hora": "11:32",
-    "clientId": "1272",
-    "nombre": "Rodríguez Cintia Analia"
-   },
-   {
-    "hora": "11:42",
-    "clientId": "897",
-    "nombre": "MARIO MARCELO CERDAN"
-   },
-   {
-    "hora": "11:44",
-    "clientId": "3435",
-    "nombre": "LUCAS IGNACIO ELMER"
-   },
-   {
-    "hora": "11:45",
-    "clientId": "2186",
-    "nombre": "JULIETA AILEN ARANZA"
-   },
-   {
-    "hora": "11:45",
-    "clientId": "1832",
-    "nombre": "LACATENA SANDRA NORMA"
-   },
-   {
-    "hora": "11:46",
-    "clientId": "1709",
-    "nombre": "Del Prado Marisa Ester"
-   },
-   {
-    "hora": "12:02",
-    "clientId": "1362",
-    "nombre": "NANNI ABEL"
-   },
-   {
-    "hora": "12:43",
-    "clientId": "5051",
-    "nombre": "CHEGGFIELD SOCIEDAD ANONIMA"
-   },
-   {
-    "hora": "12:56",
-    "clientId": "1804",
-    "nombre": "BELGRAINS S.A."
-   },
-   {
-    "hora": "12:58",
-    "clientId": "3111",
-    "nombre": "PAULA AGUSTINA OLIVERA"
-   },
-   {
-    "hora": "13:03",
-    "clientId": "1820",
-    "nombre": "selecto market srl"
-   },
-   {
-    "hora": "13:07",
-    "clientId": "3840",
-    "nombre": "SILVINA LAURA ORIOL"
-   },
-   {
-    "hora": "13:18",
-    "clientId": "4911",
-    "nombre": "FRUTICEL TOUCH S.R.L."
-   },
-   {
-    "hora": "13:19",
-    "clientId": "1971",
-    "nombre": "ORLANDO NATALIA VERONICA"
-   },
-   {
-    "hora": "13:23",
-    "clientId": "3514",
-    "nombre": "WALTER ELISEO ESCUDERO"
-   },
-   {
-    "hora": "13:24",
-    "clientId": "1957",
-    "nombre": "BARBARA SOFIA CRAVERO"
-   },
-   {
-    "hora": "13:26",
-    "clientId": "1363",
-    "nombre": "PALAVECINO MIRTA"
-   },
-   {
-    "hora": "13:26",
-    "clientId": "2029",
-    "nombre": "ANA RUTH TRIPODI"
-   },
-   {
-    "hora": "13:28",
-    "clientId": "527",
-    "nombre": "DONG XINGWU"
-   },
-   {
-    "hora": "13:38",
-    "clientId": "1024",
-    "nombre": "PAREDEZ RUBEN DARIO"
-   },
-   {
-    "hora": "13:39",
-    "clientId": "1211",
-    "nombre": "Jeremías ramos"
-   },
-   {
-    "hora": "13:50",
-    "clientId": "1966",
-    "nombre": "INNOVACIONES SUREÑAS SA"
-   },
-   {
-    "hora": "13:51",
-    "clientId": "1414",
-    "nombre": "RAMOS MAXIMILIANO JAVIER"
-   },
-   {
-    "hora": "13:53",
-    "clientId": "3520",
-    "nombre": "CHOCOCHIA S. A."
-   },
-   {
-    "hora": "13:54",
-    "clientId": "1975",
-    "nombre": "VALORZI RUBEN"
-   },
-   {
-    "hora": "14:00",
-    "clientId": "1259",
-    "nombre": "ACOSTA ROBERTO OMAR"
-   },
-   {
-    "hora": "14:04",
-    "clientId": "3654",
-    "nombre": "RONCATI RAFAEL GUILLERMO"
-   },
-   {
-    "hora": "14:05",
-    "clientId": "2442",
-    "nombre": "MARIA LAURA PEREZ BLANCO"
-   },
-   {
-    "hora": "14:24",
-    "clientId": "1967",
-    "nombre": "GRAFF MARIA LUISA"
-   },
-   {
-    "hora": "14:24",
-    "clientId": "1404",
-    "nombre": "DI RENZO JUAN NICOLAS"
-   },
-   {
-    "hora": "14:33",
-    "clientId": "1964",
-    "nombre": "GIGENA HUGO ERNESTO"
-   },
-   {
-    "hora": "14:39",
-    "clientId": "3082",
-    "nombre": "VERONICA VICTORIA LOURO"
-   },
-   {
-    "hora": "14:58",
-    "clientId": "1331",
-    "nombre": "FRUTICEL TOUCH S.R.L."
-   },
-   {
-    "hora": "14:58",
-    "clientId": "1893",
-    "nombre": "LIMAYLA VELI CEPINA"
-   },
-   {
-    "hora": "14:58",
-    "clientId": "991",
-    "nombre": "Saravia Natalia celeste"
-   },
-   {
-    "hora": "15:01",
-    "clientId": "3375",
-    "nombre": "RAMIREZ SANOJA JONATHAN GERARDO"
-   },
-   {
-    "hora": "15:01",
-    "clientId": "1322",
-    "nombre": "Miguel angel Villalba"
-   }
-  ],
-  "2": [
-   {
-    "hora": "08:43",
-    "clientId": "2670",
-    "nombre": "JOSE CAYETANO PACENZA"
+  "7": [
+   {
+    "hora": "08:44",
+    "clientId": "2358",
+    "nombre": "Sosa Juan Ignacio"
    },
    {
     "hora": "08:45",
-    "clientId": "2386",
-    "nombre": "BICHWEILER OMAR JORGE"
+    "clientId": "574",
+    "nombre": "BAZTERRICA PABLO JAVIER MARTIN"
+   },
+   {
+    "hora": "08:45",
+    "clientId": "594",
+    "nombre": "DAI YAQIN"
+   },
+   {
+    "hora": "08:45",
+    "clientId": "470",
+    "nombre": "SABELOTE S.A."
    },
    {
     "hora": "08:46",
-    "clientId": "2222",
-    "nombre": "SILVA VANINA"
+    "clientId": "941",
+    "nombre": "ADRIANA MABEL NEME  (LO DE MA )"
+   },
+   {
+    "hora": "08:46",
+    "clientId": "1853",
+    "nombre": "DIAZ ROVIRA JOSE LUIS"
+   },
+   {
+    "hora": "08:46",
+    "clientId": "1439",
+    "nombre": "HIDDE LEONARDO ADRIAN"
+   },
+   {
+    "hora": "08:46",
+    "clientId": "1176",
+    "nombre": "EMFACO SA"
    },
    {
     "hora": "08:48",
-    "clientId": "1688",
-    "nombre": "NICADELO SA"
+    "clientId": "1087",
+    "nombre": "CREMONA SA"
+   },
+   {
+    "hora": "08:56",
+    "clientId": "2250",
+    "nombre": "FERQUIN S.A."
+   },
+   {
+    "hora": "08:58",
+    "clientId": "3909",
+    "nombre": "MONICA MILAGROS MONTEAGUDO"
    },
    {
     "hora": "08:59",
-    "clientId": "3084",
-    "nombre": "RODRIGO GARCIA PACIAROTTI"
-   },
-   {
-    "hora": "09:11",
-    "clientId": "2217",
-    "nombre": "MANZO CRISTIAN PABLO"
-   },
-   {
-    "hora": "09:12",
-    "clientId": "1767",
-    "nombre": "NICADELO S.A."
-   },
-   {
-    "hora": "09:12",
-    "clientId": "2583",
-    "nombre": "LUIS HORACIO BERTONCELLO"
-   },
-   {
-    "hora": "09:13",
-    "clientId": "1603",
-    "nombre": "SARAVIA LEANDRO AMADEO"
-   },
-   {
-    "hora": "09:26",
-    "clientId": "3491",
-    "nombre": "CHOCOCHIA S.A."
-   },
-   {
-    "hora": "09:26",
-    "clientId": "4213",
-    "nombre": "CHEGGFIELD SOCIEDAD ANONIMA"
-   },
-   {
-    "hora": "09:27",
-    "clientId": "106",
-    "nombre": "JUAN EDUARDO SABBATELLA"
-   },
-   {
-    "hora": "09:28",
-    "clientId": "1681",
-    "nombre": "PIOLETTI CLAUDIA MARIANA"
-   },
-   {
-    "hora": "09:29",
-    "clientId": "1101",
-    "nombre": "WEI JINZHU"
-   },
-   {
-    "hora": "09:29",
-    "clientId": "2502",
-    "nombre": "MYRIAM ASTAITA"
-   },
-   {
-    "hora": "09:30",
-    "clientId": "4875",
-    "nombre": "LA CURADURIA"
-   },
-   {
-    "hora": "09:31",
-    "clientId": "1671",
-    "nombre": "VALERIA SOLEDAD CAYO"
-   },
-   {
-    "hora": "09:32",
-    "clientId": "2531",
-    "nombre": "JOSE LUIS PATRUCCO"
-   },
-   {
-    "hora": "09:32",
-    "clientId": "1095",
-    "nombre": "YANINA LOBO"
-   },
-   {
-    "hora": "09:33",
-    "clientId": "4488",
-    "nombre": "SCURINI ALAIA BRISA"
-   },
-   {
-    "hora": "09:35",
-    "clientId": "1607",
-    "nombre": "XIAO XIANGYING"
-   },
-   {
-    "hora": "09:56",
-    "clientId": "2424",
-    "nombre": "LUCIANO NICOLAS NADER"
-   },
-   {
-    "hora": "10:04",
-    "clientId": "4237",
-    "nombre": "PILAR VALENZUELA"
-   },
-   {
-    "hora": "10:05",
-    "clientId": "1097",
-    "nombre": "LIN CHUANHUI"
-   },
-   {
-    "hora": "10:08",
-    "clientId": "1675",
-    "nombre": "FRUTICEL TOUCH SRL"
-   },
-   {
-    "hora": "10:08",
-    "clientId": "1096",
-    "nombre": "MARCELO ALEJANDRO BORELLI"
-   },
-   {
-    "hora": "10:11",
-    "clientId": "1599",
-    "nombre": "IRIART ALICIA LILIANA"
-   },
-   {
-    "hora": "10:14",
-    "clientId": "1424",
-    "nombre": "LocabaPolirrubros S.A"
-   },
-   {
-    "hora": "10:16",
-    "clientId": "1417",
-    "nombre": "AZPIAZU JULIAN"
-   },
-   {
-    "hora": "10:21",
-    "clientId": "2219",
-    "nombre": "OLAIZOLA GITTLEIN SOLANGE"
-   },
-   {
-    "hora": "10:22",
-    "clientId": "1606",
-    "nombre": "PASSANTINO CAROLINA"
-   },
-   {
-    "hora": "10:22",
-    "clientId": "1673",
-    "nombre": "DONFRANCESCO LUIS ALBERTO"
-   },
-   {
-    "hora": "10:22",
-    "clientId": "1092",
-    "nombre": "CREMONA SA"
-   },
-   {
-    "hora": "10:25",
-    "clientId": "842",
-    "nombre": "SCHLEGEL POZZONI S.A."
-   },
-   {
-    "hora": "10:25",
-    "clientId": "1676",
-    "nombre": "KIOSMDQ"
-   },
-   {
-    "hora": "10:26",
-    "clientId": "2421",
-    "nombre": "GASTON TOBLER"
-   },
-   {
-    "hora": "10:26",
-    "clientId": "3493",
-    "nombre": "ZHIXIONG LIN"
-   },
-   {
-    "hora": "10:30",
-    "clientId": "1610",
-    "nombre": "VALLARTA SA"
-   },
-   {
-    "hora": "10:30",
-    "clientId": "2214",
-    "nombre": "CONDORI ZURITA YANET YANINA"
-   },
-   {
-    "hora": "10:37",
-    "clientId": "2221",
-    "nombre": "Fernando emilio ojea"
-   },
-   {
-    "hora": "10:38",
-    "clientId": "2208",
-    "nombre": "CHIERCHIA GUSTAVO FRANCO"
-   },
-   {
-    "hora": "10:40",
-    "clientId": "4108",
-    "nombre": "PABLO AGUSTIN CHIERCHIA"
-   },
-   {
-    "hora": "10:40",
-    "clientId": "2479",
-    "nombre": "MDP COSTEHER S.A."
-   },
-   {
-    "hora": "10:50",
-    "clientId": "4957",
-    "nombre": "BRISCHETTO JONATHAN ALEJANDRO"
-   },
-   {
-    "hora": "11:12",
-    "clientId": "1448",
-    "nombre": "DUVAL ST ALMACEN SRL"
-   },
-   {
-    "hora": "11:14",
-    "clientId": "1100",
-    "nombre": "Naihao li"
-   },
-   {
-    "hora": "11:16",
-    "clientId": "3097",
-    "nombre": "CHOCOCHIA S.A."
-   },
-   {
-    "hora": "11:18",
-    "clientId": "1130",
-    "nombre": "Genesis"
-   },
-   {
-    "hora": "11:20",
-    "clientId": "3902",
-    "nombre": "FRUTICEL TOUCH S.R.L."
-   },
-   {
-    "hora": "11:29",
-    "clientId": "1683",
-    "nombre": "ROBREDO HECTOR"
-   },
-   {
-    "hora": "11:32",
-    "clientId": "1131",
-    "nombre": "TOMATTIS EDUARDO ADRIAN"
-   },
-   {
-    "hora": "11:32",
-    "clientId": "2791",
-    "nombre": "DUVAL ST.  ALMACEN S. R. L."
-   },
-   {
-    "hora": "11:37",
-    "clientId": "1011",
-    "nombre": "CASTRO OSCAR RODOLFO"
-   },
-   {
-    "hora": "11:47",
-    "clientId": "1057",
-    "nombre": "NIETO SILVANA BEATRIZ"
-   },
-   {
-    "hora": "11:51",
-    "clientId": "1426",
-    "nombre": "SEÑORIÑO NATALIA"
-   },
-   {
-    "hora": "11:56",
-    "clientId": "1418",
-    "nombre": "DUVUDIO MARIA"
-   },
-   {
-    "hora": "11:56",
-    "clientId": "3059",
-    "nombre": "ELIANA VERONICA FRANCONERE"
-   },
-   {
-    "hora": "12:08",
-    "clientId": "1054",
-    "nombre": "DEBAR ADALBERTO"
-   },
-   {
-    "hora": "12:16",
-    "clientId": "1982",
-    "nombre": "MANNELLO GABRIELA"
-   },
-   {
-    "hora": "12:20",
-    "clientId": "1425",
-    "nombre": "Duval st almacén s.r.l"
-   },
-   {
-    "hora": "12:27",
-    "clientId": "1035",
-    "nombre": "Li Zhang"
-   },
-   {
-    "hora": "13:07",
-    "clientId": "1980",
-    "nombre": "QUINTAS DIEGO MARTIN"
-   },
-   {
-    "hora": "13:26",
-    "clientId": "2336",
-    "nombre": "DUVAL ST ALMACEN S.R.L"
-   },
-   {
-    "hora": "13:51",
-    "clientId": "1672",
-    "nombre": "DIAZ JUANA"
-   },
-   {
-    "hora": "13:51",
-    "clientId": "1666",
-    "nombre": "BIANCHEDI HERNAN GABRIEL"
-   },
-   {
-    "hora": "13:52",
-    "clientId": "3131",
-    "nombre": "HOTEL NUEVO HORIZONTE"
-   },
-   {
-    "hora": "13:52",
-    "clientId": "2526",
-    "nombre": "CHOCOCHIA S. A."
-   },
-   {
-    "hora": "13:53",
-    "clientId": "2211",
-    "nombre": "BERGARA RUBÉN SEBASTIÁN"
-   },
-   {
-    "hora": "13:55",
-    "clientId": "1075",
-    "nombre": "KDOUH JOSE LUIS"
-   },
-   {
-    "hora": "13:57",
-    "clientId": "1602",
-    "nombre": "KIOSMDQ"
-   },
-   {
-    "hora": "13:58",
-    "clientId": "1091",
-    "nombre": "CHEN MINGKUI"
-   },
-   {
-    "hora": "13:59",
-    "clientId": "3783",
-    "nombre": "CRISTIAN AGUSTIN CHAVEZ FLAMENCO"
-   },
-   {
-    "hora": "14:04",
-    "clientId": "16",
-    "nombre": "ALEJANDRO OSCAR IGLESIAS"
-   },
-   {
-    "hora": "14:04",
-    "clientId": "1594",
-    "nombre": "DOS MARES MDQ S.A.S."
-   },
-   {
-    "hora": "14:05",
-    "clientId": "2357",
-    "nombre": "DOMINGUEZ CAMILA ELISA MERCEDE"
-   },
-   {
-    "hora": "14:05",
-    "clientId": "1201",
-    "nombre": "CATTAN JAIME RUBEN"
-   }
-  ],
-  "10": [
-   {
-    "hora": "08:50",
-    "clientId": "2018",
-    "nombre": "HENRIK PABLO PEDRO"
-   },
-   {
-    "hora": "09:07",
-    "clientId": "1942",
-    "nombre": "Madsen Carla Alicia"
-   },
-   {
-    "hora": "09:20",
-    "clientId": "3399",
-    "nombre": "NATALIA ANALIA LOPEZ"
-   },
-   {
-    "hora": "09:21",
-    "clientId": "113",
-    "nombre": "GUAITA PATRAULT FRANCIS EZEQUIEL"
-   },
-   {
-    "hora": "09:41",
-    "clientId": "749",
-    "nombre": "RODRIGUEZ FRANCISCO FEDERICO"
-   },
-   {
-    "hora": "09:52",
-    "clientId": "3805",
-    "nombre": "LUANA VESPRINI"
-   },
-   {
-    "hora": "09:53",
-    "clientId": "2517",
-    "nombre": "YE FADONG"
-   },
-   {
-    "hora": "09:55",
-    "clientId": "3404",
-    "nombre": "LUCAS EMILIANO FORIGO"
-   },
-   {
-    "hora": "10:18",
-    "clientId": "2354",
-    "nombre": "GARASA OSVALDO JORGE"
-   },
-   {
-    "hora": "10:34",
-    "clientId": "2028",
-    "nombre": "PAPARO SAVERIO MARCELO"
-   },
-   {
-    "hora": "10:34",
-    "clientId": "2024",
-    "nombre": "MASCARO NATALIA AMANDA"
-   },
-   {
-    "hora": "10:40",
-    "clientId": "2545",
-    "nombre": "CRISTIAN ALEJANDRO DALTO"
-   },
-   {
-    "hora": "10:42",
-    "clientId": "1415",
-    "nombre": "CLAUDIA ALEJANDRA PALEO"
-   },
-   {
-    "hora": "10:42",
-    "clientId": "2032",
-    "nombre": "GUTIERREZ GONZALO"
-   },
-   {
-    "hora": "10:47",
-    "clientId": "525",
-    "nombre": "ZAPULLA ADRIAN LEONARDO"
-   },
-   {
-    "hora": "10:57",
-    "clientId": "2596",
-    "nombre": "LIN XINGSHUI"
-   },
-   {
-    "hora": "10:57",
-    "clientId": "2105",
-    "nombre": "BATISTA MARIA ROSA"
-   },
-   {
-    "hora": "11:01",
-    "clientId": "4043",
-    "nombre": "MASCINA EDUARDO ANTONIO"
-   },
-   {
-    "hora": "11:37",
-    "clientId": "2728",
-    "nombre": "MANZUR  MISAEL"
-   },
-   {
-    "hora": "11:38",
-    "clientId": "40",
-    "nombre": "PAÑALERA UNIVERSAL"
-   },
-   {
-    "hora": "11:39",
-    "clientId": "1457",
-    "nombre": "ESTEBAN GERMAN ALESSANDRINI"
-   },
-   {
-    "hora": "11:39",
-    "clientId": "2661",
-    "nombre": "BRANDO SOCIEDAD ANONIMA"
-   },
-   {
-    "hora": "12:20",
-    "clientId": "990",
-    "nombre": "ROBERTO GUSTAVO GONZALEZ"
-   },
-   {
-    "hora": "12:22",
-    "clientId": "2556",
-    "nombre": "YANFENG CHI"
-   },
-   {
-    "hora": "12:23",
-    "clientId": "1040",
-    "nombre": "SEGURA MARIELA ANAHI"
-   },
-   {
-    "hora": "12:26",
-    "clientId": "824",
-    "nombre": "Lago Gabriel"
-   },
-   {
-    "hora": "12:56",
-    "clientId": "3275",
-    "nombre": "PABLO DAMIAN PORRAS"
-   },
-   {
-    "hora": "13:07",
-    "clientId": "3550",
-    "nombre": "ORELLANA JOSE LUIS"
-   },
-   {
-    "hora": "13:07",
-    "clientId": "3781",
-    "nombre": "Salcedo Fernando"
-   },
-   {
-    "hora": "13:07",
-    "clientId": "2355",
-    "nombre": "KAWSAY AYLLU S.A"
-   },
-   {
-    "hora": "13:07",
-    "clientId": "320",
-    "nombre": "BRANDO SOCIEDAD ANONIMA"
-   },
-   {
-    "hora": "13:08",
-    "clientId": "989",
-    "nombre": "Iron servicios sa"
-   },
-   {
-    "hora": "13:08",
-    "clientId": "517",
-    "nombre": "FERNANDO LAGO"
-   },
-   {
-    "hora": "13:15",
-    "clientId": "1431",
-    "nombre": "Pennisi Daiana Solange"
-   },
-   {
-    "hora": "14:13",
-    "clientId": "2926",
-    "nombre": "ROSA CECILIA NUÑEZ PAREDES"
-   },
-   {
-    "hora": "14:13",
-    "clientId": "4935",
-    "nombre": "SERGIO ASKER"
-   },
-   {
-    "hora": "14:13",
-    "clientId": "4256",
-    "nombre": "JOEL JULIAN PAGLIONE"
-   },
-   {
-    "hora": "14:27",
-    "clientId": "94",
-    "nombre": "MARTINEZ JUAN PABLO Y BARRIOS MARTIN SOCIEDAD LEY"
-   },
-   {
-    "hora": "14:30",
-    "clientId": "2681",
-    "nombre": "MARINE GONZALEZ URQUIZA"
-   },
-   {
-    "hora": "16:14",
-    "clientId": "1396",
-    "nombre": "DON FELIX S A"
-   }
-  ],
-  "7": [
-   {
-    "hora": "08:50",
-    "clientId": "2350",
-    "nombre": "ARISTEO SRL"
-   },
-   {
-    "hora": "08:55",
-    "clientId": "1168",
-    "nombre": "PETROLERA CRUZ DEL SUR S A"
-   },
-   {
-    "hora": "09:03",
-    "clientId": "2352",
-    "nombre": "PORRAS PABLO DAMIAN"
-   },
-   {
-    "hora": "09:08",
-    "clientId": "2351",
-    "nombre": "CREMONA SA"
-   },
-   {
-    "hora": "09:11",
-    "clientId": "1298",
-    "nombre": "LUIS EDGAR AVILA"
-   },
-   {
-    "hora": "09:12",
-    "clientId": "1302",
-    "nombre": "PUCHULUTEGUI ADRIANA NOEMI"
-   },
-   {
-    "hora": "09:15",
-    "clientId": "1445",
-    "nombre": "LAFKEN MDQ"
-   },
-   {
-    "hora": "09:15",
-    "clientId": "1444",
-    "nombre": "LAFKEN MDQ"
-   },
-   {
-    "hora": "09:16",
-    "clientId": "2003",
-    "nombre": "PIVOTTO BRIGIDA MARIA"
-   },
-   {
-    "hora": "09:34",
-    "clientId": "1986",
-    "nombre": "Julieta Banza"
-   },
-   {
-    "hora": "09:35",
-    "clientId": "1999",
-    "nombre": "LOPEZ ARIEL GEMAN"
-   },
-   {
-    "hora": "09:58",
-    "clientId": "2000",
-    "nombre": "MARTINEZ MARIA FERNANDA"
-   },
-   {
-    "hora": "10:48",
-    "clientId": "1989",
-    "nombre": "CANO SOFIA ELIZABETH"
-   },
-   {
-    "hora": "10:49",
-    "clientId": "1933",
-    "nombre": "TOLEDO ELBA MABEL"
-   },
-   {
-    "hora": "11:06",
-    "clientId": "393",
-    "nombre": "CRISTIAN ESTEBAN GRISETTI"
-   },
-   {
-    "hora": "11:22",
-    "clientId": "3882",
-    "nombre": "GARCIA DIEGO SEBASTIAN"
-   },
-   {
-    "hora": "11:33",
-    "clientId": "2303",
-    "nombre": "RUBINSTEIN MELINA"
-   },
-   {
-    "hora": "11:45",
-    "clientId": "1719",
-    "nombre": "GALLASTEGUI MARIA LUJAN"
-   },
-   {
-    "hora": "11:53",
-    "clientId": "2176",
-    "nombre": "PROXIMORESTO S A"
-   },
-   {
-    "hora": "12:08",
-    "clientId": "1306",
-    "nombre": "VAQUERO NESTOR OSCAR"
-   },
-   {
-    "hora": "12:48",
-    "clientId": "1856",
-    "nombre": "fabiquiel srl"
-   },
-   {
-    "hora": "13:02",
-    "clientId": "1064",
-    "nombre": "CREMONA SA"
-   },
-   {
-    "hora": "13:16",
-    "clientId": "1852",
-    "nombre": "ALZUGARAY AILEN YOHANA"
-   },
-   {
-    "hora": "13:41",
-    "clientId": "1992",
-    "nombre": "JENSEN BARBARA"
-   }
-  ],
-  "6": [
-   {
-    "hora": "08:55",
-    "clientId": "4466",
-    "nombre": "KIOSMDQ"
-   },
-   {
-    "hora": "08:57",
-    "clientId": "4622",
-    "nombre": "XIAXIA YU"
-   },
-   {
-    "hora": "08:59",
-    "clientId": "1351",
-    "nombre": "MATO MANUEL"
-   },
-   {
-    "hora": "09:12",
-    "clientId": "1733",
-    "nombre": "SUSANA ELVIRA NORBERTO"
-   },
-   {
-    "hora": "09:25",
-    "clientId": "3099",
-    "nombre": "Sr quesos y  fiambres"
-   },
-   {
-    "hora": "09:27",
-    "clientId": "335",
-    "nombre": "PONCE KATHERINE PAULINA ELENA"
-   },
-   {
-    "hora": "09:28",
-    "clientId": "3409",
-    "nombre": "MARIA JOSE COVELLO"
-   },
-   {
-    "hora": "09:29",
-    "clientId": "4667",
-    "nombre": "CAMILA BELEN ESCALANTE"
-   },
-   {
-    "hora": "09:29",
-    "clientId": "2367",
-    "nombre": "SANTINO GROSSI"
-   },
-   {
-    "hora": "09:31",
-    "clientId": "2065",
-    "nombre": "FREXAS FEDERICO ANDRES"
-   },
-   {
-    "hora": "09:40",
-    "clientId": "1045",
-    "nombre": "XING FENGYAN"
-   },
-   {
-    "hora": "09:42",
-    "clientId": "105",
-    "nombre": "Lorenzo Lucas Fernando"
-   },
-   {
-    "hora": "10:09",
-    "clientId": "2346",
-    "nombre": "ERRECALDE FACUNDO"
-   },
-   {
-    "hora": "10:12",
-    "clientId": "4708",
-    "nombre": "SABELOTE S.A."
-   },
-   {
-    "hora": "10:33",
-    "clientId": "3385",
-    "nombre": "CHOCOCHIA S. A."
-   },
-   {
-    "hora": "10:39",
-    "clientId": "1906",
-    "nombre": "IHLO HANSEN ALBERTO"
-   },
-   {
-    "hora": "10:43",
-    "clientId": "1915",
-    "nombre": "PERINI NATALIA PAOLA"
-   },
-   {
-    "hora": "10:44",
-    "clientId": "3006",
-    "nombre": "PACHECO MARIA JOSE"
-   },
-   {
-    "hora": "10:44",
-    "clientId": "123",
-    "nombre": "MASID ROCIO BELEN"
-   },
-   {
-    "hora": "10:49",
-    "clientId": "2154",
-    "nombre": "ILINCHETA DARIO HAROLDO"
-   },
-   {
-    "hora": "10:50",
-    "clientId": "1609",
-    "nombre": "URBANO ELSA AUDELINA"
-   },
-   {
-    "hora": "11:06",
-    "clientId": "1197",
-    "nombre": "LAUREANO FULCO"
-   },
-   {
-    "hora": "11:08",
-    "clientId": "1764",
-    "nombre": "APREA GABRIELA ALEJANDRA"
-   },
-   {
-    "hora": "11:13",
-    "clientId": "1684",
-    "nombre": "RODRIGO MANUEL ORTIZ Y JUAN MA"
-   },
-   {
-    "hora": "11:15",
-    "clientId": "663",
-    "nombre": "CRISTINA BEATRIZ LEDESMA"
-   },
-   {
-    "hora": "11:21",
-    "clientId": "882",
-    "nombre": "HECTOR HUGO CARDOZO"
-   },
-   {
-    "hora": "11:22",
-    "clientId": "1907",
-    "nombre": "LEONE MARCELO URIEL"
-   },
-   {
-    "hora": "11:23",
-    "clientId": "4344",
-    "nombre": "NEY TIENDA NATURAL"
-   },
-   {
-    "hora": "11:34",
-    "clientId": "1955",
-    "nombre": "SCHMIDT LIS GRETEL"
-   },
-   {
-    "hora": "11:38",
-    "clientId": "4253",
-    "nombre": "LOGGIA BASSO LORENZO OSCAR"
-   },
-   {
-    "hora": "11:41",
-    "clientId": "1678",
-    "nombre": "MARTIN NICOLAS MIGUEL"
-   },
-   {
-    "hora": "11:54",
-    "clientId": "810",
-    "nombre": "CHOCOCHIA S.A."
-   },
-   {
-    "hora": "12:00",
-    "clientId": "1914",
-    "nombre": "ZULEMA TERESITA WALTON"
-   },
-   {
-    "hora": "12:11",
-    "clientId": "3160",
-    "nombre": "GASTRONOMIA 331 DE MAR DEL PLATA S. R. L."
-   },
-   {
-    "hora": "12:33",
-    "clientId": "1904",
-    "nombre": "DIAZ DELIA CARINA"
-   },
-   {
-    "hora": "12:34",
-    "clientId": "1346",
-    "nombre": "BARDERI MARIA JOSE"
-   },
-   {
-    "hora": "12:37",
-    "clientId": "1342",
-    "nombre": "ALBORNOZ EDGARDO RAUL"
-   },
-   {
-    "hora": "13:12",
-    "clientId": "3414",
-    "nombre": "CHOCOCHIA S. A."
-   },
-   {
-    "hora": "13:12",
-    "clientId": "2903",
-    "nombre": "ALEJANDRA CORREA"
-   },
-   {
-    "hora": "13:27",
-    "clientId": "2060",
-    "nombre": "MAGLIOTTI FERNANDO RUBEN Y MAG"
-   },
-   {
-    "hora": "13:32",
-    "clientId": "1485",
-    "nombre": "SUELDO MIGUEL ROBERTO"
-   },
-   {
-    "hora": "13:33",
-    "clientId": "1476",
-    "nombre": "VALLEGOS RUTH ELIZABETH"
-   },
-   {
-    "hora": "13:35",
-    "clientId": "2063",
-    "nombre": "SANTOS CARLOS ADRIAN"
-   },
-   {
-    "hora": "13:36",
-    "clientId": "2066",
-    "nombre": "SANCHEZ JUAN MANUEL"
-   },
-   {
-    "hora": "13:39",
-    "clientId": "4608",
-    "nombre": "JUAN IGNACIO ARNALDO"
-   },
-   {
-    "hora": "13:48",
-    "clientId": "1954",
-    "nombre": "PICCINI CARLOS JOSE"
-   },
-   {
-    "hora": "13:50",
-    "clientId": "1393",
-    "nombre": "VISONE MONICA"
-   },
-   {
-    "hora": "13:57",
-    "clientId": "3023",
-    "nombre": "KIOSMDQ"
-   },
-   {
-    "hora": "13:58",
-    "clientId": "1385",
-    "nombre": "ARISTEO SRL"
-   },
-   {
-    "hora": "13:58",
-    "clientId": "1354",
-    "nombre": "PERUCHENA MARIA VIRGINIA"
-   },
-   {
-    "hora": "13:58",
-    "clientId": "1359",
-    "nombre": "VELTRI EUGENIO"
-   },
-   {
-    "hora": "14:01",
-    "clientId": "2059",
-    "nombre": "GODOY ALFREDO MARIO"
-   },
-   {
-    "hora": "14:02",
-    "clientId": "1481",
-    "nombre": "NATALIO TURANO MERCEDES GABRIE"
-   },
-   {
-    "hora": "14:03",
-    "clientId": "3168",
-    "nombre": "CHOCOCHIA S.A."
-   },
-   {
-    "hora": "14:14",
-    "clientId": "2064",
-    "nombre": "laprimardel full srl"
-   },
-   {
-    "hora": "14:14",
-    "clientId": "4657",
-    "nombre": "NICADELO SA"
-   },
-   {
-    "hora": "14:23",
-    "clientId": "3457",
-    "nombre": "FACUNDO EZEQUIEL RIOS"
-   },
-   {
-    "hora": "14:27",
-    "clientId": "1349",
-    "nombre": "Stessens María Barbara"
-   },
-   {
-    "hora": "14:28",
-    "clientId": "1951",
-    "nombre": "CASCIOTTI GUSTAVO CLAUDIO"
-   },
-   {
-    "hora": "14:32",
-    "clientId": "1390",
-    "nombre": "MARTINEZ FERNANDO"
-   },
-   {
-    "hora": "14:40",
-    "clientId": "1484",
-    "nombre": "SUARPI SA"
-   },
-   {
-    "hora": "14:43",
-    "clientId": "1343",
-    "nombre": "ALDERETE FRANCISCO ANGEL"
-   },
-   {
-    "hora": "14:43",
-    "clientId": "1175",
-    "nombre": "REFINERIA BAHIA BLANCA S.A.U"
-   },
-   {
-    "hora": "14:43",
-    "clientId": "1483",
-    "nombre": "SIROCHINSKY DANIEL ARTURO"
-   }
-  ],
-  "3": [
-   {
-    "hora": "09:03",
-    "clientId": "124",
-    "nombre": "PADILLA VERONICA CRISTINA"
-   },
-   {
-    "hora": "09:28",
-    "clientId": "1103",
-    "nombre": "CREMONA SA"
-   },
-   {
-    "hora": "09:31",
-    "clientId": "4550",
-    "nombre": "SABELOTE S.A."
-   },
-   {
-    "hora": "09:31",
-    "clientId": "1510",
-    "nombre": "MONTEFUSCO LUCAS EZEQUIEL"
-   },
-   {
-    "hora": "09:35",
-    "clientId": "1512",
-    "nombre": "GUFFANTI AGUSTIN ANDRES"
-   },
-   {
-    "hora": "09:52",
-    "clientId": "964",
-    "nombre": "CRISTINA BEATRIZ MORENO"
-   },
-   {
-    "hora": "10:11",
-    "clientId": "1730",
-    "nombre": "MARIANA LAURA CAMINOS"
-   },
-   {
-    "hora": "10:27",
-    "clientId": "1640",
-    "nombre": "Toldos violetas SA"
-   },
-   {
-    "hora": "10:37",
-    "clientId": "1701",
-    "nombre": "VILLAR SANCHEZ SILVIA SUSANA"
-   },
-   {
-    "hora": "10:45",
-    "clientId": "2239",
-    "nombre": "LANDABURU LEANDRO JAVIER"
-   },
-   {
-    "hora": "10:55",
-    "clientId": "4900",
-    "nombre": "QUERIAN MAZENZIO"
-   },
-   {
-    "hora": "11:02",
-    "clientId": "1523",
-    "nombre": "PANIFICADO JUAMAR"
-   },
-   {
-    "hora": "11:14",
-    "clientId": "3788",
-    "nombre": "WALTER ARIEL CORVALAN"
-   },
-   {
-    "hora": "11:43",
-    "clientId": "1003",
-    "nombre": "BIONDO MIRTA SUSANA"
-   },
-   {
-    "hora": "11:47",
-    "clientId": "2159",
-    "nombre": "HUANG ZENGGUANG"
-   },
-   {
-    "hora": "12:09",
-    "clientId": "1052",
-    "nombre": "TALLERES FUTBOL CLUB"
-   },
-   {
-    "hora": "12:27",
-    "clientId": "1213",
-    "nombre": "SEBASTIAN RAU"
-   },
-   {
-    "hora": "12:30",
-    "clientId": "1822",
-    "nombre": "Gaston gabriel ordoñez"
-   },
-   {
-    "hora": "12:42",
-    "clientId": "2158",
-    "nombre": "GRUMBLATT VERONICA"
-   },
-   {
-    "hora": "12:43",
-    "clientId": "2671",
-    "nombre": "Santiago Domingo Marzano"
-   },
-   {
-    "hora": "12:43",
-    "clientId": "1102",
-    "nombre": "CARABAJAL GUSTAVO DAVID"
-   },
-   {
-    "hora": "13:01",
-    "clientId": "2690",
-    "nombre": "CBF PUNTANOS MR SRL"
-   },
-   {
-    "hora": "13:11",
-    "clientId": "1180",
-    "nombre": "AIQIN WANG"
-   },
-   {
-    "hora": "13:11",
-    "clientId": "1502",
-    "nombre": "CANDELA VIRGINIA GONZALEZ"
-   },
-   {
-    "hora": "13:11",
-    "clientId": "2733",
-    "nombre": "LEONARDO  ROBERTO DI MUZIO"
-   },
-   {
-    "hora": "13:11",
-    "clientId": "2638",
-    "nombre": "CHRISTIAN LEONARDO ACOSTA"
-   },
-   {
-    "hora": "13:12",
-    "clientId": "1079",
-    "nombre": "SANCHEZ NAZARENA DORA"
-   },
-   {
-    "hora": "13:57",
-    "clientId": "1696",
-    "nombre": "FERNANDEZ ANA MARIA"
-   },
-   {
-    "hora": "14:07",
-    "clientId": "1504",
-    "nombre": "BECERRO REINALDO ALFREDO"
-   },
-   {
-    "hora": "14:26",
-    "clientId": "2089",
-    "nombre": "LAURO STEVEN LEE"
-   },
-   {
-    "hora": "14:50",
-    "clientId": "1182",
-    "nombre": "BONOMI MARIA"
-   },
-   {
-    "hora": "14:51",
-    "clientId": "1177",
-    "nombre": "EL UNICO S A"
-   },
-   {
-    "hora": "14:58",
-    "clientId": "1505",
-    "nombre": "CARRASCO LUSIANA NATALIA"
-   }
-  ],
-  "31": [
-   {
-    "hora": "09:07",
-    "clientId": "430",
-    "nombre": "ESTEBAN JAVIER PERERA"
-   },
-   {
-    "hora": "09:25",
-    "clientId": "427",
-    "nombre": "LUIS CARLOS GARGIULO"
-   },
-   {
-    "hora": "09:48",
-    "clientId": "432",
-    "nombre": "VARGAS CORRIPIO S.R.L"
-   },
-   {
-    "hora": "09:59",
-    "clientId": "435",
-    "nombre": "COMPAÑIA ALIMENTICIA DE LA COSTA SRL"
-   },
-   {
-    "hora": "10:50",
-    "clientId": "436",
-    "nombre": "JUAN JOSE MARRERO"
-   },
-   {
-    "hora": "10:55",
-    "clientId": "564",
-    "nombre": "ZHENGJIE WANG"
-   },
-   {
-    "hora": "11:16",
-    "clientId": "465",
-    "nombre": "MARCELO NICOLAS CAMBRONERA"
-   },
-   {
-    "hora": "11:20",
-    "clientId": "3098",
-    "nombre": "María Lourdes Potin"
-   },
-   {
-    "hora": "11:47",
-    "clientId": "464",
-    "nombre": "GUTIERREZ NANCY"
-   },
-   {
-    "hora": "11:50",
-    "clientId": "457",
-    "nombre": "MARCOS ANTONIO BEADES"
-   },
-   {
-    "hora": "11:53",
-    "clientId": "460",
-    "nombre": "DANILA GISELE OPORTO"
-   },
-   {
-    "hora": "12:11",
-    "clientId": "569",
-    "nombre": "ALDANA ROMERO"
-   },
-   {
-    "hora": "12:16",
-    "clientId": "3349",
-    "nombre": "JUAN ALBERTO PINEDA"
-   },
-   {
-    "hora": "12:45",
-    "clientId": "1294",
-    "nombre": "RUBEN ARTURO PADILLA"
-   }
-  ],
-  "1": [
-   {
-    "hora": "09:44",
-    "clientId": "1021",
-    "nombre": "LI YUANTONG"
-   },
-   {
-    "hora": "09:44",
-    "clientId": "1252",
-    "nombre": "NEGRO SERGIO JAVIER"
-   },
-   {
-    "hora": "09:45",
-    "clientId": "3113",
-    "nombre": "YANI EZEQUIEL MANNINI"
-   },
-   {
-    "hora": "09:45",
-    "clientId": "1286",
-    "nombre": "GRAGACAWA S.A. EN FORMACION"
-   },
-   {
-    "hora": "09:46",
-    "clientId": "2179",
-    "nombre": "Urrutia Gaston Julio"
-   },
-   {
-    "hora": "09:48",
-    "clientId": "4420",
-    "nombre": "Tojomami s.r.l."
-   },
-   {
-    "hora": "09:48",
-    "clientId": "1814",
-    "nombre": "AMORETTI MARIANO DANIEL"
-   },
-   {
-    "hora": "09:48",
-    "clientId": "1486",
-    "nombre": "Pollop Patamar S.A"
-   },
-   {
-    "hora": "09:49",
-    "clientId": "1248",
-    "nombre": "HASSEIN GAMAL JALIL"
-   },
-   {
-    "hora": "09:49",
-    "clientId": "4383",
-    "nombre": "JUAN CARLOS AMBROSINO"
-   },
-   {
-    "hora": "09:50",
-    "clientId": "119",
-    "nombre": "ALFREDO OMAR CID"
-   },
-   {
-    "hora": "09:51",
-    "clientId": "1251",
-    "nombre": "MENENDEZ MARIA GABRIELA"
-   },
-   {
-    "hora": "09:51",
-    "clientId": "1256",
-    "nombre": "LUCCA JUAN CRUZ"
-   },
-   {
-    "hora": "09:51",
-    "clientId": "1118",
-    "nombre": "Ni Xingquan"
-   },
-   {
-    "hora": "09:53",
-    "clientId": "1355",
-    "nombre": "ROSA RAFAEL CARLOS"
-   },
-   {
-    "hora": "09:58",
-    "clientId": "1628",
-    "nombre": "TUCIBELLI JUAN PABLO"
-   },
-   {
-    "hora": "09:59",
-    "clientId": "2992",
-    "nombre": "SILVIO GASTON DIAZ"
-   },
-   {
-    "hora": "10:00",
-    "clientId": "2178",
-    "nombre": "FREIJE SANDRA LIDA"
-   },
-   {
-    "hora": "10:11",
-    "clientId": "1627",
-    "nombre": "FRUTICEL TOUCH"
-   },
-   {
-    "hora": "10:11",
-    "clientId": "1629",
-    "nombre": "GONZALEZ URQUIZA GABRIEL"
-   },
-   {
-    "hora": "10:20",
-    "clientId": "3913",
-    "nombre": "LUCAS EZEQUIEL ILLESCAS GIMENEZ"
-   },
-   {
-    "hora": "10:49",
-    "clientId": "2138",
-    "nombre": "GOMEZ MARIANO JOSE"
-   },
-   {
-    "hora": "10:50",
-    "clientId": "5040",
-    "nombre": "NICADELO"
-   },
-   {
-    "hora": "10:50",
-    "clientId": "1559",
-    "nombre": "FRUTICEL TOUCH S.R.L."
-   },
-   {
-    "hora": "11:04",
-    "clientId": "3439",
-    "nombre": "JOAQUIN LA BANCA"
-   },
-   {
-    "hora": "11:07",
-    "clientId": "2181",
-    "nombre": "MARA NOEMI GARRIDO"
-   },
-   {
-    "hora": "11:08",
-    "clientId": "2702",
-    "nombre": "CRISTIAN ARIEL CALATAYUD"
-   },
-   {
-    "hora": "11:08",
-    "clientId": "1246",
-    "nombre": "FAPEL SOCIEDAD DE RESPONSABILIDAD LIMITADA"
-   },
-   {
-    "hora": "11:08",
-    "clientId": "3204",
-    "nombre": "Bianchi Santos Lucas"
-   },
-   {
-    "hora": "11:26",
-    "clientId": "1253",
-    "nombre": "CASELLA MARIA SOL"
-   },
-   {
-    "hora": "11:33",
-    "clientId": "1658",
-    "nombre": "GABRIELA RUBI"
-   },
-   {
-    "hora": "11:51",
-    "clientId": "1258",
-    "nombre": "VICTOREL MARIANO"
-   },
-   {
-    "hora": "12:02",
-    "clientId": "1337",
-    "nombre": "La Mafalda"
-   },
-   {
-    "hora": "12:21",
-    "clientId": "1596",
-    "nombre": "GIMENEZ EMMANUEL"
-   },
-   {
-    "hora": "12:22",
-    "clientId": "1978",
-    "nombre": "COTICO S.R.L."
-   },
-   {
-    "hora": "12:22",
-    "clientId": "1074",
-    "nombre": "DI RICO SERGIO GABRIEL"
-   },
-   {
-    "hora": "12:22",
-    "clientId": "1099",
-    "nombre": "BERARDO PABLO ANTONIO"
-   },
-   {
-    "hora": "12:25",
-    "clientId": "1601",
-    "nombre": "KIOSMDQ"
-   },
-   {
-    "hora": "12:25",
-    "clientId": "1389",
-    "nombre": "KIOSMDQ"
-   },
-   {
-    "hora": "12:33",
-    "clientId": "2077",
-    "nombre": "PISANDELLI MARIA FLORENCIA"
-   },
-   {
-    "hora": "12:34",
-    "clientId": "2477",
-    "nombre": "JEANNETTE QUEZADA HERRERA"
-   },
-   {
-    "hora": "12:34",
-    "clientId": "643",
-    "nombre": "PAKISTAN SHOP"
-   },
-   {
-    "hora": "12:34",
-    "clientId": "1304",
-    "nombre": "MAXIMILIANO PONCE"
-   },
-   {
-    "hora": "12:35",
-    "clientId": "1119",
-    "nombre": "Liqiong Zheng"
-   },
-   {
-    "hora": "12:35",
-    "clientId": "1554",
-    "nombre": "EL PORTAL DEL SOL CENTRO DE HA"
-   },
-   {
-    "hora": "12:41",
-    "clientId": "4588",
-    "nombre": "LOCABA POLIRRUBROS S.A."
-   },
-   {
-    "hora": "13:08",
-    "clientId": "1352",
-    "nombre": "VARGAS IVAN AGUSTIN"
-   },
-   {
-    "hora": "13:16",
-    "clientId": "2978",
-    "nombre": "SABELOTE"
-   },
-   {
-    "hora": "13:17",
-    "clientId": "2383",
-    "nombre": "FRUTICEL TOUCH S.R.L."
-   },
-   {
-    "hora": "13:20",
-    "clientId": "896",
-    "nombre": "GOÑI CONSTANZA MICAELA"
-   },
-   {
-    "hora": "13:20",
-    "clientId": "4629",
-    "nombre": "JEREMIAS ERRECALDE"
-   },
-   {
-    "hora": "13:24",
-    "clientId": "2752",
-    "nombre": "MARIA ALEJANDRA GONZALEZ"
-   },
-   {
-    "hora": "13:43",
-    "clientId": "182",
-    "nombre": "NICOLAS GABRIEL JOHNSON"
-   },
-   {
-    "hora": "13:44",
-    "clientId": "1084",
-    "nombre": "HUANG XIAYU"
-   },
-   {
-    "hora": "13:45",
-    "clientId": "3132",
-    "nombre": "JUAREZ LUCAS MIGUEL"
-   },
-   {
-    "hora": "13:45",
-    "clientId": "3898",
-    "nombre": "PABLO DANIEL AGUERO"
-   },
-   {
-    "hora": "13:46",
-    "clientId": "2567",
-    "nombre": "MARTA ROSA ARMATTA"
-   },
-   {
-    "hora": "13:46",
-    "clientId": "1243",
-    "nombre": "NICADELO SA"
-   },
-   {
-    "hora": "13:47",
-    "clientId": "4958",
-    "nombre": "CLAUDIA SARA BARATTUCCI"
-   },
-   {
-    "hora": "13:47",
-    "clientId": "111",
-    "nombre": "SANCHEZ JORGE GUSTAVO"
-   },
-   {
-    "hora": "13:48",
-    "clientId": "2377",
-    "nombre": "MERCADITO TRINIJAZ S.R.L"
-   },
-   {
-    "hora": "13:48",
-    "clientId": "1549",
-    "nombre": "BUGIOLACCHI MARIO"
-   },
-   {
-    "hora": "13:49",
-    "clientId": "2375",
-    "nombre": "granja costera srl"
-   },
-   {
-    "hora": "13:50",
-    "clientId": "3495",
-    "nombre": "Huang Lecong"
-   },
-   {
-    "hora": "13:52",
-    "clientId": "1122",
-    "nombre": "HUANG LECONG"
-   },
-   {
-    "hora": "14:01",
-    "clientId": "2144",
-    "nombre": "GONZALES ROSANA EVA"
-   },
-   {
-    "hora": "14:06",
-    "clientId": "1121",
-    "nombre": "SABELOTE S.A."
-   },
-   {
-    "hora": "14:26",
-    "clientId": "1626",
-    "nombre": "NICADELO SA"
-   },
-   {
-    "hora": "14:27",
-    "clientId": "2518",
-    "nombre": "SERGIO ADRIAN RODRIGUES"
-   },
-   {
-    "hora": "14:33",
-    "clientId": "3708",
-    "nombre": "CHOCOCHIA S.A."
-   },
-   {
-    "hora": "14:41",
-    "clientId": "1570",
-    "nombre": "EMPRENDIMIENTOS SALBEN SOCIEDA"
-   },
-   {
-    "hora": "14:41",
-    "clientId": "606",
-    "nombre": "TEYCI MAR DEL PLATA SRL (CINES AMBASSADOR)"
-   },
-   {
-    "hora": "14:42",
-    "clientId": "1956",
-    "nombre": "Podesta Blas"
-   },
-   {
-    "hora": "14:49",
-    "clientId": "1493",
-    "nombre": "MILKI MDQ SA"
-   },
-   {
-    "hora": "14:49",
-    "clientId": "1584",
-    "nombre": "CHOCOCHIA S.A."
-   },
-   {
-    "hora": "14:59",
-    "clientId": "2515",
-    "nombre": "Leranoz Sergio Alejandro"
-   },
-   {
-    "hora": "14:59",
-    "clientId": "1050",
-    "nombre": "LAMAS  MARCELA CLAUDIA"
-   },
-   {
-    "hora": "15:00",
-    "clientId": "2080",
-    "nombre": "MARIA BEGOÑA OZCARIZ"
-   },
-   {
-    "hora": "15:01",
-    "clientId": "816",
-    "nombre": "YAN JOHANA"
-   },
-   {
-    "hora": "15:14",
-    "clientId": "1191",
-    "nombre": "GOROSO EMMA TERESA"
-   },
-   {
-    "hora": "15:15",
-    "clientId": "2723",
-    "nombre": "NICADELO SA"
-   },
-   {
-    "hora": "15:15",
-    "clientId": "2146",
-    "nombre": "AMORETTI MARIANO DANIEL"
-   },
-   {
-    "hora": "15:16",
-    "clientId": "1196",
-    "nombre": "SUAREZ DAMIAN RAUL"
-   },
-   {
-    "hora": "15:16",
-    "clientId": "1194",
-    "nombre": "ROSA RAFAEL CARLOS"
-   },
-   {
-    "hora": "15:16",
-    "clientId": "1190",
-    "nombre": "NICADELO S.A."
-   },
-   {
-    "hora": "15:17",
-    "clientId": "3335",
-    "nombre": "CHOCOCHIA S.A."
-   },
-   {
-    "hora": "15:17",
-    "clientId": "1761",
-    "nombre": "CIRKOV CRISTIAN DAMIAN"
-   },
-   {
-    "hora": "15:18",
-    "clientId": "1577",
-    "nombre": "KIOSMDQ"
-   },
-   {
-    "hora": "15:19",
-    "clientId": "1587",
-    "nombre": "CHOCOCHIA S.A."
-   },
-   {
-    "hora": "15:19",
-    "clientId": "1591",
-    "nombre": "GALEANO LUCA"
-   },
-   {
-    "hora": "15:20",
-    "clientId": "1089",
-    "nombre": "LANDEO ÑAHUIS DOMINGA ALICIA"
-   },
-   {
-    "hora": "15:20",
-    "clientId": "1588",
-    "nombre": "NICADELO SA"
-   },
-   {
-    "hora": "15:21",
-    "clientId": "1590",
-    "nombre": "FRUTICEL TOUCH S.R.L."
-   }
-  ],
-  "12": [
-   {
-    "hora": "09:55",
-    "clientId": "1860",
-    "nombre": "SABELOTE SA"
-   },
-   {
-    "hora": "09:55",
-    "clientId": "538",
-    "nombre": "MARCONI MARIA NAHIR"
-   },
-   {
-    "hora": "09:55",
-    "clientId": "3408",
-    "nombre": "GABRIELA GIANGUALANO"
-   },
-   {
-    "hora": "09:58",
-    "clientId": "474",
-    "nombre": "NIETO SOUTO SRL"
-   },
-   {
-    "hora": "10:11",
-    "clientId": "46",
-    "nombre": "NORMA TELMA FEUKES"
-   },
-   {
-    "hora": "10:11",
-    "clientId": "478",
-    "nombre": "JOSE LUIS FERNANDEZ"
-   },
-   {
-    "hora": "10:11",
-    "clientId": "2525",
-    "nombre": "SUSANA ANGELICA ALONSO"
-   },
-   {
-    "hora": "10:11",
-    "clientId": "44",
-    "nombre": "ANDREA NOEMI GONGORA"
-   },
-   {
-    "hora": "10:18",
-    "clientId": "3073",
-    "nombre": "Chen Xiang"
-   },
-   {
-    "hora": "10:54",
-    "clientId": "60",
-    "nombre": "KARLA STEFANEE CARBAJAL GUERRERO"
-   },
-   {
-    "hora": "11:08",
-    "clientId": "684",
-    "nombre": "XIMEI HE"
-   },
-   {
-    "hora": "11:34",
-    "clientId": "524",
-    "nombre": "NIETO SOUTO SRL"
-   },
-   {
-    "hora": "11:39",
-    "clientId": "7613",
-    "nombre": "XIAFANG HUANG"
-   },
-   {
-    "hora": "12:03",
-    "clientId": "512",
-    "nombre": "GIMENEZ MAYRA AYLEN"
-   },
-   {
-    "hora": "12:10",
-    "clientId": "514",
-    "nombre": "MINIMERCADO SOUTO S.A."
-   },
-   {
-    "hora": "12:23",
-    "clientId": "621",
-    "nombre": "GONZALEZ MENDOZA HECTOR ENRIQUE"
-   },
-   {
-    "hora": "12:23",
-    "clientId": "626",
-    "nombre": "ROMINALUCIANA SEIP"
-   },
-   {
-    "hora": "12:32",
-    "clientId": "703",
-    "nombre": "JUAN MANUEL LENCINAS"
-   },
-   {
-    "hora": "12:41",
-    "clientId": "2488",
-    "nombre": "NEGOCIOS CHENLI S. A."
-   },
-   {
-    "hora": "12:58",
-    "clientId": "616",
-    "nombre": "CARRASCO ANDREA"
-   },
-   {
-    "hora": "13:04",
-    "clientId": "484",
-    "nombre": "ANDREA NATALIA ORIOLO LOURDES"
-   },
-   {
-    "hora": "13:57",
-    "clientId": "3545",
-    "nombre": "MINIMERCADO SOUTO S.A."
-   },
-   {
-    "hora": "14:05",
-    "clientId": "2958",
-    "nombre": "Jarana multiservicio myl sociedad anónima"
+    "clientId": "3576",
+    "nombre": "FRYDMAN SILVANA CLAUDIA"
    }
   ],
   "": [
    {
-    "hora": "14:05",
-    "clientId": "2439",
-    "nombre": "INNOVACIONES SURENAS S.A.S."
+    "hora": "08:45",
+    "clientId": "4311",
+    "nombre": "ANABEL LUCIA MASTELLONE"
    },
    {
-    "hora": "14:34",
-    "clientId": "1613",
-    "nombre": "ESPIRITU Y VIÑA S.A."
+    "hora": "08:46",
+    "clientId": "1858",
+    "nombre": "Matias nahuel goñi"
    },
    {
-    "hora": "17:52",
-    "clientId": "619",
-    "nombre": "AUTOSERVICO SIGLO XXI"
+    "hora": "08:46",
+    "clientId": "1332",
+    "nombre": "FRUTICEL TOUCH S.R.L."
    },
    {
-    "hora": "18:04",
-    "clientId": "3355",
-    "nombre": "autoservicio camet"
+    "hora": "08:53",
+    "clientId": "2670",
+    "nombre": "JOSE CAYETANO PACENZA"
+   },
+   {
+    "hora": "08:59",
+    "clientId": "1871",
+    "nombre": "GONZALEZ VIRGINIA CAROLINA"
+   }
+  ],
+  "12": [
+   {
+    "hora": "08:46",
+    "clientId": "4292",
+    "nombre": "SERGIO ANDRES VENTURA"
+   },
+   {
+    "hora": "08:59",
+    "clientId": "4465",
+    "nombre": "DANIEL GUSTAVO GARCIA"
+   },
+   {
+    "hora": "08:59",
+    "clientId": "1164",
+    "nombre": "SALINAS CHICO S.A"
+   }
+  ],
+  "6": [
+   {
+    "hora": "08:51",
+    "clientId": "4740",
+    "nombre": "LEILA AYELEN IRIZAR BLANCO"
+   },
+   {
+    "hora": "08:52",
+    "clientId": "1345",
+    "nombre": "FRESH FOOD MARPLATENSE"
+   },
+   {
+    "hora": "08:53",
+    "clientId": "1391",
+    "nombre": "PAZ HECTOR OSVALDO"
+   }
+  ],
+  "2": [
+   {
+    "hora": "08:54",
+    "clientId": "1131",
+    "nombre": "TOMATTIS EDUARDO ADRIAN"
+   },
+   {
+    "hora": "08:55",
+    "clientId": "1605",
+    "nombre": "PALLERO YESSICA AGUSTINA"
+   },
+   {
+    "hora": "08:55",
+    "clientId": "2214",
+    "nombre": "CONDORI ZURITA YANET YANINA"
+   },
+   {
+    "hora": "08:56",
+    "clientId": "2421",
+    "nombre": "GASTON TOBLER"
+   },
+   {
+    "hora": "08:56",
+    "clientId": "1676",
+    "nombre": "KIOSMDQ"
+   },
+   {
+    "hora": "08:57",
+    "clientId": "1092",
+    "nombre": "CREMONA SA"
+   },
+   {
+    "hora": "08:57",
+    "clientId": "1606",
+    "nombre": "PASSANTINO CAROLINA"
+   },
+   {
+    "hora": "08:57",
+    "clientId": "2219",
+    "nombre": "OLAIZOLA GITTLEIN SOLANGE"
+   },
+   {
+    "hora": "08:59",
+    "clientId": "1673",
+    "nombre": "DONFRANCESCO LUIS ALBERTO"
+   }
+  ],
+  "10": [
+   {
+    "hora": "08:59",
+    "clientId": "1016",
+    "nombre": "TOLABA CHOQUE WILSON GABRIEL"
    }
   ]
  }
