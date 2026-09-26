@@ -3,13 +3,31 @@
  "diaSemana": "sabado",
  "bySeller": [
   {
+   "sellerId": "6",
+   "vendedor": "Camila Martinez",
+   "ruta": 15,
+   "visitadosDeRuta": 4,
+   "pendientes": 11,
+   "fueraDeRuta": 15,
+   "pct": 26.7
+  },
+  {
    "sellerId": "12",
    "vendedor": "Agustin Pogorzelski",
    "ruta": 14,
+   "visitadosDeRuta": 3,
+   "pendientes": 11,
+   "fueraDeRuta": 16,
+   "pct": 21.4
+  },
+  {
+   "sellerId": "7",
+   "vendedor": "Ramiro Rando",
+   "ruta": 19,
    "visitadosDeRuta": 1,
-   "pendientes": 13,
-   "fueraDeRuta": 2,
-   "pct": 7.1
+   "pendientes": 18,
+   "fueraDeRuta": 21,
+   "pct": 5.3
   },
   {
    "sellerId": "1",
@@ -17,7 +35,7 @@
    "ruta": 13,
    "visitadosDeRuta": 0,
    "pendientes": 13,
-   "fueraDeRuta": 0,
+   "fueraDeRuta": 7,
    "pct": 0.0
   },
   {
@@ -26,7 +44,7 @@
    "ruta": 22,
    "visitadosDeRuta": 0,
    "pendientes": 22,
-   "fueraDeRuta": 1,
+   "fueraDeRuta": 6,
    "pct": 0.0
   },
   {
@@ -35,7 +53,7 @@
    "ruta": 23,
    "visitadosDeRuta": 0,
    "pendientes": 23,
-   "fueraDeRuta": 0,
+   "fueraDeRuta": 10,
    "pct": 0.0
   },
   {
@@ -44,7 +62,7 @@
    "ruta": 11,
    "visitadosDeRuta": 0,
    "pendientes": 11,
-   "fueraDeRuta": 9,
+   "fueraDeRuta": 30,
    "pct": 0.0
   },
   {
@@ -53,7 +71,7 @@
    "ruta": 15,
    "visitadosDeRuta": 0,
    "pendientes": 15,
-   "fueraDeRuta": 0,
+   "fueraDeRuta": 8,
    "pct": 0.0
   },
   {
@@ -80,7 +98,7 @@
    "ruta": 26,
    "visitadosDeRuta": 0,
    "pendientes": 26,
-   "fueraDeRuta": 0,
+   "fueraDeRuta": 4,
    "pct": 0.0
   },
   {
@@ -89,25 +107,7 @@
    "ruta": 22,
    "visitadosDeRuta": 0,
    "pendientes": 22,
-   "fueraDeRuta": 0,
-   "pct": 0.0
-  },
-  {
-   "sellerId": "6",
-   "vendedor": "Camila Martinez",
-   "ruta": 15,
-   "visitadosDeRuta": 0,
-   "pendientes": 15,
-   "fueraDeRuta": 3,
-   "pct": 0.0
-  },
-  {
-   "sellerId": "7",
-   "vendedor": "Ramiro Rando",
-   "ruta": 19,
-   "visitadosDeRuta": 0,
-   "pendientes": 19,
-   "fueraDeRuta": 12,
+   "fueraDeRuta": 5,
    "pct": 0.0
   },
   {
@@ -516,12 +516,6 @@
     "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
-    "clientId": "1459",
-    "nombre": "CREMONA SA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Mayoristas_D"
-   },
-   {
     "clientId": "1470",
     "nombre": "ZARAGOZA NELIDA ADELA",
     "localidad": "MAR DEL PLATA",
@@ -532,12 +526,6 @@
     "nombre": "fruticel touch srl",
     "localidad": "Mar del Plata",
     "taxonomia": "Kiosco/Maxikiosco_C"
-   },
-   {
-    "clientId": "1949",
-    "nombre": "IGLESIAS LUCAS ANTONIO",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_A"
    },
    {
     "clientId": "2037",
@@ -1130,12 +1118,6 @@
     "taxonomia": "Estacion de Servicio - NO OFICIALES_D"
    },
    {
-    "clientId": "1386",
-    "nombre": "CLASA SA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Estacion de Servicio - NO OFICIALES_B"
-   },
-   {
     "clientId": "1390",
     "nombre": "MARTINEZ FERNANDO",
     "localidad": "MAR DEL PLATA",
@@ -1146,12 +1128,6 @@
     "nombre": "SUARPI SA",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Estacion de Servicio - NO OFICIALES_D"
-   },
-   {
-    "clientId": "1566",
-    "nombre": "LIZARDO WALTER OSVALDO",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Kiosco/Maxikiosco_B"
    },
    {
     "clientId": "1859",
@@ -1172,22 +1148,10 @@
     "taxonomia": "Kiosco/Maxikiosco_B"
    },
    {
-    "clientId": "2483",
-    "nombre": "PEDRO ALBERTO CELASCO",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_C"
-   },
-   {
     "clientId": "3168",
     "nombre": "CHOCOCHIA S.A.",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Kiosco/Maxikiosco_B"
-   },
-   {
-    "clientId": "3412",
-    "nombre": "CHOCOCHIA S.A",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_C"
    },
    {
     "clientId": "4466",
@@ -1262,12 +1226,6 @@
     "nombre": "GRUPO XXF SOCIEDAD DE RESPONSABILIDAD LIMITADA",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Autoservicio Tradicional_A"
-   },
-   {
-    "clientId": "3216",
-    "nombre": "FRYDMAN SILVANA CLAUDIA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_A"
    },
    {
     "clientId": "3613",
