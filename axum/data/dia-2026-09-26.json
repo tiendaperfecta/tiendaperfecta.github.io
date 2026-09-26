@@ -7359,11 +7359,11 @@
    "minutos": 4.5,
    "visito": true,
    "hora": "11:01",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 28857.17,
+   "fechaVenta": "2026-09-26",
+   "horaVenta": "18:18",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-09-26",
@@ -7492,11 +7492,11 @@
    "minutos": 1.2,
    "visito": true,
    "hora": "10:39",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 2,
+   "monto": 5785.71,
+   "fechaVenta": "2026-09-26",
+   "horaVenta": "18:20",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-09-26",
@@ -7511,11 +7511,11 @@
    "minutos": 0.9,
    "visito": true,
    "hora": "13:43",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 17500.04,
+   "fechaVenta": "2026-09-26",
+   "horaVenta": "18:23",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-09-26",
@@ -7587,11 +7587,11 @@
    "minutos": 0.1,
    "visito": true,
    "hora": "13:10",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 10000.02,
+   "fechaVenta": "2026-09-26",
+   "horaVenta": "18:24",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-09-26",
@@ -7781,6 +7781,101 @@
    "monto": 60500.02,
    "fechaVenta": "2026-09-26",
    "horaVenta": "14:38",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-26",
+   "sellerId": "5",
+   "vendedor": "Nicolas Martinez",
+   "clientId": "3793",
+   "nombre": "RUBEN ALEJANDRO MARTORELL VALLADARES",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 32285.72,
+   "fechaVenta": "2026-09-26",
+   "horaVenta": "18:13",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-26",
+   "sellerId": "5",
+   "vendedor": "Nicolas Martinez",
+   "clientId": "188",
+   "nombre": "VIRGINIA GABRIELA BROGGI",
+   "localidad": "LAS ARMAS",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 12428.58,
+   "fechaVenta": "2026-09-26",
+   "horaVenta": "18:15",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-26",
+   "sellerId": "5",
+   "vendedor": "Nicolas Martinez",
+   "clientId": "384",
+   "nombre": "Diana Mariela Fernández",
+   "localidad": "Maipú",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 1642.85,
+   "fechaVenta": "2026-09-26",
+   "horaVenta": "18:21",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-26",
+   "sellerId": "5",
+   "vendedor": "Nicolas Martinez",
+   "clientId": "389",
+   "nombre": "Galvan Maria Angelica",
+   "localidad": "Maipú",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 5785.71,
+   "fechaVenta": "2026-09-26",
+   "horaVenta": "18:22",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-26",
+   "sellerId": "5",
+   "vendedor": "Nicolas Martinez",
+   "clientId": "3684",
+   "nombre": "EL CRUCE S A",
+   "localidad": "LAS ARMAS",
+   "taxonomia": "Estacion de Servicio - NO OFICIALES_D",
+   "canal": "PROXIMITY",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 16571.43,
+   "fechaVenta": "2026-09-26",
+   "horaVenta": "18:26",
    "estado": "vendio_sin_pasar"
   },
   {
@@ -10901,6 +10996,25 @@
   },
   {
    "fecha": "2026-09-26",
+   "sellerId": "8",
+   "vendedor": "Martinica Rodriguez",
+   "clientId": "3689",
+   "nombre": "ANALIA VERONICA EIRAS",
+   "localidad": "GENERAL PIRAN",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 75714.3,
+   "fechaVenta": "2026-09-26",
+   "horaVenta": "18:22",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-26",
    "sellerId": "9",
    "vendedor": "Ludmila Aylen Martinez",
    "clientId": "301",
@@ -11471,10 +11585,10 @@
   }
  ],
  "resumen": {
-  "vendio": 231,
-  "paso_sin_vender": 186,
+  "vendio": 235,
+  "paso_sin_vender": 182,
   "sin_visita": 27,
-  "vendio_sin_pasar": 146
+  "vendio_sin_pasar": 152
  },
  "bySeller": [
   {
@@ -11670,9 +11784,9 @@
    "visitas": 23,
    "minutosTotal": 155.3,
    "minutosPromedio": 6.8,
-   "pedidos": 26,
-   "monto": 3788582.23,
-   "pasoSinVender": 10,
+   "pedidos": 36,
+   "monto": 3919439.46,
+   "pasoSinVender": 6,
    "km": 65.0,
    "llegoTarde": true,
    "salioTemprano": false
@@ -11750,8 +11864,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 27,
-   "monto": 2945917.03,
+   "pedidos": 28,
+   "monto": 3021631.33,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -15385,7 +15499,7 @@
  "totales": {
   "visitas": 417,
   "minutos": 1766.9,
-  "pedidos": 514,
-  "monto": 43862665.95
+  "pedidos": 525,
+  "monto": 44069237.48
  }
 }
