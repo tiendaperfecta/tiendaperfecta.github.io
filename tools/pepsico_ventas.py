@@ -405,7 +405,22 @@ def main():
             data = r.json()
             print("DIAG TP datasources:", [(d.get("name"), len(d.get("table", []))) for d in data.get("datasources") or []])
             for d in data.get("datasources") or []:
-                print("DIAG TP", d.get("name"), "header:", d.get("table", [[]])[0] if d.get("table") else None)
+                tabla = d.get("table") or []
+                print("DIAG TP", d.get("name"), "header:", tabla[0] if tabla else None)
+                if len(tabla) > 2:
+                    print("DIAG TP", d.get("name"), "fila1:", tabla[1])
+                    print("DIAG TP", d.get("name"), "fila2:", tabla[2])
+                # valores distintos de columnas clave para entender el formato
+                if tabla:
+                    header = tabla[0]
+                    for col in ("TiendaPerfecta", "SupOk", "Segmento", "SubCanal", "SubCanalTiendaPerfecta", "Vendedor_ID"):
+                        if col in header:
+                            i = header.index(col)
+                            valores = {}
+                            for fila in tabla[1:]:
+                                v = fila[i]
+                                valores[v] = valores.get(v, 0) + 1
+                            print("DIAG TP valores de", col, ":", valores)
         else:
             texto = r.content.decode("cp1252", errors="replace")
             print("DIAG TP CSV primera linea:", texto.split(chr(13))[0][:2000])
