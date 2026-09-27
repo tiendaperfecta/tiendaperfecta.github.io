@@ -1,28 +1,17 @@
 {
- "generatedAt": "2026-09-26T21:01:10-03:00",
- "date": "2026-09-26",
- "errors": [],
+ "generatedAt": "2026-09-27T08:00:40-03:00",
+ "date": "2026-09-27",
+ "errors": [
+  "gps: list index out of range"
+ ],
  "pedidos": {
-  "traidos": 525,
-  "totalSegunApi": 525
- },
- "formatoGps": {
-  "posicion": "'-38.0073291,-57.5382505,6,2:59 PM,nnn,,'",
-  "visitados": "{'sellerID': '6', 'visitedClient': '1745'}",
-  "km": null,
-  "visitadosTotal": 434,
-  "kmError": null
+  "traidos": 0,
+  "totalSegunApi": 0
  },
  "gescom": {
   "clientes": 2837,
   "zonas": 91
  },
- "alerta": "hay 4 llegadas tarde, sin casilla configurada",
- "detalle": {
-  "filas": 597,
-  "vendedores": 15,
-  "diasEnHistoria": 35
- },
  "ordersOk": true,
- "gpsOk": true
+ "gpsOk": false
 }
