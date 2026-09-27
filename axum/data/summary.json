@@ -1,14 +1,26 @@
 {
  "date": "2026-09-27",
- "totalNet": 381936.48,
- "totalGross": 462143.12,
- "orders": 1,
+ "totalNet": 544628.3,
+ "totalGross": 659000.23,
+ "orders": 3,
  "bySeller": [
   {
    "sellerId": "5",
    "name": "Nicolas Martinez",
    "orders": 1,
    "total": 462143.12
+  },
+  {
+   "sellerId": "7",
+   "name": "Ramiro Rando",
+   "orders": 1,
+   "total": 112428.53
+  },
+  {
+   "sellerId": "3",
+   "name": "Ezequiel Hack",
+   "orders": 1,
+   "total": 84428.57
   }
  ],
  "byChannel": [
@@ -16,6 +28,11 @@
    "channel": "TRADITIONAL TRADE_B",
    "orders": 1,
    "total": 462143.12
+  },
+  {
+   "channel": "TRADITIONAL TRADE_D",
+   "orders": 2,
+   "total": 196857.1
   }
  ],
  "topClients": [
@@ -24,6 +41,18 @@
    "name": "ZHENGQIANG WANG (Autoservicio Tradicional_B)",
    "orders": 1,
    "total": 462143.12
+  },
+  {
+   "clientId": "572",
+   "name": "MONICA ANTONIA BODLOVICH (Autoservicio Tradicional_D)",
+   "orders": 1,
+   "total": 112428.53
+  },
+  {
+   "clientId": "1460",
+   "name": "Macarena soledad iglesias (Kiosco/Maxikiosco_D)",
+   "orders": 1,
+   "total": 84428.57
   }
  ]
 }
