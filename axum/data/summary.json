@@ -1,14 +1,20 @@
 {
  "date": "2026-09-27",
- "totalNet": 729929.5,
- "totalGross": 883214.68,
- "orders": 5,
+ "totalNet": 1007084.27,
+ "totalGross": 1218571.96,
+ "orders": 6,
  "bySeller": [
   {
    "sellerId": "5",
    "name": "Nicolas Martinez",
    "orders": 1,
    "total": 462143.12
+  },
+  {
+   "sellerId": "9",
+   "name": "Ludmila Aylen Martinez",
+   "orders": 1,
+   "total": 335357.28
   },
   {
    "sellerId": "3",
@@ -31,6 +37,11 @@
  ],
  "byChannel": [
   {
+   "channel": "TRADITIONAL TRADE_A",
+   "orders": 2,
+   "total": 482857.42
+  },
+  {
    "channel": "TRADITIONAL TRADE_B",
    "orders": 1,
    "total": 462143.12
@@ -39,11 +50,6 @@
    "channel": "TRADITIONAL TRADE_D",
    "orders": 2,
    "total": 196857.1
-  },
-  {
-   "channel": "TRADITIONAL TRADE_A",
-   "orders": 1,
-   "total": 147500.14
   },
   {
    "channel": "TRADITIONAL TRADE_C",
@@ -57,6 +63,12 @@
    "name": "ZHENGQIANG WANG (Autoservicio Tradicional_B)",
    "orders": 1,
    "total": 462143.12
+  },
+  {
+   "clientId": "375",
+   "name": "MATIAS LEONARDO HERRERA (Autoservicio Tradicional_A)",
+   "orders": 1,
+   "total": 335357.28
   },
   {
    "clientId": "2457",
