@@ -345,11 +345,34 @@ def ruta_de(cliente_raw):
     return candidatos[0]
 
 
+MES_ARCHIVO = None
+
+
+def actualizar_indice_archivo(mes):
+    ruta = DIR / "archive" / "index.json"
+    meses = []
+    if ruta.exists():
+        try:
+            meses = json.loads(ruta.read_text(encoding="utf-8"))
+        except Exception:
+            meses = []
+    if mes not in meses:
+        meses.append(mes)
+        meses.sort()
+    ruta.parent.mkdir(parents=True, exist_ok=True)
+    ruta.write_text(json.dumps(meses, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
 def escribir(nombre, data):
     ruta = DIR / nombre
     ruta.parent.mkdir(parents=True, exist_ok=True)
-    ruta.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    texto = json.dumps(data, ensure_ascii=False, indent=2)
+    ruta.write_text(texto, encoding="utf-8")
     print("Guardado", ruta)
+    if MES_ARCHIVO:
+        ruta_archivo = DIR / "archive" / MES_ARCHIVO / nombre
+        ruta_archivo.parent.mkdir(parents=True, exist_ok=True)
+        ruta_archivo.write_text(texto, encoding="utf-8")
 
 
 # Censo Tienda Perfecta: mismo motor generico de reportes, sin rango de
@@ -441,6 +464,10 @@ def main():
 
     hoy = dt.datetime.now(TZ_AR).date()
     inicio_mes = hoy.replace(day=1)
+
+    global MES_ARCHIVO
+    MES_ARCHIVO = hoy.strftime("%Y-%m")
+    actualizar_indice_archivo(MES_ARCHIVO)
 
     clientes_raw, ramos, subramos = gescom.bajar_clientes()
     clientes = {}
