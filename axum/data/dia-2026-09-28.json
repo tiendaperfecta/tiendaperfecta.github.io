@@ -10,6 +10,25 @@
  "rows": [
   {
    "fecha": "2026-09-28",
+   "sellerId": "1",
+   "vendedor": "Maria Noelia Madia",
+   "clientId": "1564",
+   "nombre": "Guillermo Román Gonzalez",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 44857.19,
+   "fechaVenta": "2026-09-28",
+   "horaVenta": "19:35",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-28",
    "sellerId": "12",
    "vendedor": "Agustin Pogorzelski",
    "clientId": "2172",
@@ -143,6 +162,25 @@
   },
   {
    "fecha": "2026-09-28",
+   "sellerId": "5",
+   "vendedor": "Nicolas Martinez",
+   "clientId": "1442",
+   "nombre": "MULTIDEPORTES BRANDSEN Y DORREGO S A",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Canchas de Futbol_B",
+   "canal": "AWAY FROM HOME",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 38499.95,
+   "fechaVenta": "2026-09-28",
+   "horaVenta": "19:31",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-28",
    "sellerId": "7",
    "vendedor": "Ramiro Rando",
    "clientId": "1176",
@@ -215,6 +253,44 @@
    "monto": 28785.73,
    "fechaVenta": "2026-09-28",
    "horaVenta": "11:43",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-28",
+   "sellerId": "7",
+   "vendedor": "Ramiro Rando",
+   "clientId": "490",
+   "nombre": "ANALIA FERNANDA AGUILAR",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Dietetica_A",
+   "canal": "AWAY FROM HOME",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 60785.68,
+   "fechaVenta": "2026-09-28",
+   "horaVenta": "19:25",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-28",
+   "sellerId": "7",
+   "vendedor": "Ramiro Rando",
+   "clientId": "4766",
+   "nombre": "CARLOS ANTONIO MANSILLA",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_B",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 107571.5,
+   "fechaVenta": "2026-09-28",
+   "horaVenta": "19:28",
    "estado": "vendio_sin_pasar"
   },
   {
@@ -314,7 +390,7 @@
   }
  ],
  "resumen": {
-  "vendio_sin_pasar": 16
+  "vendio_sin_pasar": 20
  },
  "bySeller": [
   {
@@ -330,8 +406,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 0,
-   "monto": 0.0,
+   "pedidos": 1,
+   "monto": 44857.19,
    "pasoSinVender": 0,
    "km": 1.0,
    "llegoTarde": false,
@@ -530,8 +606,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 1,
-   "monto": 255714.33,
+   "pedidos": 2,
+   "monto": 294214.28,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -590,8 +666,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 4,
-   "monto": 372428.8,
+   "pedidos": 6,
+   "monto": 540785.98,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -4314,7 +4390,7 @@
  "totales": {
   "visitas": 0,
   "minutos": 0.0,
-  "pedidos": 16,
-  "monto": 2001928.52
+  "pedidos": 20,
+  "monto": 2253642.84
  }
 }
