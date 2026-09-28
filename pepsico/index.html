@@ -915,7 +915,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     </table>
   </div>
 
-  <h3 class="subsection-title">Motivos de devolución — última fecha (22/09)</h3>
+  <h3 class="subsection-title">Motivos de devolución — última fecha (<span id="rechazos-ultima-fecha">—</span>)</h3>
   <p class="section-note">
     Devoluciones por rechazo del último día con datos, por <code>FechaComprobante</code> (no
     <code>FechaCarga</code>).
@@ -1673,41 +1673,43 @@ Promise.all([rechazosDetallePromise, ventaVendedorPromise]).then(([detalle, vent
     <td>${fmt(rechazoTot.venta ? Math.abs(rechazoTot.rechazo)/rechazoTot.venta*100 : 0,2)}%</td>
   </tr>
 `;
-}).catch(() => {});
 
-const motivoRows = [
-  {motivo:"RECHAZO",                                       cant:1189, importe:-2214724},
-  {motivo:"ERROR DE PREVENTA",                              cant:900,  importe:-1808404},
-  {motivo:"NO SE CARGÓ",                                    cant:791,  importe:-1461651},
-  {motivo:"CERRADO",                                        cant:535,  importe:-939050},
-  {motivo:"SIN DINERO",                                     cant:414,  importe:-687270},
-  {motivo:"NO ENTREGADO",                                   cant:393,  importe:-805003},
-  {motivo:"Error de Armado: Diferencia de unidades",        cant:174,  importe:-387987},
-  {motivo:"SIN STOCK",                                      cant:151,  importe:-283784},
-  {motivo:"Error de Armado: Producto roto o mal estado",    cant:49,   importe:-61293},
-  {motivo:"Rotura",                                         cant:4,    importe:-7674},
-];
-document.getElementById('tbody-motivos').innerHTML = motivoRows.map(r => `
+  const motivoTotales = {};
+  Object.values(detalle).forEach(lista => {
+    lista.forEach(x => {
+      const acc = motivoTotales[x.motivo] || (motivoTotales[x.motivo] = {cant:0, importe:0});
+      acc.cant += x.cant;
+      acc.importe += x.importe;
+    });
+  });
+  const motivoRows = Object.entries(motivoTotales)
+    .map(([motivo, v]) => ({motivo, cant: v.cant, importe: v.importe}))
+    .sort((a,b) => a.importe - b.importe);
+  document.getElementById('tbody-motivos').innerHTML = motivoRows.map(r => `
   <tr>
     <td class="name">${r.motivo}</td>
     <td>${fmt(r.cant)}</td>
     <td>-$ ${fmt(Math.abs(r.importe))}</td>
   </tr>
 `).join('');
+}).catch(() => {});
 
-const motivosUltimaFechaRows = [
-  {n:"Lucas Giayetto",  cliente:"744",  motivo:"ERROR DE PREVENTA", cant:8, importe:-788529},
-  {n:"Melanie Larrama", cliente:"1086", motivo:"SIN STOCK",         cant:2, importe:-10029},
-];
-document.getElementById('tbody-motivosUltimaFecha').innerHTML = motivosUltimaFechaRows.map(r => `
+fetch('rechazos_ultima_fecha.json').then(r => r.json()).then(data => {
+  const fechaEl = document.getElementById('rechazos-ultima-fecha');
+  if (fechaEl && data.fecha) {
+    const [anio, mes, dia] = data.fecha.split('-');
+    fechaEl.textContent = `${dia}/${mes}`;
+  }
+  document.getElementById('tbody-motivosUltimaFecha').innerHTML = (data.filas || []).map(r => `
   <tr>
-    <td class="name">${r.n}</td>
+    <td class="name">${r.vendedor}</td>
     <td>${r.cliente}</td>
     <td>${r.motivo}</td>
     <td>${fmt(r.cant)}</td>
     <td>-$ ${fmt(Math.abs(r.importe))}</td>
   </tr>
 `).join('');
+}).catch(() => {});
 
 const comboRows = [
   {n:"Ezequiel Hack",           combos:70, reconocer:947077.09},
