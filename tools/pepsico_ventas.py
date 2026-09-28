@@ -491,6 +491,12 @@ def main():
         "cliActivos": 0,
     })
     print("Filas del detalle de ventas (mes en curso, todos los proveedores):", len(filas))
+    if filas:
+        print("DEBUG columnas detalle de ventas:", list(filas[0].keys()))
+        for f in filas:
+            if (f.get("TipoDeVenta") or "") == TIPO_RECHAZO:
+                print("DEBUG fila de rechazo de ejemplo:", dict(f))
+                break
 
     compra_cliente = {}
     compra_cliente_marca = {}
