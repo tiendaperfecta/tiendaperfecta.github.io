@@ -492,11 +492,14 @@ def main():
     })
     print("Filas del detalle de ventas (mes en curso, todos los proveedores):", len(filas))
     if filas:
-        print("DEBUG columnas detalle de ventas:", list(filas[0].keys()))
+        vistos = 0
         for f in filas:
-            if (f.get("TipoDeVenta") or "") == TIPO_RECHAZO:
-                print("DEBUG fila de rechazo de ejemplo:", dict(f))
-                break
+            if (f.get("TipoDeVenta") or "") == TIPO_RECHAZO and "PEPSICO" in (f.get("Proveedor") or "").upper():
+                print("DEBUG fila de rechazo Pepsico:", {k: f.get(k) for k in
+                      ("FechaComprobante", "FechaEntrega", "FechaCarga", "Cliente", "Vendedor", "MotivoDevolucion", "CantBase", "ImporteNetoItem")})
+                vistos += 1
+                if vistos >= 5:
+                    break
 
     compra_cliente = {}
     compra_cliente_marca = {}
