@@ -10,27 +10,15 @@
   --good:#3f7d4f; --good-soft:#e4f0e6; --warn:#b5651d; --warn-soft:#f6e8d5; --bad:#b23b2e; --bad-soft:#f7e2de;
   --shadow: 0 1px 2px rgba(36,31,24,.06), 0 8px 24px -12px rgba(36,31,24,.18);
 }
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#2c2519; --panel:#3a3122; --panel-2:#453a29; --text:#f2ece0; --muted:#c2b39c;
-    --border:#544632; --accent:#e2a33d; --accent-soft:#4a3a1f;
-    --good:#6cbb84; --good-soft:#1e3324; --warn:#e2a33d; --warn-soft:#3a2c15; --bad:#e2695c; --bad-soft:#3a1e1b;
-    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px -14px rgba(0,0,0,.6);
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#17140f; --panel:#211c15; --panel-2:#282219; --text:#f2ece0; --muted:#a89a86;
-  --border:#3a3122; --accent:#e2a33d; --accent-soft:#3a2c15;
-  --good:#6cbb84; --good-soft:#1e3324; --warn:#e2a33d; --warn-soft:#3a2c15; --bad:#e2695c; --bad-soft:#3a1e1b;
-  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px -14px rgba(0,0,0,.6);
-}
 *{box-sizing:border-box}
 body{
   margin:0; background:var(--bg); color:var(--text);
   font-family:"IBM Plex Sans", system-ui, sans-serif;
   padding:28px 20px 48px; display:flex; justify-content:center;
 }
-.wrap{width:100%; max-width:1120px}
+.wrap{width:100%; max-width:1120px; position:relative}
+.tp-logo-hero{position:absolute; top:0; right:0; width:120px; height:120px; border-radius:50%}
+@media (max-width:640px){ .tp-logo-hero{width:72px; height:72px} }
 .eyebrow{
   font:600 12px/1 "IBM Plex Mono", monospace; letter-spacing:.12em; text-transform:uppercase;
   color:var(--accent); margin:0 0 10px;
@@ -124,7 +112,7 @@ h1{
 table{border-collapse:collapse; width:100%; min-width:920px; font-size:13px}
 thead tr.grp th{
   font:600 11px/1 "IBM Plex Mono",monospace; letter-spacing:.05em; text-transform:uppercase;
-  color:var(--muted); text-align:center; padding:12px 10px 6px; border-bottom:none;
+  color:var(--accent); text-align:center; padding:12px 10px 6px; border-bottom:none;
 }
 thead tr.grp th.g-platino{color:var(--accent)}
 thead tr.cols th{
@@ -269,6 +257,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
 </style>
 
 <div class="wrap">
+  <img src="../assets/img/logo-tiendaperfecta.jpeg" alt="Tienda Perfecta" class="tp-logo-hero">
   <p class="eyebrow">PepsiCo · Tienda Perfecta · Objetivo TN Septiembre 2026</p>
   <h1>Avance de venta diario</h1>
   <p class="sub">
