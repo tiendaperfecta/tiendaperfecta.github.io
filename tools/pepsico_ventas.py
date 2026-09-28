@@ -278,6 +278,7 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
             "en este archivo." % parametros["objetivoId"])
 
     header = tabla[0]
+    print("DEBUG columnas Avance de Ventas Pepsico:", header)
     idx = {nombre: i for i, nombre in enumerate(header)}
     por_vendedor = {}
     for fila in tabla[1:]:
