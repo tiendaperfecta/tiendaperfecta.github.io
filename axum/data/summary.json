@@ -1,8 +1,8 @@
 {
  "date": "2026-09-28",
- "totalNet": 843978.56,
- "totalGross": 1021214.06,
- "orders": 9,
+ "totalNet": 1150708.19,
+ "totalGross": 1392356.91,
+ "orders": 12,
  "bySeller": [
   {
    "sellerId": "7",
@@ -11,34 +11,51 @@
    "total": 372428.8
   },
   {
+   "sellerId": "8",
+   "name": "Martinica Rodriguez",
+   "orders": 3,
+   "total": 324785.27
+  },
+  {
    "sellerId": "2",
    "name": "Julian Nuñez",
    "orders": 2,
    "total": 285142.84
   },
   {
-   "sellerId": "8",
-   "name": "Martinica Rodriguez",
-   "orders": 2,
-   "total": 233499.54
+   "sellerId": "5",
+   "name": "Nicolas Martinez",
+   "orders": 1,
+   "total": 255714.33
   },
   {
    "sellerId": "4",
    "name": "Lucas Giayetto",
    "orders": 1,
    "total": 130142.88
+  },
+  {
+   "sellerId": "3",
+   "name": "Ezequiel Hack",
+   "orders": 1,
+   "total": 24142.79
   }
  ],
  "byChannel": [
+  {
+   "channel": "TRADITIONAL TRADE_D",
+   "orders": 3,
+   "total": 317499.47
+  },
   {
    "channel": "TRADITIONAL TRADE_C",
    "orders": 3,
    "total": 282714.32
   },
   {
-   "channel": "TRADITIONAL TRADE_D",
+   "channel": "PROXIMITY_A",
    "orders": 1,
-   "total": 202070.95
+   "total": 255714.33
   },
   {
    "channel": "AWAY FROM HOME_B",
@@ -67,6 +84,12 @@
   }
  ],
  "topClients": [
+  {
+   "clientId": "1167",
+   "name": "SERVICIOS LUARCA SA (Estacion de Servicio - AXION_A)",
+   "orders": 1,
+   "total": 255714.33
+  },
   {
    "clientId": "1685",
    "name": "SANTIAGO COLELLA (Kiosco/Maxikiosco_D)",
@@ -104,6 +127,12 @@
    "total": 109642.9
   },
   {
+   "clientId": "2760",
+   "name": "Damian Alejandro Xhardez (Kiosco/Maxikiosco_D)",
+   "orders": 1,
+   "total": 91285.73
+  },
+  {
    "clientId": "1855",
    "name": "GOÑI JOSE MARIA (Panaderia_A)",
    "orders": 1,
@@ -120,6 +149,12 @@
    "name": "LAURIANA ESTHER BAEZ (Almacen/Despensa_C)",
    "orders": 1,
    "total": 28785.73
+  },
+  {
+   "clientId": "1694",
+   "name": "DABOS ANDREA ELIZABETH (Almacen/Despensa_D)",
+   "orders": 1,
+   "total": 24142.79
   }
  ]
 }
