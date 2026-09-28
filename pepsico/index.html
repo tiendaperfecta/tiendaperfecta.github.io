@@ -105,6 +105,13 @@ h1{
 }
 .section-title-row .section-title, .section-title-row .subsection-title{ margin:0 }
 .mn-logo{ height:34px; width:auto; flex:none }
+.mn-watermark{ position:relative; isolation:isolate }
+.mn-watermark::before{
+  content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
+  background:url('logo_mi_negocio.png') no-repeat center;
+  background-size:200px auto; opacity:.18; mix-blend-mode:multiply;
+}
+.mn-watermark > *{ position:relative; z-index:1 }
 .subsection-title{
   font-family:"Fraunces",serif; font-weight:600; font-size:15.5px; color:var(--accent);
   margin:28px 0 4px; text-transform:uppercase; letter-spacing:.03em;
@@ -440,7 +447,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     (Platino+Gold + Silver&amp;Bronze) que cada vendedor cargó en la tabla "Por vendedor" de más arriba.
   </p>
 
-  <div class="mn-panel">
+  <div class="mn-panel mn-watermark">
     <div class="mn-head">
       <div>
         <span class="name">Mi Negocio+</span>
@@ -471,7 +478,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     vienen del Power BI "Mi Negocio +" (PepsiCo), export manual del 22/09.
   </p>
 
-  <div class="table-scroll">
+  <div class="table-scroll mn-watermark">
     <table>
       <thead>
         <tr class="cols">
@@ -501,7 +508,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     clientes.
   </p>
 
-  <div class="table-scroll">
+  <div class="table-scroll mn-watermark">
     <table>
       <thead>
         <tr class="cols">
@@ -1042,7 +1049,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
   </p>
 
   <div class="tp-summary">
-    <div class="tp-total-card">
+    <div class="tp-total-card mn-watermark">
       <div class="tp-total-title">Total Combos Mi Negocio</div>
       <div class="tp-tiles" style="grid-template-columns:1fr 1fr">
         <div class="tp-tile"><div class="v good" id="comboMn-tot-cant">—</div><div class="l">Combos vendidos</div></div>
@@ -1051,7 +1058,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     </div>
   </div>
 
-  <div class="table-scroll">
+  <div class="table-scroll mn-watermark">
     <table>
       <thead>
         <tr class="cols">
@@ -1070,7 +1077,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     menor total $.
   </p>
 
-  <div class="table-scroll">
+  <div class="table-scroll mn-watermark">
     <table id="tabla-combosMnDetalle">
       <thead>
         <tr class="grp" id="grp-combosMnDetalle"></tr>
