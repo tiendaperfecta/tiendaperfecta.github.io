@@ -452,15 +452,15 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
         <span class="name">Mi Negocio+</span>
         <span class="mn-sub">venta Pepsico pedida por el canal digital, sin visita de preventa</span>
       </div>
-      <span class="pct">78,6<span class="unit">%</span></span>
+      <span class="pct" id="mn-pct">—<span class="unit">%</span></span>
     </div>
     <div class="bar-track mn-track">
-      <div class="bar-fill mn-fill" style="width:78.6%"></div>
+      <div class="bar-fill mn-fill" id="mn-fill" style="width:0%"></div>
       <div class="goal-marker" style="left:85%" title="Compromiso: 85%"></div>
     </div>
     <div class="seg-foot">
-      <span>Acumulado 15.506 kg de 19.741 kg Pepsico</span>
-      <span>Compromiso 85% · faltan 6,4 pts</span>
+      <span id="mn-acum-txt">Acumulado — kg de — kg Pepsico</span>
+      <span id="mn-goal-txt">Compromiso 85%</span>
     </div>
     <p class="mn-note">
       Columna <code>AcumuladoMN</code> del mismo reporte <b>Avance de Ventas Pepsico</b> (no hay un
@@ -2274,6 +2274,18 @@ if (kgAvanceMeta) {
       <td></td><td></td><td id="tfoot-compromiso-total"></td>
     </tr>
   `;
+  const mnRowsConAcum = rows.filter(r => typeof r.acumuladoMN === 'number');
+  if (mnRowsConAcum.length) {
+    const acumMN = mnRowsConAcum.reduce((s,r)=>s+r.acumuladoMN,0);
+    const pctMN = totTa ? acumMN / totTa * 100 : 0;
+    document.getElementById('mn-pct').innerHTML = fmt(pctMN,1) + '<span class="unit">%</span>';
+    document.getElementById('mn-fill').style.width = Math.min(pctMN,100) + '%';
+    document.getElementById('mn-acum-txt').textContent = `Acumulado ${fmt(acumMN)} kg de ${fmt(totTa)} kg Pepsico`;
+    const faltan = 85 - pctMN;
+    document.getElementById('mn-goal-txt').textContent = faltan > 0
+      ? `Compromiso 85% · faltan ${fmt(faltan,1)} pts`
+      : `Compromiso 85% · superado por ${fmt(-faltan,1)} pts`;
+  }
 }
 const tbody = document.getElementById('tbody');
 tbody.innerHTML = rows.map(r => `
