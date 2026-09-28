@@ -273,10 +273,29 @@
    "fechaVenta": "2026-09-28",
    "horaVenta": "13:23",
    "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-28",
+   "sellerId": "8",
+   "vendedor": "Martinica Rodriguez",
+   "clientId": "7607",
+   "nombre": "SAN ALBERTO BALCARCE S R L",
+   "localidad": "BALCARCE",
+   "taxonomia": "Estacion de Servicio - NO OFICIALES_C",
+   "canal": "PROXIMITY",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 139499.88,
+   "fechaVenta": "2026-09-28",
+   "horaVenta": "15:47",
+   "estado": "vendio_sin_pasar"
   }
  ],
  "resumen": {
-  "vendio_sin_pasar": 14
+  "vendio_sin_pasar": 15
  },
  "bySeller": [
   {
@@ -572,8 +591,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 3,
-   "monto": 324785.27,
+   "pedidos": 4,
+   "monto": 464285.14,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -4276,7 +4295,7 @@
  "totales": {
   "visitas": 0,
   "minutos": 0.0,
-  "pedidos": 14,
-  "monto": 1831142.91
+  "pedidos": 15,
+  "monto": 1970642.78
  }
 }
