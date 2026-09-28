@@ -1361,7 +1361,7 @@ function drillFrescura(codigo) {
 
 let rows = [];
 let kgAvanceMeta = null;
-Promise.all([
+const rowsReadyPromise = Promise.all([
   fetch('avance_kg_vendedor.json').then(r => r.json()),
   ventaVendedorPromise,
 ]).then(([data, venta]) => {
@@ -1411,7 +1411,9 @@ function heatColor(v, min, max){
 }
 
 let portafolioDetalle = [];
-fetch('oportunidad_portafolio.json').then(r => r.json()).then(data => { portafolioDetalle = data; }).catch(() => {});
+const portafolioDetallePromise = fetch('oportunidad_portafolio.json').then(r => r.json()).then(data => {
+  portafolioDetalle = data;
+}).catch(() => {});
 
 function openDrillPortafolio(title, subtitle, list) {
   document.getElementById('drillDefaultBody').style.display = '';
@@ -1443,20 +1445,64 @@ function drillPortSeg(vendedor, seg) {
   openDrillPortafolio(vendedor, sub, list);
 }
 
-const portDiaRows = [
-  {n:"Camila Martinez",        Lunes:[6,28],  Martes:[13,33], Miercoles:[16,37], Jueves:[10,37], Viernes:[6,32],  Sabado:[3,15], totOp:54, totU:182},
-  {n:"Matias Parada",          Lunes:[11,38], Martes:[9,38],  Miercoles:[10,39], Jueves:[5,38],  Viernes:[6,18],  Sabado:[3,17], totOp:44, totU:188},
-  {n:"Maria Noelia Madia",     Lunes:[8,38],  Martes:[6,24],  Miercoles:[10,31], Jueves:[10,27], Viernes:[9,36],  Sabado:[1,7],  totOp:44, totU:163},
-  {n:"Melanie Larrama",        Lunes:[11,32], Martes:[7,30],  Miercoles:[5,16],  Jueves:[7,40],  Viernes:[7,32],  Sabado:[5,22], totOp:42, totU:172},
-  {n:"Julian Nuñez",           Lunes:[9,32],  Martes:[7,37],  Miercoles:[12,30], Jueves:[6,36],  Viernes:[4,28],  Sabado:[3,8],  totOp:41, totU:171},
-  {n:"Ramiro Rando",           Lunes:[4,29],  Martes:[10,34], Miercoles:[8,37],  Jueves:[6,43],  Viernes:[9,34],  Sabado:[4,19], totOp:41, totU:196},
-  {n:"Martinica Rodriguez",    Lunes:[6,40],  Martes:[8,42],  Miercoles:[9,40],  Jueves:[6,41],  Viernes:[6,32],  Sabado:[5,26], totOp:40, totU:221},
-  {n:"Nicolas Martinez",       Lunes:[6,36],  Martes:[7,32],  Miercoles:[8,34],  Jueves:[8,32],  Viernes:[7,31],  Sabado:[1,20], totOp:37, totU:185},
-  {n:"Agustin Pogorzelski",    Lunes:[7,29],  Martes:[9,32],  Miercoles:[12,40], Jueves:[2,36],  Viernes:[5,32],  Sabado:[2,12], totOp:37, totU:181},
-  {n:"Lucas Giayetto",         Lunes:[4,30],  Martes:[3,38],  Miercoles:[7,36],  Jueves:[4,30],  Viernes:[13,53], Sabado:[5,25], totOp:36, totU:212},
-  {n:"Ludmila Aylen Martinez", Lunes:[4,35],  Martes:[9,37],  Miercoles:[10,40], Jueves:[3,29],  Viernes:[6,31],  Sabado:[3,20], totOp:35, totU:192},
-  {n:"Ezequiel Hack",          Lunes:[6,39],  Martes:[7,37],  Miercoles:[8,44],  Jueves:[4,37],  Viernes:[5,28],  Sabado:[1,15], totOp:31, totU:200},
-];
+let portDiaRows = [];
+const DIAS_PORT = ['Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'];
+const DIA_KEY_PORT = {Lunes:'lu',Martes:'ma',Miercoles:'mi',Jueves:'ju',Viernes:'vi',Sabado:'sa'};
+
+function renderPortDiaSection(){
+  if (!noCompraRows.length) return;
+  // universo por vendedor+dia sale de no_compradores_por_dia.json (mismo
+  // universo de clientes con ruta asignada); el numerador (oportunidad de
+  // portafolio) sale de oportunidad_portafolio.json, agrupado aca.
+  const opPorVendDia = {};
+  portafolioDetalle.forEach(c => {
+    if (!c.vendedor || !c.dia) return;
+    const porDia = opPorVendDia[c.vendedor] || (opPorVendDia[c.vendedor] = {});
+    porDia[c.dia] = (porDia[c.dia] || 0) + 1;
+  });
+  portDiaRows = noCompraRows.map(nc => {
+    const fila = { n: nc.n };
+    let totOp = 0, totU = 0;
+    DIAS_PORT.forEach(d => {
+      const u = nc[DIA_KEY_PORT[d]][1];
+      const op = (opPorVendDia[nc.n] && opPorVendDia[nc.n][d]) || 0;
+      fila[d] = [op, u];
+      totOp += op; totU += u;
+    });
+    fila.totOp = totOp; fila.totU = totU;
+    return fila;
+  });
+  portDiaRows.sort((a,b) => b.totOp - a.totOp);
+
+  const tbodyPortDia = document.getElementById('tbody-portdia');
+  tbodyPortDia.innerHTML = portDiaRows.map(r => {
+    const pct = r.totU ? r.totOp/r.totU*100 : 0;
+    return `
+  <tr>
+    <td class="name">${r.n}</td>
+    <td class="clickable" onclick="drillPortDia('${r.n}','Lunes')">${fmtCellOp(r.Lunes)}</td>
+    <td class="clickable" onclick="drillPortDia('${r.n}','Martes')">${fmtCellOp(r.Martes)}</td>
+    <td class="clickable" onclick="drillPortDia('${r.n}','Miercoles')">${fmtCellOp(r.Miercoles)}</td>
+    <td class="clickable" onclick="drillPortDia('${r.n}','Jueves')">${fmtCellOp(r.Jueves)}</td>
+    <td class="clickable" onclick="drillPortDia('${r.n}','Viernes')">${fmtCellOp(r.Viernes)}</td>
+    <td class="clickable" onclick="drillPortDia('${r.n}','Sabado')">${fmtCellOp(r.Sabado)}</td>
+    <td class="clickable" onclick="drillPortDia('${r.n}','Total')"><span class="pill ${tierOportunidad(pct)}">${r.totOp}/${r.totU}</span></td>
+  </tr>
+`;}).join('');
+  const totPortDia = {Lunes:[0,0],Martes:[0,0],Miercoles:[0,0],Jueves:[0,0],Viernes:[0,0],Sabado:[0,0],totOp:0,totU:0};
+  portDiaRows.forEach(r => {
+    DIAS_PORT.forEach(d => { totPortDia[d][0]+=r[d][0]; totPortDia[d][1]+=r[d][1]; });
+    totPortDia.totOp += r.totOp; totPortDia.totU += r.totU;
+  });
+  document.getElementById('tfoot-portdia').innerHTML = `
+  <tr>
+    <td class="name">Total PepsiCo</td>
+    <td>${fmtCellOp(totPortDia.Lunes)}</td><td>${fmtCellOp(totPortDia.Martes)}</td><td>${fmtCellOp(totPortDia.Miercoles)}</td>
+    <td>${fmtCellOp(totPortDia.Jueves)}</td><td>${fmtCellOp(totPortDia.Viernes)}</td><td>${fmtCellOp(totPortDia.Sabado)}</td>
+    <td>${fmt(totPortDia.totOp)}/${fmt(totPortDia.totU)}</td>
+  </tr>
+`;
+}
 
 const portSegRows = [
   {n:"Camila Martinez",        A:[6,23],  B:[9,28],  C:[16,60], D:[21,70],  totOp:52, totU:181},
@@ -1474,35 +1520,6 @@ const portSegRows = [
 ];
 function tierOportunidad(p){ return p<=15 ? 'good' : p<=25 ? 'warn' : 'bad'; }
 function fmtCellOp([op,u]){ return `${op}/${u}`; }
-
-const tbodyPortDia = document.getElementById('tbody-portdia');
-tbodyPortDia.innerHTML = portDiaRows.map(r => {
-  const pct = r.totU ? r.totOp/r.totU*100 : 0;
-  return `
-  <tr>
-    <td class="name">${r.n}</td>
-    <td class="clickable" onclick="drillPortDia('${r.n}','Lunes')">${fmtCellOp(r.Lunes)}</td>
-    <td class="clickable" onclick="drillPortDia('${r.n}','Martes')">${fmtCellOp(r.Martes)}</td>
-    <td class="clickable" onclick="drillPortDia('${r.n}','Miercoles')">${fmtCellOp(r.Miercoles)}</td>
-    <td class="clickable" onclick="drillPortDia('${r.n}','Jueves')">${fmtCellOp(r.Jueves)}</td>
-    <td class="clickable" onclick="drillPortDia('${r.n}','Viernes')">${fmtCellOp(r.Viernes)}</td>
-    <td class="clickable" onclick="drillPortDia('${r.n}','Sabado')">${fmtCellOp(r.Sabado)}</td>
-    <td class="clickable" onclick="drillPortDia('${r.n}','Total')"><span class="pill ${tierOportunidad(pct)}">${r.totOp}/${r.totU}</span></td>
-  </tr>
-`;}).join('');
-const totPortDia = {Lunes:[0,0],Martes:[0,0],Miercoles:[0,0],Jueves:[0,0],Viernes:[0,0],Sabado:[0,0],totOp:0,totU:0};
-portDiaRows.forEach(r => {
-  ['Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'].forEach(d => { totPortDia[d][0]+=r[d][0]; totPortDia[d][1]+=r[d][1]; });
-  totPortDia.totOp += r.totOp; totPortDia.totU += r.totU;
-});
-document.getElementById('tfoot-portdia').innerHTML = `
-  <tr>
-    <td class="name">Total PepsiCo</td>
-    <td>${fmtCellOp(totPortDia.Lunes)}</td><td>${fmtCellOp(totPortDia.Martes)}</td><td>${fmtCellOp(totPortDia.Miercoles)}</td>
-    <td>${fmtCellOp(totPortDia.Jueves)}</td><td>${fmtCellOp(totPortDia.Viernes)}</td><td>${fmtCellOp(totPortDia.Sabado)}</td>
-    <td>${fmt(totPortDia.totOp)}/${fmt(totPortDia.totU)}</td>
-  </tr>
-`;
 
 const tbodyPortSeg = document.getElementById('tbody-portseg');
 tbodyPortSeg.innerHTML = portSegRows.map(r => {
@@ -2076,10 +2093,12 @@ function renderCcc2Section(){
 }
 
 let noCompraRows = [];
-fetch('no_compradores_por_dia.json').then(r => r.json()).then(data => {
+const noCompraReadyPromise = fetch('no_compradores_por_dia.json').then(r => r.json()).then(data => {
   noCompraRows = data.vendedores;
   renderNoCompraSection();
 }).catch(() => {});
+
+const portDiaReadyPromise = Promise.all([noCompraReadyPromise, portafolioDetallePromise]).then(() => renderPortDiaSection());
 
 function tierNoCompra(p){ return p<=20 ? 'good' : p<=28 ? 'warn' : 'bad'; }
 function fmtCell([nc,u]){ return `${nc}/${u}`; }
@@ -2379,31 +2398,52 @@ if (hoyLabelEl) hoyLabelEl.textContent = hoyDiaIp;
 
 function findByNameIp(arr, name){ return arr.find(x => x.n === name); }
 
-const pehuamar90BaseByVendedor = {
-  "Ramiro Rando": 47, "Matias Parada": 40, "Camila Martinez": 35, "Ezequiel Hack": 34,
-  "Melanie Larrama": 33, "Martinica Rodriguez": 32, "Julian Nuñez": 29, "Agustin Pogorzelski": 28,
-  "Lucas Giayetto": 27, "Maria Noelia Madia": 22, "Nicolas Martinez": 18, "Ludmila Aylen Martinez": 16
-};
-
-const ipRows = rows.map(r => {
-  const nc = findByNameIp(noCompraRows, r.n);
-  const freqBase = nc ? nc[hoyKeyIp][1] : 0;
-  const port = findByNameIp(portDiaRows, r.n);
-  const portBase = port && port[hoyDiaIp] ? port[hoyDiaIp][0] : 0;
-  const pehuamarBase = pehuamar90BaseByVendedor[r.n] ?? 0;
-  return { n: r.n, freqBase, portBase, pehuamarBase };
-});
-
 let pehuamar90Detalle = [];
-fetch('pehuamar90_no_comprado.json').then(r => r.json()).then(data => { pehuamar90Detalle = data; }).catch(() => {});
+const pehuamar90DetallePromise = fetch('pehuamar90_no_comprado.json').then(r => r.json()).then(data => { pehuamar90Detalle = data; }).catch(() => {});
 
 function drillPehuamar90(vendedor) {
   const list = pehuamar90Detalle.filter(c => c.vendedor === vendedor);
-  openDrillPortafolio(vendedor, 'Ruta de hoy — sin compra de Pehuamar 90gr Lisa o Acanalada (01/09-24/09)', list);
+  openDrillPortafolio(vendedor, `Sin compra de Pehuamar 90gr Lisa o Acanalada en lo que va del mes`, list);
 }
 
-const tbodyIp = document.getElementById('tbody-ip');
-tbodyIp.innerHTML = ipRows.map(r => `
+const IP_API = 'https://script.google.com/macros/s/AKfycby29cOLAt2nSOU-jbpaLxwRSiK1_eG-0eWhKrbitGks8U7eJzqdkPBsI7kwkxsT6-K0/exec';
+let ipRenderStarted = false;
+
+async function renderIpSection(){
+  if (ipRenderStarted) return;
+  ipRenderStarted = true;
+  await Promise.all([rowsReadyPromise, portDiaReadyPromise, pehuamar90DetallePromise]);
+  if (!rows.length || !noCompraRows.length) { ipRenderStarted = false; return; }
+
+  const pehuamarBaseByVendedor = {};
+  pehuamar90Detalle.forEach(c => {
+    pehuamarBaseByVendedor[c.vendedor] = (pehuamarBaseByVendedor[c.vendedor] || 0) + 1;
+  });
+
+  let data = null;
+  try {
+    const r = await fetch(IP_API);
+    data = await r.json();
+  } catch (err) {
+    console.error('ip: fetch failed:', err);
+  }
+  const compromisos = (data && data.ok && data.compromisos) || {};
+  const ipGuardado = (data && data.ok && data.ipProyecciones) || {};
+
+  const ipRows = rows.map(r => {
+    const nc = findByNameIp(noCompraRows, r.n);
+    const freqBase = nc ? nc[hoyKeyIp][1] : 0;
+    const port = findByNameIp(portDiaRows, r.n);
+    const portBase = port && port[hoyDiaIp] ? port[hoyDiaIp][0] : 0;
+    const pehuamarBase = pehuamarBaseByVendedor[r.n] || 0;
+    const guardado = ipGuardado[r.n] || {};
+    const comp = compromisos[r.n] || {};
+    const mnBase = (typeof comp.pg === 'number' || typeof comp.sb === 'number') ? (comp.pg||0) + (comp.sb||0) : null;
+    return { n: r.n, freqBase, portBase, pehuamarBase, guardado, mnBase };
+  });
+
+  const tbodyIp = document.getElementById('tbody-ip');
+  tbodyIp.innerHTML = ipRows.map(r => `
   <tr>
     <td class="name">${r.n}</td>
     <td>${fmt(r.freqBase)}</td>
@@ -2420,198 +2460,113 @@ tbodyIp.innerHTML = ipRows.map(r => `
     <td class="clickable" onclick="drillPehuamar90('${r.n}')">${fmt(r.pehuamarBase)}</td>
     <td><input class="ip-input" data-vendedor="${r.n}" data-metric="pehuamar" type="number" step="1" placeholder="clientes" /></td>
     <td></td>
-    <td><span class="ip-mnbase" data-vendedor-mnbase="${r.n}">—</span></td>
+    <td><span class="ip-mnbase" data-vendedor-mnbase="${r.n}">${r.mnBase === null ? '—' : fmt(r.mnBase)}</span></td>
     <td><input class="ip-input" data-vendedor="${r.n}" data-metric="sellout" type="number" step="1" placeholder="kg" /></td>
     <td><span class="ip-mnpct" data-vendedor-mnpct="${r.n}">—</span></td>
   </tr>
 `).join('');
 
-const ipFreqBaseTotal = ipRows.reduce((s,r)=>s+r.freqBase,0);
-const ipPortBaseTotal = ipRows.reduce((s,r)=>s+r.portBase,0);
-const ipPehuamarBaseTotal = ipRows.reduce((s,r)=>s+r.pehuamarBase,0);
+  const ipFreqBaseTotal = ipRows.reduce((s,r)=>s+r.freqBase,0);
+  const ipPortBaseTotal = ipRows.reduce((s,r)=>s+r.portBase,0);
+  const ipPehuamarBaseTotal = ipRows.reduce((s,r)=>s+r.pehuamarBase,0);
+  document.getElementById('tfoot-ip-freq-base').textContent = fmt(ipFreqBaseTotal);
+  document.getElementById('tfoot-ip-port-base').textContent = fmt(ipPortBaseTotal);
+  document.getElementById('tfoot-ip-pehuamar-base').textContent = fmt(ipPehuamarBaseTotal);
+  const ipMnBaseTotal = ipRows.reduce((s,r)=>s+(r.mnBase||0),0);
+  document.getElementById('tfoot-ip-mn-base').textContent = fmt(ipMnBaseTotal);
 
-document.getElementById('tfoot-ip-freq-base').textContent = fmt(ipFreqBaseTotal);
-document.getElementById('tfoot-ip-port-base').textContent = fmt(ipPortBaseTotal);
-document.getElementById('tfoot-ip-pehuamar-base').textContent = fmt(ipPehuamarBaseTotal);
-
-const ipInputRefs = [];
-[...document.querySelectorAll('.ip-input')].forEach(input => {
-  ipInputRefs.push({ vendedor: input.dataset.vendedor, metric: input.dataset.metric, input });
-  if (input.dataset.metric === 'frecuencia') {
-    const base = Number(input.dataset.base) || 0;
-    const pctEl = input.parentElement.querySelector('.ip-pct');
-    const updateFreqPct = () => {
-      if (!pctEl) return;
-      if (input.value === '' || !base) { pctEl.textContent = '—'; return; }
-      pctEl.textContent = fmt(Number(input.value) / base * 100, 1) + '%';
-    };
-    input.addEventListener('input', updateFreqPct);
-    updateFreqPct();
-  }
-});
-
-(async () => {
-  let db = null;
-  try {
-    db = await claude.use("db");
-  } catch (err) {
-    console.error('ip: claude.use("db") failed:', err);
-  }
-
-  if (!db) {
-    ipInputRefs.forEach(({ input }) => { input.disabled = true; input.placeholder = 'no disp.'; });
-    ['tfoot-ip-freq-comp','tfoot-ip-port-comp','tfoot-ip-pehuamar-comp','tfoot-ip-mn-comp','tfoot-ip-mn-comp-pct','tfoot-ip-mn-base'].forEach(id => {
+  if (!data || !data.ok) {
+    [...document.querySelectorAll('.ip-input')].forEach(input => { input.disabled = true; input.placeholder = 'no disp.'; });
+    ['tfoot-ip-freq-comp','tfoot-ip-port-comp','tfoot-ip-pehuamar-comp','tfoot-ip-mn-comp','tfoot-ip-mn-comp-pct'].forEach(id => {
       const el = document.getElementById(id); if (el) el.textContent = 'n/d';
     });
-    document.querySelectorAll('.ip-mnbase, .ip-mnpct').forEach(el => { el.textContent = 'n/d'; });
+    document.querySelectorAll('.ip-mnpct').forEach(el => { el.textContent = 'n/d'; });
     return;
   }
 
-  const slugIp = (v) => v.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9]+/g, '_');
-
   const byVendedorIp = {};
-  ipInputRefs.forEach(ref => {
-    if (!byVendedorIp[ref.vendedor]) byVendedorIp[ref.vendedor] = {};
-    byVendedorIp[ref.vendedor][ref.metric] = ref.input;
+  [...document.querySelectorAll('.ip-input')].forEach(input => {
+    const vendedor = input.dataset.vendedor;
+    if (!byVendedorIp[vendedor]) byVendedorIp[vendedor] = {};
+    byVendedorIp[vendedor][input.dataset.metric] = input;
+    if (input.dataset.metric === 'frecuencia') {
+      const base = Number(input.dataset.base) || 0;
+      const pctEl = input.parentElement.querySelector('.ip-pct');
+      const updateFreqPct = () => {
+        if (!pctEl) return;
+        if (input.value === '' || !base) { pctEl.textContent = '—'; return; }
+        pctEl.textContent = fmt(Number(input.value) / base * 100, 1) + '%';
+      };
+      input.addEventListener('input', updateFreqPct);
+    }
   });
 
   const mnPctEls = {};
   document.querySelectorAll('.ip-mnpct').forEach(el => { mnPctEls[el.dataset.vendedorMnpct] = el; });
-  const mnBaseValues = {};
-  function updateMnPct(vendedor) {
+  function updateMnPct(vendedor, mnBase) {
     const pctEl = mnPctEls[vendedor];
     const input = byVendedorIp[vendedor] && byVendedorIp[vendedor].sellout;
     if (!pctEl || !input) return;
-    const base = mnBaseValues[vendedor];
-    if (!base || input.value === '') { pctEl.textContent = '—'; return; }
-    pctEl.textContent = fmt(Number(input.value) / base * 100, 1) + '%';
+    if (!mnBase || input.value === '') { pctEl.textContent = '—'; return; }
+    pctEl.textContent = fmt(Number(input.value) / mnBase * 100, 1) + '%';
   }
 
-  Object.keys(byVendedorIp).forEach(vendedor => {
-    try {
-      const inputs = byVendedorIp[vendedor];
-      const ref = db.doc(`ipProyeccion/${slugIp(vendedor)}`);
-      ref.onSnapshot(
-        (snap) => {
-          const data = (typeof snap.data === 'function') ? (snap.data() || {}) : (snap && snap.data) || {};
-          ['frecuencia','portafolio','pehuamar','sellout'].forEach(metric => {
-            const input = inputs[metric];
-            if (!input) return;
-            if (document.activeElement !== input) {
-              input.value = typeof data[metric] === 'number' ? data[metric] : '';
-              input.dispatchEvent(new Event('input', { bubbles: true }));
-            }
-          });
-        },
-        (err) => { console.error('ip subscribe error:', vendedor, err.code, err.message); }
-      );
-      const writeAll = () => {
-        const payload = { updatedAt: Date.now() };
-        ['frecuencia','portafolio','pehuamar','sellout'].forEach(metric => {
-          const input = inputs[metric];
-          const v = input && input.value !== '' ? Number(input.value) : null;
-          payload[metric] = (v !== null && Number.isNaN(v)) ? null : v;
-        });
-        ref.set(payload).catch((err) => console.error('ip write failed:', vendedor, err.code, err.message));
-      };
-      ['frecuencia','portafolio','pehuamar','sellout'].forEach(metric => {
-        const input = inputs[metric];
-        if (!input) return;
-        input.addEventListener('change', writeAll);
-      });
-      if (inputs.sellout) {
-        inputs.sellout.addEventListener('input', () => updateMnPct(vendedor));
+  function guardarIp(vendedor, inputs) {
+    const val = (m) => inputs[m] && inputs[m].value !== '' ? Number(inputs[m].value) : null;
+    const params = new URLSearchParams({
+      action: 'guardarIp', vendedor,
+      frecuencia: val('frecuencia') === null ? '' : val('frecuencia'),
+      portafolio: val('portafolio') === null ? '' : val('portafolio'),
+      pehuamar: val('pehuamar') === null ? '' : val('pehuamar'),
+      sellout: val('sellout') === null ? '' : val('sellout'),
+    });
+    fetch(IP_API + '?' + params.toString()).catch((err) => console.error('ip write failed:', vendedor, err));
+  }
+
+  let freqTotal = 0, portTotal = 0, pehuamarTotal = 0, selloutSum = 0, selloutCount = 0;
+
+  ipRows.forEach(r => {
+    const inputs = byVendedorIp[r.n];
+    if (!inputs) return;
+    const g = r.guardado;
+    ['frecuencia','portafolio','pehuamar','sellout'].forEach(metric => {
+      const input = inputs[metric];
+      if (!input) return;
+      if (typeof g[metric] === 'number') {
+        input.value = g[metric];
+        input.dispatchEvent(new Event('input', { bubbles: true }));
       }
-    } catch (err) {
-      console.error('ip row db-sync failed:', vendedor, err);
+    });
+    if (typeof g.frecuencia === 'number') freqTotal += g.frecuencia;
+    if (typeof g.portafolio === 'number') portTotal += g.portafolio;
+    if (typeof g.pehuamar === 'number') pehuamarTotal += g.pehuamar;
+    if (typeof g.sellout === 'number') { selloutSum += g.sellout; selloutCount++; }
+    updateMnPct(r.n, r.mnBase);
+
+    ['frecuencia','portafolio','pehuamar','sellout'].forEach(metric => {
+      const input = inputs[metric];
+      if (!input) return;
+      input.addEventListener('change', () => guardarIp(r.n, inputs));
+    });
+    if (inputs.sellout) {
+      inputs.sellout.addEventListener('input', () => updateMnPct(r.n, r.mnBase));
     }
   });
 
-  [...document.querySelectorAll('.ip-mnbase')].forEach(el => {
-    const vendedor = el.dataset.vendedorMnbase;
-    try {
-      const ref = db.doc(`compromiso/${slugIp(vendedor)}`);
-      ref.onSnapshot(
-        (snap) => {
-          const data = (typeof snap.data === 'function') ? (snap.data() || {}) : (snap && snap.data) || {};
-          const pg = typeof data.pg === 'number' ? data.pg : 0;
-          const sb = typeof data.sb === 'number' ? data.sb : 0;
-          const hasVal = typeof data.pg === 'number' || typeof data.sb === 'number';
-          el.textContent = hasVal ? fmt(pg + sb) : '—';
-          mnBaseValues[vendedor] = hasVal ? (pg + sb) : null;
-          updateMnPct(vendedor);
-        },
-        (err) => { console.error('ip mnbase subscribe error:', vendedor, err.code, err.message); }
-      );
-    } catch (err) {
-      console.error('ip mnbase db-sync failed:', vendedor, err);
-    }
-  });
-
-  let totalMnBaseKg = 0;
-  function renderMnCompPct() {
-    const elPct = document.getElementById('tfoot-ip-mn-comp-pct');
-    if (elPct) elPct.textContent = totalMnBaseKg ? fmt(totalSelloutKg / totalMnBaseKg * 100, 1) + '%' : '—';
+  const elFreq = document.getElementById('tfoot-ip-freq-comp');
+  if (elFreq) {
+    const pctTxt = ipFreqBaseTotal ? ` <span class="ip-pct">${fmt(freqTotal/ipFreqBaseTotal*100,1)}%</span>` : '';
+    elFreq.innerHTML = fmt(freqTotal) + pctTxt;
   }
-  let totalSelloutKg = 0;
+  const elPort = document.getElementById('tfoot-ip-port-comp');
+  if (elPort) elPort.textContent = fmt(portTotal);
+  const elPehuamar = document.getElementById('tfoot-ip-pehuamar-comp');
+  if (elPehuamar) elPehuamar.textContent = fmt(pehuamarTotal);
+  const elMn = document.getElementById('tfoot-ip-mn-comp');
+  if (elMn) elMn.textContent = selloutCount ? fmt(selloutSum) : '—';
+  const elMnPct = document.getElementById('tfoot-ip-mn-comp-pct');
+  if (elMnPct) elMnPct.textContent = ipMnBaseTotal ? fmt(selloutSum / ipMnBaseTotal * 100, 1) + '%' : '—';
+}
 
-  db.collection('compromiso').onSnapshot(
-    (snap) => {
-      try {
-        let total = 0;
-        const list = Array.isArray(snap) ? snap : (Array.isArray(snap && snap.docs) ? snap.docs : snap);
-        const each = (fn) => { if (list && typeof list.forEach === 'function') list.forEach(fn); };
-        each((doc) => {
-          if (!doc || doc.id === '_supervisor') return;
-          const data = (typeof doc.data === 'function') ? (doc.data() || {}) : (doc.data || {});
-          const pg = typeof data.pg === 'number' ? data.pg : 0;
-          const sb = typeof data.sb === 'number' ? data.sb : 0;
-          if (typeof data.pg === 'number' || typeof data.sb === 'number') total += pg + sb;
-        });
-        const elBase = document.getElementById('tfoot-ip-mn-base');
-        if (elBase) elBase.textContent = fmt(total);
-        totalMnBaseKg = total;
-        renderMnCompPct();
-      } catch (err) {
-        console.error('ip mnbase total render failed:', err);
-      }
-    },
-    (err) => { console.error('ip mnbase total subscribe error:', err.code, err.message); }
-  );
-
-  db.collection('ipProyeccion').onSnapshot(
-    (snap) => {
-      try {
-        let freqTotal = 0, portTotal = 0, pehuamarTotal = 0;
-        let selloutSum = 0, selloutCount = 0;
-        const list = Array.isArray(snap) ? snap : (Array.isArray(snap && snap.docs) ? snap.docs : snap);
-        const each = (fn) => { if (list && typeof list.forEach === 'function') list.forEach(fn); };
-        each((doc) => {
-          if (!doc) return;
-          const data = (typeof doc.data === 'function') ? (doc.data() || {}) : (doc.data || {});
-          if (typeof data.frecuencia === 'number') freqTotal += data.frecuencia;
-          if (typeof data.portafolio === 'number') portTotal += data.portafolio;
-          if (typeof data.pehuamar === 'number') pehuamarTotal += data.pehuamar;
-          if (typeof data.sellout === 'number') { selloutSum += data.sellout; selloutCount++; }
-        });
-        const elFreq = document.getElementById('tfoot-ip-freq-comp');
-        const elPort = document.getElementById('tfoot-ip-port-comp');
-        const elPehuamar = document.getElementById('tfoot-ip-pehuamar-comp');
-        const elMn = document.getElementById('tfoot-ip-mn-comp');
-        if (elFreq) {
-          const pctTxt = ipFreqBaseTotal ? ` <span class="ip-pct">${fmt(freqTotal/ipFreqBaseTotal*100,1)}%</span>` : '';
-          elFreq.innerHTML = fmt(freqTotal) + pctTxt;
-        }
-        if (elPort) elPort.textContent = fmt(portTotal);
-        if (elPehuamar) elPehuamar.textContent = fmt(pehuamarTotal);
-        if (elMn) elMn.textContent = selloutCount ? fmt(selloutSum) : '—';
-        totalSelloutKg = selloutSum;
-        renderMnCompPct();
-      } catch (err) {
-        console.error('ip total render failed:', err);
-      }
-    },
-    (err) => { console.error('ip total subscribe error:', err.code, err.message); }
-  );
-})();
+rowsReadyPromise.then(renderIpSection);
 </script>
