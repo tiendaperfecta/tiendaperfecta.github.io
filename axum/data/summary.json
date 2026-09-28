@@ -1,29 +1,75 @@
 {
  "date": "2026-09-28",
- "totalNet": 90613.97,
- "totalGross": 109642.9,
- "orders": 1,
+ "totalNet": 326446.35,
+ "totalGross": 395000.08,
+ "orders": 4,
  "bySeller": [
+  {
+   "sellerId": "4",
+   "name": "Lucas Giayetto",
+   "orders": 1,
+   "total": 130142.88
+  },
+  {
+   "sellerId": "2",
+   "name": "Julian Nuñez",
+   "orders": 1,
+   "total": 123785.71
+  },
   {
    "sellerId": "7",
    "name": "Ramiro Rando",
    "orders": 1,
    "total": 109642.9
+  },
+  {
+   "sellerId": "8",
+   "name": "Martinica Rodriguez",
+   "orders": 1,
+   "total": 31428.59
   }
  ],
  "byChannel": [
   {
+   "channel": "TRADITIONAL TRADE_C",
+   "orders": 2,
+   "total": 253928.59
+  },
+  {
    "channel": "PROXIMITY_B",
    "orders": 1,
    "total": 109642.9
+  },
+  {
+   "channel": "TRADITIONAL TRADE_B",
+   "orders": 1,
+   "total": 31428.59
   }
  ],
  "topClients": [
+  {
+   "clientId": "2802",
+   "name": "CLAUDIA MARCELA CANDIDO (Autoservicio Tradicional_C)",
+   "orders": 1,
+   "total": 130142.88
+  },
+  {
+   "clientId": "1376",
+   "name": "Alejandra Valenzuela (Kiosco/Maxikiosco_C)",
+   "orders": 1,
+   "total": 123785.71
+  },
   {
    "clientId": "1176",
    "name": "EMFACO SA (Estacion de Servicio - SHELL_B)",
    "orders": 1,
    "total": 109642.9
+  },
+  {
+   "clientId": "304",
+   "name": "REDONDO MICAELA ANAHI  (Almacen/Despensa_B)",
+   "orders": 1,
+   "total": 31428.59
   }
  ]
 }
