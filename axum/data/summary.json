@@ -1,9 +1,21 @@
 {
  "date": "2026-09-28",
- "totalNet": 326446.35,
- "totalGross": 395000.08,
- "orders": 4,
+ "totalNet": 533116.55,
+ "totalGross": 645071.04,
+ "orders": 6,
  "bySeller": [
+  {
+   "sellerId": "8",
+   "name": "Martinica Rodriguez",
+   "orders": 2,
+   "total": 233499.54
+  },
+  {
+   "sellerId": "7",
+   "name": "Ramiro Rando",
+   "orders": 2,
+   "total": 157642.9
+  },
   {
    "sellerId": "4",
    "name": "Lucas Giayetto",
@@ -15,18 +27,6 @@
    "name": "Julian Nuñez",
    "orders": 1,
    "total": 123785.71
-  },
-  {
-   "sellerId": "7",
-   "name": "Ramiro Rando",
-   "orders": 1,
-   "total": 109642.9
-  },
-  {
-   "sellerId": "8",
-   "name": "Martinica Rodriguez",
-   "orders": 1,
-   "total": 31428.59
   }
  ],
  "byChannel": [
@@ -36,9 +36,19 @@
    "total": 253928.59
   },
   {
+   "channel": "TRADITIONAL TRADE_D",
+   "orders": 1,
+   "total": 202070.95
+  },
+  {
    "channel": "PROXIMITY_B",
    "orders": 1,
    "total": 109642.9
+  },
+  {
+   "channel": "AWAY FROM HOME_A",
+   "orders": 1,
+   "total": 48000.0
   },
   {
    "channel": "TRADITIONAL TRADE_B",
@@ -47,6 +57,12 @@
   }
  ],
  "topClients": [
+  {
+   "clientId": "1685",
+   "name": "SANTIAGO COLELLA (Kiosco/Maxikiosco_D)",
+   "orders": 1,
+   "total": 202070.95
+  },
   {
    "clientId": "2802",
    "name": "CLAUDIA MARCELA CANDIDO (Autoservicio Tradicional_C)",
@@ -64,6 +80,12 @@
    "name": "EMFACO SA (Estacion de Servicio - SHELL_B)",
    "orders": 1,
    "total": 109642.9
+  },
+  {
+   "clientId": "1855",
+   "name": "GOÑI JOSE MARIA (Panaderia_A)",
+   "orders": 1,
+   "total": 48000.0
   },
   {
    "clientId": "304",

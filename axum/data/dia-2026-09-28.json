@@ -423,6 +423,25 @@
   },
   {
    "fecha": "2026-09-28",
+   "sellerId": "7",
+   "vendedor": "Ramiro Rando",
+   "clientId": "1855",
+   "nombre": "GOÑI JOSE MARIA",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Panaderia_A",
+   "canal": "AWAY FROM HOME",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 48000.0,
+   "fechaVenta": "2026-09-28",
+   "horaVenta": "09:07",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-28",
    "sellerId": "8",
    "vendedor": "Martinica Rodriguez",
    "clientId": "304",
@@ -439,10 +458,29 @@
    "fechaVenta": "2026-09-28",
    "horaVenta": "08:56",
    "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-28",
+   "sellerId": "8",
+   "vendedor": "Martinica Rodriguez",
+   "clientId": "1685",
+   "nombre": "SANTIAGO COLELLA",
+   "localidad": "Balcarce",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 202070.95,
+   "fechaVenta": "2026-09-28",
+   "horaVenta": "09:19",
+   "estado": "vendio_sin_pasar"
   }
  ],
  "resumen": {
-  "vendio_sin_pasar": 4
+  "vendio_sin_pasar": 6
  },
  "bySeller": [
   {
@@ -718,8 +756,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 1,
-   "monto": 109642.9,
+   "pedidos": 2,
+   "monto": 157642.9,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -738,8 +776,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 1,
-   "monto": 31428.59,
+   "pedidos": 2,
+   "monto": 233499.54,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -4442,7 +4480,7 @@
  "totales": {
   "visitas": 0,
   "minutos": 0.0,
-  "pedidos": 4,
-  "monto": 395000.08
+  "pedidos": 6,
+  "monto": 645071.03
  }
 }
