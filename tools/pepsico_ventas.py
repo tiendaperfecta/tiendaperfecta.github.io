@@ -346,6 +346,7 @@ def ruta_de(cliente_raw):
 
 
 MES_ARCHIVO = None
+SOLO_ARCHIVO = False
 
 
 def actualizar_indice_archivo(mes):
@@ -364,15 +365,17 @@ def actualizar_indice_archivo(mes):
 
 
 def escribir(nombre, data):
-    ruta = DIR / nombre
-    ruta.parent.mkdir(parents=True, exist_ok=True)
     texto = json.dumps(data, ensure_ascii=False, indent=2)
-    ruta.write_text(texto, encoding="utf-8")
-    print("Guardado", ruta)
+    if not SOLO_ARCHIVO:
+        ruta = DIR / nombre
+        ruta.parent.mkdir(parents=True, exist_ok=True)
+        ruta.write_text(texto, encoding="utf-8")
+        print("Guardado", ruta)
     if MES_ARCHIVO:
         ruta_archivo = DIR / "archive" / MES_ARCHIVO / nombre
         ruta_archivo.parent.mkdir(parents=True, exist_ok=True)
         ruta_archivo.write_text(texto, encoding="utf-8")
+        print("Guardado (archivo)", ruta_archivo)
 
 
 # Censo Tienda Perfecta: mismo motor generico de reportes, sin rango de
@@ -735,5 +738,255 @@ def main():
     return 0
 
 
+def cmd_backfill(anio, mes):
+    """Carga retroactiva de UN mes ya cerrado, solo a pepsico/archive/AAAA-MM/
+    (nunca toca los archivos en vivo). No incluye Tienda Perfecta (el censo de
+    Gescom es una foto del estado actual, no se puede consultar a una fecha
+    pasada) ni pehuamar90_no_comprado.json (es un concepto de "ruta de hoy",
+    no tiene sentido para un mes ya cerrado)."""
+    if not gescom.hay_credenciales():
+        print("Sin credenciales de GesCom: no se corre.")
+        return 1
+
+    global MES_ARCHIVO, SOLO_ARCHIVO
+    SOLO_ARCHIVO = True
+    MES_ARCHIVO = "%04d-%02d" % (anio, mes)
+    ultimo_dia = calendar.monthrange(anio, mes)[1]
+    hoy = dt.date(anio, mes, ultimo_dia)
+    inicio_mes = hoy.replace(day=1)
+    print("Backfill de %s (tomando el mes completo, %s a %s)" % (MES_ARCHIVO, inicio_mes, hoy))
+    actualizar_indice_archivo(MES_ARCHIVO)
+
+    clientes_raw, ramos, subramos = gescom.bajar_clientes()
+    clientes = {}
+    for c in clientes_raw:
+        codigo = cod(c.get("codigo"))
+        if not codigo:
+            continue
+        dia, codven = ruta_de(c)
+        clientes[codigo] = {
+            "codigo": codigo,
+            "razon": (c.get("nombre") or c.get("razonSocial") or "").strip(),
+            "localidad": (c.get("localidad") or "").strip(),
+            "seg": cod(c.get("codigoSegmento")).upper(),
+            "dia": dia,
+            "codven": codven,
+        }
+
+    subgrupo_por_desc = {}
+    for grupo, cfg in SUBPRODUCTOS.items():
+        for clave, skus in cfg["skus"].items():
+            for sku in skus:
+                subgrupo_por_desc[sku.upper()] = (grupo, clave)
+
+    api = Api()
+    vendedores_raw = api.get("/data/cmd/ventas/api/v1/get-vendedores")
+    nombre_por_codven = {cod(x.get("codigo")): (x.get("nombre") or "").strip() for x in vendedores_raw}
+
+    fin_mes_excl = hoy + dt.timedelta(days=1)
+    filas = api.render_csv(GUID_DETALLE_VENTAS, {
+        "empId": 0,
+        "fechaIni": inicio_mes.isoformat() + "T03:00:00.000Z",
+        "fechaFin": fin_mes_excl.isoformat() + "T03:00:00.000Z",
+        "facturadaId": 2,
+        "supervisorId": 0,
+        "sedeId": 0,
+        "tipoVentaId": 2,
+        "ventaEmpl": 0,
+        "cliActivos": 0,
+    })
+    print("Filas del detalle de ventas (%s, todos los proveedores): %d" % (MES_ARCHIVO, len(filas)))
+
+    compra_cliente = {}
+    compra_cliente_marca = {}
+    compra_cliente_subgrupo = {}
+    invendible_por_vend = {}
+    rechazos_por_vend = {}
+    venta_importe_por_vend = {}
+    rechazos_fecha_rows = []
+
+    for fila in filas:
+        if "PEPSICO" not in (fila.get("Proveedor") or "").upper():
+            continue
+        tipo = fila.get("TipoDeVenta") or ""
+        cli = cod(fila.get("Cliente"))
+        articulo = (fila.get("Articulo") or "").strip()
+        q = num_ar(fila.get("CantBase"))
+        codven = cod(fila.get("CodVendedor"))
+        nombre_vend = (fila.get("Vendedor") or "").strip() or nombre_por_codven.get(codven, codven)
+
+        if tipo == TIPO_VENTA:
+            compra_cliente[cli] = compra_cliente.get(cli, 0) + q
+            marca = MARCA_LABEL.get((fila.get("Marca") or "").strip().upper())
+            if marca:
+                porcli = compra_cliente_marca.setdefault(cli, {})
+                porcli[marca] = porcli.get(marca, 0) + q
+            sub = subgrupo_por_desc.get(articulo.upper())
+            if sub:
+                porcli_sub = compra_cliente_subgrupo.setdefault(cli, {})
+                porcli_sub[sub] = porcli_sub.get(sub, 0) + q
+            venta_importe_por_vend[nombre_vend] = venta_importe_por_vend.get(nombre_vend, 0.0) + num_ar(fila.get("ImporteNetoItem"))
+        elif tipo in (TIPO_CANJE, TIPO_RECHAZO):
+            importe = num_ar(fila.get("ImporteNetoItem"))
+            if tipo == TIPO_CANJE:
+                acc = invendible_por_vend.setdefault(nombre_vend, {}).setdefault(articulo, [0.0, 0.0])
+            else:
+                motivo = (fila.get("MotivoDevolucion") or "").strip() or "SIN MOTIVO"
+                acc = rechazos_por_vend.setdefault(nombre_vend, {}).setdefault(motivo, [0.0, 0.0])
+                fecha_comp = (fila.get("FechaComprobante") or "").strip()
+                if fecha_comp:
+                    rechazos_fecha_rows.append({
+                        "fecha": fecha_comp, "vendedor": nombre_vend, "cliente": cli,
+                        "motivo": motivo, "cant": abs(q), "importe": importe,
+                    })
+            acc[0] += abs(q)
+            acc[1] += importe
+
+    universo_por_vend = {}
+    marca_cumple_por_vend = {}
+    sub_cumple_por_vend = {}
+    seg_por_vend = {}
+    nc_dia_por_vend = {}
+    no_compradores = []
+    DIA_CLAVE = {"Lunes": "lu", "Martes": "ma", "Miercoles": "mi",
+                 "Jueves": "ju", "Viernes": "vi", "Sabado": "sa"}
+    for codigo, c in clientes.items():
+        if not c["dia"] or c["codven"] not in VENDEDORES_PEPSICO:
+            continue
+        nombre_vend_cli = nombre_por_codven.get(c["codven"], c["codven"])
+        es_no_comprador = compra_cliente.get(codigo, 0) < 3
+        if es_no_comprador:
+            no_compradores.append({**{k: c[k] for k in
+                                    ("codigo", "razon", "localidad", "seg", "dia")},
+                                    "vendedor": nombre_vend_cli})
+        codven = c["codven"]
+        universo_por_vend[codven] = universo_por_vend.get(codven, 0) + 1
+        cumple_marca = marca_cumple_por_vend.setdefault(codven, {})
+        for marca, cant in compra_cliente_marca.get(codigo, {}).items():
+            if cant >= 3:
+                cumple_marca[marca] = cumple_marca.get(marca, 0) + 1
+        cumple_sub = sub_cumple_por_vend.setdefault(codven, {})
+        for sub, cant in compra_cliente_subgrupo.get(codigo, {}).items():
+            if cant >= 3:
+                cumple_sub[sub] = cumple_sub.get(sub, 0) + 1
+        seg = c["seg"] if c["seg"] in SEGMENTOS else None
+        if seg:
+            segdata = seg_por_vend.setdefault(codven, {s: {"universo": 0, "cumple": 0} for s in SEGMENTOS})
+            segdata[seg]["universo"] += 1
+            if compra_cliente.get(codigo, 0) >= 3:
+                segdata[seg]["cumple"] += 1
+        clave_dia = DIA_CLAVE.get(c["dia"])
+        if clave_dia:
+            nc_dia = nc_dia_por_vend.setdefault(codven, {k: [0, 0] for k in DIA_CLAVE.values()})
+            nc_dia[clave_dia][1] += 1
+            if es_no_comprador:
+                nc_dia[clave_dia][0] += 1
+
+    escribir("no_compradores_detalle.json", no_compradores)
+    print("No compradores (%s): %d" % (MES_ARCHIVO, len(no_compradores)))
+
+    no_compradores_dia_out = []
+    for codven in sorted(nc_dia_por_vend, key=lambda x: int(x)):
+        dias = nc_dia_por_vend[codven]
+        fila = {"n": nombre_por_codven.get(codven, codven)}
+        fila.update(dias)
+        fila["totNc"] = sum(v[0] for v in dias.values())
+        fila["totU"] = sum(v[1] for v in dias.values())
+        no_compradores_dia_out.append(fila)
+    escribir("no_compradores_por_dia.json", {"vendedores": no_compradores_dia_out})
+
+    venta_vendedor_out = {n: round(v, 2) for n, v in venta_importe_por_vend.items()}
+    escribir("venta_vendedor.json", venta_vendedor_out)
+
+    cobertura_vendedores = []
+    for codven in sorted(universo_por_vend, key=lambda x: int(x)):
+        universo = universo_por_vend[codven]
+        cumple_marca = marca_cumple_por_vend.get(codven, {})
+        fila = {"codven": codven, "n": nombre_por_codven.get(codven, codven), "universo": universo}
+        for label in MARCA_LABEL.values():
+            cant = cumple_marca.get(label, 0)
+            fila[label] = round(cant / universo * 100, 1) if universo else 0.0
+        cobertura_vendedores.append(fila)
+    escribir("cobertura_marca_vendedor.json", {"vendedores": cobertura_vendedores})
+
+    subproductos_out = {}
+    for grupo, cfg in SUBPRODUCTOS.items():
+        filas_sp = []
+        for codven in sorted(universo_por_vend, key=lambda x: int(x)):
+            universo = universo_por_vend[codven]
+            cumple_sub = sub_cumple_por_vend.get(codven, {})
+            fila = {"codven": codven, "n": nombre_por_codven.get(codven, codven), "universo": universo}
+            for clave in cfg["labels"]:
+                fila[clave] = cumple_sub.get((grupo, clave), 0)
+            filas_sp.append(fila)
+        subproductos_out[grupo] = {"obj": cfg["obj"], "labels": cfg["labels"], "vendedores": filas_sp}
+    escribir("subproductos_vendedor.json", subproductos_out)
+
+    universo_seg_total = {s: sum(seg_por_vend.get(cv, {}).get(s, {}).get("universo", 0)
+                                  for cv in universo_por_vend) for s in SEGMENTOS}
+    ccc_vendedores = []
+    for codven in sorted(universo_por_vend, key=lambda x: int(x)):
+        segdata = seg_por_vend.get(codven, {s: {"universo": 0, "cumple": 0} for s in SEGMENTOS})
+        fila = {"n": nombre_por_codven.get(codven, codven)}
+        keymap = {"A": ("ao", "ac"), "B": ("bo", "bc"), "C": ("co", "cc"), "D": ("do_", "dc")}
+        for s in SEGMENTOS:
+            ko, kc = keymap[s]
+            uni_total_seg = universo_seg_total[s]
+            uni_v = segdata[s]["universo"]
+            fila[ko] = round(CCC_OBJETIVO_SEG[s] * uni_v / uni_total_seg) if uni_total_seg else 0
+            fila[kc] = segdata[s]["cumple"]
+        ccc_vendedores.append(fila)
+    objetivo_oficial = dict(CCC_OBJETIVO_SEG)
+    objetivo_oficial["total"] = sum(CCC_OBJETIVO_SEG.values())
+    escribir("ccc_segmento.json", {"vendedores": ccc_vendedores, "objetivoOficial": objetivo_oficial})
+
+    dias_habiles = dias_habiles_mes(anio, mes)
+    try:
+        avance_kg = traer_avance_kg(api, hoy, dias_habiles, dias_habiles)
+        escribir("avance_kg_vendedor.json", avance_kg)
+        print("Avance kg (%s): %d vendedores | objetivo PG %.1f kg | objetivo SB %.1f kg" %
+              (MES_ARCHIVO, len(avance_kg["vendedores"]), avance_kg["objetivoPG"], avance_kg["objetivoSB"]))
+    except Exception as e:
+        print("ERROR trayendo Avance de Ventas Pepsico para %s:" % MES_ARCHIVO, e)
+        return 1
+
+    invendible_out = {
+        vend: [{"articulo": art, "cant": round(c, 1), "importe": round(i, 2)}
+               for art, (c, i) in sorted(d.items(), key=lambda kv: kv[1][1])]
+        for vend, d in invendible_por_vend.items()
+    }
+    rechazos_out = {
+        vend: [{"motivo": m, "cant": round(c, 0), "importe": round(i, 2)}
+               for m, (c, i) in sorted(d.items(), key=lambda kv: kv[1][1])]
+        for vend, d in rechazos_por_vend.items()
+    }
+    escribir("invendible_detalle.json", invendible_out)
+    escribir("rechazos_detalle.json", rechazos_out)
+
+    if rechazos_fecha_rows:
+        ultima_fecha = max(r["fecha"] for r in rechazos_fecha_rows)
+        agrupado = {}
+        for r in rechazos_fecha_rows:
+            if r["fecha"] != ultima_fecha:
+                continue
+            clave = (r["vendedor"], r["cliente"], r["motivo"])
+            acc = agrupado.setdefault(clave, [0.0, 0.0])
+            acc[0] += r["cant"]
+            acc[1] += r["importe"]
+        rechazos_ultima_out = {
+            "fecha": ultima_fecha,
+            "filas": [
+                {"vendedor": vend, "cliente": cli, "motivo": mot, "cant": round(c, 0), "importe": round(i, 2)}
+                for (vend, cli, mot), (c, i) in sorted(agrupado.items(), key=lambda kv: kv[1][1])
+            ],
+        }
+        escribir("rechazos_ultima_fecha.json", rechazos_ultima_out)
+
+    print("Backfill de %s completo." % MES_ARCHIVO)
+    return 0
+
+
 if __name__ == "__main__":
+    if len(sys.argv) >= 4 and sys.argv[1] == "backfill":
+        sys.exit(cmd_backfill(int(sys.argv[2]), int(sys.argv[3])))
     sys.exit(main())
