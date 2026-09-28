@@ -491,15 +491,6 @@ def main():
         "cliActivos": 0,
     })
     print("Filas del detalle de ventas (mes en curso, todos los proveedores):", len(filas))
-    if filas:
-        vistos = 0
-        for f in filas:
-            if (f.get("TipoDeVenta") or "") == TIPO_RECHAZO and "PEPSICO" in (f.get("Proveedor") or "").upper():
-                print("DEBUG fila de rechazo Pepsico:", {k: f.get(k) for k in
-                      ("FechaComprobante", "FechaEntrega", "FechaCarga", "Cliente", "Vendedor", "MotivoDevolucion", "CantBase", "ImporteNetoItem")})
-                vistos += 1
-                if vistos >= 5:
-                    break
 
     compra_cliente = {}
     compra_cliente_marca = {}
@@ -508,6 +499,7 @@ def main():
     invendible_por_vend = {}
     rechazos_por_vend = {}
     venta_importe_por_vend = {}
+    rechazos_fecha_rows = []
 
     items_pepsico_vistos = 0
     for fila in filas:
@@ -544,6 +536,12 @@ def main():
             else:
                 motivo = (fila.get("MotivoDevolucion") or "").strip() or "SIN MOTIVO"
                 acc = rechazos_por_vend.setdefault(nombre_vend, {}).setdefault(motivo, [0.0, 0.0])
+                fecha_comp = (fila.get("FechaComprobante") or "").strip()
+                if fecha_comp:
+                    rechazos_fecha_rows.append({
+                        "fecha": fecha_comp, "vendedor": nombre_vend, "cliente": cli,
+                        "motivo": motivo, "cant": abs(q), "importe": importe,
+                    })
             acc[0] += abs(q)
             acc[1] += importe
 
@@ -687,6 +685,26 @@ def main():
     escribir("rechazos_detalle.json", rechazos_out)
     print("Invendible: %d vendedores | Rechazos: %d vendedores" %
           (len(invendible_out), len(rechazos_out)))
+
+    if rechazos_fecha_rows:
+        ultima_fecha = max(r["fecha"] for r in rechazos_fecha_rows)
+        agrupado = {}
+        for r in rechazos_fecha_rows:
+            if r["fecha"] != ultima_fecha:
+                continue
+            clave = (r["vendedor"], r["cliente"], r["motivo"])
+            acc = agrupado.setdefault(clave, [0.0, 0.0])
+            acc[0] += r["cant"]
+            acc[1] += r["importe"]
+        rechazos_ultima_out = {
+            "fecha": ultima_fecha,
+            "filas": [
+                {"vendedor": vend, "cliente": cli, "motivo": mot, "cant": round(c, 0), "importe": round(i, 2)}
+                for (vend, cli, mot), (c, i) in sorted(agrupado.items(), key=lambda kv: kv[1][1])
+            ],
+        }
+        escribir("rechazos_ultima_fecha.json", rechazos_ultima_out)
+        print("Rechazos ultima fecha (%s): %d filas" % (ultima_fecha, len(rechazos_ultima_out["filas"])))
     return 0
 
 
