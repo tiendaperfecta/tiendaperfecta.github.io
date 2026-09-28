@@ -17,8 +17,8 @@ body{
   padding:28px 20px 48px; display:flex; justify-content:center;
 }
 .wrap{width:100%; max-width:1120px; position:relative}
-.tp-logo-hero{position:absolute; top:0; right:0; width:120px; height:120px; border-radius:50%}
-@media (max-width:640px){ .tp-logo-hero{width:72px; height:72px} }
+.tp-logo-hero{position:absolute; top:0; right:0; width:190px; height:190px; border-radius:50%}
+@media (max-width:640px){ .tp-logo-hero{width:110px; height:110px} }
 .eyebrow{
   font:600 12px/1 "IBM Plex Mono", monospace; letter-spacing:.12em; text-transform:uppercase;
   color:var(--accent); margin:0 0 10px;
@@ -28,6 +28,15 @@ h1{
   line-height:1.1; margin:0 0 8px; text-wrap:balance;
 }
 .sub{color:var(--muted); font-size:14.5px; margin:0 0 28px; max-width:65ch}
+.mes-selector-wrap{
+  position:absolute; top:130px; right:0; display:flex; align-items:center; gap:8px;
+  font:600 12px "IBM Plex Sans"; color:var(--muted);
+}
+.mes-selector-wrap select{
+  font:600 13px "IBM Plex Sans"; color:var(--text); background:var(--panel);
+  border:1px solid var(--border); border-radius:8px; padding:6px 10px; cursor:pointer;
+}
+@media (max-width:640px){ .mes-selector-wrap{position:static; margin:0 0 16px} }
 .sub b{color:var(--text); font-weight:600}
 
 .kpis{
@@ -258,8 +267,15 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
 
 <div class="wrap">
   <img src="../assets/img/logo-tiendaperfecta.jpeg" alt="Tienda Perfecta" class="tp-logo-hero">
-  <p class="eyebrow">PepsiCo · Tienda Perfecta · Objetivo TN Septiembre 2026</p>
+  <p class="eyebrow" id="eyebrow-label">PepsiCo · Tienda Perfecta · Objetivo TN Septiembre 2026</p>
   <h1>Avance de venta diario</h1>
+  <div id="banner-archivo" style="display:none; background:var(--accent-soft); color:var(--accent); font-weight:600; padding:8px 14px; border-radius:8px; margin-bottom:16px; font-size:13.5px"></div>
+  <div class="mes-selector-wrap">
+    <label for="mes-selector">Ver mes:</label>
+    <select id="mes-selector">
+      <option value="">Mes actual</option>
+    </select>
+  </div>
   <p class="sub">
     Medida en <b>kilogramos</b>. Acumulado del <b>01/09</b> hasta hoy, actualizado automáticamente por API dos
     veces por día (días hábiles = lunes a sábado, domingo no es día hábil). El <b>Avance</b> es
@@ -1110,29 +1126,65 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
 </div>
 
 <script>
+const MES_SEL = new URLSearchParams(location.search).get('mes') || '';
+const BASE = MES_SEL ? `archive/${MES_SEL}/` : '';
+const NOMBRES_MES = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+if (MES_SEL) {
+  const [anioSel, mesSel] = MES_SEL.split('-');
+  const nombreMesSel = `${NOMBRES_MES[Number(mesSel)]} ${anioSel}`;
+  const eyebrowEl = document.getElementById('eyebrow-label');
+  if (eyebrowEl) eyebrowEl.textContent = `PepsiCo · Tienda Perfecta · Objetivo TN ${nombreMesSel}`;
+  const bannerEl = document.getElementById('banner-archivo');
+  if (bannerEl) {
+    bannerEl.style.display = 'block';
+    bannerEl.textContent = `📅 Estás viendo el cierre archivado de ${nombreMesSel}. Portafolio, Mi Negocio+ y Combos no tienen historial (solo se ven en el mes actual). Compromiso y Proyección de IPs no aplican a meses cerrados.`;
+  }
+}
+
+(function initSelectorMes(){
+  const sel = document.getElementById('mes-selector');
+  if (!sel) return;
+  sel.addEventListener('change', () => {
+    const v = sel.value;
+    location.href = v ? `?mes=${v}` : location.pathname;
+  });
+  fetch('archive/index.json').then(r => r.json()).then(meses => {
+    meses.slice().reverse().forEach(m => {
+      const opt = document.createElement('option');
+      opt.value = m;
+      const [anio, mes] = m.split('-');
+      const NOMBRES = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+      opt.textContent = `${NOMBRES[Number(mes)]} ${anio}`;
+      if (m === MES_SEL) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  }).catch(() => {});
+})();
+
 let noCompradoresDetalle = [];
-fetch('no_compradores_detalle.json').then(r => r.json()).then(data => { noCompradoresDetalle = data; }).catch(() => {});
+fetch(BASE + 'no_compradores_detalle.json').then(r => r.json()).then(data => { noCompradoresDetalle = data; }).catch(() => {});
 
 let invendibleDetalle = {};
-const invendibleDetallePromise = fetch('invendible_detalle.json').then(r => r.json())
+const invendibleDetallePromise = fetch(BASE + 'invendible_detalle.json').then(r => r.json())
   .then(data => { invendibleDetalle = data; return data; }).catch(() => ({}));
 
 let combosDetalle = {};
-fetch('combos_detalle.json').then(r => r.json()).then(data => { combosDetalle = data; }).catch(() => {});
+fetch(BASE + 'combos_detalle.json').then(r => r.json()).then(data => { combosDetalle = data; }).catch(() => {});
 
 let rechazosDetalle = {};
-const rechazosDetallePromise = fetch('rechazos_detalle.json').then(r => r.json())
+const rechazosDetallePromise = fetch(BASE + 'rechazos_detalle.json').then(r => r.json())
   .then(data => { rechazosDetalle = data; return data; }).catch(() => ({}));
 
 let ventaPorVendedor = {};
-const ventaVendedorPromise = fetch('venta_vendedor.json').then(r => r.json())
+const ventaVendedorPromise = fetch(BASE + 'venta_vendedor.json').then(r => r.json())
   .then(data => { ventaPorVendedor = data; return data; }).catch(() => ({}));
 
 let mnSeguimientoDetalle = [];
-fetch('mn_seguimiento.json').then(r => r.json()).then(data => { mnSeguimientoDetalle = data; }).catch(() => {});
+fetch(BASE + 'mn_seguimiento.json').then(r => r.json()).then(data => { mnSeguimientoDetalle = data; }).catch(() => {});
 
 let frescuraData = null;
-fetch('frescura_data.json').then(r => r.json()).then(data => {
+fetch(BASE + 'frescura_data.json').then(r => r.json()).then(data => {
   frescuraData = data;
   renderFrescura();
 }).catch(() => {});
@@ -1219,7 +1271,7 @@ const LAYS_SUB_OBJ = 20;
 const LAYS_SUB_LABELS = {Caprese:"Lays Rústicas Caprese", SalMarina:"Lays Rústicas Sal Marina", LimonHierbas:"Lays Rústicas Limón y Hierbas"};
 const TOSTITOS_SUB_OBJ = 20;
 const TOSTITOS_SUB_LABELS = {G144:"Tostitos Hierbas y Limón 144g", G90:"Tostitos Hierbas y Limón 90g"};
-fetch('subproductos_vendedor.json').then(r => r.json()).then(data => {
+fetch(BASE + 'subproductos_vendedor.json').then(r => r.json()).then(data => {
   pehuamarSubRows = data.pehuamar.vendedores;
   laysSubRows = data.lays.vendedores;
   tostitosSubRows = data.tostitos.vendedores;
@@ -1353,7 +1405,7 @@ function drillFrescura(codigo) {
 let rows = [];
 let kgAvanceMeta = null;
 const rowsReadyPromise = Promise.all([
-  fetch('avance_kg_vendedor.json').then(r => r.json()),
+  fetch(BASE + 'avance_kg_vendedor.json').then(r => r.json()),
   ventaVendedorPromise,
 ]).then(([data, venta]) => {
   kgAvanceMeta = data;
@@ -1390,7 +1442,7 @@ const marcaObjRows = [
   {marca:"Tostitos", obj:14.02},
   {marca:"Twistos",  obj:54.71},
 ];
-fetch('cobertura_marca_vendedor.json').then(r => r.json()).then(data => {
+fetch(BASE + 'cobertura_marca_vendedor.json').then(r => r.json()).then(data => {
   marcaVendRows = data.vendedores;
   renderMarcaSection();
 }).catch(() => {});
@@ -1402,7 +1454,7 @@ function heatColor(v, min, max){
 }
 
 let portafolioDetalle = [];
-const portafolioDetallePromise = fetch('oportunidad_portafolio.json').then(r => r.json()).then(data => {
+const portafolioDetallePromise = fetch(BASE + 'oportunidad_portafolio.json').then(r => r.json()).then(data => {
   portafolioDetalle = data;
 }).catch(() => {});
 
@@ -1542,7 +1594,7 @@ function fmt(n, d=0){ return n.toLocaleString('es-AR', {minimumFractionDigits:d,
 function tier(p){ return p>=100 ? 'good' : p>=90 ? 'warn' : 'bad'; }
 function tierShare(p){ return p>=85 ? 'good' : p>=75 ? 'warn' : 'bad'; }
 
-fetch('tienda_perfecta.json').then(r => r.json()).then(data => {
+fetch(BASE + 'tienda_perfecta.json').then(r => r.json()).then(data => {
   renderTiendaPerfecta(data);
 }).catch(() => {});
 
@@ -1688,7 +1740,7 @@ Promise.all([rechazosDetallePromise, ventaVendedorPromise]).then(([detalle, vent
 `).join('');
 }).catch(() => {});
 
-fetch('rechazos_ultima_fecha.json').then(r => r.json()).then(data => {
+fetch(BASE + 'rechazos_ultima_fecha.json').then(r => r.json()).then(data => {
   const fechaEl = document.getElementById('rechazos-ultima-fecha');
   if (fechaEl && data.fecha) {
     const [anio, mes, dia] = data.fecha.split('-');
@@ -2032,7 +2084,7 @@ function renderMarcaSection(){
 let ccc2Rows = [];
 function segAvance(o,c){ return o ? c/o*100 : 0; }
 let ccc2ObjetivoOficial = null;
-fetch('ccc_segmento.json').then(r => r.json()).then(data => {
+fetch(BASE + 'ccc_segmento.json').then(r => r.json()).then(data => {
   ccc2Rows = data.vendedores;
   ccc2ObjetivoOficial = data.objetivoOficial || null;
   renderCcc2Section();
@@ -2086,7 +2138,7 @@ function renderCcc2Section(){
 }
 
 let noCompraRows = [];
-const noCompraReadyPromise = fetch('no_compradores_por_dia.json').then(r => r.json()).then(data => {
+const noCompraReadyPromise = fetch(BASE + 'no_compradores_por_dia.json').then(r => r.json()).then(data => {
   noCompraRows = data.vendedores;
   renderNoCompraSection();
 }).catch(() => {});
@@ -2338,6 +2390,12 @@ const compromisoRefs = [];
 const compTotalEl = document.getElementById('kpi-compromiso-total');
 const supInput = document.getElementById('compromiso-supervisor-input');
 
+if (MES_SEL) {
+  compromisoRefs.forEach(({ inputPg, inputSb }) => { inputPg.disabled = true; inputSb.disabled = true; inputPg.placeholder = 'n/a'; inputSb.placeholder = 'n/a'; });
+  compTotalEl.textContent = 'n/a';
+  supInput.disabled = true;
+  supInput.placeholder = 'n/a';
+} else {
 (async () => {
   const COMPROMISO_API = 'https://script.google.com/macros/s/AKfycby29cOLAt2nSOU-jbpaLxwRSiK1_eG-0eWhKrbitGks8U7eJzqdkPBsI7kwkxsT6-K0/exec';
   let data = null;
@@ -2446,6 +2504,7 @@ const supInput = document.getElementById('compromiso-supervisor-input');
   });
 })();
 }
+}
 
 const DIA_KEY_IP = {Lunes:'lu',Martes:'ma',Miercoles:'mi',Jueves:'ju',Viernes:'vi',Sabado:'sa'};
 const DIAS_JS_IP = ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'];
@@ -2458,7 +2517,7 @@ if (hoyLabelEl) hoyLabelEl.textContent = hoyDiaIp;
 function findByNameIp(arr, name){ return arr.find(x => x.n === name); }
 
 let pehuamar90Detalle = [];
-const pehuamar90DetallePromise = fetch('pehuamar90_no_comprado.json').then(r => r.json()).then(data => { pehuamar90Detalle = data; }).catch(() => {});
+const pehuamar90DetallePromise = fetch(BASE + 'pehuamar90_no_comprado.json').then(r => r.json()).then(data => { pehuamar90Detalle = data; }).catch(() => {});
 
 function drillPehuamar90(vendedor) {
   const list = pehuamar90Detalle.filter(c => c.vendedor === vendedor);
@@ -2620,5 +2679,5 @@ async function renderIpSection(){
   ipSectionReady = true;
 }
 
-rowsReadyPromise.then(renderIpSection);
+if (!MES_SEL) rowsReadyPromise.then(renderIpSection);
 </script>
