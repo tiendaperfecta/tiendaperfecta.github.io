@@ -132,6 +132,11 @@ thead tr.cols th{
   border-bottom:1px solid var(--border); white-space:nowrap;
 }
 thead tr.cols th:first-child, thead tr.cols th.name-col{text-align:left}
+thead tr.grp th:first-child, thead tr.cols th.name-col, tbody td.name, tfoot td.name{
+  position:sticky; left:0; z-index:1; background:var(--panel); box-shadow:1px 0 0 var(--border);
+}
+thead tr.grp th:first-child, thead tr.cols th.name-col{z-index:3}
+tbody tr:hover td.name{background:var(--panel-2)}
 tbody td{
   padding:10px; text-align:right; border-bottom:1px solid var(--border);
   font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; white-space:nowrap;
@@ -372,7 +377,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
           <td class="name">Total PepsiCo</td>
           <td colspan="16" style="text-align:center">—</td>
           <td></td>
-          <td></td><td></td><td id="tfoot-compromiso-total"></td>
+          <td id="tfoot-compromiso-pg"></td><td id="tfoot-compromiso-sb"></td><td id="tfoot-compromiso-total"></td>
         </tr>
       </tfoot>
     </table>
@@ -2273,7 +2278,7 @@ if (kgAvanceMeta) {
       <td>${fmt(realTotal,1)}</td>
       <td>$ ${fmt(ventaTotal)}</td>
       <td></td>
-      <td></td><td></td><td id="tfoot-compromiso-total"></td>
+      <td id="tfoot-compromiso-pg"></td><td id="tfoot-compromiso-sb"></td><td id="tfoot-compromiso-total"></td>
     </tr>
   `;
   const mnRowsConAcum = rows.filter(r => typeof r.acumuladoMN === 'number');
@@ -2382,14 +2387,22 @@ const supInput = document.getElementById('compromiso-supervisor-input');
   function recomputeTotal() {
     let total = 0;
     let count = 0;
+    let totalPg = 0, countPg = 0;
+    let totalSb = 0, countSb = 0;
     compromisoRefs.forEach(({ inputPg, inputSb }) => {
       const pg = inputPg.value === '' ? null : Number(inputPg.value);
       const sb = inputSb.value === '' ? null : Number(inputSb.value);
       if (pg !== null || sb !== null) { total += (pg || 0) + (sb || 0); count++; }
+      if (pg !== null) { totalPg += pg; countPg++; }
+      if (sb !== null) { totalSb += sb; countSb++; }
     });
     const tfootTotalEl = document.getElementById('tfoot-compromiso-total');
+    const tfootPgEl = document.getElementById('tfoot-compromiso-pg');
+    const tfootSbEl = document.getElementById('tfoot-compromiso-sb');
     compTotalEl.innerHTML = count ? `${fmt(total)}<span class="unit">kg</span>` : '—';
     if (tfootTotalEl) tfootTotalEl.textContent = count ? fmt(total) : '';
+    if (tfootPgEl) tfootPgEl.textContent = countPg ? fmt(totalPg) : '';
+    if (tfootSbEl) tfootSbEl.textContent = countSb ? fmt(totalSb) : '';
   }
 
   function bloquear(input) {
