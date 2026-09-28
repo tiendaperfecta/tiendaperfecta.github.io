@@ -1,9 +1,15 @@
 {
  "date": "2026-09-28",
- "totalNet": 1150708.19,
- "totalGross": 1392356.91,
- "orders": 12,
+ "totalNet": 1513341.25,
+ "totalGross": 1831142.91,
+ "orders": 14,
  "bySeller": [
+  {
+   "sellerId": "2",
+   "name": "Julian Nuñez",
+   "orders": 3,
+   "total": 587500.15
+  },
   {
    "sellerId": "7",
    "name": "Ramiro Rando",
@@ -17,16 +23,16 @@
    "total": 324785.27
   },
   {
-   "sellerId": "2",
-   "name": "Julian Nuñez",
-   "orders": 2,
-   "total": 285142.84
-  },
-  {
    "sellerId": "5",
    "name": "Nicolas Martinez",
    "orders": 1,
    "total": 255714.33
+  },
+  {
+   "sellerId": "12",
+   "name": "Agustin Pogorzelski",
+   "orders": 1,
+   "total": 136428.69
   },
   {
    "sellerId": "4",
@@ -43,14 +49,19 @@
  ],
  "byChannel": [
   {
+   "channel": "TRADITIONAL TRADE_C",
+   "orders": 4,
+   "total": 419143.01
+  },
+  {
+   "channel": "TRADITIONAL TRADE_B",
+   "orders": 2,
+   "total": 333785.9
+  },
+  {
    "channel": "TRADITIONAL TRADE_D",
    "orders": 3,
    "total": 317499.47
-  },
-  {
-   "channel": "TRADITIONAL TRADE_C",
-   "orders": 3,
-   "total": 282714.32
   },
   {
    "channel": "PROXIMITY_A",
@@ -76,14 +87,15 @@
    "channel": "AWAY FROM HOME_A",
    "orders": 1,
    "total": 48000.0
-  },
-  {
-   "channel": "TRADITIONAL TRADE_B",
-   "orders": 1,
-   "total": 31428.59
   }
  ],
  "topClients": [
+  {
+   "clientId": "2643",
+   "name": "DUVAL ST ALMACEN SRL (Almacen/Despensa_B)",
+   "orders": 1,
+   "total": 302357.31
+  },
   {
    "clientId": "1167",
    "name": "SERVICIOS LUARCA SA (Estacion de Servicio - AXION_A)",
@@ -107,6 +119,12 @@
    "name": "INNOVACIONES SURENAS S.A.S. (Kiosco/Maxikiosco_A)",
    "orders": 1,
    "total": 161357.12
+  },
+  {
+   "clientId": "2172",
+   "name": "ALCOBA PABLO DANIEL (Autoservicio Tradicional_C)",
+   "orders": 1,
+   "total": 136428.69
   },
   {
    "clientId": "2802",

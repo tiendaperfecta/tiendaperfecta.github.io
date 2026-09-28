@@ -3,6 +3,25 @@
  "rows": [
   {
    "fecha": "2026-09-28",
+   "sellerId": "12",
+   "vendedor": "Agustin Pogorzelski",
+   "clientId": "2172",
+   "nombre": "ALCOBA PABLO DANIEL",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Autoservicio Tradicional_C",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 136428.69,
+   "fechaVenta": "2026-09-28",
+   "horaVenta": "14:47",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-28",
    "sellerId": "2",
    "vendedor": "Julian Nuñez",
    "clientId": "1376",
@@ -37,6 +56,25 @@
    "monto": 161357.12,
    "fechaVenta": "2026-09-28",
    "horaVenta": "10:05",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-28",
+   "sellerId": "2",
+   "vendedor": "Julian Nuñez",
+   "clientId": "2643",
+   "nombre": "DUVAL ST ALMACEN SRL",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_B",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 302357.31,
+   "fechaVenta": "2026-09-28",
+   "horaVenta": "14:35",
    "estado": "vendio_sin_pasar"
   },
   {
@@ -231,6 +269,6 @@
   }
  ],
  "resumen": {
-  "vendio_sin_pasar": 12
+  "vendio_sin_pasar": 14
  }
 }

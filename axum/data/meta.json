@@ -1,23 +1,23 @@
 {
- "generatedAt": "2026-09-28T14:02:09-03:00",
+ "generatedAt": "2026-09-28T15:01:33-03:00",
  "date": "2026-09-28",
  "errors": [
-  "gescom: HTTPError: 401 Client Error: Unauthorized for url: https://auth.gescom.online/realms/gcw-tiendaperfecta/protocol/openid-connect/token",
-  "detalle: repartos 2026-09-28: 401 Client Error: Unauthorized for url: https://auth.gescom.online/realms/gcw-tiendaperfecta/protocol/openid-connect/token"
+  "gescom: HTTPError: 400 Client Error: Bad Request for url: https://auth.gescom.online/realms/gcw-tiendaperfecta/protocol/openid-connect/token",
+  "detalle: repartos 2026-09-28: 400 Client Error: Bad Request for url: https://auth.gescom.online/realms/gcw-tiendaperfecta/protocol/openid-connect/token"
  ],
  "pedidos": {
-  "traidos": 12,
-  "totalSegunApi": 12
+  "traidos": 14,
+  "totalSegunApi": 14
  },
  "formatoGps": {
-  "posicion": "'-38.0179283333333,-57.5694216666667,12,2:01 PM,18,,'",
+  "posicion": "'-37.9997245,-57.5468881,4,2:59 PM,95,,'",
   "visitados": null,
   "km": null,
   "visitadosTotal": 0,
   "kmError": null
  },
  "detalle": {
-  "filas": 12,
+  "filas": 14,
   "vendedores": 16,
   "diasEnHistoria": 37
  },
