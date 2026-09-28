@@ -290,6 +290,8 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
         acc[clave + "o"] = num(fila[idx["ValorObjetivo"]])
         acc[clave + "a"] = num(fila[idx["Acumulado"]])
         acc[clave + "p"] = num(fila[idx["Avance"]])
+        if "AcumuladoMN" in idx:
+            acc["mn"] = acc.get("mn", 0.0) + num(fila[idx["AcumuladoMN"]])
         acc["ultima"] += num(fila[idx["UltimaVisita"]])
         acc["penult"] += num(fila[idx["PenultimaVisita"]])
         acc["real"] += num(fila[idx["Real"]])
@@ -311,6 +313,7 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
             "real": round(acc["real"], 2),
             "penult": round(acc["penult"], 2),
             "ultima": round(acc["ultima"], 2),
+            "acumuladoMN": round(acc["mn"], 2) if "mn" in acc else None,
         })
 
     return {
