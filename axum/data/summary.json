@@ -1,9 +1,15 @@
 {
  "date": "2026-09-28",
- "totalNet": 666469.55,
- "totalGross": 806428.16,
- "orders": 7,
+ "totalNet": 843978.56,
+ "totalGross": 1021214.06,
+ "orders": 9,
  "bySeller": [
+  {
+   "sellerId": "7",
+   "name": "Ramiro Rando",
+   "orders": 4,
+   "total": 372428.8
+  },
   {
    "sellerId": "2",
    "name": "Julian Nuñez",
@@ -17,12 +23,6 @@
    "total": 233499.54
   },
   {
-   "sellerId": "7",
-   "name": "Ramiro Rando",
-   "orders": 2,
-   "total": 157642.9
-  },
-  {
    "sellerId": "4",
    "name": "Lucas Giayetto",
    "orders": 1,
@@ -32,13 +32,18 @@
  "byChannel": [
   {
    "channel": "TRADITIONAL TRADE_C",
-   "orders": 2,
-   "total": 253928.59
+   "orders": 3,
+   "total": 282714.32
   },
   {
    "channel": "TRADITIONAL TRADE_D",
    "orders": 1,
    "total": 202070.95
+  },
+  {
+   "channel": "AWAY FROM HOME_B",
+   "orders": 1,
+   "total": 186000.17
   },
   {
    "channel": "TRADITIONAL TRADE_A",
@@ -67,6 +72,12 @@
    "name": "SANTIAGO COLELLA (Kiosco/Maxikiosco_D)",
    "orders": 1,
    "total": 202070.95
+  },
+  {
+   "clientId": "312",
+   "name": "ALBA DANIELA URIBARRI (Hotel_B)",
+   "orders": 1,
+   "total": 186000.17
   },
   {
    "clientId": "2439",
@@ -103,6 +114,12 @@
    "name": "REDONDO MICAELA ANAHI  (Almacen/Despensa_B)",
    "orders": 1,
    "total": 31428.59
+  },
+  {
+   "clientId": "645",
+   "name": "LAURIANA ESTHER BAEZ (Almacen/Despensa_C)",
+   "orders": 1,
+   "total": 28785.73
   }
  ]
 }
