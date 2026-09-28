@@ -2188,6 +2188,50 @@ document.getElementById('tfoot-mnSeg').innerHTML = `
   </tr>
 `;
 
+async function fetchIpApiConReintentos(url, intentos = 4, esperaMs = 1200) {
+  let ultimoError = null;
+  for (let i = 0; i < intentos; i++) {
+    try {
+      const r = await fetch(url);
+      if (r.ok) return r;
+      ultimoError = new Error('HTTP ' + r.status);
+    } catch (err) {
+      ultimoError = err;
+    }
+    if (i < intentos - 1) await new Promise(res => setTimeout(res, esperaMs * (i + 1)));
+  }
+  throw ultimoError;
+}
+
+let ipMnBaseByVendedor = {};
+let ipSectionReady = false;
+function ipRefreshTotals() {
+  if (!ipSectionReady) return;
+  const inputs = [...document.querySelectorAll('.ip-input[data-metric="sellout"]')];
+  let selloutSum = 0, selloutCount = 0;
+  inputs.forEach(inp => { if (inp.value !== '') { selloutSum += Number(inp.value); selloutCount++; } });
+  const mnBaseTotal = Object.values(ipMnBaseByVendedor).reduce((s,v) => s + (v || 0), 0);
+  const elMnBase = document.getElementById('tfoot-ip-mn-base');
+  if (elMnBase) elMnBase.textContent = fmt(mnBaseTotal);
+  const elMn = document.getElementById('tfoot-ip-mn-comp');
+  if (elMn) elMn.textContent = selloutCount ? fmt(selloutSum) : '—';
+  const elMnPct = document.getElementById('tfoot-ip-mn-comp-pct');
+  if (elMnPct) elMnPct.textContent = mnBaseTotal ? fmt(selloutSum / mnBaseTotal * 100, 1) + '%' : '—';
+}
+function ipSetMnBase(vendedor, mnBase) {
+  ipMnBaseByVendedor[vendedor] = mnBase;
+  if (!ipSectionReady) return;
+  const span = document.querySelector(`[data-vendedor-mnbase="${CSS.escape(vendedor)}"]`);
+  if (span) span.textContent = (mnBase === null || mnBase === undefined) ? '—' : fmt(mnBase);
+  const selloutInput = document.querySelector(`.ip-input[data-vendedor="${CSS.escape(vendedor)}"][data-metric="sellout"]`);
+  const pctEl = document.querySelector(`[data-vendedor-mnpct="${CSS.escape(vendedor)}"]`);
+  if (pctEl) {
+    if (!mnBase || !selloutInput || selloutInput.value === '') pctEl.textContent = '—';
+    else pctEl.textContent = fmt(Number(selloutInput.value) / mnBase * 100, 1) + '%';
+  }
+  ipRefreshTotals();
+}
+
 function renderMainTable(){
 if (!rows.length) return;
 if (kgAvanceMeta) {
@@ -2293,7 +2337,7 @@ const supInput = document.getElementById('compromiso-supervisor-input');
   const COMPROMISO_API = 'https://script.google.com/macros/s/AKfycby29cOLAt2nSOU-jbpaLxwRSiK1_eG-0eWhKrbitGks8U7eJzqdkPBsI7kwkxsT6-K0/exec';
   let data = null;
   try {
-    const r = await fetch(COMPROMISO_API);
+    const r = await fetchIpApiConReintentos(COMPROMISO_API);
     data = await r.json();
   } catch (err) {
     console.error('compromiso: fetch failed:', err);
@@ -2371,6 +2415,8 @@ const supInput = document.getElementById('compromiso-supervisor-input');
         }
         updateTotal();
         recomputeTotal();
+        const mnBase = (pg !== null || sb !== null) ? (pg||0) + (sb||0) : null;
+        ipSetMnBase(vendedor, mnBase);
       });
     }
     attach(inputPg);
@@ -2422,7 +2468,7 @@ async function renderIpSection(){
 
   let data = null;
   try {
-    const r = await fetch(IP_API);
+    const r = await fetchIpApiConReintentos(IP_API);
     data = await r.json();
   } catch (err) {
     console.error('ip: fetch failed:', err);
@@ -2474,15 +2520,6 @@ async function renderIpSection(){
   document.getElementById('tfoot-ip-pehuamar-base').textContent = fmt(ipPehuamarBaseTotal);
   const ipMnBaseTotal = ipRows.reduce((s,r)=>s+(r.mnBase||0),0);
   document.getElementById('tfoot-ip-mn-base').textContent = fmt(ipMnBaseTotal);
-
-  if (!data || !data.ok) {
-    [...document.querySelectorAll('.ip-input')].forEach(input => { input.disabled = true; input.placeholder = 'no disp.'; });
-    ['tfoot-ip-freq-comp','tfoot-ip-port-comp','tfoot-ip-pehuamar-comp','tfoot-ip-mn-comp','tfoot-ip-mn-comp-pct'].forEach(id => {
-      const el = document.getElementById(id); if (el) el.textContent = 'n/d';
-    });
-    document.querySelectorAll('.ip-mnpct').forEach(el => { el.textContent = 'n/d'; });
-    return;
-  }
 
   const byVendedorIp = {};
   [...document.querySelectorAll('.ip-input')].forEach(input => {
@@ -2541,6 +2578,7 @@ async function renderIpSection(){
     if (typeof g.portafolio === 'number') portTotal += g.portafolio;
     if (typeof g.pehuamar === 'number') pehuamarTotal += g.pehuamar;
     if (typeof g.sellout === 'number') { selloutSum += g.sellout; selloutCount++; }
+    ipMnBaseByVendedor[r.n] = r.mnBase;
     updateMnPct(r.n, r.mnBase);
 
     ['frecuencia','portafolio','pehuamar','sellout'].forEach(metric => {
@@ -2566,6 +2604,7 @@ async function renderIpSection(){
   if (elMn) elMn.textContent = selloutCount ? fmt(selloutSum) : '—';
   const elMnPct = document.getElementById('tfoot-ip-mn-comp-pct');
   if (elMnPct) elMnPct.textContent = ipMnBaseTotal ? fmt(selloutSum / ipMnBaseTotal * 100, 1) + '%' : '—';
+  ipSectionReady = true;
 }
 
 rowsReadyPromise.then(renderIpSection);
