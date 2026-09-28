@@ -13,7 +13,7 @@
     "estado": "Pendiente",
     "cerrado": false,
     "cancelado": false,
-    "clientesAsignados": 30,
+    "clientesAsignados": 31,
     "boletas": 0,
     "entregadas": 0,
     "rechazos": 0,
@@ -118,7 +118,7 @@
     "estado": "Pendiente",
     "cerrado": false,
     "cancelado": false,
-    "clientesAsignados": 33,
+    "clientesAsignados": 36,
     "boletas": 0,
     "entregadas": 0,
     "rechazos": 0,
@@ -223,7 +223,7 @@
     "estado": "Pendiente",
     "cerrado": false,
     "cancelado": false,
-    "clientesAsignados": 51,
+    "clientesAsignados": 33,
     "boletas": 0,
     "entregadas": 0,
     "rechazos": 0,
@@ -265,7 +265,7 @@
     "estado": "Pendiente",
     "cerrado": false,
     "cancelado": false,
-    "clientesAsignados": 55,
+    "clientesAsignados": 65,
     "boletas": 0,
     "entregadas": 0,
     "rechazos": 0,
@@ -307,7 +307,7 @@
     "estado": "Pendiente",
     "cerrado": false,
     "cancelado": false,
-    "clientesAsignados": 64,
+    "clientesAsignados": 66,
     "boletas": 0,
     "entregadas": 0,
     "rechazos": 0,
@@ -328,7 +328,7 @@
     "estado": "Pendiente",
     "cerrado": false,
     "cancelado": false,
-    "clientesAsignados": 0,
+    "clientesAsignados": 6,
     "boletas": 0,
     "entregadas": 0,
     "rechazos": 0,
@@ -381,6 +381,25 @@
    "monto": 123785.71,
    "fechaVenta": "2026-09-28",
    "horaVenta": "08:50",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-28",
+   "sellerId": "2",
+   "vendedor": "Julian Nuñez",
+   "clientId": "2439",
+   "nombre": "INNOVACIONES SURENAS S.A.S.",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Kiosco/Maxikiosco_A",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 161357.12,
+   "fechaVenta": "2026-09-28",
+   "horaVenta": "10:05",
    "estado": "vendio_sin_pasar"
   },
   {
@@ -480,7 +499,7 @@
   }
  ],
  "resumen": {
-  "vendio_sin_pasar": 6
+  "vendio_sin_pasar": 7
  },
  "bySeller": [
   {
@@ -576,8 +595,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 1,
-   "monto": 123785.71,
+   "pedidos": 2,
+   "monto": 285142.84,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -4480,7 +4499,7 @@
  "totales": {
   "visitas": 0,
   "minutos": 0.0,
-  "pedidos": 6,
-  "monto": 645071.03
+  "pedidos": 7,
+  "monto": 806428.16
  }
 }

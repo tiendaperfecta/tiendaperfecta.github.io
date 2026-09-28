@@ -1,9 +1,15 @@
 {
  "date": "2026-09-28",
- "totalNet": 533116.55,
- "totalGross": 645071.04,
- "orders": 6,
+ "totalNet": 666469.55,
+ "totalGross": 806428.16,
+ "orders": 7,
  "bySeller": [
+  {
+   "sellerId": "2",
+   "name": "Julian Nuñez",
+   "orders": 2,
+   "total": 285142.84
+  },
   {
    "sellerId": "8",
    "name": "Martinica Rodriguez",
@@ -21,12 +27,6 @@
    "name": "Lucas Giayetto",
    "orders": 1,
    "total": 130142.88
-  },
-  {
-   "sellerId": "2",
-   "name": "Julian Nuñez",
-   "orders": 1,
-   "total": 123785.71
   }
  ],
  "byChannel": [
@@ -39,6 +39,11 @@
    "channel": "TRADITIONAL TRADE_D",
    "orders": 1,
    "total": 202070.95
+  },
+  {
+   "channel": "TRADITIONAL TRADE_A",
+   "orders": 1,
+   "total": 161357.12
   },
   {
    "channel": "PROXIMITY_B",
@@ -62,6 +67,12 @@
    "name": "SANTIAGO COLELLA (Kiosco/Maxikiosco_D)",
    "orders": 1,
    "total": 202070.95
+  },
+  {
+   "clientId": "2439",
+   "name": "INNOVACIONES SURENAS S.A.S. (Kiosco/Maxikiosco_A)",
+   "orders": 1,
+   "total": 161357.12
   },
   {
    "clientId": "2802",
