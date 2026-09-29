@@ -2741,9 +2741,12 @@ async function renderIpSection(){
   const elPehuamar = document.getElementById('tfoot-ip-pehuamar-comp');
   if (elPehuamar) elPehuamar.textContent = fmt(pehuamarTotal);
   const elMn = document.getElementById('tfoot-ip-mn-comp');
-  if (elMn) elMn.textContent = selloutCount ? fmt(selloutSum) : '—';
+  if (elMn) {
+    elMn.style.textAlign = 'right';
+    elMn.innerHTML = selloutCount ? `<span style="display:inline-block; width:90px; text-align:center">${fmt(selloutSum)}</span>` : '—';
+  }
   const elMnPct = document.getElementById('tfoot-ip-mn-comp-pct');
-  if (elMnPct) elMnPct.textContent = ipMnBaseTotal ? fmt(selloutSum / ipMnBaseTotal * 100, 1) + '%' : '—';
+  if (elMnPct) elMnPct.innerHTML = ipMnBaseTotal ? `<span class="ip-mnpct">${fmt(selloutSum / ipMnBaseTotal * 100, 1)}%</span>` : '—';
   ipSectionReady = true;
   ipRenderBusy = false;
 }
