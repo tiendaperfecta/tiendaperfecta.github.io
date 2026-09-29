@@ -101,6 +101,19 @@ h1{
 .mn-note{color:var(--muted); font-size:12px; line-height:1.6; margin:12px 0 0; max-width:78ch}
 .mn-note code{font-family:"IBM Plex Mono",monospace; background:var(--panel-2); padding:1px 5px; border-radius:4px}
 
+.tabs-bar{
+  display:flex; flex-wrap:wrap; gap:6px; margin:0 0 24px; padding-bottom:10px;
+  border-bottom:1px solid var(--border);
+}
+.tab-btn{
+  font:600 12.5px "IBM Plex Sans"; color:var(--muted); background:var(--panel-2); border:none;
+  border-radius:99px; padding:8px 16px; cursor:pointer; white-space:nowrap;
+}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{background:var(--accent); color:#fff}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
 .section-title{
   font-family:"Fraunces",serif; font-weight:600; font-size:19px; margin:0 0 4px; color:var(--accent);
 }
@@ -350,6 +363,22 @@ td.ip-base.clickable{cursor:pointer}
     </div>
   </div>
 
+  <div class="tabs-bar" id="tabs-bar">
+    <button type="button" class="tab-btn active" data-tab-btn="por-vendedor">Por vendedor</button>
+    <button type="button" class="tab-btn" data-tab-btn="mi-negocio">Mi Negocio+</button>
+    <button type="button" class="tab-btn" data-tab-btn="cobertura">Cobertura</button>
+    <button type="button" class="tab-btn" data-tab-btn="ccc">CCC</button>
+    <button type="button" class="tab-btn" data-tab-btn="tienda-perfecta">Tienda Perfecta</button>
+    <button type="button" class="tab-btn" data-tab-btn="portafolio">Portafolio</button>
+    <button type="button" class="tab-btn" data-tab-btn="invendible">Invendible</button>
+    <button type="button" class="tab-btn" data-tab-btn="rechazos">Rechazos</button>
+    <button type="button" class="tab-btn" data-tab-btn="frescura">Frescura</button>
+    <button type="button" class="tab-btn" data-tab-btn="combos-axum">Combos Axum</button>
+    <button type="button" class="tab-btn" data-tab-btn="combos-mn">Combos Mi Negocio</button>
+  </div>
+
+  <div class="tab-panel active" data-tab-panel="por-vendedor">
+
   <h2 class="section-title">Por vendedor</h2>
   <p class="section-note">
     Ordenado de menor a mayor avance — los que necesitan más empuje primero. <b>Promedio</b> = kg/día vendidos en
@@ -493,6 +522,10 @@ td.ip-base.clickable{cursor:pointer}
     </p>
   </div>
 
+  </div>
+
+  <div class="tab-panel" data-tab-panel="mi-negocio">
+
   <h2 class="section-title">Mi Negocio+ por vendedor</h2>
   <p class="section-note">
     Ordenado de menor a mayor % de venta por el canal digital. <b>Universo/Registrado/Activos/Fully Digital</b>
@@ -544,6 +577,10 @@ td.ip-base.clickable{cursor:pointer}
     <code>Clientes Claude.xlsx</code>.
   </p>
 
+  </div>
+
+  <div class="tab-panel" data-tab-panel="cobertura">
+
   <h2 class="section-title">Cobertura por marca y vendedor</h2>
   <p class="section-note">
     Cobertura = clientes con 3 o más unidades de la marca en el período ÷ universo de clientes del vendedor.
@@ -593,6 +630,10 @@ td.ip-base.clickable{cursor:pointer}
     restan, como devoluciones, ya vienen en negativo). Es el importe facturado, no está prorrateado contra ningún
     objetivo en $.
   </p>
+
+  </div>
+
+  <div class="tab-panel" data-tab-panel="ccc">
 
   <h2 class="section-title">CCC por segmento</h2>
   <p class="section-note">
@@ -694,6 +735,10 @@ td.ip-base.clickable{cursor:pointer}
     ruta empieza con el día, ej. "Viernes V4"). Un cliente sin ruta cargada no entra en esta tabla; el objetivo CCC
     (2.294) es un prorrateo oficial y no tiene por qué coincidir con el universo real con ruta asignada (2.546).
   </p>
+
+  </div>
+
+  <div class="tab-panel" data-tab-panel="tienda-perfecta">
 
   <h2 class="section-title">Tienda Perfecta</h2>
   <p class="section-note">
@@ -812,6 +857,10 @@ td.ip-base.clickable{cursor:pointer}
     objetivo oficial cargado en Gescom.
   </p>
 
+  </div>
+
+  <div class="tab-panel" data-tab-panel="portafolio">
+
   <h2 class="section-title">Portafolio</h2>
   <p class="section-note">
     Cobertura de portafolio sobre el universo de Tienda Perfecta (2.260 clientes). Oportunidad de Portafolio =
@@ -875,6 +924,10 @@ td.ip-base.clickable{cursor:pointer}
     (4 clientes sin ruta asignada quedan fuera de la tabla por día, pero sí en la de segmento).
   </p>
 
+  </div>
+
+  <div class="tab-panel" data-tab-panel="invendible">
+
   <h2 class="section-title">Invendible / Vencidos por Canje</h2>
   <p class="section-note">
     Productos vencidos o dañados retirados de los clientes este mes. <b>Venta $</b> = filas con
@@ -902,6 +955,10 @@ td.ip-base.clickable{cursor:pointer}
     Fuente: <code>Detallado de ventas extendido Pepsico</code>, mismo export usado para Venta $, filtrado por
     <code>TipoDeVenta</code> en lugar de sumar todos los tipos juntos.
   </p>
+
+  </div>
+
+  <div class="tab-panel" data-tab-panel="rechazos">
 
   <h2 class="section-title">Rechazos</h2>
   <p class="section-note">
@@ -965,6 +1022,10 @@ td.ip-base.clickable{cursor:pointer}
     campo <code>MotivoDevolucion</code>.
   </p>
 
+  </div>
+
+  <div class="tab-panel" data-tab-panel="frescura">
+
   <h2 class="section-title">Seguimiento de Frescura</h2>
   <p class="section-note">
     Productos de fecha corta de Pepsico (Tienda Perfecta y Rambla de los Lobos), semana del 21/09 al 27/09.
@@ -1006,6 +1067,10 @@ td.ip-base.clickable{cursor:pointer}
     activos, redondeando artículo por artículo. Dashboard propio
     <code>frescura.tienda-perfecta.workers.dev</code>.
   </p>
+
+  </div>
+
+  <div class="tab-panel" data-tab-panel="combos-axum">
 
   <h2 class="section-title">Combos Tradicionales Axum</h2>
   <p class="section-note">
@@ -1058,6 +1123,10 @@ td.ip-base.clickable{cursor:pointer}
     export manual del 24/09.
   </p>
 
+  </div>
+
+  <div class="tab-panel" data-tab-panel="combos-mn">
+
   <h2 class="section-title">Combos Mi Negocio</h2>
   <p class="section-note">
     Combos del canal digital Mi Negocio+ usados por vendedor, período 02/09 al 23/09. Ordenado de mayor a menor $.
@@ -1108,6 +1177,8 @@ td.ip-base.clickable{cursor:pointer}
     TotalesVendedor y Totales), export manual del 22/09.
   </p>
 
+  </div>
+
   <div class="closing-quote">
     <p>“Cuando el conocimiento se acompaña de <b>creatividad</b>, lo imposible se simplifica.”</p>
     <p class="closing-wish">¡Que tengan un excelente día de ventas!</p>
@@ -1141,6 +1212,24 @@ td.ip-base.clickable{cursor:pointer}
 </div>
 
 <script>
+(function initTabs(){
+  const btns = [...document.querySelectorAll('.tab-btn')];
+  const panels = [...document.querySelectorAll('.tab-panel')];
+  if (!btns.length) return;
+  function activar(id){
+    btns.forEach(b => b.classList.toggle('active', b.dataset.tabBtn === id));
+    panels.forEach(p => p.classList.toggle('active', p.dataset.tabPanel === id));
+    try { sessionStorage.setItem('pepsico-tab', id); } catch (e) {}
+  }
+  btns.forEach(b => b.addEventListener('click', () => activar(b.dataset.tabBtn)));
+  let inicial = 'por-vendedor';
+  try {
+    const guardado = sessionStorage.getItem('pepsico-tab');
+    if (guardado && panels.some(p => p.dataset.tabPanel === guardado)) inicial = guardado;
+  } catch (e) {}
+  activar(inicial);
+})();
+
 const MES_SEL = new URLSearchParams(location.search).get('mes') || '';
 const BASE = MES_SEL ? `archive/${MES_SEL}/` : '';
 const NOMBRES_MES = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
