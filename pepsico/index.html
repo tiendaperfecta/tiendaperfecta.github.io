@@ -224,7 +224,10 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
 .ip-input:disabled{opacity:.5}
 .ip-input-sm{width:56px}
 .ip-freq-cell{display:flex; align-items:center; justify-content:flex-end; gap:6px}
-.ip-pct{font:600 11px "IBM Plex Mono",monospace; color:var(--muted); min-width:38px; text-align:right}
+.ip-pct{font:700 12px "IBM Plex Mono",monospace; color:var(--accent); min-width:38px; text-align:right}
+.ip-mnpct{font:700 12px "IBM Plex Mono",monospace; color:var(--accent)}
+td.ip-base{background:var(--accent-soft); color:var(--accent); font-weight:700}
+td.ip-base.clickable{cursor:pointer}
 
 .modal-overlay{
   position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:flex-start;
@@ -358,17 +361,17 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
     <table>
       <colgroup>
         <col style="width:190px">
-        <col><col><col>
-        <col class="sep"><col><col><col>
+        <col><col><col><col>
+        <col class="sep"><col><col><col><col>
         <col class="sep"><col><col><col><col><col><col><col><col>
         <col class="sep"><col style="width:110px"><col style="width:110px"><col style="width:110px">
       </colgroup>
       <thead>
         <tr class="grp">
           <th></th>
-          <th class="g-platino" colspan="3">Platino + Gold</th>
+          <th class="g-platino" colspan="4">Platino + Gold</th>
           <th></th>
-          <th colspan="3">Silver &amp; Bronze</th>
+          <th colspan="4">Silver &amp; Bronze</th>
           <th></th>
           <th colspan="9">Total vendedor</th>
           <th></th>
@@ -376,9 +379,9 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
         </tr>
         <tr class="cols">
           <th class="name-col">Vendedor</th>
-          <th>Objetivo</th><th>Acum.</th><th>Avance</th>
+          <th>Objetivo</th><th>Acum.</th><th>Avance</th><th>Media Nec.</th>
           <th></th>
-          <th>Objetivo</th><th>Acum.</th><th>Avance</th>
+          <th>Objetivo</th><th>Acum.</th><th>Avance</th><th>Media Nec.</th>
           <th></th>
           <th>Objetivo</th><th>Acumulado</th><th>Avance</th><th>Promedio</th><th>Media Nec.</th><th>Penúlt. Vis.</th><th>Últ. Vis.</th><th>Real hoy</th><th>Venta $</th>
           <th></th>
@@ -389,7 +392,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
       <tfoot id="tfoot-main">
         <tr>
           <td class="name">Total PepsiCo</td>
-          <td colspan="16" style="text-align:center">—</td>
+          <td colspan="18" style="text-align:center">—</td>
           <td></td>
           <td id="tfoot-compromiso-pg"></td><td id="tfoot-compromiso-sb"></td><td id="tfoot-compromiso-total"></td>
         </tr>
@@ -2307,8 +2310,10 @@ function ipSetMnBase(vendedor, mnBase) {
 
 function renderMainTable(){
 if (!rows.length) return;
+let diasRestantesGlobal = 0;
 if (kgAvanceMeta) {
   const m = kgAvanceMeta;
+  diasRestantesGlobal = (m.diasHabiles||0) - (m.diasTrabajados||0);
   const totPG = rows.reduce((s,r)=>s+r.p1o,0), acumPG = rows.reduce((s,r)=>s+r.p1a,0);
   const totSB = rows.reduce((s,r)=>s+r.p2o,0), acumSB = rows.reduce((s,r)=>s+r.p2a,0);
   const totTo = rows.reduce((s,r)=>s+r.to,0), totTa = rows.reduce((s,r)=>s+r.ta,0);
@@ -2337,8 +2342,10 @@ if (kgAvanceMeta) {
   document.getElementById('tfoot-main').innerHTML = `
     <tr>
       <td class="name">Total PepsiCo</td>
-      <td>${fmt(totPG)}</td><td>${fmt(acumPG)}</td><td>${fmt(pctPG,1)}%</td><td></td>
-      <td>${fmt(totSB)}</td><td>${fmt(acumSB)}</td><td>${fmt(pctSB,1)}%</td><td></td>
+      <td>${fmt(totPG)}</td><td>${fmt(acumPG)}</td><td>${fmt(pctPG,1)}%</td><td>${fmt(diasRestantesGlobal>0 ? (totPG-acumPG)/diasRestantesGlobal : 0,1)}</td>
+      <td></td>
+      <td>${fmt(totSB)}</td><td>${fmt(acumSB)}</td><td>${fmt(pctSB,1)}%</td><td>${fmt(diasRestantesGlobal>0 ? (totSB-acumSB)/diasRestantesGlobal : 0,1)}</td>
+      <td></td>
       <td>${fmt(totTo)}</td><td>${fmt(totTa)}</td><td>${fmt(pctTo,1)}%</td>
       <td>${fmt(rows.reduce((s,r)=>s+r.promedio,0),1)}</td>
       <td>${fmt(medianecTotal,1)}</td>
@@ -2369,9 +2376,11 @@ tbody.innerHTML = rows.map(r => `
     <td class="name">${r.n}</td>
     <td>${fmt(r.p1o)}</td><td>${fmt(r.p1a)}</td>
     <td><span class="pill ${tier(r.p1p)}">${fmt(r.p1p,1)}%</span></td>
+    <td>${fmt(diasRestantesGlobal>0 ? (r.p1o-r.p1a)/diasRestantesGlobal : 0,1)}</td>
     <td></td>
     <td>${fmt(r.p2o)}</td><td>${fmt(r.p2a)}</td>
     <td><span class="pill ${tier(r.p2p)}">${fmt(r.p2p,1)}%</span></td>
+    <td>${fmt(diasRestantesGlobal>0 ? (r.p2o-r.p2a)/diasRestantesGlobal : 0,1)}</td>
     <td></td>
     <td>${fmt(r.to)}</td><td>${fmt(r.ta)}</td>
     <td>
@@ -2620,7 +2629,7 @@ async function renderIpSection(){
   tbodyIp.innerHTML = ipRows.map(r => `
   <tr>
     <td class="name">${r.n}</td>
-    <td>${fmt(r.freqBase)}</td>
+    <td class="ip-base">${fmt(r.freqBase)}</td>
     <td>
       <div class="ip-freq-cell">
         <span class="ip-pct" data-freq-pct="${r.n}">—</span>
@@ -2628,13 +2637,13 @@ async function renderIpSection(){
       </div>
     </td>
     <td></td>
-    <td class="clickable" onclick="drillPortDia('${r.n}','${hoyDiaIp}')">${fmt(r.portBase)}</td>
+    <td class="clickable ip-base" onclick="drillPortDia('${r.n}','${hoyDiaIp}')">${fmt(r.portBase)}</td>
     <td><input class="ip-input" data-vendedor="${r.n}" data-metric="portafolio" type="number" step="1" placeholder="clientes" /></td>
     <td></td>
-    <td class="clickable" onclick="drillPehuamar90('${r.n}')">${fmt(r.pehuamarBase)}</td>
+    <td class="clickable ip-base" onclick="drillPehuamar90('${r.n}')">${fmt(r.pehuamarBase)}</td>
     <td><input class="ip-input" data-vendedor="${r.n}" data-metric="pehuamar" type="number" step="1" placeholder="clientes" /></td>
     <td></td>
-    <td><span class="ip-mnbase" data-vendedor-mnbase="${r.n}">${r.mnBase === null ? '—' : fmt(r.mnBase)}</span></td>
+    <td class="ip-base"><span class="ip-mnbase" data-vendedor-mnbase="${r.n}">${r.mnBase === null ? '—' : fmt(r.mnBase)}</span></td>
     <td><input class="ip-input" data-vendedor="${r.n}" data-metric="sellout" type="number" step="1" placeholder="kg" /></td>
     <td><span class="ip-mnpct" data-vendedor-mnpct="${r.n}">—</span></td>
   </tr>
