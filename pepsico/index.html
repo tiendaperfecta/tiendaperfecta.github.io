@@ -367,14 +367,15 @@ td.ip-base.clickable{cursor:pointer}
     <button type="button" class="tab-btn active" data-tab-btn="por-vendedor">Por vendedor</button>
     <button type="button" class="tab-btn" data-tab-btn="mi-negocio">Mi Negocio+</button>
     <button type="button" class="tab-btn" data-tab-btn="cobertura">Cobertura</button>
+    <button type="button" class="tab-btn" data-tab-btn="innovaciones">Innovaciones</button>
     <button type="button" class="tab-btn" data-tab-btn="ccc">CCC</button>
     <button type="button" class="tab-btn" data-tab-btn="tienda-perfecta">Tienda Perfecta</button>
-    <button type="button" class="tab-btn" data-tab-btn="portafolio">Portafolio</button>
     <button type="button" class="tab-btn" data-tab-btn="invendible">Invendible</button>
     <button type="button" class="tab-btn" data-tab-btn="rechazos">Rechazos</button>
     <button type="button" class="tab-btn" data-tab-btn="frescura">Frescura</button>
     <button type="button" class="tab-btn" data-tab-btn="combos-axum">Combos Axum</button>
     <button type="button" class="tab-btn" data-tab-btn="combos-mn">Combos Mi Negocio</button>
+    <button type="button" class="tab-btn" data-tab-btn="frase-dia">Frase del día</button>
   </div>
 
   <div class="tab-panel active" data-tab-panel="por-vendedor">
@@ -500,6 +501,10 @@ td.ip-base.clickable{cursor:pointer}
     (Platino+Gold + Silver&amp;Bronze) que cada vendedor cargó en la tabla "Por vendedor" de más arriba.
   </p>
 
+  </div>
+
+  <div class="tab-panel" data-tab-panel="mi-negocio">
+
   <div class="mn-panel mn-watermark">
     <div class="mn-head">
       <div>
@@ -521,10 +526,6 @@ td.ip-base.clickable{cursor:pointer}
       objetivo ni reporte separado para Mi Negocio+). % Mi Negocio = AcumuladoMN ÷ Acumulado total.
     </p>
   </div>
-
-  </div>
-
-  <div class="tab-panel" data-tab-panel="mi-negocio">
 
   <h2 class="section-title">Mi Negocio+ por vendedor</h2>
   <p class="section-note">
@@ -630,6 +631,18 @@ td.ip-base.clickable{cursor:pointer}
     restan, como devoluciones, ya vienen en negativo). Es el importe facturado, no está prorrateado contra ningún
     objetivo en $.
   </p>
+
+  </div>
+
+  <div class="tab-panel" data-tab-panel="innovaciones">
+
+  <h2 class="section-title">Innovaciones</h2>
+  <p class="section-note">
+    Cobertura por vendedor de los lanzamientos de Lays Rústicas, Tostitos y Pehuamar. Cobertura = clientes con 3+
+    unidades del producto ÷ universo del vendedor. Actualizado automáticamente por API dos veces por día.
+  </p>
+
+  <div class="table-scroll" id="innovaciones-content"></div>
 
   </div>
 
@@ -856,10 +869,6 @@ td.ip-base.clickable{cursor:pointer}
     reparto por vendedor es una estimación proporcional según la composición de clientes de cada segmento, no un
     objetivo oficial cargado en Gescom.
   </p>
-
-  </div>
-
-  <div class="tab-panel" data-tab-panel="portafolio">
 
   <h2 class="section-title">Portafolio</h2>
   <p class="section-note">
@@ -1179,9 +1188,13 @@ td.ip-base.clickable{cursor:pointer}
 
   </div>
 
+  <div class="tab-panel" data-tab-panel="frase-dia">
+
   <div class="closing-quote">
     <p>“Cuando el conocimiento se acompaña de <b>creatividad</b>, lo imposible se simplifica.”</p>
     <p class="closing-wish">¡Que tengan un excelente día de ventas!</p>
+  </div>
+
   </div>
 </div>
 
@@ -1398,7 +1411,19 @@ fetch(BASE + 'subproductos_vendedor.json').then(r => r.json()).then(data => {
   pehuamarSubRows = data.pehuamar.vendedores;
   laysSubRows = data.lays.vendedores;
   tostitosSubRows = data.tostitos.vendedores;
+  renderInnovaciones();
 }).catch(() => {});
+
+function renderInnovaciones(){
+  const el = document.getElementById('innovaciones-content');
+  if (!el) return;
+  const html = [
+    Object.keys(LAYS_SUB_LABELS).map(k => productSubTable(laysSubRows, k, LAYS_SUB_LABELS[k], LAYS_SUB_OBJ)).join(''),
+    Object.keys(TOSTITOS_SUB_LABELS).map(k => productSubTable(tostitosSubRows, k, TOSTITOS_SUB_LABELS[k], TOSTITOS_SUB_OBJ)).join(''),
+    Object.keys(PEHUAMAR_SUB_LABELS).map(k => productSubTable(pehuamarSubRows, k, PEHUAMAR_SUB_LABELS[k], PEHUAMAR_SUB_OBJ)).join(''),
+  ].join('');
+  el.innerHTML = html;
+}
 
 function productSubTable(rowsData, key, label, obj){
   const items = rowsData.map(r => {
