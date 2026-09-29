@@ -128,6 +128,13 @@ h1{
   background-size:320px auto; opacity:.4; mix-blend-mode:multiply;
 }
 .mn-watermark > *{ position:relative; z-index:1 }
+.innov-watermark{ position:relative; isolation:isolate; margin-bottom:8px }
+.innov-watermark::before{
+  content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
+  background-image:var(--watermark-img); background-repeat:no-repeat; background-position:center right 12px;
+  background-size:120px auto; opacity:.16; mix-blend-mode:multiply;
+}
+.innov-watermark > *{ position:relative; z-index:1 }
 .subsection-title{
   font-family:"Fraunces",serif; font-weight:600; font-size:15.5px; color:var(--accent);
   margin:28px 0 4px; text-transform:uppercase; letter-spacing:.03em;
@@ -1422,23 +1429,25 @@ fetch(BASE + 'subproductos_vendedor.json').then(r => r.json()).then(data => {
   renderInnovaciones();
 }).catch(() => {});
 
-function innovacionImg(src, alt){
-  return src ? `<img src="${src}" alt="${alt}" style="max-width:260px; width:100%; height:auto; border-radius:10px; box-shadow:var(--shadow); display:block; margin:8px 0 4px">` : '';
-}
+const INNOVACION_WATERMARKS = {
+  Caprese: '../assets/img/innovacion-lays-rusticas.jpg',
+  SalMarina: '../assets/img/innovacion-lays-rusticas.jpg',
+  LimonHierbas: '../assets/img/innovacion-lays-rusticas.jpg',
+  G144: '../assets/img/innovacion-tostitos-hierbas-limon.jpg',
+  G90: '../assets/img/innovacion-tostitos-hierbas-limon.jpg',
+};
 
 function renderInnovaciones(){
-  const laysHtml = innovacionImg('../assets/img/innovacion-lays-rusticas.jpg', 'Lays Rústicas') +
-    Object.keys(LAYS_SUB_LABELS).map(k => productSubTable(laysSubRows, k, LAYS_SUB_LABELS[k], LAYS_SUB_OBJ)).join('');
-  const tostitosHtml = innovacionImg('../assets/img/innovacion-tostitos-hierbas-limon.jpg', 'Tostitos Hierbas y Limón') +
-    Object.keys(TOSTITOS_SUB_LABELS).map(k => productSubTable(tostitosSubRows, k, TOSTITOS_SUB_LABELS[k], TOSTITOS_SUB_OBJ)).join('');
-  const pehuamarHtml = Object.keys(PEHUAMAR_SUB_LABELS).map(k => productSubTable(pehuamarSubRows, k, PEHUAMAR_SUB_LABELS[k], PEHUAMAR_SUB_OBJ)).join('');
+  const laysHtml = Object.keys(LAYS_SUB_LABELS).map(k => productSubTable(laysSubRows, k, LAYS_SUB_LABELS[k], LAYS_SUB_OBJ, INNOVACION_WATERMARKS[k])).join('');
+  const tostitosHtml = Object.keys(TOSTITOS_SUB_LABELS).map(k => productSubTable(tostitosSubRows, k, TOSTITOS_SUB_LABELS[k], TOSTITOS_SUB_OBJ, INNOVACION_WATERMARKS[k])).join('');
+  const pehuamarHtml = Object.keys(PEHUAMAR_SUB_LABELS).map(k => productSubTable(pehuamarSubRows, k, PEHUAMAR_SUB_LABELS[k], PEHUAMAR_SUB_OBJ, INNOVACION_WATERMARKS[k])).join('');
   const innovEl = document.getElementById('innovaciones-content');
   if (innovEl) innovEl.innerHTML = laysHtml + tostitosHtml + pehuamarHtml;
   const cobEl = document.getElementById('cobertura-innovaciones-content');
   if (cobEl) cobEl.innerHTML = pehuamarHtml;
 }
 
-function productSubTable(rowsData, key, label, obj){
+function productSubTable(rowsData, key, label, obj, watermarkImg){
   const items = rowsData.map(r => {
     const cob = r.universo ? r[key] / r.universo * 100 : 0;
     const cump = obj ? cob / obj * 100 : 0;
@@ -1448,7 +1457,7 @@ function productSubTable(rowsData, key, label, obj){
   const totC = items.reduce((s,i)=>s+i.count,0);
   const totCob = totU ? totC/totU*100 : 0;
   const totCump = obj ? totCob / obj * 100 : 0;
-  return `
+  const content = `
     <h4 style="font-family:'Fraunces',serif;font-weight:600;font-size:14.5px;margin:18px 0 8px">${label}</h4>
     <table>
       <thead><tr><th>Vendedor</th><th style="text-align:right">Clientes</th><th style="text-align:right">Objetivo</th><th style="text-align:right">Cobertura</th><th style="text-align:right">Cump. %</th></tr></thead>
@@ -1458,6 +1467,8 @@ function productSubTable(rowsData, key, label, obj){
       <tfoot><tr style="font-weight:700"><td>Total PepsiCo</td><td style="text-align:right">${fmt(totC,0)}</td><td style="text-align:right">${fmt(obj,0)}%</td><td style="text-align:right">${fmt(totCob,1)}%</td><td style="text-align:right">${fmt(totCump,1)}%</td></tr></tfoot>
     </table>
   `;
+  if (!watermarkImg) return content;
+  return `<div class="innov-watermark" style="--watermark-img:url('${watermarkImg}')">${content}</div>`;
 }
 
 function drillByDia(vendedor, dia) {
