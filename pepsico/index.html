@@ -165,6 +165,9 @@ tfoot td{
   font-family:"IBM Plex Mono",monospace; text-align:right;
 }
 tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
+#tfoot-ip td{text-align:center}
+#tfoot-ip td.name{text-align:left}
+#tfoot-ip td.ip-base{background:var(--accent-soft); color:var(--accent)}
 
 .tp-summary{margin-bottom:20px}
 .tp-total-card{
@@ -446,13 +449,13 @@ td.ip-base.clickable{cursor:pointer}
         </tr>
       </thead>
       <tbody id="tbody-ip"></tbody>
-      <tfoot>
+      <tfoot id="tfoot-ip">
         <tr>
           <td class="name">Total PepsiCo</td>
-          <td id="tfoot-ip-freq-base"></td><td id="tfoot-ip-freq-comp"></td><td></td>
-          <td id="tfoot-ip-port-base"></td><td id="tfoot-ip-port-comp"></td><td></td>
-          <td id="tfoot-ip-pehuamar-base"></td><td id="tfoot-ip-pehuamar-comp"></td><td></td>
-          <td id="tfoot-ip-mn-base"></td><td id="tfoot-ip-mn-comp"></td><td id="tfoot-ip-mn-comp-pct"></td>
+          <td id="tfoot-ip-freq-base" class="ip-base"></td><td id="tfoot-ip-freq-comp"></td><td></td>
+          <td id="tfoot-ip-port-base" class="ip-base"></td><td id="tfoot-ip-port-comp"></td><td></td>
+          <td id="tfoot-ip-pehuamar-base" class="ip-base"></td><td id="tfoot-ip-pehuamar-comp"></td><td></td>
+          <td id="tfoot-ip-mn-base" class="ip-base"></td><td id="tfoot-ip-mn-comp"></td><td id="tfoot-ip-mn-comp-pct"></td>
         </tr>
       </tfoot>
     </table>
@@ -2731,7 +2734,7 @@ async function renderIpSection(){
   const elFreq = document.getElementById('tfoot-ip-freq-comp');
   if (elFreq) {
     const pctTxt = ipFreqBaseTotal ? `<span class="ip-pct">${fmt(freqTotal/ipFreqBaseTotal*100,1)}%</span>` : '';
-    elFreq.innerHTML = `<div class="ip-freq-cell">${pctTxt}<span>${fmt(freqTotal)}</span></div>`;
+    elFreq.innerHTML = `<div class="ip-freq-cell" style="justify-content:center">${pctTxt}<span>${fmt(freqTotal)}</span></div>`;
   }
   const elPort = document.getElementById('tfoot-ip-port-comp');
   if (elPort) elPort.textContent = fmt(portTotal);
