@@ -2485,16 +2485,29 @@ if (MES_SEL) {
     input.title = 'Ya pasaron los 15 minutos para corregir. Se vuelve a habilitar mañana.';
   }
 
-  compromisoRefs.forEach(({ vendedor, inputPg, inputSb, updateTotal }) => {
-    const saved = data.compromisos[vendedor] || {};
-    inputPg.value = typeof saved.pg === 'number' ? saved.pg : '';
-    inputSb.value = typeof saved.sb === 'number' ? saved.sb : '';
-    if (saved.bloqueado) {
-      bloquear(inputPg);
-      bloquear(inputSb);
+  function aplicarCompromisos(data) {
+    compromisoRefs.forEach(({ vendedor, inputPg, inputSb, updateTotal }) => {
+      const saved = data.compromisos[vendedor] || {};
+      const enfocado = document.activeElement === inputPg || document.activeElement === inputSb;
+      if (!enfocado) {
+        inputPg.value = typeof saved.pg === 'number' ? saved.pg : '';
+        inputSb.value = typeof saved.sb === 'number' ? saved.sb : '';
+        if (saved.bloqueado) {
+          bloquear(inputPg);
+          bloquear(inputSb);
+        }
+      }
+      updateTotal();
+    });
+    recomputeTotal();
+    if (document.activeElement !== supInput) {
+      supInput.value = typeof data.supervisor === 'number' ? data.supervisor : '';
     }
-    updateTotal();
+  }
 
+  aplicarCompromisos(data);
+
+  compromisoRefs.forEach(({ vendedor, inputPg, inputSb, updateTotal }) => {
     function attach(input) {
       input.addEventListener('change', async () => {
         const pg = inputPg.value === '' ? null : Number(inputPg.value);
@@ -2522,14 +2535,21 @@ if (MES_SEL) {
     attach(inputSb);
   });
 
-  recomputeTotal();
-
-  supInput.value = typeof data.supervisor === 'number' ? data.supervisor : '';
   supInput.addEventListener('change', () => {
     const valor = supInput.value === '' ? null : Number(supInput.value);
     if (valor !== null && Number.isNaN(valor)) return;
     guardarSupervisor(valor).catch((err) => console.error('compromiso supervisor write failed:', err));
   });
+
+  setInterval(async () => {
+    try {
+      const r2 = await fetchIpApiConReintentos(COMPROMISO_API);
+      const data2 = await r2.json();
+      if (data2 && data2.ok) aplicarCompromisos(data2);
+    } catch (err) {
+      console.error('compromiso: refresh automatico fallo:', err);
+    }
+  }, 60000);
 })();
 }
 }
@@ -2554,12 +2574,20 @@ function drillPehuamar90(vendedor) {
 
 const IP_API = 'https://script.google.com/macros/s/AKfycby29cOLAt2nSOU-jbpaLxwRSiK1_eG-0eWhKrbitGks8U7eJzqdkPBsI7kwkxsT6-K0/exec';
 let ipRenderStarted = false;
+let ipRenderBusy = false;
+
+function haySpanEnfocadoEn(clase){
+  const el = document.activeElement;
+  return !!(el && el.classList && el.classList.contains(clase));
+}
 
 async function renderIpSection(){
-  if (ipRenderStarted) return;
+  if (ipRenderBusy) return;
+  if (ipRenderStarted && haySpanEnfocadoEn('ip-input')) return;
+  ipRenderBusy = true;
   ipRenderStarted = true;
   await Promise.all([rowsReadyPromise, portDiaReadyPromise, pehuamar90DetallePromise]);
-  if (!rows.length || !noCompraRows.length) { ipRenderStarted = false; return; }
+  if (!rows.length || !noCompraRows.length) { ipRenderStarted = false; ipRenderBusy = false; return; }
 
   const pehuamarBaseByVendedor = {};
   pehuamar90Detalle.forEach(c => {
@@ -2705,7 +2733,11 @@ async function renderIpSection(){
   const elMnPct = document.getElementById('tfoot-ip-mn-comp-pct');
   if (elMnPct) elMnPct.textContent = ipMnBaseTotal ? fmt(selloutSum / ipMnBaseTotal * 100, 1) + '%' : '—';
   ipSectionReady = true;
+  ipRenderBusy = false;
 }
 
-if (!MES_SEL) rowsReadyPromise.then(renderIpSection);
+if (!MES_SEL) {
+  rowsReadyPromise.then(renderIpSection);
+  setInterval(() => { renderIpSection().catch(() => { ipRenderBusy = false; }); }, 60000);
+}
 </script>
