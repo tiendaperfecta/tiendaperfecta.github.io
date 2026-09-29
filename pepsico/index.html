@@ -632,7 +632,7 @@ td.ip-base.clickable{cursor:pointer}
     objetivo en $.
   </p>
 
-  <h3 class="subsection-title">Cobertura de Lays Rústicas, Tostitos y Pehuamar</h3>
+  <h3 class="subsection-title">Cobertura de Pehuamar</h3>
   <p class="section-note">
     Cobertura = clientes con 3+ unidades del producto ÷ universo del vendedor. Actualizado automáticamente por API
     dos veces por día.
@@ -1423,15 +1423,13 @@ fetch(BASE + 'subproductos_vendedor.json').then(r => r.json()).then(data => {
 }).catch(() => {});
 
 function renderInnovaciones(){
-  const html = [
-    Object.keys(LAYS_SUB_LABELS).map(k => productSubTable(laysSubRows, k, LAYS_SUB_LABELS[k], LAYS_SUB_OBJ)).join(''),
-    Object.keys(TOSTITOS_SUB_LABELS).map(k => productSubTable(tostitosSubRows, k, TOSTITOS_SUB_LABELS[k], TOSTITOS_SUB_OBJ)).join(''),
-    Object.keys(PEHUAMAR_SUB_LABELS).map(k => productSubTable(pehuamarSubRows, k, PEHUAMAR_SUB_LABELS[k], PEHUAMAR_SUB_OBJ)).join(''),
-  ].join('');
-  ['innovaciones-content', 'cobertura-innovaciones-content'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = html;
-  });
+  const laysHtml = Object.keys(LAYS_SUB_LABELS).map(k => productSubTable(laysSubRows, k, LAYS_SUB_LABELS[k], LAYS_SUB_OBJ)).join('');
+  const tostitosHtml = Object.keys(TOSTITOS_SUB_LABELS).map(k => productSubTable(tostitosSubRows, k, TOSTITOS_SUB_LABELS[k], TOSTITOS_SUB_OBJ)).join('');
+  const pehuamarHtml = Object.keys(PEHUAMAR_SUB_LABELS).map(k => productSubTable(pehuamarSubRows, k, PEHUAMAR_SUB_LABELS[k], PEHUAMAR_SUB_OBJ)).join('');
+  const innovEl = document.getElementById('innovaciones-content');
+  if (innovEl) innovEl.innerHTML = laysHtml + tostitosHtml + pehuamarHtml;
+  const cobEl = document.getElementById('cobertura-innovaciones-content');
+  if (cobEl) cobEl.innerHTML = pehuamarHtml;
 }
 
 function productSubTable(rowsData, key, label, obj){
@@ -1454,21 +1452,6 @@ function productSubTable(rowsData, key, label, obj){
       <tfoot><tr style="font-weight:700"><td>Total PepsiCo</td><td style="text-align:right">${fmt(totC,0)}</td><td style="text-align:right">${fmt(obj,0)}%</td><td style="text-align:right">${fmt(totCob,1)}%</td><td style="text-align:right">${fmt(totCump,1)}%</td></tr></tfoot>
     </table>
   `;
-}
-
-function drillPehuamar(){
-  const html = Object.keys(PEHUAMAR_SUB_LABELS).map(k => productSubTable(pehuamarSubRows, k, PEHUAMAR_SUB_LABELS[k], PEHUAMAR_SUB_OBJ)).join('');
-  openDrillCustom('Pehuamar — desglose por producto', 'Cobertura = clientes con 3+ unidades del producto ÷ universo del vendedor · Objetivo 30% por vendedor · actualizado automáticamente por API dos veces por día', html);
-}
-
-function drillLays(){
-  const html = Object.keys(LAYS_SUB_LABELS).map(k => productSubTable(laysSubRows, k, LAYS_SUB_LABELS[k], LAYS_SUB_OBJ)).join('');
-  openDrillCustom('Lays — Rústicas por sabor', 'Cobertura = clientes con 3+ unidades del sabor ÷ universo del vendedor · Objetivo 20% por vendedor · actualizado automáticamente por API dos veces por día', html);
-}
-
-function drillTostitos(){
-  const html = Object.keys(TOSTITOS_SUB_LABELS).map(k => productSubTable(tostitosSubRows, k, TOSTITOS_SUB_LABELS[k], TOSTITOS_SUB_OBJ)).join('');
-  openDrillCustom('Tostitos — Hierbas y Limón por gramaje', 'Cobertura = clientes con 3+ unidades del gramaje ÷ universo del vendedor · Objetivo 20% por vendedor · actualizado automáticamente por API dos veces por día', html);
 }
 
 function drillByDia(vendedor, dia) {
@@ -2213,7 +2196,7 @@ function renderMarcaSection(){
   const tbodyMarcaObj = document.getElementById('tbody-marcaObj');
   tbodyMarcaObj.innerHTML = marcaObjRows.map(r => `
     <tr>
-      <td class="name">${r.marca === 'Pehuamar' ? `<span class="clickable" onclick="drillPehuamar()">${r.marca}</span>` : r.marca === 'Lays' ? `<span class="clickable" onclick="drillLays()">${r.marca}</span>` : r.marca === 'Tostitos' ? `<span class="clickable" onclick="drillTostitos()">${r.marca}</span>` : r.marca}</td>
+      <td class="name">${r.marca}</td>
       <td>${fmt(r.obj,1)}%</td>
       <td>${fmt(r.cob,1)}%</td>
       <td><span class="pill ${tier(r.cump)}">${fmt(r.cump,1)}%</span></td>
