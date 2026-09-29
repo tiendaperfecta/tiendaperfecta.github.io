@@ -1422,9 +1422,15 @@ fetch(BASE + 'subproductos_vendedor.json').then(r => r.json()).then(data => {
   renderInnovaciones();
 }).catch(() => {});
 
+function innovacionImg(src, alt){
+  return src ? `<img src="${src}" alt="${alt}" style="max-width:260px; width:100%; height:auto; border-radius:10px; box-shadow:var(--shadow); display:block; margin:8px 0 4px">` : '';
+}
+
 function renderInnovaciones(){
-  const laysHtml = Object.keys(LAYS_SUB_LABELS).map(k => productSubTable(laysSubRows, k, LAYS_SUB_LABELS[k], LAYS_SUB_OBJ)).join('');
-  const tostitosHtml = Object.keys(TOSTITOS_SUB_LABELS).map(k => productSubTable(tostitosSubRows, k, TOSTITOS_SUB_LABELS[k], TOSTITOS_SUB_OBJ)).join('');
+  const laysHtml = innovacionImg('../assets/img/innovacion-lays-rusticas.jpg', 'Lays Rústicas') +
+    Object.keys(LAYS_SUB_LABELS).map(k => productSubTable(laysSubRows, k, LAYS_SUB_LABELS[k], LAYS_SUB_OBJ)).join('');
+  const tostitosHtml = innovacionImg('../assets/img/innovacion-tostitos-hierbas-limon.jpg', 'Tostitos Hierbas y Limón') +
+    Object.keys(TOSTITOS_SUB_LABELS).map(k => productSubTable(tostitosSubRows, k, TOSTITOS_SUB_LABELS[k], TOSTITOS_SUB_OBJ)).join('');
   const pehuamarHtml = Object.keys(PEHUAMAR_SUB_LABELS).map(k => productSubTable(pehuamarSubRows, k, PEHUAMAR_SUB_LABELS[k], PEHUAMAR_SUB_OBJ)).join('');
   const innovEl = document.getElementById('innovaciones-content');
   if (innovEl) innovEl.innerHTML = laysHtml + tostitosHtml + pehuamarHtml;
