@@ -3,6 +3,11 @@
  "bySeller": [
   {
    "sellerId": "10",
+   "visited": 55,
+   "km": null
+  },
+  {
+   "sellerId": "3",
    "visited": 54,
    "km": null
   },
@@ -17,18 +22,23 @@
    "km": null
   },
   {
+   "sellerId": "6",
+   "visited": 46,
+   "km": null
+  },
+  {
    "sellerId": "2",
    "visited": 45,
    "km": null
   },
   {
-   "sellerId": "6",
-   "visited": 44,
+   "sellerId": "7",
+   "visited": 45,
    "km": null
   },
   {
-   "sellerId": "3",
-   "visited": 43,
+   "sellerId": "5",
+   "visited": 39,
    "km": null
   },
   {
@@ -37,18 +47,8 @@
    "km": null
   },
   {
-   "sellerId": "5",
-   "visited": 34,
-   "km": null
-  },
-  {
-   "sellerId": "7",
-   "visited": 31,
-   "km": null
-  },
-  {
    "sellerId": "4",
-   "visited": 22,
+   "visited": 23,
    "km": null
   }
  ],
@@ -324,6 +324,10 @@
   {
    "sellerId": "10",
    "client": "320"
+  },
+  {
+   "sellerId": "10",
+   "client": "3275"
   },
   {
    "sellerId": "10",
@@ -991,6 +995,10 @@
   },
   {
    "sellerId": "3",
+   "client": "1036"
+  },
+  {
+   "sellerId": "3",
    "client": "1132"
   },
   {
@@ -1063,7 +1071,15 @@
   },
   {
    "sellerId": "3",
+   "client": "1929"
+  },
+  {
+   "sellerId": "3",
    "client": "2086"
+  },
+  {
+   "sellerId": "3",
+   "client": "2139"
   },
   {
    "sellerId": "3",
@@ -1115,6 +1131,10 @@
   },
   {
    "sellerId": "3",
+   "client": "3002"
+  },
+  {
+   "sellerId": "3",
    "client": "3005"
   },
   {
@@ -1123,7 +1143,19 @@
   },
   {
    "sellerId": "3",
+   "client": "3466"
+  },
+  {
+   "sellerId": "3",
+   "client": "3802"
+  },
+  {
+   "sellerId": "3",
    "client": "423"
+  },
+  {
+   "sellerId": "3",
+   "client": "4357"
   },
   {
    "sellerId": "3",
@@ -1135,7 +1167,15 @@
   },
   {
    "sellerId": "3",
+   "client": "4823"
+  },
+  {
+   "sellerId": "3",
    "client": "489"
+  },
+  {
+   "sellerId": "3",
+   "client": "491"
   },
   {
    "sellerId": "3",
@@ -1151,11 +1191,19 @@
   },
   {
    "sellerId": "3",
+   "client": "612"
+  },
+  {
+   "sellerId": "3",
    "client": "737"
   },
   {
    "sellerId": "3",
    "client": "743"
+  },
+  {
+   "sellerId": "3",
+   "client": "752"
   },
   {
    "sellerId": "3",
@@ -1208,6 +1256,10 @@
   {
    "sellerId": "4",
    "client": "2573"
+  },
+  {
+   "sellerId": "4",
+   "client": "278"
   },
   {
    "sellerId": "4",
@@ -1287,6 +1339,18 @@
   },
   {
    "sellerId": "5",
+   "client": "1765"
+  },
+  {
+   "sellerId": "5",
+   "client": "1867"
+  },
+  {
+   "sellerId": "5",
+   "client": "1875"
+  },
+  {
+   "sellerId": "5",
    "client": "2784"
   },
   {
@@ -1319,7 +1383,15 @@
   },
   {
    "sellerId": "5",
+   "client": "3374"
+  },
+  {
+   "sellerId": "5",
    "client": "3441"
+  },
+  {
+   "sellerId": "5",
+   "client": "3672"
   },
   {
    "sellerId": "5",
@@ -1436,6 +1508,14 @@
   {
    "sellerId": "6",
    "client": "1478"
+  },
+  {
+   "sellerId": "6",
+   "client": "1500"
+  },
+  {
+   "sellerId": "6",
+   "client": "1538"
   },
   {
    "sellerId": "6",
@@ -1583,6 +1663,10 @@
   },
   {
    "sellerId": "7",
+   "client": "189"
+  },
+  {
+   "sellerId": "7",
    "client": "195"
   },
   {
@@ -1619,6 +1703,10 @@
   },
   {
    "sellerId": "7",
+   "client": "2125"
+  },
+  {
+   "sellerId": "7",
    "client": "213"
   },
   {
@@ -1628,6 +1716,10 @@
   {
    "sellerId": "7",
    "client": "215"
+  },
+  {
+   "sellerId": "7",
+   "client": "2469"
   },
   {
    "sellerId": "7",
@@ -1647,11 +1739,23 @@
   },
   {
    "sellerId": "7",
+   "client": "2900"
+  },
+  {
+   "sellerId": "7",
+   "client": "3049"
+  },
+  {
+   "sellerId": "7",
    "client": "3086"
   },
   {
    "sellerId": "7",
    "client": "312"
+  },
+  {
+   "sellerId": "7",
+   "client": "313"
   },
   {
    "sellerId": "7",
@@ -1671,6 +1775,26 @@
   },
   {
    "sellerId": "7",
+   "client": "381"
+  },
+  {
+   "sellerId": "7",
+   "client": "3882"
+  },
+  {
+   "sellerId": "7",
+   "client": "413"
+  },
+  {
+   "sellerId": "7",
+   "client": "4393"
+  },
+  {
+   "sellerId": "7",
+   "client": "4546"
+  },
+  {
+   "sellerId": "7",
    "client": "4684"
   },
   {
@@ -1680,6 +1804,18 @@
   {
    "sellerId": "7",
    "client": "4874"
+  },
+  {
+   "sellerId": "7",
+   "client": "540"
+  },
+  {
+   "sellerId": "7",
+   "client": "630"
+  },
+  {
+   "sellerId": "7",
+   "client": "640"
   },
   {
    "sellerId": "7",

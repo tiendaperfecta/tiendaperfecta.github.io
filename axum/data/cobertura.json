@@ -26,7 +26,7 @@
    "ruta": 41,
    "visitadosDeRuta": 34,
    "pendientes": 7,
-   "fueraDeRuta": 9,
+   "fueraDeRuta": 10,
    "pct": 82.9
   },
   {
@@ -39,12 +39,21 @@
    "pct": 80.0
   },
   {
+   "sellerId": "3",
+   "vendedor": "Ezequiel Hack",
+   "ruta": 42,
+   "visitadosDeRuta": 33,
+   "pendientes": 9,
+   "fueraDeRuta": 21,
+   "pct": 78.6
+  },
+  {
    "sellerId": "7",
    "vendedor": "Ramiro Rando",
    "ruta": 39,
    "visitadosDeRuta": 30,
    "pendientes": 9,
-   "fueraDeRuta": 1,
+   "fueraDeRuta": 13,
    "pct": 76.9
   },
   {
@@ -62,7 +71,7 @@
    "ruta": 39,
    "visitadosDeRuta": 28,
    "pendientes": 11,
-   "fueraDeRuta": 2,
+   "fueraDeRuta": 4,
    "pct": 71.8
   },
   {
@@ -71,26 +80,17 @@
    "ruta": 41,
    "visitadosDeRuta": 29,
    "pendientes": 12,
-   "fueraDeRuta": 19,
+   "fueraDeRuta": 23,
    "pct": 70.7
-  },
-  {
-   "sellerId": "3",
-   "vendedor": "Ezequiel Hack",
-   "ruta": 42,
-   "visitadosDeRuta": 29,
-   "pendientes": 13,
-   "fueraDeRuta": 14,
-   "pct": 69.0
   },
   {
    "sellerId": "4",
    "vendedor": "Lucas Giayetto",
    "ruta": 44,
-   "visitadosDeRuta": 22,
-   "pendientes": 22,
+   "visitadosDeRuta": 23,
+   "pendientes": 21,
    "fueraDeRuta": 0,
-   "pct": 50.0
+   "pct": 52.3
   },
   {
    "sellerId": "1020",
@@ -408,12 +408,6 @@
     "taxonomia": "Verduleria_D"
    },
    {
-    "clientId": "3466",
-    "nombre": "JULIO MAXIMILIANO GEREZ",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
     "clientId": "3987",
     "nombre": "MAX FRUTAS",
     "localidad": "MAR DEL PLATA",
@@ -424,24 +418,6 @@
     "nombre": "MIRIAM ANTUNEZ",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Panaderia_B"
-   },
-   {
-    "clientId": "491",
-    "nombre": "Carlos Rodriguez",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Almacen/Despensa_D"
-   },
-   {
-    "clientId": "612",
-    "nombre": "PASEO DE COMPRAS",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_C"
-   },
-   {
-    "clientId": "752",
-    "nombre": "ARIE SLAVEN",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Almacen/Despensa_D"
    },
    {
     "clientId": "778",
@@ -864,12 +840,6 @@
     "nombre": "María Teresa correa",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
-    "clientId": "278",
-    "nombre": "JUAN CARLOS MACHADO",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_C"
    },
    {
     "clientId": "3351",
