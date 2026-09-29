@@ -1,24 +1,24 @@
 {
- "generatedAt": "2026-09-29T10:57:19-03:00",
+ "generatedAt": "2026-09-29T11:03:42-03:00",
  "date": "2026-09-29",
  "errors": [
   "gescom: HTTPError: 403 Client Error: Forbidden for url: https://tiendaperfecta.gescom.online/data/cmd/ventas/api/v1/get-ramos",
   "detalle: repartos 2026-09-29: 403 Client Error: Forbidden for url: https://tiendaperfecta.gescom.online/data/cmd/distribucion/api/v1/get-repartos?fechadesde=2026-09-29&fechahasta=2026-09-30"
  ],
  "pedidos": {
-  "traidos": 143,
-  "totalSegunApi": 143
+  "traidos": 152,
+  "totalSegunApi": 152
  },
  "formatoGps": {
-  "posicion": "'-37.9947274,-57.577358,4,10:56 AM,95,,'",
+  "posicion": "'-37.922941,-57.7533751,7,11:02 AM,107,,'",
   "visitados": "{'sellerID': '1', 'visitedClient': '11'}",
   "km": null,
-  "visitadosTotal": 175,
+  "visitadosTotal": 179,
   "kmError": null
  },
  "alerta": "hay 4 llegadas tarde, sin casilla configurada",
  "detalle": {
-  "filas": 221,
+  "filas": 228,
   "vendedores": 17,
   "diasEnHistoria": 38
  },
