@@ -4,7 +4,7 @@ pepsico_ventas.py - datos del panel Avance Pepsico via API de GesCom.
 Genera no_compradores_detalle.json, no_compradores_por_dia.json,
 pehuamar90_no_comprado.json, invendible_detalle.json, rechazos_detalle.json,
 cobertura_marca_vendedor.json, ccc_segmento.json, subproductos_vendedor.json,
-venta_vendedor.json y avance_kg_vendedor.json.
+subproductos_no_comprado.json, venta_vendedor.json y avance_kg_vendedor.json.
 
 Avance kg: viene directo del reporte "Avance de Ventas Pepsico" de Gescom (el
 mismo motor generico de reportes que usa la UI, /data/cmd/report/render),
@@ -584,6 +584,7 @@ def main():
     hoy_key = DIAS_CAP[hoy.weekday()]
     no_compradores = []
     pehuamar_no_comprado = []
+    subproducto_no_comprado = {(g, k): [] for g, cfg in SUBPRODUCTOS.items() for k in cfg["labels"]}
     universo_por_vend = {}
     marca_cumple_por_vend = {}
     sub_cumple_por_vend = {}
@@ -609,10 +610,16 @@ def main():
         for marca, cant in compra_cliente_marca.get(codigo, {}).items():
             if cant >= 3:
                 cumple_marca[marca] = cumple_marca.get(marca, 0) + 1
+        cli_sub = compra_cliente_subgrupo.get(codigo, {})
         cumple_sub = sub_cumple_por_vend.setdefault(codven, {})
-        for sub, cant in compra_cliente_subgrupo.get(codigo, {}).items():
+        for sub, cant in cli_sub.items():
             if cant >= 3:
                 cumple_sub[sub] = cumple_sub.get(sub, 0) + 1
+        for gk in subproducto_no_comprado:
+            if cli_sub.get(gk, 0) < 3:
+                subproducto_no_comprado[gk].append({**{k: c[k] for k in
+                                                    ("codigo", "razon", "localidad", "seg", "dia")},
+                                                    "vendedor": nombre_vend_cli})
         seg = c["seg"] if c["seg"] in SEGMENTOS else None
         if seg:
             segdata = seg_por_vend.setdefault(codven, {s: {"universo": 0, "cumple": 0} for s in SEGMENTOS})
@@ -628,6 +635,7 @@ def main():
 
     escribir("no_compradores_detalle.json", no_compradores)
     escribir("pehuamar90_no_comprado.json", pehuamar_no_comprado)
+    escribir("subproductos_no_comprado.json", {f"{g}_{k}": v for (g, k), v in subproducto_no_comprado.items()})
     print("No compradores:", len(no_compradores), "| Sin Pehuamar 90gr hoy:", len(pehuamar_no_comprado))
 
     no_compradores_dia_out = []
@@ -848,6 +856,7 @@ def cmd_backfill(anio, mes):
     seg_por_vend = {}
     nc_dia_por_vend = {}
     no_compradores = []
+    subproducto_no_comprado = {(g, k): [] for g, cfg in SUBPRODUCTOS.items() for k in cfg["labels"]}
     DIA_CLAVE = {"Lunes": "lu", "Martes": "ma", "Miercoles": "mi",
                  "Jueves": "ju", "Viernes": "vi", "Sabado": "sa"}
     for codigo, c in clientes.items():
@@ -865,10 +874,16 @@ def cmd_backfill(anio, mes):
         for marca, cant in compra_cliente_marca.get(codigo, {}).items():
             if cant >= 3:
                 cumple_marca[marca] = cumple_marca.get(marca, 0) + 1
+        cli_sub = compra_cliente_subgrupo.get(codigo, {})
         cumple_sub = sub_cumple_por_vend.setdefault(codven, {})
-        for sub, cant in compra_cliente_subgrupo.get(codigo, {}).items():
+        for sub, cant in cli_sub.items():
             if cant >= 3:
                 cumple_sub[sub] = cumple_sub.get(sub, 0) + 1
+        for gk in subproducto_no_comprado:
+            if cli_sub.get(gk, 0) < 3:
+                subproducto_no_comprado[gk].append({**{k: c[k] for k in
+                                                    ("codigo", "razon", "localidad", "seg", "dia")},
+                                                    "vendedor": nombre_vend_cli})
         seg = c["seg"] if c["seg"] in SEGMENTOS else None
         if seg:
             segdata = seg_por_vend.setdefault(codven, {s: {"universo": 0, "cumple": 0} for s in SEGMENTOS})
@@ -883,6 +898,7 @@ def cmd_backfill(anio, mes):
                 nc_dia[clave_dia][0] += 1
 
     escribir("no_compradores_detalle.json", no_compradores)
+    escribir("subproductos_no_comprado.json", {f"{g}_{k}": v for (g, k), v in subproducto_no_comprado.items()})
     print("No compradores (%s): %d" % (MES_ARCHIVO, len(no_compradores)))
 
     no_compradores_dia_out = []
