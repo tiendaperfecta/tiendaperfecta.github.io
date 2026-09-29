@@ -632,6 +632,14 @@ td.ip-base.clickable{cursor:pointer}
     objetivo en $.
   </p>
 
+  <h3 class="subsection-title">Cobertura de Lays Rústicas, Tostitos y Pehuamar</h3>
+  <p class="section-note">
+    Cobertura = clientes con 3+ unidades del producto ÷ universo del vendedor. Actualizado automáticamente por API
+    dos veces por día.
+  </p>
+
+  <div class="table-scroll" id="cobertura-innovaciones-content"></div>
+
   </div>
 
   <div class="tab-panel" data-tab-panel="innovaciones">
@@ -1415,14 +1423,15 @@ fetch(BASE + 'subproductos_vendedor.json').then(r => r.json()).then(data => {
 }).catch(() => {});
 
 function renderInnovaciones(){
-  const el = document.getElementById('innovaciones-content');
-  if (!el) return;
   const html = [
     Object.keys(LAYS_SUB_LABELS).map(k => productSubTable(laysSubRows, k, LAYS_SUB_LABELS[k], LAYS_SUB_OBJ)).join(''),
     Object.keys(TOSTITOS_SUB_LABELS).map(k => productSubTable(tostitosSubRows, k, TOSTITOS_SUB_LABELS[k], TOSTITOS_SUB_OBJ)).join(''),
     Object.keys(PEHUAMAR_SUB_LABELS).map(k => productSubTable(pehuamarSubRows, k, PEHUAMAR_SUB_LABELS[k], PEHUAMAR_SUB_OBJ)).join(''),
   ].join('');
-  el.innerHTML = html;
+  ['innovaciones-content', 'cobertura-innovaciones-content'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = html;
+  });
 }
 
 function productSubTable(rowsData, key, label, obj){
