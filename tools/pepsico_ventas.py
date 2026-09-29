@@ -989,4 +989,24 @@ def cmd_backfill(anio, mes):
 if __name__ == "__main__":
     if len(sys.argv) >= 4 and sys.argv[1] == "backfill":
         sys.exit(cmd_backfill(int(sys.argv[2]), int(sys.argv[3])))
+
+    # El workflow de GitHub Actions no se puede tocar sin permiso extra, asi
+    # que un backfill se pide dejando pepsico/.backfill_pendiente con
+    # "AAAA-MM" (via la Contents API) y disparando el workflow normal, sin
+    # argumentos. Si existe, se corre el backfill primero, se borra el
+    # marcador (queda commiteado junto con el resto de pepsico/) y despues
+    # sigue la corrida normal del mes actual.
+    marcador = DIR / ".backfill_pendiente"
+    if marcador.exists():
+        mes_pendiente = marcador.read_text(encoding="utf-8").strip()
+        marcador.unlink()
+        try:
+            anio_p, mes_p = mes_pendiente.split("-")
+            print("Ejecutando backfill pendiente:", mes_pendiente)
+            codigo = cmd_backfill(int(anio_p), int(mes_p))
+            if codigo != 0:
+                sys.exit(codigo)
+        except Exception as e:
+            print("ERROR en backfill pendiente de %r:" % mes_pendiente, e)
+
     sys.exit(main())
