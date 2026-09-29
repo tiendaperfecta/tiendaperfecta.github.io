@@ -2734,7 +2734,7 @@ async function renderIpSection(){
   const elFreq = document.getElementById('tfoot-ip-freq-comp');
   if (elFreq) {
     const pctTxt = ipFreqBaseTotal ? `<span class="ip-pct">${fmt(freqTotal/ipFreqBaseTotal*100,1)}%</span>` : '';
-    elFreq.innerHTML = `<div class="ip-freq-cell" style="justify-content:center">${pctTxt}<span>${fmt(freqTotal)}</span></div>`;
+    elFreq.innerHTML = `<div class="ip-freq-cell">${pctTxt}<span style="width:56px; text-align:center">${fmt(freqTotal)}</span></div>`;
   }
   const elPort = document.getElementById('tfoot-ip-port-comp');
   if (elPort) elPort.textContent = fmt(portTotal);
