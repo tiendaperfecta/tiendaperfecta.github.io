@@ -38,12 +38,18 @@ def hay_credenciales():
 
 
 def _token(sesion):
+    # Un espacio o salto de linea pegado junto con el secret hace que Keycloak
+    # rechace la clave; se limpian y se avisa (sin mostrar el valor).
+    user, pwd = os.environ["GESCOM_USERNAME"], os.environ["GESCOM_PASSWORD"]
+    if user != user.strip() or pwd != pwd.strip():
+        print("aviso: GESCOM_USERNAME/GESCOM_PASSWORD tenian espacios o saltos "
+              "de linea al principio o al final; se ignoran.")
     r = sesion.post(
-        "%s/realms/%s/protocol/openid-connect/token" % (AUTH, os.environ["GESCOM_REALM"]),
+        "%s/realms/%s/protocol/openid-connect/token" % (AUTH, os.environ["GESCOM_REALM"].strip()),
         data={"grant_type": "password",
-              "client_id": os.environ["GESCOM_CLIENT_ID"],
-              "username": os.environ["GESCOM_USERNAME"],
-              "password": os.environ["GESCOM_PASSWORD"]},
+              "client_id": os.environ["GESCOM_CLIENT_ID"].strip(),
+              "username": user.strip(),
+              "password": pwd.strip()},
         timeout=40)
     if r.status_code != 200:
         # Keycloak explica el rechazo en error/error_description (no incluyen la
