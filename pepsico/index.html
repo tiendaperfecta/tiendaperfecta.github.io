@@ -1415,24 +1415,34 @@ const LAYS_SUB_OBJ = 20;
 const LAYS_SUB_LABELS = {Caprese:"Lays Rústicas Caprese", SalMarina:"Lays Rústicas Sal Marina", LimonHierbas:"Lays Rústicas Limón y Hierbas"};
 const TOSTITOS_SUB_OBJ = 20;
 const TOSTITOS_SUB_LABELS = {G144:"Tostitos Hierbas y Limón 144g", G90:"Tostitos Hierbas y Limón 90g"};
-fetch(BASE + 'subproductos_vendedor.json').then(r => r.json()).then(data => {
+let subproductoNoComprado = {};
+Promise.all([
+  fetch(BASE + 'subproductos_vendedor.json').then(r => r.json()),
+  fetch(BASE + 'subproductos_no_comprado.json').then(r => r.json()).catch(() => ({})),
+]).then(([data, noComprado]) => {
   pehuamarSubRows = data.pehuamar.vendedores;
   laysSubRows = data.lays.vendedores;
   tostitosSubRows = data.tostitos.vendedores;
+  subproductoNoComprado = noComprado || {};
   renderInnovaciones();
 }).catch(() => {});
 
+function drillSubproducto(vendedor, grupoClave, label) {
+  const list = (subproductoNoComprado[grupoClave] || []).filter(c => c.vendedor === vendedor);
+  openDrillPortafolio(vendedor, `Sin compra de ${label} en lo que va del mes`, list);
+}
+
 function renderInnovaciones(){
-  const laysHtml = Object.keys(LAYS_SUB_LABELS).map(k => productSubTable(laysSubRows, k, LAYS_SUB_LABELS[k], LAYS_SUB_OBJ)).join('');
-  const tostitosHtml = Object.keys(TOSTITOS_SUB_LABELS).map(k => productSubTable(tostitosSubRows, k, TOSTITOS_SUB_LABELS[k], TOSTITOS_SUB_OBJ)).join('');
-  const pehuamarHtml = Object.keys(PEHUAMAR_SUB_LABELS).map(k => productSubTable(pehuamarSubRows, k, PEHUAMAR_SUB_LABELS[k], PEHUAMAR_SUB_OBJ)).join('');
+  const laysHtml = Object.keys(LAYS_SUB_LABELS).map(k => productSubTable(laysSubRows, 'lays', k, LAYS_SUB_LABELS[k], LAYS_SUB_OBJ)).join('');
+  const tostitosHtml = Object.keys(TOSTITOS_SUB_LABELS).map(k => productSubTable(tostitosSubRows, 'tostitos', k, TOSTITOS_SUB_LABELS[k], TOSTITOS_SUB_OBJ)).join('');
+  const pehuamarHtml = Object.keys(PEHUAMAR_SUB_LABELS).map(k => productSubTable(pehuamarSubRows, 'pehuamar', k, PEHUAMAR_SUB_LABELS[k], PEHUAMAR_SUB_OBJ)).join('');
   const innovEl = document.getElementById('innovaciones-content');
   if (innovEl) innovEl.innerHTML = laysHtml + tostitosHtml;
   const cobEl = document.getElementById('cobertura-innovaciones-content');
   if (cobEl) cobEl.innerHTML = pehuamarHtml;
 }
 
-function productSubTable(rowsData, key, label, obj){
+function productSubTable(rowsData, grupo, key, label, obj){
   const items = rowsData.map(r => {
     const cob = r.universo ? r[key] / r.universo * 100 : 0;
     const cump = obj ? cob / obj * 100 : 0;
@@ -1442,14 +1452,15 @@ function productSubTable(rowsData, key, label, obj){
   const totC = items.reduce((s,i)=>s+i.count,0);
   const totCob = totU ? totC/totU*100 : 0;
   const totCump = obj ? totCob / obj * 100 : 0;
+  const grupoClave = `${grupo}_${key}`;
   return `
     <h4 style="font-family:'Fraunces',serif;font-weight:600;font-size:14.5px;margin:18px 0 8px">${label}</h4>
     <table>
-      <thead><tr><th>Vendedor</th><th style="text-align:right">Clientes</th><th style="text-align:right">Objetivo</th><th style="text-align:right">Cobertura</th><th style="text-align:right">Cump. %</th></tr></thead>
+      <thead><tr><th>Vendedor</th><th style="text-align:right">Base</th><th style="text-align:right">Clientes</th><th style="text-align:right">Objetivo</th><th style="text-align:right">Cobertura</th><th style="text-align:right">Cump. %</th></tr></thead>
       <tbody>
-        ${items.map(i => `<tr><td>${i.n}</td><td style="text-align:right">${fmt(i.count,0)}</td><td style="text-align:right">${fmt(obj,0)}%</td><td style="text-align:right">${fmt(i.cob,1)}%</td><td style="text-align:right"><span class="pill ${tier(i.cump)}">${fmt(i.cump,1)}%</span></td></tr>`).join('')}
+        ${items.map(i => `<tr><td class="clickable" onclick="drillSubproducto('${i.n}','${grupoClave}','${label}')">${i.n}</td><td class="ip-base" style="text-align:right">${fmt(i.universo,0)}</td><td style="text-align:right">${fmt(i.count,0)}</td><td style="text-align:right">${fmt(obj,0)}%</td><td style="text-align:right">${fmt(i.cob,1)}%</td><td style="text-align:right"><span class="pill ${tier(i.cump)}">${fmt(i.cump,1)}%</span></td></tr>`).join('')}
       </tbody>
-      <tfoot><tr style="font-weight:700"><td>Total PepsiCo</td><td style="text-align:right">${fmt(totC,0)}</td><td style="text-align:right">${fmt(obj,0)}%</td><td style="text-align:right">${fmt(totCob,1)}%</td><td style="text-align:right">${fmt(totCump,1)}%</td></tr></tfoot>
+      <tfoot><tr style="font-weight:700"><td>Total PepsiCo</td><td class="ip-base" style="text-align:right">${fmt(totU,0)}</td><td style="text-align:right">${fmt(totC,0)}</td><td style="text-align:right">${fmt(obj,0)}%</td><td style="text-align:right">${fmt(totCob,1)}%</td><td style="text-align:right">${fmt(totCump,1)}%</td></tr></tfoot>
     </table>
   `;
 }
