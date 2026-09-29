@@ -3859,6 +3859,25 @@
   },
   {
    "fecha": "2026-09-29",
+   "sellerId": "1176",
+   "vendedor": "Vendedor",
+   "clientId": "3472",
+   "nombre": "TEXTER FEED SRL",
+   "localidad": "CIUDAD AUTONOMA BUENOS AIRES",
+   "taxonomia": "Mayoristas_D",
+   "canal": "CASH&CARRY",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 15246000.0,
+   "fechaVenta": "2026-09-29",
+   "horaVenta": "21:02",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-29",
    "sellerId": "12",
    "vendedor": "Agustin Pogorzelski",
    "clientId": "791",
@@ -11918,7 +11937,7 @@
   "vendio": 194,
   "paso_sin_vender": 236,
   "sin_visita": 27,
-  "vendio_sin_pasar": 142
+  "vendio_sin_pasar": 143
  },
  "bySeller": [
   {
@@ -12136,6 +12155,26 @@
    "minutosPromedio": 0,
    "pedidos": 2,
    "monto": 0.0,
+   "pasoSinVender": 0,
+   "km": 0.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
+   "sellerId": "1176",
+   "vendedor": "Vendedor",
+   "inicioJornada": null,
+   "finJornada": null,
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": null,
+   "ultima": null,
+   "visitas": 0,
+   "minutosTotal": 0.0,
+   "minutosPromedio": 0,
+   "pedidos": 1,
+   "monto": 15246000.0,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -14619,6 +14658,15 @@
    "pct": null
   },
   {
+   "sellerId": "1176",
+   "vendedor": "Vendedor",
+   "ruta": 0,
+   "visitadosDeRuta": 0,
+   "pendientes": 0,
+   "fueraDeRuta": 0,
+   "pct": null
+  },
+  {
    "sellerId": "20",
    "vendedor": "Deposito",
    "ruta": 0,
@@ -14792,6 +14840,7 @@
     "taxonomia": "Almacen/Despensa_D"
    }
   ],
+  "1176": [],
   "12": [
    {
     "clientId": "1174",
@@ -16131,7 +16180,7 @@
  "totales": {
   "visitas": 430,
   "minutos": 2070.3,
-  "pedidos": 483,
-  "monto": 44717412.76
+  "pedidos": 484,
+  "monto": 59963412.76
  }
 }

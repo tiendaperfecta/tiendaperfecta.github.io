@@ -1,9 +1,15 @@
 {
  "date": "2026-09-29",
- "totalNet": 36697971.52,
- "totalGross": 44404545.53,
- "orders": 479,
+ "totalNet": 49297971.52,
+ "totalGross": 59650545.53,
+ "orders": 480,
  "bySeller": [
+  {
+   "sellerId": "1176",
+   "name": "Vendedor",
+   "orders": 1,
+   "total": 15246000.0
+  },
   {
    "sellerId": "2",
    "name": "Julian Nuñez",
@@ -96,6 +102,11 @@
    "total": 18321223.87
   },
   {
+   "channel": "s/canal",
+   "orders": 31,
+   "total": 15314158.01
+  },
+  {
    "channel": "TRADITIONAL TRADE_C",
    "orders": 152,
    "total": 11453515.67
@@ -156,17 +167,18 @@
    "total": 80571.33
   },
   {
-   "channel": "s/canal",
-   "orders": 30,
-   "total": 68158.01
-  },
-  {
    "channel": "PROXIMITY_D",
    "orders": 1,
    "total": 11285.72
   }
  ],
  "topClients": [
+  {
+   "clientId": "3472",
+   "name": "",
+   "orders": 1,
+   "total": 15246000.0
+  },
   {
    "clientId": "2616",
    "name": "PABLO ARIEL MARTINEZ (Autoservicio Tradicional_C)",
@@ -280,12 +292,6 @@
    "name": "Pleiler Ramona Francisca (Kiosco/Maxikiosco_B)",
    "orders": 2,
    "total": 381383.58
-  },
-  {
-   "clientId": "2163",
-   "name": "NI ZHENGWANG (Autoservicio Tradicional_B)",
-   "orders": 3,
-   "total": 367441.79
   }
  ]
 }
