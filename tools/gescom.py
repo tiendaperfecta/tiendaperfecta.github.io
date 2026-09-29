@@ -45,7 +45,17 @@ def _token(sesion):
               "username": os.environ["GESCOM_USERNAME"],
               "password": os.environ["GESCOM_PASSWORD"]},
         timeout=40)
-    r.raise_for_status()
+    if r.status_code != 200:
+        # Keycloak explica el rechazo en error/error_description (no incluyen la
+        # clave): distingue cliente invalido, credenciales invalidas o cuenta
+        # deshabilitada, que un 401 pelado no dice.
+        try:
+            det = r.json()
+            motivo = "%s: %s" % (det.get("error"), det.get("error_description"))
+        except ValueError:
+            motivo = r.text[:200]
+        raise requests.HTTPError("GesCom rechazo el login (%s) %s"
+                                 % (r.status_code, motivo), response=r)
     return r.json()["access_token"]
 
 
