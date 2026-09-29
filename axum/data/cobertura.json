@@ -8,7 +8,7 @@
    "ruta": 28,
    "visitadosDeRuta": 26,
    "pendientes": 2,
-   "fueraDeRuta": 6,
+   "fueraDeRuta": 15,
    "pct": 92.9
   },
   {
@@ -17,7 +17,7 @@
    "ruta": 36,
    "visitadosDeRuta": 33,
    "pendientes": 3,
-   "fueraDeRuta": 6,
+   "fueraDeRuta": 18,
    "pct": 91.7
   },
   {
@@ -28,6 +28,15 @@
    "pendientes": 7,
    "fueraDeRuta": 9,
    "pct": 82.9
+  },
+  {
+   "sellerId": "2",
+   "vendedor": "Julian Nuñez",
+   "ruta": 40,
+   "visitadosDeRuta": 32,
+   "pendientes": 8,
+   "fueraDeRuta": 7,
+   "pct": 80.0
   },
   {
    "sellerId": "7",
@@ -48,13 +57,22 @@
    "pct": 75.8
   },
   {
-   "sellerId": "2",
-   "vendedor": "Julian Nuñez",
-   "ruta": 40,
-   "visitadosDeRuta": 30,
-   "pendientes": 10,
-   "fueraDeRuta": 7,
-   "pct": 75.0
+   "sellerId": "5",
+   "vendedor": "Nicolas Martinez",
+   "ruta": 39,
+   "visitadosDeRuta": 28,
+   "pendientes": 11,
+   "fueraDeRuta": 2,
+   "pct": 71.8
+  },
+  {
+   "sellerId": "10",
+   "vendedor": "Matias Parada",
+   "ruta": 41,
+   "visitadosDeRuta": 29,
+   "pendientes": 12,
+   "fueraDeRuta": 19,
+   "pct": 70.7
   },
   {
    "sellerId": "3",
@@ -62,35 +80,17 @@
    "ruta": 42,
    "visitadosDeRuta": 29,
    "pendientes": 13,
-   "fueraDeRuta": 13,
+   "fueraDeRuta": 14,
    "pct": 69.0
-  },
-  {
-   "sellerId": "5",
-   "vendedor": "Nicolas Martinez",
-   "ruta": 39,
-   "visitadosDeRuta": 24,
-   "pendientes": 15,
-   "fueraDeRuta": 2,
-   "pct": 61.5
-  },
-  {
-   "sellerId": "10",
-   "vendedor": "Matias Parada",
-   "ruta": 41,
-   "visitadosDeRuta": 25,
-   "pendientes": 16,
-   "fueraDeRuta": 18,
-   "pct": 61.0
   },
   {
    "sellerId": "4",
    "vendedor": "Lucas Giayetto",
    "ruta": 44,
-   "visitadosDeRuta": 20,
-   "pendientes": 24,
+   "visitadosDeRuta": 22,
+   "pendientes": 22,
    "fueraDeRuta": 0,
-   "pct": 45.5
+   "pct": 50.0
   },
   {
    "sellerId": "1020",
@@ -230,22 +230,10 @@
     "taxonomia": "Almacen/Despensa_A"
    },
    {
-    "clientId": "3096",
-    "nombre": "MAILEN NATALY LEIS",
-    "localidad": "SANTA CLARA DEL MAR",
-    "taxonomia": "Almacen/Despensa_A"
-   },
-   {
     "clientId": "3167",
     "nombre": "JOSE ARNALDO MEDINA",
     "localidad": "CAMET",
     "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
-    "clientId": "607",
-    "nombre": "ARES MARTIN MATIAS",
-    "localidad": "SANTA CLARA DEL MAR",
-    "taxonomia": "Almacen/Despensa_C"
    },
    {
     "clientId": "632",
@@ -258,18 +246,6 @@
     "nombre": "MANNINI VIVIANA MARISA",
     "localidad": "Mar del Plata",
     "taxonomia": "Almacen/Despensa_D"
-   },
-   {
-    "clientId": "674",
-    "nombre": "LAS PALMERAS",
-    "localidad": "SANTA CLARA DEL MAR",
-    "taxonomia": "Autoservicio Tradicional_D"
-   },
-   {
-    "clientId": "80",
-    "nombre": "CR 88 Santa Clara",
-    "localidad": "SANTA CLARA DEL MAR",
-    "taxonomia": "Estacion de Servicio - NO OFICIALES_C"
    },
    {
     "clientId": "829",
@@ -357,22 +333,10 @@
     "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
-    "clientId": "1366",
-    "nombre": "CORREA DIEGO RAFAEL",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_C"
-   },
-   {
     "clientId": "1371",
     "nombre": "GRUPO ADAPTAR S.A",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Kiosco/Maxikiosco_A"
-   },
-   {
-    "clientId": "1372",
-    "nombre": "EL CALAMAR LOCO S.A",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_C"
    },
    {
     "clientId": "1927",
@@ -884,12 +848,6 @@
     "taxonomia": "Fiambreria_D"
    },
    {
-    "clientId": "2292",
-    "nombre": "Burcaizea Yamila Micaela",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_D"
-   },
-   {
     "clientId": "2304",
     "nombre": "RUBIO GONZALO JAVIER",
     "localidad": "MAR DEL PLATA",
@@ -944,12 +902,6 @@
     "taxonomia": "Almacen/Despensa_D"
    },
    {
-    "clientId": "4514",
-    "nombre": "ROBERTO MARCIAL FERNANDEZ",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
     "clientId": "596",
     "nombre": "HE LIQUIN",
     "localidad": "MAR DEL PLATA",
@@ -994,12 +946,6 @@
     "taxonomia": "Canchas de Futbol_B"
    },
    {
-    "clientId": "161",
-    "nombre": "ANDREA INES ALDERETE",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_C"
-   },
-   {
     "clientId": "1702",
     "nombre": "CECILIA ISSA",
     "localidad": "MAR DEL PLATA",
@@ -1016,12 +962,6 @@
     "nombre": "NANCY DORA IGLESIAS",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Kiosco/Maxikiosco_C"
-   },
-   {
-    "clientId": "2840",
-    "nombre": "Matías Ruiz",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_A"
    },
    {
     "clientId": "3083",
@@ -1058,18 +998,6 @@
     "nombre": "AROHA ARGENTINA S.A.",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Mayoristas_D"
-   },
-   {
-    "clientId": "475",
-    "nombre": "LUCIA ANGELA DE GENNARO",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_C"
-   },
-   {
-    "clientId": "476",
-    "nombre": "GABRIELA LORENA PAREDES",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_A"
    }
   ],
   "6": [
