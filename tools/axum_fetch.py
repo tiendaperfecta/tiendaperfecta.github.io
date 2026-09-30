@@ -535,4 +535,9 @@ def build():
 
 
 if __name__ == "__main__":
+    # Desde el 30/9/2026 lo de Gescom (clientes, ramos, repartos, ventas) sale de la base
+    # propia, no de Gescom. Axum y el GPS siguen igual.
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import gescom
+    gescom.usar_base()
     build()

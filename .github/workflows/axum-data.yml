@@ -35,10 +35,8 @@ jobs:
           GPS_PASS: ${{ secrets.GPS_PASS }}
           # Maestro de clientes, rutas y zonas. Si faltan, el script sigue con
           # los archivos ya publicados en vez de fallar.
-          GESCOM_REALM: ${{ secrets.GESCOM_REALM }}
-          GESCOM_CLIENT_ID: ${{ secrets.GESCOM_CLIENT_ID }}
-          GESCOM_USERNAME: ${{ secrets.GESCOM_USERNAME }}
-          GESCOM_PASSWORD: ${{ secrets.GESCOM_PASSWORD }}
+          # Lee de la base propia (worker base), no de Gescom, desde el 30/9/2026
+          BASE_CLAVE: ${{ secrets.BASE_CLAVE }}
           # Aviso de llegadas tarde: un solo mail por dia. Sin MAIL_USER/PASS
           # no manda nada, solo deja el aviso armado en axum/data/alerta.json.
           MAIL_USER: ${{ secrets.MAIL_USER }}
