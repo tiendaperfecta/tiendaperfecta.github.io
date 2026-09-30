@@ -24,4 +24,4 @@ jobs:
           AXUM_ORDERS_PASS: ${{ secrets.AXUM_ORDERS_PASS }}
           GPS_USER: ${{ secrets.GPS_USER }}
           GPS_PASS: ${{ secrets.GPS_PASS }}
-        run: python tools/axum_probe_cobros.py
+        run: python tools/axum_probe_cobros.py && python tools/axum_probe_ldr.py
