@@ -6,6 +6,22 @@ pehuamar90_no_comprado.json, invendible_detalle.json, rechazos_detalle.json,
 cobertura_marca_vendedor.json, ccc_segmento.json, subproductos_vendedor.json,
 subproductos_no_comprado.json, venta_vendedor.json y avance_kg_vendedor.json.
 
+DESDE EL 30/9/2026 NO USA report/render (el usuario de API nuevo recibe 403). Los
+tres reportes se reemplazaron:
+  - "Detallado de ventas extendido" -> renglones Pepsico de la BASE PROPIA
+    (https://base.tienda-perfecta.workers.dev/api/lineas-proveedor, secreto
+    BASE_CLAVE), por fecha de pedido (= fecha de carga). Proveedor, marca y peso
+    salen del catalogo de articulos de la base; la marca, de get-marcas (oficial).
+  - "Avance de Ventas Pepsico" (kg) -> calculado con los mismos renglones por fecha
+    de ENTREGA, solo ventas, grupos *P01/*P02 por las etiquetas del articulo y
+    kg = cantidad x factorPeso / 1000. Comparado contra el reporte del 28/9/2026:
+    ~2% por debajo (el reporte cuenta pedidos todavia sin facturar, que
+    ventas/api/v2/get no devuelve). Los OBJETIVOS por vendedor no tienen endpoint:
+    salen de pepsico/objetivos_kg.json (los de septiembre, congelados).
+    acumuladoMN = kg del canal "MiNegocio".
+  - Censo "Tienda Perfecta" -> endpoint oficial pepsico/get-resultado-tienda-perfecta.
+
+(Lo que sigue describe como era antes, con los reportes.)
 Avance kg: viene directo del reporte "Avance de Ventas Pepsico" de Gescom (el
 mismo motor generico de reportes que usa la UI, /data/cmd/report/render),
 Objetivo/Acumulado/Avance%/Promedio/Media Necesaria/Tendencia/venta real de
@@ -32,6 +48,7 @@ import csv
 import datetime as dt
 import io
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -149,6 +166,8 @@ def num(v):
 def num_ar(s):
     """Numero con formato AR del reporte CSV: '.' separador de miles, ','
     decimal (ej '12.562,00')."""
+    if isinstance(s, (int, float)):
+        return float(s)
     s = (s or "").strip()
     if not s:
         return 0.0
@@ -231,6 +250,126 @@ class Api:
         return list(csv.DictReader(io.StringIO(texto), delimiter=";"))
 
 
+# --- BASE PROPIA DE GESCOM -----------------------------------------------------------
+BASE = "https://base.tienda-perfecta.workers.dev"
+PROVEEDOR_PEPSICO = "100"
+TIPO_POR_CODIGO = {"VEN": None, "DEV-RE": None, "DEV-CA": None}   # se completa abajo
+OBJETIVOS_KG = DIR / "objetivos_kg.json"
+
+
+def hay_base():
+    return bool(os.environ.get("BASE_CLAVE", "").strip())
+
+
+def base_get(ruta, **params):
+    for intento in range(3):
+        try:
+            r = requests.get(BASE + ruta, params=params, timeout=240,
+                             headers={"x-clave": os.environ["BASE_CLAVE"].strip()})
+            if r.status_code < 500:
+                break
+        except requests.ConnectionError:
+            if intento == 2:
+                raise
+        time.sleep(10 * (intento + 1))
+    r.raise_for_status()
+    return r.json()
+
+
+_catalogo = {}
+
+
+def articulos_pepsico():
+    """(codigo, empresa) -> articulo, con proveedor Pepsico. La empresa 99 no tiene
+    articulos propios: usa los de la 1 (y si no, los de la 2)."""
+    if "arts" not in _catalogo:
+        arts = {}
+        for a in base_get("/api/catalogo/articulos"):
+            if cod(a.get("codigoProveedor")) != PROVEEDOR_PEPSICO:
+                continue
+            arts[(cod(a.get("codigo")), cod(a.get("codigoEmpresa")))] = a
+            arts.setdefault((cod(a.get("codigo")), ""), a)
+        _catalogo["arts"] = arts
+    return _catalogo["arts"]
+
+
+def articulo_de(item, emp):
+    arts = articulos_pepsico()
+    for e in ([emp] if emp not in ("99", "") else []) + ["1", "2", ""]:
+        a = arts.get((item, e))
+        if a:
+            return a
+    return None
+
+
+def nombre_proveedor_pepsico():
+    if "prov" not in _catalogo:
+        prov = {cod(p.get("codigo")): (p.get("nombre") or "").strip() for p in base_get("/api/catalogo/proveedores")}
+        _catalogo["prov"] = prov.get(PROVEEDOR_PEPSICO) or "PEPSICO"
+    return _catalogo["prov"]
+
+
+def lineas_pepsico(desde, hasta, por):
+    """Renglones de articulos Pepsico de la base, en tramos de 31 dias."""
+    filas, d = [], desde
+    while d <= hasta:
+        h = min(hasta, d + dt.timedelta(days=30))
+        filas += base_get("/api/lineas-proveedor", proveedor=PROVEEDOR_PEPSICO,
+                          desde=d.isoformat(), hasta=h.isoformat(), por=por)
+        d = h + dt.timedelta(days=1)
+    return filas
+
+
+def filas_desde_base(api, desde, hasta):
+    """Reemplaza al CSV "Detallado de ventas extendido": mismas claves que usaba el
+    loop (Proveedor, TipoDeVenta, Cliente, Articulo, CantBase, CodVendedor, Vendedor,
+    Marca, ImporteNetoItem, MotivoDevolucion, FechaComprobante). Las devoluciones
+    van en negativo, como venian en el reporte."""
+    tipos = {"VEN": TIPO_VENTA, "DEV-RE": TIPO_RECHAZO, "DEV-CA": TIPO_CANJE}
+    marcas = {cod(m.get("codigo")): (m.get("descripcion") or "").strip()
+              for m in api.get("/data/cmd/inventario/api/v1/get-marcas")}
+    vend = {cod(v.get("codigo")): (v.get("nombre") or "").strip() for v in base_get("/api/catalogo/vendedores")}
+    prov = nombre_proveedor_pepsico()
+    filas, sin_articulo = [], 0
+    for l in lineas_pepsico(desde, hasta, "pedido"):
+        tipo = tipos.get(l.get("tipo"))
+        if not tipo:
+            continue
+        a = articulo_de(cod(l.get("item")), cod(l.get("emp")))
+        if not a:
+            sin_articulo += 1
+            continue
+        signo = 1 if tipo == TIPO_VENTA else -1
+        filas.append({
+            "Proveedor": prov, "TipoDeVenta": tipo, "Cliente": cod(l.get("cli")),
+            "Articulo": (a.get("descripcion") or "").strip(),
+            "CantBase": signo * abs(num(l.get("cant"))),
+            "CodVendedor": cod(l.get("ven")), "Vendedor": vend.get(cod(l.get("ven")), ""),
+            "Marca": marcas.get(cod(a.get("codigoMarca")), ""),
+            "ImporteNetoItem": signo * abs(num(l.get("neto"))),
+            "MotivoDevolucion": (l.get("motivo") or "").strip(),
+            "FechaComprobante": (l.get("fcomp") or "")[:10],
+        })
+    if sin_articulo:
+        print("AVISO: %d renglones Pepsico sin articulo en el catalogo de la base" % sin_articulo)
+    return filas
+
+
+def objetivos_kg(anio, mes):
+    """{nombre vendedor: (p1o, p2o)} del mes, o los del ultimo mes cargado."""
+    try:
+        todos = json.loads(OBJETIVOS_KG.read_text(encoding="utf-8"))
+    except Exception:
+        return {}, None
+    clave = "%04d-%02d" % (anio, mes)
+    if clave not in todos:
+        previos = sorted(k for k in todos if k < clave) or sorted(todos)
+        if not previos:
+            return {}, None
+        clave = previos[-1]
+    return {n: (num(v.get("p1o")), num(v.get("p2o"))) for n, v in todos[clave].items()}, clave
+
+
 def dias_habiles_mes(anio, mes, hasta=None):
     """Cuenta dias lunes a sabado (domingo no es habil) del mes. Si `hasta`
     se pasa, cuenta solo hasta esa fecha inclusive (dias trabajados)."""
@@ -245,7 +384,82 @@ def dias_habiles_mes(anio, mes, hasta=None):
 
 
 def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
-    """Trae el Avance de Ventas Pepsico (kg) directo del reporte de Gescom, ya
+    """Avance de kg calculado desde la base (el reporte de Gescom da 403 desde el 30/9).
+    Mismas formulas y mismo JSON de salida que armaba con el reporte."""
+    if not hay_base():
+        raise RuntimeError("falta el secreto BASE_CLAVE para leer la base")
+    ratio = dias_trabajados / dias_habiles if dias_habiles else 0
+    objetivos, mes_obj = objetivos_kg(hoy.year, hoy.month)
+    vend = {cod(v.get("codigo")): (v.get("nombre") or "").strip() for v in base_get("/api/catalogo/vendedores")}
+    acc = {}
+    for l in lineas_pepsico(hoy.replace(day=1), hoy, "entrega"):
+        if l.get("tipo") != "VEN":
+            continue
+        codven = cod(l.get("ven"))
+        if codven not in VENDEDORES_PEPSICO:
+            continue
+        a = articulo_de(cod(l.get("item")), cod(l.get("emp")))
+        if not a:
+            continue
+        tags = a.get("tags") or []
+        g = "p1" if "*P01" in tags else "p2" if "*P02" in tags else None
+        if not g:
+            continue
+        kg = num(l.get("cant")) * num(a.get("factorPeso")) / 1000
+        x = acc.setdefault(codven, {"p1a": 0.0, "p2a": 0.0, "mn": 0.0, "dias": {}})
+        x[g + "a"] += kg
+        if l.get("canal") == "MiNegocio":
+            x["mn"] += kg
+    # Ultima / penultima visita / real: kg (*P01 + *P02) cargados el mismo dia de la semana
+    # hace 7 y 14 dias, y hoy, por fecha de PEDIDO (asi coincide con el reporte de Gescom,
+    # comparado el 30/9/2026 contra el del 28/9: 99,95 vs 100,0; 178,72 vs 178,7).
+    for l in lineas_pepsico(hoy - dt.timedelta(days=14), hoy, "pedido"):
+        if l.get("tipo") != "VEN" or cod(l.get("ven")) not in VENDEDORES_PEPSICO:
+            continue
+        a = articulo_de(cod(l.get("item")), cod(l.get("emp")))
+        tags = (a or {}).get("tags") or []
+        if not a or not ("*P01" in tags or "*P02" in tags):
+            continue
+        x = acc.setdefault(cod(l.get("ven")), {"p1a": 0.0, "p2a": 0.0, "mn": 0.0, "dias": {}})
+        fp = (l.get("fp") or "")[:10]
+        x["dias"][fp] = x["dias"].get(fp, 0.0) + num(l.get("cant")) * num(a.get("factorPeso")) / 1000
+    hoy_iso = hoy.isoformat()
+    hace7, hace14 = (hoy - dt.timedelta(days=7)).isoformat(), (hoy - dt.timedelta(days=14)).isoformat()
+    kg_vendedores = []
+    for codven in sorted(set(acc) | {c for c in VENDEDORES_PEPSICO if vend.get(c) in objetivos}, key=lambda c: int(c)):
+        x = acc.get(codven, {"p1a": 0.0, "p2a": 0.0, "mn": 0.0, "dias": {}})
+        nombre = vend.get(codven, codven)
+        p1o, p2o = objetivos.get(nombre, (0.0, 0.0))
+        p1a, p2a = x["p1a"], x["p2a"]
+        to, ta = round(p1o + p2o, 2), round(p1a + p2a, 2)
+        kg_vendedores.append({
+            "n": nombre,
+            "p1o": round(p1o, 2), "p1a": round(p1a, 2),
+            "p1p": round(p1a / (p1o * ratio) * 100, 2) if p1o and ratio else 0.0,
+            "p2o": round(p2o, 2), "p2a": round(p2a, 2),
+            "p2p": round(p2a / (p2o * ratio) * 100, 2) if p2o and ratio else 0.0,
+            "to": to, "ta": ta,
+            "tp": round(ta / (to * ratio) * 100, 2) if to and ratio else 0.0,
+            "promedio": round(ta / dias_trabajados, 2) if dias_trabajados else 0.0,
+            "medianec": round((to - ta) / (dias_habiles - dias_trabajados), 2) if dias_habiles > dias_trabajados else 0.0,
+            "tendencia": round(ta / dias_trabajados * dias_habiles, 2) if dias_trabajados else 0.0,
+            "real": round(x["dias"].get(hoy_iso, 0.0), 2),
+            "penult": round(x["dias"].get(hace14, 0.0), 2),
+            "ultima": round(x["dias"].get(hace7, 0.0), 2),
+            "acumuladoMN": round(x["mn"], 2),
+        })
+    print("Avance kg desde la base: objetivos de %s%s" % (mes_obj, "" if mes_obj == hoy.strftime("%Y-%m") else " (congelados)"))
+    return {
+        "objetivoPG": round(sum(v["p1o"] for v in kg_vendedores), 2),
+        "objetivoSB": round(sum(v["p2o"] for v in kg_vendedores), 2),
+        "diasHabiles": dias_habiles, "diasTrabajados": dias_trabajados,
+        "vendedores": kg_vendedores,
+        "fuente": "base propia (renglones por fecha de entrega); objetivos de %s" % mes_obj,
+    }
+
+
+def traer_avance_kg_reporte(api, hoy, dias_habiles, dias_trabajados):
+    """(ANTES, sin uso desde el 30/9/2026: report/render da 403.) Trae el Avance de Ventas Pepsico (kg) directo del reporte de Gescom, ya
     prorrateado y clasificado por el propio sistema (Platino+Gold = *P01,
     Silver&Bronze = *P02). Reemplaza la aproximacion anterior (objetivo fijo
     prorrateado por universo de clientes + clasificacion de producto a mano)
@@ -396,13 +610,38 @@ def es_si(v):
     return (v or "").strip().lower() == "si"
 
 
-def traer_tienda_perfecta(api, nombre_por_codven):
-    data = api.render_report(GUID_TIENDA_PERFECTA, {"sedeId": 0, "soloTP": 0})
-    tabla = next((d["table"] for d in data.get("datasources") or [] if d["name"] == "Principal"), None)
-    if not tabla or len(tabla) < 2:
+# Del endpoint oficial: TiendaPerfecta = portafolio >= 80%; validado por el supervisor
+# (SupOk) = perfectStoreType en TP_TIPOS_VALIDADO. Calibrar contra el ultimo censo del
+# reporte (28/9/2026: universo 2262, TP 1131, a validar 35): el log de cada corrida
+# muestra la cantidad por tipo.
+TP_PORC_MINIMO = 80
+TP_TIPOS_VALIDADO = {2}
+
+
+def traer_tienda_perfecta(api, nombre_por_codven, clientes):
+    crudos = api.get("/data/cmd/ventas/api/v1/pepsico/get-resultado-tienda-perfecta")
+    if not crudos:
         raise RuntimeError("El censo Tienda Perfecta vino vacio.")
-    header = tabla[0]
-    filas = [dict(zip(header, fila)) for fila in tabla[1:]]
+    vistos, filas, por_tipo = set(), [], {}
+    for r in crudos:
+        cc = cod(r.get("codigoCliente"))
+        if cc in vistos:          # un cliente puede venir repetido
+            continue
+        vistos.add(cc)
+        c = clientes.get(cc, {})
+        porc = int(num(r.get("perfectStorePortafolioPorc")))
+        tipo = int(num(r.get("perfectStoreType")))
+        es_tp = porc >= TP_PORC_MINIMO
+        if es_tp:
+            por_tipo[tipo] = por_tipo.get(tipo, 0) + 1
+        filas.append({
+            "SubCanal": (r.get("subRamo") or "").strip(),
+            "Segmento": (c.get("seg") or cod(r.get("perfectStoreState"))).upper(),
+            "TiendaPerfecta": "Si" if es_tp else "No",
+            "SupOk": "Si" if tipo in TP_TIPOS_VALIDADO else "No",
+            "Vendedor_ID": c.get("codven") or "",
+        })
+    print("Censo TP (oficial): %d clientes; TP por perfectStoreType: %s" % (len(filas), por_tipo))
     universo = [f for f in filas if (f.get("SubCanal") or "").strip() in SUBCANALES_TP]
 
     por_seg = {s: {"universo": 0, "tp": 0, "validar": 0} for s in SEGMENTOS}
@@ -500,7 +739,7 @@ def main():
     nombre_por_codven = {cod(x.get("codigo")): (x.get("nombre") or "").strip() for x in vendedores_raw}
 
     try:
-        tienda_perfecta = traer_tienda_perfecta(api, nombre_por_codven)
+        tienda_perfecta = traer_tienda_perfecta(api, nombre_por_codven, clientes)
         escribir("tienda_perfecta.json", tienda_perfecta)
         print("Tienda Perfecta: universo %d | TP %d | no TP %d | a validar %d" %
               (tienda_perfecta["universoTotal"], tienda_perfecta["tpTotal"],
@@ -508,18 +747,10 @@ def main():
     except Exception as e:
         print("ERROR trayendo censo Tienda Perfecta (se deja tienda_perfecta.json anterior sin tocar):", e)
 
-    fin_mes_excl = hoy + dt.timedelta(days=1)
-    filas = api.render_csv(GUID_DETALLE_VENTAS, {
-        "empId": 0,
-        "fechaIni": inicio_mes.isoformat() + "T03:00:00.000Z",
-        "fechaFin": fin_mes_excl.isoformat() + "T03:00:00.000Z",
-        "facturadaId": 2,
-        "supervisorId": 0,
-        "sedeId": 0,
-        "tipoVentaId": 2,
-        "ventaEmpl": 0,
-        "cliActivos": 0,
-    })
+    if not hay_base():
+        print("Falta el secreto BASE_CLAVE: no se puede leer la base; se dejan los JSON anteriores sin tocar.")
+        return 0
+    filas = filas_desde_base(api, inicio_mes, hoy)
     print("Filas del detalle de ventas (mes en curso, todos los proveedores):", len(filas))
 
     compra_cliente = {}
@@ -791,18 +1022,10 @@ def cmd_backfill(anio, mes):
     vendedores_raw = api.get("/data/cmd/ventas/api/v1/get-vendedores")
     nombre_por_codven = {cod(x.get("codigo")): (x.get("nombre") or "").strip() for x in vendedores_raw}
 
-    fin_mes_excl = hoy + dt.timedelta(days=1)
-    filas = api.render_csv(GUID_DETALLE_VENTAS, {
-        "empId": 0,
-        "fechaIni": inicio_mes.isoformat() + "T03:00:00.000Z",
-        "fechaFin": fin_mes_excl.isoformat() + "T03:00:00.000Z",
-        "facturadaId": 2,
-        "supervisorId": 0,
-        "sedeId": 0,
-        "tipoVentaId": 2,
-        "ventaEmpl": 0,
-        "cliActivos": 0,
-    })
+    if not hay_base():
+        print("Falta el secreto BASE_CLAVE: no se puede leer la base; se dejan los JSON anteriores sin tocar.")
+        return 0
+    filas = filas_desde_base(api, inicio_mes, hoy)
     print("Filas del detalle de ventas (%s, todos los proveedores): %d" % (MES_ARCHIVO, len(filas)))
 
     compra_cliente = {}
