@@ -1,0 +1,27 @@
+name: Axum probe cobros (una vez)
+
+# Prueba de solo lectura, a mano: ¿Axum tiene los cobros de los choferes? Imprime solo
+# estructura (campos y cantidades), nunca datos: el repo es público. Borrar después de usar.
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  probar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - name: Probar
+        env:
+          AXUM_ORDERS_USER: ${{ secrets.AXUM_ORDERS_USER }}
+          AXUM_ORDERS_PASS: ${{ secrets.AXUM_ORDERS_PASS }}
+          GPS_USER: ${{ secrets.GPS_USER }}
+          GPS_PASS: ${{ secrets.GPS_PASS }}
+        run: python tools/axum_probe_cobros.py
