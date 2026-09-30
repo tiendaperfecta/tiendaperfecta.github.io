@@ -20,10 +20,10 @@
    "visitas": 69,
    "minutosTotal": 260.7,
    "minutosPromedio": 3.8,
-   "pedidos": 31,
-   "monto": 3167625.55,
+   "pedidos": 32,
+   "monto": 3295196.95,
    "pasoSinVender": 53,
-   "km": 53.0,
+   "km": 56.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -43,7 +43,7 @@
    "pedidos": 18,
    "monto": 1762368.31,
    "pasoSinVender": 42,
-   "km": 35.0,
+   "km": 42.0,
    "llegoTarde": true,
    "salioTemprano": true
   },
@@ -63,7 +63,7 @@
    "pedidos": 32,
    "monto": 1977518.6,
    "pasoSinVender": 30,
-   "km": 64.0,
+   "km": 68.0,
    "llegoTarde": true,
    "salioTemprano": false
   },
@@ -83,7 +83,7 @@
    "pedidos": 35,
    "monto": 3365676.73,
    "pasoSinVender": 22,
-   "km": 18.0,
+   "km": 25.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -128,6 +128,26 @@
    "salioTemprano": false
   },
   {
+   "sellerId": "7",
+   "vendedor": "Ramiro Rando",
+   "inicioJornada": "08:39",
+   "finJornada": "16:57",
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": "08:39",
+   "ultima": "16:57",
+   "visitas": 38,
+   "minutosTotal": 222.0,
+   "minutosPromedio": 5.8,
+   "pedidos": 29,
+   "monto": 4249786.97,
+   "pasoSinVender": 21,
+   "km": 39.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
    "sellerId": "3",
    "vendedor": "Ezequiel Hack",
    "inicioJornada": "09:11",
@@ -138,34 +158,14 @@
    "primera": "09:11",
    "ultima": "15:22",
    "visitas": 35,
-   "minutosTotal": 195.2,
-   "minutosPromedio": 5.6,
+   "minutosTotal": 287.1,
+   "minutosPromedio": 8.2,
    "pedidos": 30,
    "monto": 2740234.83,
    "pasoSinVender": 17,
-   "km": 28.0,
+   "km": 34.0,
    "llegoTarde": true,
    "salioTemprano": false
-  },
-  {
-   "sellerId": "7",
-   "vendedor": "Ramiro Rando",
-   "inicioJornada": "08:39",
-   "finJornada": "13:27",
-   "entradaZona": null,
-   "salidaZona": null,
-   "zonaConfiable": false,
-   "primera": "08:39",
-   "ultima": "13:27",
-   "visitas": 35,
-   "minutosTotal": 222.0,
-   "minutosPromedio": 6.3,
-   "pedidos": 29,
-   "monto": 4249786.97,
-   "pasoSinVender": 18,
-   "km": 36.0,
-   "llegoTarde": false,
-   "salioTemprano": true
   },
   {
    "sellerId": "5",
@@ -198,10 +198,10 @@
    "primera": "08:57",
    "ultima": "12:57",
    "visitas": 31,
-   "minutosTotal": 203.2,
+   "minutosTotal": 204.9,
    "minutosPromedio": 6.6,
-   "pedidos": 28,
-   "monto": 2270914.83,
+   "pedidos": 29,
+   "monto": 2509343.3,
    "pasoSinVender": 14,
    "km": 11.0,
    "llegoTarde": false,
@@ -686,6 +686,21 @@
     "hora": "13:27",
     "clientId": "1856",
     "nombre": "fabiquiel srl"
+   },
+   {
+    "hora": "16:55",
+    "clientId": "4867",
+    "nombre": "MARIANA OLGA DOMINGUEZ"
+   },
+   {
+    "hora": "16:55",
+    "clientId": "63",
+    "nombre": "CLOTILDE MARIA VANUFFELEN"
+   },
+   {
+    "hora": "16:57",
+    "clientId": "3216",
+    "nombre": "FRYDMAN SILVANA CLAUDIA"
    }
   ],
   "31": [
