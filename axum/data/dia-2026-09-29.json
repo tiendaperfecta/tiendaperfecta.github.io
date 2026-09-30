@@ -7195,11 +7195,11 @@
    "minutos": 12.7,
    "visito": true,
    "hora": "10:38",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 30000.06,
+   "fechaVenta": "2026-09-29",
+   "horaVenta": "20:01",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-09-29",
@@ -7214,11 +7214,11 @@
    "minutos": 9.4,
    "visito": true,
    "hora": "13:56",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 30000.06,
+   "fechaVenta": "2026-09-29",
+   "horaVenta": "19:58",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-09-29",
@@ -7347,11 +7347,11 @@
    "minutos": 4.3,
    "visito": true,
    "hora": "12:25",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 30000.06,
+   "fechaVenta": "2026-09-29",
+   "horaVenta": "20:00",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-09-29",
@@ -7423,11 +7423,11 @@
    "minutos": 1.4,
    "visito": true,
    "hora": "12:38",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 30000.06,
+   "fechaVenta": "2026-09-29",
+   "horaVenta": "19:54",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-09-29",
@@ -7480,11 +7480,11 @@
    "minutos": 0.7,
    "visito": true,
    "hora": "15:13",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 30000.06,
+   "fechaVenta": "2026-09-29",
+   "horaVenta": "19:55",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-09-29",
@@ -7788,6 +7788,63 @@
    "monto": 48428.48,
    "fechaVenta": "2026-09-29",
    "horaVenta": "14:48",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-29",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "695",
+   "nombre": "REYES GUILLERMO PABLO Y STAMPELLA MARIA GUILLERMINA S. CAP I SECC IV",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 30000.06,
+   "fechaVenta": "2026-09-29",
+   "horaVenta": "19:57",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-29",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "1163",
+   "nombre": "LALLI GLADYS ESTER",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 30000.06,
+   "fechaVenta": "2026-09-29",
+   "horaVenta": "19:59",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-29",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "1237",
+   "nombre": "PARADISO MARIO HORACIO",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 30000.06,
+   "fechaVenta": "2026-09-29",
+   "horaVenta": "20:00",
    "estado": "vendio_sin_pasar"
   },
   {
@@ -11972,10 +12029,10 @@
   }
  ],
  "resumen": {
-  "vendio": 200,
-  "paso_sin_vender": 230,
+  "vendio": 205,
+  "paso_sin_vender": 225,
   "sin_visita": 27,
-  "vendio_sin_pasar": 145
+  "vendio_sin_pasar": 148
  },
  "bySeller": [
   {
@@ -12171,9 +12228,9 @@
    "visitas": 23,
    "minutosTotal": 202.9,
    "minutosPromedio": 8.8,
-   "pedidos": 23,
-   "monto": 2791030.23,
-   "pasoSinVender": 15,
+   "pedidos": 31,
+   "monto": 3031030.73,
+   "pasoSinVender": 10,
    "km": 30.0,
    "llegoTarde": true,
    "salioTemprano": false
@@ -16223,7 +16280,7 @@
  "totales": {
   "visitas": 430,
   "minutos": 2070.3,
-  "pedidos": 497,
-  "monto": 60287448.73
+  "pedidos": 505,
+  "monto": 60527449.23
  }
 }
