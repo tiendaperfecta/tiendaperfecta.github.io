@@ -631,7 +631,11 @@ def traer_tienda_perfecta(api, nombre_por_codven, clientes):
         if cc in vistos:          # un cliente puede venir repetido
             continue
         vistos.add(cc)
-        c = clientes.get(cc, {})
+        c = clientes.get(cc)
+        # Como el reporte: solo clientes activos (en get-clientes) con ruta de un vendedor
+        # Pepsico (1-12). El endpoint trae ademas inactivos y de otros vendedores.
+        if not c or c.get("codven") not in VENDEDORES_PEPSICO:
+            continue
         tipo = int(num(r.get("perfectStoreType")))
         es_tp = tipo in TP_TIPOS_TP
         por_tipo[tipo] = por_tipo.get(tipo, 0) + 1
