@@ -1,8 +1,8 @@
 {
  "date": "2026-09-30",
- "totalNet": 71389490.41,
- "totalGross": 86381283.41,
- "orders": 383,
+ "totalNet": 75548096.84,
+ "totalGross": 91413197.19,
+ "orders": 428,
  "bySeller": [
   {
    "sellerId": "1176",
@@ -13,8 +13,14 @@
   {
    "sellerId": "9",
    "name": "Ludmila Aylen Martinez",
-   "orders": 38,
-   "total": 6471376.15
+   "orders": 46,
+   "total": 7097074.4
+  },
+  {
+   "sellerId": "4",
+   "name": "Lucas Giayetto",
+   "orders": 34,
+   "total": 6115340.66
   },
   {
    "sellerId": "7",
@@ -29,34 +35,34 @@
    "total": 4221679.19
   },
   {
-   "sellerId": "4",
-   "name": "Lucas Giayetto",
-   "orders": 27,
-   "total": 3727772.95
+   "sellerId": "6",
+   "name": "Camila Martinez",
+   "orders": 42,
+   "total": 3332972.95
   },
   {
    "sellerId": "2",
    "name": "Julian Nuñez",
-   "orders": 33,
-   "total": 3162752.43
-  },
-  {
-   "sellerId": "6",
-   "name": "Camila Martinez",
-   "orders": 38,
-   "total": 3117687.79
-  },
-  {
-   "sellerId": "5",
-   "name": "Nicolas Martinez",
-   "orders": 31,
-   "total": 2836113.14
+   "orders": 34,
+   "total": 3231962.34
   },
   {
    "sellerId": "10",
    "name": "Matias Parada",
-   "orders": 22,
-   "total": 2323580.96
+   "orders": 30,
+   "total": 3100339.71
+  },
+  {
+   "sellerId": "5",
+   "name": "Nicolas Martinez",
+   "orders": 34,
+   "total": 3027076.87
+  },
+  {
+   "sellerId": "3",
+   "name": "Ezequiel Hack",
+   "orders": 29,
+   "total": 2670377.66
   },
   {
    "sellerId": "12",
@@ -65,16 +71,10 @@
    "total": 2226699.51
   },
   {
-   "sellerId": "3",
-   "name": "Ezequiel Hack",
-   "orders": 19,
-   "total": 2014009.87
-  },
-  {
    "sellerId": "1",
    "name": "Maria Noelia Madia",
-   "orders": 29,
-   "total": 1867456.13
+   "orders": 32,
+   "total": 1977518.6
   },
   {
    "sellerId": "11",
@@ -85,35 +85,35 @@
   {
    "sellerId": "20",
    "name": "Deposito",
-   "orders": 29,
+   "orders": 30,
    "total": 0.0
   }
  ],
  "byChannel": [
   {
    "channel": "s/canal",
-   "orders": 30,
+   "orders": 31,
    "total": 48400000.0
   },
   {
    "channel": "TRADITIONAL TRADE_A",
-   "orders": 74,
-   "total": 13036817.21
+   "orders": 82,
+   "total": 15650712.22
   },
   {
    "channel": "TRADITIONAL TRADE_C",
-   "orders": 104,
-   "total": 9836677.41
+   "orders": 116,
+   "total": 10829861.87
   },
   {
    "channel": "TRADITIONAL TRADE_D",
-   "orders": 74,
-   "total": 5849519.83
+   "orders": 93,
+   "total": 7044060.08
   },
   {
    "channel": "TRADITIONAL TRADE_B",
-   "orders": 64,
-   "total": 4869866.99
+   "orders": 65,
+   "total": 4940438.5
   },
   {
    "channel": "PROXIMITY_A",
@@ -132,8 +132,8 @@
   },
   {
    "channel": "AWAY FROM HOME_D",
-   "orders": 8,
-   "total": 424408.89
+   "orders": 9,
+   "total": 449542.79
   },
   {
    "channel": "Mayorista_A",
@@ -141,14 +141,14 @@
    "total": 331500.06
   },
   {
+   "channel": "PROXIMITY_D",
+   "orders": 5,
+   "total": 235578.52
+  },
+  {
    "channel": "AWAY FROM HOME_C",
    "orders": 4,
    "total": 205317.28
-  },
-  {
-   "channel": "PROXIMITY_D",
-   "orders": 3,
-   "total": 168275.71
   },
   {
    "channel": "PROXIMITY_B",
@@ -159,6 +159,11 @@
    "channel": "LIMPIEZA_B",
    "orders": 1,
    "total": 81568.96
+  },
+  {
+   "channel": "PROXIMITY_C",
+   "orders": 1,
+   "total": 67285.84
   },
   {
    "channel": "AWAY FROM HOME_A",
@@ -182,6 +187,12 @@
    "name": "",
    "orders": 1,
    "total": 48400000.0
+  },
+  {
+   "clientId": "3115",
+   "name": "SUPER ATS 2026 S.A. (Autoservicio Tradicional_A)",
+   "orders": 2,
+   "total": 1985495.64
   },
   {
    "clientId": "557",
@@ -290,12 +301,6 @@
    "name": "DIEGO MARTIN PETRANTONIO (Estacion de Servicio - NO OFICIALES_A)",
    "orders": 2,
    "total": 449975.47
-  },
-  {
-   "clientId": "958",
-   "name": "MENGIO S.A (Estacion de Servicio - NO OFICIALES_A)",
-   "orders": 2,
-   "total": 413882.06
   }
  ]
 }
