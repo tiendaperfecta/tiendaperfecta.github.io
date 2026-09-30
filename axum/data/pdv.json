@@ -5380,6 +5380,25 @@
   },
   {
    "fecha": "2026-09-30",
+   "sellerId": "2",
+   "vendedor": "Julian Nuñez",
+   "clientId": "3316",
+   "nombre": "ARISTEO S.R.L.",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Fiambreria_C",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 133714.39,
+   "fechaVenta": "2026-09-30",
+   "horaVenta": "15:20",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-30",
    "sellerId": "20",
    "vendedor": "Deposito",
    "clientId": "6",
@@ -6237,6 +6256,25 @@
    "fecha": "2026-09-30",
    "sellerId": "3",
    "vendedor": "Ezequiel Hack",
+   "clientId": "5033",
+   "nombre": "GABRIELA ALEJANDRA BERTOLOT",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.1,
+   "visito": true,
+   "hora": "15:22",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "paso_sin_vender"
+  },
+  {
+   "fecha": "2026-09-30",
+   "sellerId": "3",
+   "vendedor": "Ezequiel Hack",
    "clientId": "1435",
    "nombre": "COLANERI MARCELA LILIANA",
    "localidad": "MAR DEL PLATA",
@@ -6379,11 +6417,11 @@
    "minutos": 36.2,
    "visito": true,
    "hora": "14:24",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 207933.9,
+   "fechaVenta": "2026-09-30",
+   "horaVenta": "14:39",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-09-30",
@@ -9695,6 +9733,25 @@
    "fecha": "2026-09-30",
    "sellerId": "7",
    "vendedor": "Ramiro Rando",
+   "clientId": "629",
+   "nombre": "MIRANDA LAURA VALERIA ANA",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": "15:33",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "sin_visita"
+  },
+  {
+   "fecha": "2026-09-30",
+   "sellerId": "7",
+   "vendedor": "Ramiro Rando",
    "clientId": "1440",
    "nombre": "Maria lorena desipio",
    "localidad": "Mar del Plata",
@@ -10795,9 +10852,9 @@
   }
  ],
  "resumen": {
-  "vendio": 196,
+  "vendio": 197,
   "paso_sin_vender": 246,
-  "sin_visita": 21,
-  "vendio_sin_pasar": 105
+  "sin_visita": 22,
+  "vendio_sin_pasar": 106
  }
 }

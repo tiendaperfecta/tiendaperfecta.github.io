@@ -18,7 +18,7 @@
     "entregadas": 52,
     "rechazos": 0,
     "clientes": 29,
-    "importe": 6631684.09,
+    "importe": 6429176.18,
     "importeRechazado": 0.0,
     "bultosRechazados": 0.0,
     "efectividad": 100.0
@@ -39,7 +39,7 @@
     "entregadas": 45,
     "rechazos": 0,
     "clientes": 30,
-    "importe": 3185835.8,
+    "importe": 3139692.96,
     "importeRechazado": 0.0,
     "bultosRechazados": 0.0,
     "efectividad": 100.0
@@ -81,7 +81,7 @@
     "entregadas": 38,
     "rechazos": 0,
     "clientes": 26,
-    "importe": 5430356.02,
+    "importe": 5365096.99,
     "importeRechazado": 0.0,
     "bultosRechazados": 0.0,
     "efectividad": 100.0
@@ -123,7 +123,7 @@
     "entregadas": 36,
     "rechazos": 0,
     "clientes": 22,
-    "importe": 2870526.32,
+    "importe": 2867240.62,
     "importeRechazado": 0.0,
     "bultosRechazados": 0.0,
     "efectividad": 100.0
@@ -144,7 +144,7 @@
     "entregadas": 32,
     "rechazos": 0,
     "clientes": 25,
-    "importe": 1814625.12,
+    "importe": 1809696.56,
     "importeRechazado": 0.0,
     "bultosRechazados": 0.0,
     "efectividad": 100.0
@@ -165,7 +165,7 @@
     "entregadas": 31,
     "rechazos": 0,
     "clientes": 24,
-    "importe": 2630620.75,
+    "importe": 2625692.19,
     "importeRechazado": 0.0,
     "bultosRechazados": 0.0,
     "efectividad": 100.0
@@ -207,7 +207,7 @@
     "entregadas": 29,
     "rechazos": 0,
     "clientes": 23,
-    "importe": 2711868.84,
+    "importe": 2703654.57,
     "importeRechazado": 0.0,
     "bultosRechazados": 0.0,
     "efectividad": 100.0
@@ -249,7 +249,7 @@
     "entregadas": 21,
     "rechazos": 0,
     "clientes": 15,
-    "importe": 1644809.93,
+    "importe": 1638809.93,
     "importeRechazado": 0.0,
     "bultosRechazados": 0.0,
     "efectividad": 100.0
@@ -561,7 +561,7 @@
    "rechazos": 0,
    "repartosFacturados": 12,
    "clientesQueRechazaron": 0,
-   "importe": 39110319.01,
+   "importe": 38769052.14,
    "importeRechazado": 0.0,
    "efectividad": 100.0
   }
@@ -5953,6 +5953,25 @@
   },
   {
    "fecha": "2026-09-30",
+   "sellerId": "2",
+   "vendedor": "Julian Nuñez",
+   "clientId": "3316",
+   "nombre": "ARISTEO S.R.L.",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Fiambreria_C",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 133714.39,
+   "fechaVenta": "2026-09-30",
+   "horaVenta": "15:20",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-30",
    "sellerId": "20",
    "vendedor": "Deposito",
    "clientId": "6",
@@ -6810,6 +6829,25 @@
    "fecha": "2026-09-30",
    "sellerId": "3",
    "vendedor": "Ezequiel Hack",
+   "clientId": "5033",
+   "nombre": "GABRIELA ALEJANDRA BERTOLOT",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.1,
+   "visito": true,
+   "hora": "15:22",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "paso_sin_vender"
+  },
+  {
+   "fecha": "2026-09-30",
+   "sellerId": "3",
+   "vendedor": "Ezequiel Hack",
    "clientId": "1435",
    "nombre": "COLANERI MARCELA LILIANA",
    "localidad": "MAR DEL PLATA",
@@ -6952,11 +6990,11 @@
    "minutos": 36.2,
    "visito": true,
    "hora": "14:24",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 207933.9,
+   "fechaVenta": "2026-09-30",
+   "horaVenta": "14:39",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-09-30",
@@ -10268,6 +10306,25 @@
    "fecha": "2026-09-30",
    "sellerId": "7",
    "vendedor": "Ramiro Rando",
+   "clientId": "629",
+   "nombre": "MIRANDA LAURA VALERIA ANA",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": "15:33",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "sin_visita"
+  },
+  {
+   "fecha": "2026-09-30",
+   "sellerId": "7",
+   "vendedor": "Ramiro Rando",
    "clientId": "1440",
    "nombre": "Maria lorena desipio",
    "localidad": "Mar del Plata",
@@ -11368,10 +11425,10 @@
   }
  ],
  "resumen": {
-  "vendio": 196,
+  "vendio": 197,
   "paso_sin_vender": 246,
-  "sin_visita": 21,
-  "vendio_sin_pasar": 105
+  "sin_visita": 22,
+  "vendio_sin_pasar": 106
  },
  "bySeller": [
   {
@@ -11390,7 +11447,7 @@
    "pedidos": 31,
    "monto": 3167625.55,
    "pasoSinVender": 53,
-   "km": 51.0,
+   "km": 53.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -11410,7 +11467,7 @@
    "pedidos": 18,
    "monto": 1762368.31,
    "pasoSinVender": 42,
-   "km": 27.0,
+   "km": 35.0,
    "llegoTarde": true,
    "salioTemprano": true
   },
@@ -11430,7 +11487,7 @@
    "pedidos": 32,
    "monto": 1977518.6,
    "pasoSinVender": 30,
-   "km": 54.0,
+   "km": 64.0,
    "llegoTarde": true,
    "salioTemprano": false
   },
@@ -11447,10 +11504,10 @@
    "visitas": 43,
    "minutosTotal": 179.4,
    "minutosPromedio": 4.2,
-   "pedidos": 34,
-   "monto": 3231962.34,
+   "pedidos": 35,
+   "monto": 3365676.73,
    "pasoSinVender": 22,
-   "km": 10.0,
+   "km": 18.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -11470,7 +11527,7 @@
    "pedidos": 42,
    "monto": 3332972.95,
    "pasoSinVender": 19,
-   "km": 20.0,
+   "km": 29.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -11487,11 +11544,31 @@
    "visitas": 39,
    "minutosTotal": 243.5,
    "minutosPromedio": 6.2,
-   "pedidos": 34,
-   "monto": 6115340.66,
-   "pasoSinVender": 18,
-   "km": 16.0,
+   "pedidos": 35,
+   "monto": 6323274.56,
+   "pasoSinVender": 17,
+   "km": 22.0,
    "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
+   "sellerId": "3",
+   "vendedor": "Ezequiel Hack",
+   "inicioJornada": "09:11",
+   "finJornada": "15:22",
+   "entradaZona": "10:19",
+   "salidaZona": "15:08",
+   "zonaConfiable": true,
+   "primera": "09:11",
+   "ultima": "15:22",
+   "visitas": 35,
+   "minutosTotal": 195.2,
+   "minutosPromedio": 5.6,
+   "pedidos": 30,
+   "monto": 2740234.83,
+   "pasoSinVender": 17,
+   "km": 28.0,
+   "llegoTarde": true,
    "salioTemprano": false
   },
   {
@@ -11510,37 +11587,17 @@
    "pedidos": 29,
    "monto": 4249786.97,
    "pasoSinVender": 18,
-   "km": 27.0,
+   "km": 36.0,
    "llegoTarde": false,
    "salioTemprano": true
-  },
-  {
-   "sellerId": "3",
-   "vendedor": "Ezequiel Hack",
-   "inicioJornada": "09:11",
-   "finJornada": "15:03",
-   "entradaZona": "10:19",
-   "salidaZona": "15:03",
-   "zonaConfiable": true,
-   "primera": "09:11",
-   "ultima": "14:51",
-   "visitas": 34,
-   "minutosTotal": 195.1,
-   "minutosPromedio": 5.7,
-   "pedidos": 30,
-   "monto": 2740234.83,
-   "pasoSinVender": 16,
-   "km": 20.0,
-   "llegoTarde": true,
-   "salioTemprano": false
   },
   {
    "sellerId": "5",
    "vendedor": "Nicolas Martinez",
    "inicioJornada": "08:14",
-   "finJornada": "14:38",
+   "finJornada": "15:08",
    "entradaZona": "08:14",
-   "salidaZona": "08:17",
+   "salidaZona": "15:08",
    "zonaConfiable": true,
    "primera": "08:27",
    "ultima": "14:38",
@@ -11550,7 +11607,7 @@
    "pedidos": 34,
    "monto": 3027076.87,
    "pasoSinVender": 14,
-   "km": 26.0,
+   "km": 35.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -13680,6 +13737,11 @@
     "hora": "14:51",
     "clientId": "913",
     "nombre": "Jorge Rafael varela"
+   },
+   {
+    "hora": "15:22",
+    "clientId": "5033",
+    "nombre": "GABRIELA ALEJANDRA BERTOLOT"
    }
   ],
   "1": [
@@ -14078,10 +14140,10 @@
    "sellerId": "3",
    "vendedor": "Ezequiel Hack",
    "ruta": 49,
-   "visitadosDeRuta": 30,
-   "pendientes": 19,
+   "visitadosDeRuta": 31,
+   "pendientes": 18,
    "fueraDeRuta": 2,
-   "pct": 61.2
+   "pct": 63.3
   },
   {
    "sellerId": "9",
@@ -14446,12 +14508,6 @@
    {
     "clientId": "4944",
     "nombre": "MARIA LAURA MIGUEL",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_D"
-   },
-   {
-    "clientId": "5033",
-    "nombre": "GABRIELA ALEJANDRA BERTOLOT",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Almacen/Despensa_D"
    },
@@ -15670,9 +15726,9 @@
   ]
  },
  "totales": {
-  "visitas": 442,
-  "minutos": 2200.2,
-  "pedidos": 431,
-  "monto": 91594555.5
+  "visitas": 443,
+  "minutos": 2200.3,
+  "pedidos": 433,
+  "monto": 91936203.79
  }
 }
