@@ -83,6 +83,10 @@ def main():
                 rr = o.s.get("https://masuno-order360.axumweb.com" + ruta,
                              headers={"Authorization": f"Bearer {o.token}", "Accept": "application/json"}, timeout=60)
                 print(ruta, rr.status_code, json.dumps(forma(rr.json()), ensure_ascii=False)[:500] if rr.ok else rr.text[:120])
+                if rr.ok and ruta.endswith("Features"):
+                    # Son nombres de funciones del sistema, no datos de clientes.
+                    for f in rr.json():
+                        print("   funcion:", f.get("feature"), "=", f.get("isAllowed"))
             except Exception as e:  # noqa: BLE001
                 print(ruta, "ERROR", str(e)[:150])
     except Exception as e:  # noqa: BLE001
