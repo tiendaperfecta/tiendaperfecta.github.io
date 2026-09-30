@@ -610,38 +610,48 @@ def es_si(v):
     return (v or "").strip().lower() == "si"
 
 
-# Del endpoint oficial: TiendaPerfecta = portafolio >= 80%; validado por el supervisor
-# (SupOk) = perfectStoreType en TP_TIPOS_VALIDADO. Calibrar contra el ultimo censo del
-# reporte (28/9/2026: universo 2262, TP 1131, a validar 35): el log de cada corrida
-# muestra la cantidad por tipo.
-TP_PORC_MINIMO = 80
-TP_TIPOS_VALIDADO = {2}
+# Del endpoint oficial, calibrado el 30/9/2026 contra el ultimo censo del reporte (28/9:
+# universo 2262, TP 1131, a validar 35). Entre los clientes con >= 80% de portafolio,
+# perfectStoreType 3 = 1163, 2 = 33, 1 = 39: el 3 es la tienda CONFIRMADA por el supervisor
+# y el 2 la que falta validar (33 ~ 35).
+TP_TIPOS_TP = {2, 3}
+TP_TIPOS_VALIDADO = {3}
+# Seguro: si el censo nuevo se aleja mas de esto del anterior (universo o a validar), no se
+# publica: queda el anterior y se avisa en el log.
+TP_MAX_DESVIO = 0.25
 
 
 def traer_tienda_perfecta(api, nombre_por_codven, clientes):
     crudos = api.get("/data/cmd/ventas/api/v1/pepsico/get-resultado-tienda-perfecta")
     if not crudos:
         raise RuntimeError("El censo Tienda Perfecta vino vacio.")
-    vistos, filas, por_tipo = set(), [], {}
+    vistos, filas, por_tipo, por_sub, por_ramo = set(), [], {}, {}, {}
     for r in crudos:
         cc = cod(r.get("codigoCliente"))
         if cc in vistos:          # un cliente puede venir repetido
             continue
         vistos.add(cc)
         c = clientes.get(cc, {})
-        porc = int(num(r.get("perfectStorePortafolioPorc")))
         tipo = int(num(r.get("perfectStoreType")))
-        es_tp = porc >= TP_PORC_MINIMO
-        if es_tp:
-            por_tipo[tipo] = por_tipo.get(tipo, 0) + 1
+        es_tp = tipo in TP_TIPOS_TP
+        por_tipo[tipo] = por_tipo.get(tipo, 0) + 1
+        sub = (r.get("subRamo") or "").strip()
+        ramo = (r.get("ramo") or "").strip()
+        por_sub[sub] = por_sub.get(sub, 0) + 1
+        por_ramo[ramo] = por_ramo.get(ramo, 0) + 1
         filas.append({
-            "SubCanal": (r.get("subRamo") or "").strip(),
+            # El subcanal del reporte puede ser el ramo o el subramo: se usa el que este en
+            # la lista de SUBCANALES_TP.
+            "SubCanal": sub if sub in SUBCANALES_TP else ramo,
             "Segmento": (c.get("seg") or cod(r.get("perfectStoreState"))).upper(),
             "TiendaPerfecta": "Si" if es_tp else "No",
             "SupOk": "Si" if tipo in TP_TIPOS_VALIDADO else "No",
             "Vendedor_ID": c.get("codven") or "",
         })
-    print("Censo TP (oficial): %d clientes; TP por perfectStoreType: %s" % (len(filas), por_tipo))
+    top = lambda d: sorted(d.items(), key=lambda kv: -kv[1])[:12]
+    print("Censo TP (oficial): %d clientes; por perfectStoreType: %s" % (len(filas), por_tipo))
+    print("  subRamo mas frecuentes: %s" % top(por_sub))
+    print("  ramo mas frecuentes: %s" % top(por_ramo))
     universo = [f for f in filas if (f.get("SubCanal") or "").strip() in SUBCANALES_TP]
 
     por_seg = {s: {"universo": 0, "tp": 0, "validar": 0} for s in SEGMENTOS}
@@ -688,6 +698,16 @@ def traer_tienda_perfecta(api, nombre_por_codven, clientes):
     objetivo_oficial = dict(TP_OBJETIVO_SEG)
     objetivo_oficial["total"] = sum(TP_OBJETIVO_SEG.values())
 
+    try:
+        previo = json.loads((DIR / "tienda_perfecta.json").read_text(encoding="utf-8"))
+    except Exception:
+        previo = None
+    if previo:
+        for campo, nuevo in (("universoTotal", universo_total), ("validarTotal", validar_total)):
+            ant = previo.get(campo) or 0
+            if ant and abs(nuevo - ant) / ant > TP_MAX_DESVIO and abs(nuevo - ant) > 20:
+                raise RuntimeError("censo TP no publicado: %s da %d y el anterior %d (desvio > %d%%)"
+                                   % (campo, nuevo, ant, TP_MAX_DESVIO * 100))
     return {
         "universoTotal": universo_total,
         "tpTotal": tp_total,
