@@ -272,6 +272,7 @@ def meses_a_bajar(args, hoy):
 
 
 def main():
+    gescom.usar_base()   # desde el 30/9/2026 lee de la base propia, no de Gescom
     if not gescom.hay_credenciales():
         print("Sin credenciales de GesCom: quedan publicados los datos anteriores.")
         return 0

@@ -32,6 +32,26 @@ API = "https://tiendaperfecta.gescom.online"
 DIAS = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"]
 
 
+# BASE PROPIA DE GESCOM (desde el 30/9/2026). Los scripts que ya no le preguntan a Gescom
+# (georgalos, axum) llaman a usar_base() al arrancar: desde ahi API apunta a la ventanilla
+# /gescom/ del worker "base" (misma forma que la API de Gescom) y el "token" es la clave de
+# lectura BASE_CLAVE. Sin la clave no corren: nunca vuelven a Gescom por su cuenta.
+# Ctacte y pepsico siguen usando este modulo sin usar_base() (van a la API oficial por lo
+# que la base no tiene).
+BASE_GESCOM = "https://base.tienda-perfecta.workers.dev/gescom"
+
+
+def usar_base():
+    global API, _token, hay_credenciales
+    clave = os.environ.get("BASE_CLAVE", "").strip()
+    if not clave:
+        raise SystemExit("Falta el secreto BASE_CLAVE (clave de lectura de la base propia): no se corre.")
+    API = BASE_GESCOM
+    _token = lambda sesion: clave  # noqa: E731
+    hay_credenciales = lambda: True  # noqa: E731
+    print("Leyendo de la base propia (no de Gescom)")
+
+
 def hay_credenciales():
     return all(os.environ.get(k, "").strip() for k in
                ("GESCOM_REALM", "GESCOM_CLIENT_ID", "GESCOM_USERNAME", "GESCOM_PASSWORD"))

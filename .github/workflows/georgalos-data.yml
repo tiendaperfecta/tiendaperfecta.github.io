@@ -35,10 +35,8 @@ jobs:
 
       - name: Fetch Georgalos data
         env:
-          GESCOM_REALM: ${{ secrets.GESCOM_REALM }}
-          GESCOM_CLIENT_ID: ${{ secrets.GESCOM_CLIENT_ID }}
-          GESCOM_USERNAME: ${{ secrets.GESCOM_USERNAME }}
-          GESCOM_PASSWORD: ${{ secrets.GESCOM_PASSWORD }}
+          # Lee de la base propia (worker base), no de Gescom, desde el 30/9/2026
+          BASE_CLAVE: ${{ secrets.BASE_CLAVE }}
         run: python tools/georgalos.py
 
       - name: Commit data if changed
