@@ -13,8 +13,8 @@ nuevo recibe 403 en report/render, que es lo que se usaba antes):
          de cada deuda, por la venta que la genero (ventaId). Las deudas que no
          vienen de una venta de esos repartos quedan sin reparto/chofer.
 
-Las deudas de ventas todavia no finalizadas (comprobanteFinalizado = false) no
-entran: todavia no son saldo de cuenta corriente. Solo moneda ARS.
+Incluye las deudas de ventas todavia no finalizadas (comprobanteFinalizado =
+false), como el reporte de antes. Solo moneda ARS.
 
 Ademas:
     GET  ventas/api/v1/get-clientes             maestro: ruta, tope, contacto
@@ -88,9 +88,10 @@ def bajar():
     v4 = gescom._traer(s, tok, "ctacte/api/v4/get-ctacte-clientes-detalle", 300)
     sin_finalizar = sum(1 for d in v4 if (d.get("saldo") or 0) > 0 and d.get("comprobanteFinalizado") is False)
     otra_moneda = sum(1 for d in v4 if (d.get("monedaCodigo") or "ARS") != "ARS")
-    v4 = [d for d in v4 if (d.get("monedaCodigo") or "ARS") == "ARS"
-          and not ((d.get("saldo") or 0) > 0 and d.get("comprobanteFinalizado") is False)]
-    print("ctacte v4: %d comprobantes (fuera: %d de ventas sin finalizar, %d en otra moneda)"
+    # Las deudas de ventas todavia no finalizadas SI entran: el reporte de antes las
+    # incluia (comparado el 30/9/2026: sin ellas faltaban ~700 deudas y ~220 clientes).
+    v4 = [d for d in v4 if (d.get("monedaCodigo") or "ARS") == "ARS"]
+    print("ctacte v4: %d comprobantes (%d de ventas sin finalizar; fuera: %d en otra moneda)"
           % (len(v4), sin_finalizar, otra_moneda))
     rep = repartos_por_venta(s, tok, hoy - dt.timedelta(days=REP_DIAS), hoy + dt.timedelta(days=1))
     detallado, padre_de = [], {}
