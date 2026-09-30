@@ -3,6 +3,60 @@
  "diaSemana": "miercoles",
  "bySeller": [
   {
+   "sellerId": "5",
+   "vendedor": "Nicolas Martinez",
+   "ruta": 37,
+   "visitadosDeRuta": 4,
+   "pendientes": 33,
+   "fueraDeRuta": 0,
+   "pct": 10.8
+  },
+  {
+   "sellerId": "2",
+   "vendedor": "Julian Nuñez",
+   "ruta": 35,
+   "visitadosDeRuta": 3,
+   "pendientes": 32,
+   "fueraDeRuta": 3,
+   "pct": 8.6
+  },
+  {
+   "sellerId": "6",
+   "vendedor": "Camila Martinez",
+   "ruta": 39,
+   "visitadosDeRuta": 2,
+   "pendientes": 37,
+   "fueraDeRuta": 2,
+   "pct": 5.1
+  },
+  {
+   "sellerId": "12",
+   "vendedor": "Agustin Pogorzelski",
+   "ruta": 45,
+   "visitadosDeRuta": 2,
+   "pendientes": 43,
+   "fueraDeRuta": 0,
+   "pct": 4.4
+  },
+  {
+   "sellerId": "7",
+   "vendedor": "Ramiro Rando",
+   "ruta": 40,
+   "visitadosDeRuta": 1,
+   "pendientes": 39,
+   "fueraDeRuta": 1,
+   "pct": 2.5
+  },
+  {
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "ruta": 41,
+   "visitadosDeRuta": 1,
+   "pendientes": 40,
+   "fueraDeRuta": 0,
+   "pct": 2.4
+  },
+  {
    "sellerId": "1",
    "vendedor": "Maria Noelia Madia",
    "ruta": 36,
@@ -17,7 +71,7 @@
    "ruta": 42,
    "visitadosDeRuta": 0,
    "pendientes": 42,
-   "fueraDeRuta": 0,
+   "fueraDeRuta": 12,
    "pct": 0.0
   },
   {
@@ -26,24 +80,6 @@
    "ruta": 22,
    "visitadosDeRuta": 0,
    "pendientes": 22,
-   "fueraDeRuta": 0,
-   "pct": 0.0
-  },
-  {
-   "sellerId": "12",
-   "vendedor": "Agustin Pogorzelski",
-   "ruta": 45,
-   "visitadosDeRuta": 0,
-   "pendientes": 45,
-   "fueraDeRuta": 0,
-   "pct": 0.0
-  },
-  {
-   "sellerId": "2",
-   "vendedor": "Julian Nuñez",
-   "ruta": 35,
-   "visitadosDeRuta": 0,
-   "pendientes": 35,
    "fueraDeRuta": 0,
    "pct": 0.0
   },
@@ -89,42 +125,6 @@
    "ruta": 33,
    "visitadosDeRuta": 0,
    "pendientes": 33,
-   "fueraDeRuta": 0,
-   "pct": 0.0
-  },
-  {
-   "sellerId": "4",
-   "vendedor": "Lucas Giayetto",
-   "ruta": 41,
-   "visitadosDeRuta": 0,
-   "pendientes": 41,
-   "fueraDeRuta": 0,
-   "pct": 0.0
-  },
-  {
-   "sellerId": "5",
-   "vendedor": "Nicolas Martinez",
-   "ruta": 37,
-   "visitadosDeRuta": 0,
-   "pendientes": 37,
-   "fueraDeRuta": 0,
-   "pct": 0.0
-  },
-  {
-   "sellerId": "6",
-   "vendedor": "Camila Martinez",
-   "ruta": 39,
-   "visitadosDeRuta": 0,
-   "pendientes": 39,
-   "fueraDeRuta": 0,
-   "pct": 0.0
-  },
-  {
-   "sellerId": "7",
-   "vendedor": "Ramiro Rando",
-   "ruta": 40,
-   "visitadosDeRuta": 0,
-   "pendientes": 40,
    "fueraDeRuta": 0,
    "pct": 0.0
   },
@@ -780,12 +780,6 @@
     "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
-    "clientId": "1235",
-    "nombre": "MARTINEZ PABLO ENRIQUE",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_C"
-   },
-   {
     "clientId": "1236",
     "nombre": "MONACO CARLOS OSCAR Y MONACO A",
     "localidad": "MAR DEL PLATA",
@@ -844,12 +838,6 @@
     "nombre": "EMILIANO ORLOV",
     "localidad": "Mar del Plata",
     "taxonomia": "Fiambreria_A"
-   },
-   {
-    "clientId": "1716",
-    "nombre": "WANG YIAN",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_B"
    },
    {
     "clientId": "1729",
@@ -1064,12 +1052,6 @@
     "taxonomia": "Kiosco/Maxikiosco_A"
    },
    {
-    "clientId": "1281",
-    "nombre": "FRUTICEL TOUCH S.R.L",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_B"
-   },
-   {
     "clientId": "1285",
     "nombre": "LASPIUR MANUEL",
     "localidad": "MAR DEL PLATA",
@@ -1086,12 +1068,6 @@
     "nombre": "DEEP WASH",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Kiosco/Maxikiosco_A"
-   },
-   {
-    "clientId": "1369",
-    "nombre": "FRUTICEL TOUCH",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_B"
    },
    {
     "clientId": "1370",
@@ -1212,12 +1188,6 @@
     "nombre": "VIBO MARINA S.A.",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Fiambreria_D"
-   },
-   {
-    "clientId": "4290",
-    "nombre": "ALBA MARIA TZAMALOF",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
     "clientId": "4291",
@@ -2113,12 +2083,6 @@
     "taxonomia": "Estacion de Servicio_D"
    },
    {
-    "clientId": "1948",
-    "nombre": "CREMONA SA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Mayoristas_A"
-   },
-   {
     "clientId": "204",
     "nombre": "MILAGROS ANCHOVERRI",
     "localidad": "Mar del Plata",
@@ -2325,12 +2289,6 @@
   ],
   "5": [
    {
-    "clientId": "1320",
-    "nombre": "NAHUEL GORDILLO",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Almacen/Despensa_D"
-   },
-   {
     "clientId": "1561",
     "nombre": "CAPUANO NAZARENO ALBERTO",
     "localidad": "MAR DEL PLATA",
@@ -2343,28 +2301,10 @@
     "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
-    "clientId": "178",
-    "nombre": "MARIEL PEREZ",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Almacen/Despensa_C"
-   },
-   {
-    "clientId": "181",
-    "nombre": "Susana Amor",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Almacen/Despensa_B"
-   },
-   {
     "clientId": "19",
     "nombre": "SHUYING CHEN",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Autoservicio Tradicional_A"
-   },
-   {
-    "clientId": "2436",
-    "nombre": "SANDRA FABIANA JONES",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_C"
    },
    {
     "clientId": "2762",
@@ -2651,20 +2591,8 @@
     "taxonomia": "Kiosco/Maxikiosco_C"
    },
    {
-    "clientId": "1751",
-    "nombre": "DE GARATE EVANGELINA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_D"
-   },
-   {
     "clientId": "1756",
     "nombre": "SURCULENTO MAMANI VICTOR JAVIE",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
-    "clientId": "1757",
-    "nombre": "VALDEZ NATALIA GABRIELA",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Kiosco/Maxikiosco_D"
    },
@@ -2837,12 +2765,6 @@
     "nombre": "NICADELO SA",
     "localidad": "Mar del Plata",
     "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
-    "clientId": "2125",
-    "nombre": "ESTRELLA AMIN S.A. EN FORMACION",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_A"
    },
    {
     "clientId": "237",

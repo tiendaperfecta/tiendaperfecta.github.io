@@ -1,46 +1,126 @@
 {
  "date": "2026-09-30",
- "totalNet": 412751.05,
- "totalGross": 499428.77,
- "orders": 4,
+ "totalNet": 2263470.88,
+ "totalGross": 2738799.79,
+ "orders": 36,
  "bySeller": [
+  {
+   "sellerId": "8",
+   "name": "Martinica Rodriguez",
+   "orders": 7,
+   "total": 1222888.38
+  },
+  {
+   "sellerId": "12",
+   "name": "Agustin Pogorzelski",
+   "orders": 2,
+   "total": 345428.71
+  },
   {
    "sellerId": "1",
    "name": "Maria Noelia Madia",
-   "orders": 2,
-   "total": 277571.52
+   "orders": 3,
+   "total": 340631.44
   },
   {
    "sellerId": "7",
    "name": "Ramiro Rando",
+   "orders": 2,
+   "total": 289143.0
+  },
+  {
+   "sellerId": "2",
+   "name": "Julian Nuñez",
+   "orders": 2,
+   "total": 198913.2
+  },
+  {
+   "sellerId": "5",
+   "name": "Nicolas Martinez",
+   "orders": 3,
+   "total": 168271.53
+  },
+  {
+   "sellerId": "3",
+   "name": "Ezequiel Hack",
    "orders": 1,
-   "total": 221857.25
+   "total": 73000.01
+  },
+  {
+   "sellerId": "4",
+   "name": "Lucas Giayetto",
+   "orders": 1,
+   "total": 63423.43
+  },
+  {
+   "sellerId": "6",
+   "name": "Camila Martinez",
+   "orders": 1,
+   "total": 37100.09
   },
   {
    "sellerId": "20",
    "name": "Deposito",
-   "orders": 1,
+   "orders": 14,
    "total": 0.0
   }
  ],
  "byChannel": [
   {
    "channel": "TRADITIONAL TRADE_A",
-   "orders": 2,
-   "total": 277571.52
+   "orders": 6,
+   "total": 767566.66
+  },
+  {
+   "channel": "TRADITIONAL TRADE_D",
+   "orders": 5,
+   "total": 740376.41
   },
   {
    "channel": "PROXIMITY_A",
+   "orders": 3,
+   "total": 717571.94
+  },
+  {
+   "channel": "TRADITIONAL TRADE_C",
+   "orders": 4,
+   "total": 277985.75
+  },
+  {
+   "channel": "TRADITIONAL TRADE_B",
+   "orders": 3,
+   "total": 121743.01
+  },
+  {
+   "channel": "PROXIMITY_B",
    "orders": 1,
-   "total": 221857.25
+   "total": 113556.02
   },
   {
    "channel": "s/canal",
-   "orders": 1,
+   "orders": 14,
    "total": 0.0
   }
  ],
  "topClients": [
+  {
+   "clientId": "1780",
+   "name": "Juan María gabilan (Autoservicio Tradicional_D)",
+   "orders": 3,
+   "total": 607451.93
+  },
+  {
+   "clientId": "2611",
+   "name": "RICARDO FERMIN ALVAREZ (Estacion de Servicio - NO OFICIALES_A)",
+   "orders": 2,
+   "total": 495714.69
+  },
+  {
+   "clientId": "1541",
+   "name": "RIOS CARLOS (Kiosco/Maxikiosco_A)",
+   "orders": 1,
+   "total": 273928.78
+  },
   {
    "clientId": "2475",
    "name": "PLACE SILVINA ALEJANDRA (Estacion de Servicio - NO OFICIALES_A)",
@@ -54,13 +134,91 @@
    "total": 185714.31
   },
   {
+   "clientId": "178",
+   "name": "MARIEL PEREZ (Almacen/Despensa_C)",
+   "orders": 2,
+   "total": 133485.81
+  },
+  {
+   "clientId": "1610",
+   "name": "VALLARTA SA (Estacion de Servicio - NO OFICIALES_B)",
+   "orders": 1,
+   "total": 113556.02
+  },
+  {
    "clientId": "2151",
    "name": "KIOSMDQ (Kiosco/Maxikiosco_A)",
    "orders": 1,
    "total": 91857.21
   },
   {
+   "clientId": "1409",
+   "name": "Macarena carla tapia  (Kiosco/Maxikiosco_A)",
+   "orders": 1,
+   "total": 85357.18
+  },
+  {
+   "clientId": "3994",
+   "name": "MONICA ANTONIA BODLOVICH (Fiambreria_C)",
+   "orders": 1,
+   "total": 73000.01
+  },
+  {
+   "clientId": "1332",
+   "name": "FRUTICEL TOUCH S.R.L. (Kiosco/Maxikiosco_C)",
+   "orders": 1,
+   "total": 71499.93
+  },
+  {
+   "clientId": "2656",
+   "name": "LYDIA CARMEN YORDANOV (Almacen/Despensa_D)",
+   "orders": 1,
+   "total": 69864.57
+  },
+  {
+   "clientId": "27",
+   "name": "SALINAS CHICO SA (Kiosco/Maxikiosco_A)",
+   "orders": 1,
+   "total": 67285.75
+  },
+  {
+   "clientId": "3972",
+   "name": "CAIYAN CHEN (Autoservicio Tradicional_A)",
+   "orders": 1,
+   "total": 63423.43
+  },
+  {
+   "clientId": "2752",
+   "name": "MARIA ALEJANDRA GONZALEZ (Kiosco/Maxikiosco_D)",
+   "orders": 1,
+   "total": 63059.91
+  },
+  {
+   "clientId": "7632",
+   "name": "GARCIA MARCELO Y ECHEVERRIA DORA S.R.L (Almacen/Despensa_B)",
+   "orders": 1,
+   "total": 49857.2
+  },
+  {
+   "clientId": "1047",
+   "name": "MONTERO DACIO HILARIO (Autoservicio Tradicional_B)",
+   "orders": 1,
+   "total": 37100.09
+  },
+  {
+   "clientId": "181",
+   "name": "Susana Amor (Almacen/Despensa_B)",
+   "orders": 1,
+   "total": 34785.72
+  },
+  {
    "clientId": "6",
+   "name": "",
+   "orders": 1,
+   "total": 0.0
+  },
+  {
+   "clientId": "5",
    "name": "",
    "orders": 1,
    "total": 0.0
