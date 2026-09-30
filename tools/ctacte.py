@@ -1,20 +1,22 @@
 #!/usr/bin/env python3
 """
-ctacte.py — Cuentas corrientes de clientes, desde los reportes de GesCom.
+ctacte.py — Cuentas corrientes de clientes, desde la API oficial de GesCom.
 
-Usa los mismos reportes que se ven en GesCom > Cta. Cte. Clientes > Reportes,
-ejecutados por la API (POST /data/cmd/report/render), asi que el panel
-coincide comprobante por comprobante con lo que muestra GesCom:
+Desde el 30/9/2026 usa el endpoint OFICIAL de cuenta corriente (el usuario de API
+nuevo recibe 403 en report/render, que es lo que se usaba antes):
 
-    "Saldo actual detallado por cliente"     (442968d3-...)  cada comprobante
-         pendiente: tipo, numero, cuota, importe original, saldo, fecha,
-         vencimiento, dias de vencido, vendedor, reparto, chofer, comentario
-    "Saldo detallado por Cliente Asociados"  (a33d4d21-...)  los mismos
-         comprobantes con la cuenta madre (PADRE) de cada cliente asociado
+    GET ctacte/api/v4/get-ctacte-clientes-detalle   cada deuda y credito pendiente:
+         tipo, numero, cuota, importe original, saldo, fecha, vencimiento,
+         condicion de pago, vendedor, comentario, empresa y el CLIENTE PAGADOR
+         (la cuenta madre), todo en una sola llamada y sin paginar.
+    GET distribucion/api/v2/get-repartos (ultimos 180 dias)   reparto y chofer
+         de cada deuda, por la venta que la genero (ventaId). Las deudas que no
+         vienen de una venta de esos repartos quedan sin reparto/chofer.
+
+Las deudas de ventas todavia no finalizadas (comprobanteFinalizado = false) no
+entran: todavia no son saldo de cuenta corriente. Solo moneda ARS.
 
 Ademas:
-    POST /data/cmd/ctacte.clientes/get-info     clienteId -> codigo (para
-                                                traducir la cuenta madre)
     GET  ventas/api/v1/get-clientes             maestro: ruta, tope, contacto
     GET  ventas/api/v1/get-condiciones-pago     codigos de condicion
     GET  ventas/api/v1/get-vendedores
@@ -57,41 +59,68 @@ OUT = ROOT / "ctacte"
 ART = dt.timezone(dt.timedelta(hours=-3))
 ITER = 200_000
 
-REP_DETALLADO = "442968d3-f5b5-4eb7-af7f-a35e16be1baf"
-REP_ASOCIADOS = "a33d4d21-3dc6-4b22-91fa-acbb53ec2991"
+REP_DIAS = 180   # ventana de repartos para ponerle reparto/chofer a cada deuda
 
 
-def _post(s, tok, ruta, body, timeout=300):
-    r = s.post(gescom.API + "/data/cmd/" + ruta, json=body,
-               headers={"Authorization": "Bearer " + tok}, timeout=timeout)
-    r.raise_for_status()
-    return r.json()
-
-
-def reporte(s, tok, rid):
-    """Ejecuta un reporte de GesCom con los parametros por defecto (todos los
-    clientes, todos los vendedores) y devuelve las filas como dicts."""
-    info = _post(s, tok, "report/info", {"id": rid}, 60)
-    params = {p["name"]: p.get("default")
-              for g in info.get("parametersGroups") or [] for p in g["parameters"]}
-    res = _post(s, tok, "report/render",
-                {"id": rid, "reportInput": {"filtersInput": {}, "parameters": params}})
-    tabla = next(d for d in res["datasources"] if d["name"] == res["mainDatasource"])["table"]
-    return [dict(zip(tabla[0], fila)) for fila in tabla[1:]]
+def repartos_por_venta(s, tok, desde, hasta):
+    """ventaId -> (numero de reparto, chofer). Vienen ordenados por fecha: si una
+    venta estuvo en mas de un reparto, queda el ultimo."""
+    out, skip = {}, 0
+    while True:
+        pag = gescom._traer(
+            s, tok, "distribucion/api/v2/get-repartos?fechadesde=%s&fechahasta=%s"
+            "&pagesize=500&pagestotake=2&pagestoskip=%d" % (desde, hasta, skip), 180)
+        for r in pag:
+            if r.get("cancelado"):
+                continue
+            for v in r.get("ventas") or []:
+                if v.get("ventaId") and not v.get("noEntregada"):
+                    out[v["ventaId"]] = (str(r.get("codigo") or ""), (r.get("nombreChofer") or "").strip())
+        if len(pag) < 1000 or skip > 40:
+            return out
+        skip += 2
 
 
 def bajar():
     s = requests.Session()
     tok = gescom._token(s)
-    detallado = reporte(s, tok, REP_DETALLADO)
-    asociados = reporte(s, tok, REP_ASOCIADOS)
+    hoy = dt.datetime.now(ART).date()
+    v4 = gescom._traer(s, tok, "ctacte/api/v4/get-ctacte-clientes-detalle", 300)
+    sin_finalizar = sum(1 for d in v4 if (d.get("saldo") or 0) > 0 and d.get("comprobanteFinalizado") is False)
+    otra_moneda = sum(1 for d in v4 if (d.get("monedaCodigo") or "ARS") != "ARS")
+    v4 = [d for d in v4 if (d.get("monedaCodigo") or "ARS") == "ARS"
+          and not ((d.get("saldo") or 0) > 0 and d.get("comprobanteFinalizado") is False)]
+    print("ctacte v4: %d comprobantes (fuera: %d de ventas sin finalizar, %d en otra moneda)"
+          % (len(v4), sin_finalizar, otra_moneda))
+    rep = repartos_por_venta(s, tok, hoy - dt.timedelta(days=REP_DIAS), hoy + dt.timedelta(days=1))
+    detallado, padre_de = [], {}
+    for d in v4:
+        cod = str(d.get("clienteCodigo"))
+        pag = str(d.get("clientePagadorCodigo") or "")
+        if pag and pag != cod:
+            padre_de[cod] = pag
+        rp = rep.get(d.get("ventaId"), ("", ""))
+        # Mismas claves que tenian las filas del reporte, para que armar() no cambie.
+        detallado.append({
+            "CodCliente": cod, "CodEmpresa": d.get("empresaCodigo"),
+            "CodTipoComprobante": d.get("tipoComprobanteCodigo"),
+            "CodPdv": d.get("puntoVentaComprobante") or 0,
+            "NumeroComprobante": d.get("numeroComprobante") or 0,
+            "NumeroCuota": d.get("numeroCuota") or 0,
+            "FechaComprobante": d.get("fechaComprobante"),
+            "FechaVencimientoDeuda": d.get("fechaVencimiento"),
+            "CP": d.get("condicionPagoCodigo") or "",
+            "ImporteOriginal": d.get("importe"), "Importe": d.get("saldo"),
+            "CodVendedor": d.get("vendedorCodigo"),
+            "Reparto": rp[0], "Chofer": rp[1],
+            "Comentario": d.get("comentario"),
+            "NombreCliente": d.get("clienteNombre"),
+        })
     tok = gescom._token(s)
-    info = _post(s, tok, "ctacte.clientes/get-info", {}, 180)
     clientes = gescom._traer(s, tok, "ventas/api/v1/get-clientes")
     conds = gescom._traer(s, tok, "ventas/api/v1/get-condiciones-pago", 60)
     vends = gescom._traer(s, tok, "ventas/api/v1/get-vendedores", 60)
     # compras de los ultimos 30 dias (para "sigue comprando con deuda")
-    hoy = dt.datetime.now(ART).date()
     ventas, skip = [], 0
     while True:
         tok = gescom._token(s) if skip % 8 == 0 else tok
@@ -106,7 +135,7 @@ def bajar():
                     "ok": bool((v.get("comprobantePrincipal") or {}).get("numeroComprobante"))}
                    for v in pag]
         skip += 2
-    return detallado, asociados, info, clientes, conds, vends, ventas
+    return detallado, padre_de, clientes, conds, vends, ventas
 
 
 def _iso(f):
@@ -119,20 +148,13 @@ def _iso(f):
     return f
 
 
-def armar(detallado, asociados, info, clientes, conds, vends, ventas):
+def armar(detallado, padre_de, clientes, conds, vends, ventas):
     hoy = dt.datetime.now(ART).date()
     maestro = {str(c.get("codigo")): c for c in clientes}
-    id2cod = {int(x["clienteId"]): str(x["clienteCodigo"]) for x in info if x.get("clienteId")}
     desc2cond = {(c.get("descripcion") or "").strip().lower(): c["codigo"] for c in conds}
 
     clave = lambda cli, r: (str(cli), r["CodTipoComprobante"], r["CodPdv"],
                             r["NumeroComprobante"], r["NumeroCuota"])
-    padre_de = {}
-    for r in asociados:
-        hijo = str(r.get("Clientehijo") or r.get("CodCliente"))
-        p = r.get("PADRE")
-        if p:
-            padre_de[hijo] = id2cod.get(int(p), str(int(p) - 100000))
 
     vta30 = defaultdict(float)
     for v in ventas:
@@ -144,7 +166,7 @@ def armar(detallado, asociados, info, clientes, conds, vends, ventas):
         cod = str(r["CodCliente"])
         nombres.setdefault(cod, r)
         cuota = r.get("NumeroCuota")
-        cp = desc2cond.get((r.get("CondicionPago") or "").strip().lower(), "")
+        cp = r.get("CP") or desc2cond.get((r.get("CondicionPago") or "").strip().lower(), "")
         x = {
             "c": cod, "e": str(r.get("CodEmpresa") or ""),
             "t": r["CodTipoComprobante"],
@@ -212,7 +234,7 @@ def armar(detallado, asociados, info, clientes, conds, vends, ventas):
     return {
         "generado": dt.datetime.now(ART).strftime("%Y-%m-%dT%H:%M"),
         "hoy": hoy.isoformat(),
-        "fuente": "GesCom · Saldo actual detallado por cliente + Saldo detallado por Cliente Asociados",
+        "fuente": "GesCom API · ctacte v4 (cuenta corriente) + distribucion get-repartos",
         "empresas": {"1": "Tienda Perfecta", "99": "TP Pex", "2": "Rambla"},
         "condiciones": {c["codigo"]: {"d": c.get("descripcion") or c["codigo"],
                                        "dias": int(c.get("dias") or 0)} for c in conds},
