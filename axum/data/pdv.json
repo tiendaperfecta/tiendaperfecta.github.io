@@ -6721,11 +6721,11 @@
    "minutos": 4.3,
    "visito": true,
    "hora": "11:53",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 243000.08,
+   "fechaVenta": "2026-09-30",
+   "horaVenta": "20:12",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-09-30",
@@ -7276,6 +7276,25 @@
    "monto": 491446.01,
    "fechaVenta": "2026-09-30",
    "horaVenta": "12:56",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-09-30",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "3118",
+   "nombre": "CHOCOCHIA S.A.",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Kiosco/Maxikiosco_A",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 144928.59,
+   "fechaVenta": "2026-09-30",
+   "horaVenta": "20:03",
    "estado": "vendio_sin_pasar"
   },
   {
@@ -10985,9 +11004,9 @@
   }
  ],
  "resumen": {
-  "vendio": 197,
-  "paso_sin_vender": 249,
+  "vendio": 198,
+  "paso_sin_vender": 248,
   "sin_visita": 22,
-  "vendio_sin_pasar": 110
+  "vendio_sin_pasar": 111
  }
 }
