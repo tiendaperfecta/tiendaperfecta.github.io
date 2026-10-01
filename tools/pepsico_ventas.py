@@ -4,7 +4,8 @@ pepsico_ventas.py - datos del panel Avance Pepsico via API de GesCom.
 Genera no_compradores_detalle.json, no_compradores_por_dia.json,
 pehuamar90_no_comprado.json, invendible_detalle.json, rechazos_detalle.json,
 cobertura_marca_vendedor.json, ccc_segmento.json, subproductos_vendedor.json,
-subproductos_no_comprado.json, venta_vendedor.json y avance_kg_vendedor.json.
+subproductos_no_comprado.json, venta_vendedor.json, avance_kg_vendedor.json
+y historial_diario.json.
 
 DESDE EL 30/9/2026 NO USA report/render (el usuario de API nuevo recibe 403). Los
 tres reportes se reemplazaron:
@@ -413,7 +414,7 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
     # Ultima / penultima visita / real: kg (*P01 + *P02) cargados el mismo dia de la semana
     # hace 7 y 14 dias, y hoy, por fecha de PEDIDO (asi coincide con el reporte de Gescom,
     # comparado el 30/9/2026 contra el del 28/9: 99,95 vs 100,0; 178,72 vs 178,7).
-    for l in lineas_pepsico(hoy - dt.timedelta(days=14), hoy, "pedido"):
+    for l in lineas_pepsico(hoy - dt.timedelta(days=45), hoy, "pedido"):
         if l.get("tipo") != "VEN" or cod(l.get("ven")) not in VENDEDORES_PEPSICO:
             continue
         a = articulo_de(cod(l.get("item")), cod(l.get("emp")))
@@ -449,6 +450,15 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
             "acumuladoMN": round(x["mn"], 2),
         })
     print("Avance kg desde la base: objetivos de %s%s" % (mes_obj, "" if mes_obj == hoy.strftime("%Y-%m") else " (congelados)"))
+
+    historial_por_dia = {}
+    for x in acc.values():
+        for fecha, kg in x["dias"].items():
+            historial_por_dia[fecha] = historial_por_dia.get(fecha, 0.0) + kg
+    historial_out = [{"fecha": f, "kg": round(k, 2)} for f, k in sorted(historial_por_dia.items())]
+    escribir("historial_diario.json", historial_out)
+    print("Historial diario: %d dias (por fecha de pedido)" % len(historial_out))
+
     return {
         "objetivoPG": round(sum(v["p1o"] for v in kg_vendedores), 2),
         "objetivoSB": round(sum(v["p2o"] for v in kg_vendedores), 2),
