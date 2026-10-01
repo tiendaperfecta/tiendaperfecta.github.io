@@ -1,16 +1,18 @@
 {
- "generatedAt": "2026-10-01T16:02:03-03:00",
+ "generatedAt": "2026-10-01T17:01:30-03:00",
  "date": "2026-10-01",
- "errors": [],
+ "errors": [
+  "orders360: se trajeron 586 de 585 pedidos que declara la API."
+ ],
  "pedidos": {
-  "traidos": 585,
+  "traidos": 586,
   "totalSegunApi": 585
  },
  "formatoGps": {
-  "posicion": "'-38.0923742,-57.5640793,11,4:00 PM,129,,'",
+  "posicion": "'-38.0923936,-57.5640475,11,4:59 PM,96,,'",
   "visitados": "{'sellerID': '1', 'visitedClient': '11'}",
   "km": null,
-  "visitadosTotal": 466,
+  "visitadosTotal": 470,
   "kmError": null
  },
  "gescom": {
@@ -19,7 +21,7 @@
  },
  "alerta": "hay 3 llegadas tarde, sin casilla configurada",
  "detalle": {
-  "filas": 600,
+  "filas": 606,
   "vendedores": 16,
   "diasEnHistoria": 40
  },

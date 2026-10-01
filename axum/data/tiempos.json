@@ -23,7 +23,7 @@
    "pedidos": 43,
    "monto": 3436511.96,
    "pasoSinVender": 47,
-   "km": 67.0,
+   "km": 75.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -71,19 +71,19 @@
    "sellerId": "1",
    "vendedor": "Maria Noelia Madia",
    "inicioJornada": "09:32",
-   "finJornada": "14:39",
-   "entradaZona": null,
-   "salidaZona": null,
-   "zonaConfiable": false,
+   "finJornada": "16:46",
+   "entradaZona": "16:42",
+   "salidaZona": "16:46",
+   "zonaConfiable": true,
    "primera": "09:32",
-   "ultima": "14:39",
-   "visitas": 50,
-   "minutosTotal": 200.0,
-   "minutosPromedio": 4.0,
-   "pedidos": 36,
-   "monto": 1972736.21,
-   "pasoSinVender": 30,
-   "km": 44.0,
+   "ultima": "16:40",
+   "visitas": 51,
+   "minutosTotal": 200.3,
+   "minutosPromedio": 3.9,
+   "pedidos": 37,
+   "monto": 3020593.58,
+   "pasoSinVender": 31,
+   "km": 51.0,
    "llegoTarde": true,
    "salioTemprano": false
   },
@@ -143,7 +143,7 @@
    "pedidos": 55,
    "monto": 4515934.44,
    "pasoSinVender": 20,
-   "km": 29.0,
+   "km": 31.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -163,7 +163,7 @@
    "pedidos": 46,
    "monto": 6474517.3,
    "pasoSinVender": 22,
-   "km": 28.0,
+   "km": 32.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -1379,6 +1379,21 @@
     "hora": "15:45",
     "clientId": "4443",
     "nombre": "WANG ZHENGWEN"
+   },
+   {
+    "hora": "16:37",
+    "clientId": "1590",
+    "nombre": "FRUTICEL TOUCH S.R.L."
+   },
+   {
+    "hora": "16:42",
+    "clientId": "1920",
+    "nombre": "MOISES ERICA BEATRIZ"
+   },
+   {
+    "hora": "16:42",
+    "clientId": "1919",
+    "nombre": "Mainmenu Gastronomía S.A"
    }
   ],
   "10": [
@@ -2683,6 +2698,11 @@
     "hora": "14:39",
     "clientId": "1601",
     "nombre": "KIOSMDQ"
+   },
+   {
+    "hora": "16:40",
+    "clientId": "893",
+    "nombre": "Rocio De mar"
    }
   ]
  }
