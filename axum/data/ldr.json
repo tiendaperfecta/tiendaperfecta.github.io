@@ -1,324 +1,170 @@
 {
- "date": "2026-09-30",
+ "date": "2026-10-01",
  "camiones": [
   {
    "id": "11",
-   "lat": -38.00892,
-   "lng": -57.57171,
-   "hora": "4:59 PM",
-   "etiqueta": "nnn"
-  },
-  {
-   "id": "7",
-   "lat": -38.0245883,
-   "lng": -57.598385,
-   "hora": "4:59 PM",
-   "etiqueta": "nnn"
-  },
-  {
-   "id": "3",
-   "lat": -38.0090136,
-   "lng": -57.5716149,
-   "hora": "4:59 PM",
-   "etiqueta": "nnn"
-  },
-  {
-   "id": "5",
-   "lat": -38.0080407,
-   "lng": -57.6215863,
-   "hora": "4:59 PM",
-   "etiqueta": "nnn"
-  },
-  {
-   "id": "6",
-   "lat": -38.0080687,
-   "lng": -57.6217656,
-   "hora": "4:23 PM",
-   "etiqueta": "nnn"
-  },
-  {
-   "id": "9",
-   "lat": -38.092605,
-   "lng": -57.5482833333333,
-   "hora": "12:46 PM",
-   "etiqueta": "nnn"
-  },
-  {
-   "id": "1",
-   "lat": -38.024351,
-   "lng": -57.5986783,
-   "hora": "4:59 PM",
-   "etiqueta": "nnn"
-  },
-  {
-   "id": "12",
-   "lat": -38.0025571,
-   "lng": -57.578633,
-   "hora": "1:01 PM",
-   "etiqueta": "nnn"
-  },
-  {
-   "id": "4",
-   "lat": -38.0081046,
-   "lng": -57.621596,
-   "hora": "4:09 PM",
-   "etiqueta": "nnn"
-  },
-  {
-   "id": "10",
-   "lat": -38.0012536,
-   "lng": -57.6069454,
-   "hora": "4:59 PM",
-   "etiqueta": "nnn"
-  },
-  {
-   "id": "2",
-   "lat": -38.0089442,
-   "lng": -57.5717214,
-   "hora": "4:59 PM",
-   "etiqueta": "nnn"
+   "lat": -37.9852359,
+   "lng": -57.5695751,
+   "hora": "7:53 AM",
+   "etiqueta": "575"
   }
  ],
  "fuente": "Panel de Fleteros (API GesCom) + posiciones de Axum GPS",
  "nota": "Axum solo expone la posición de los camiones: sus reportes de reparto, km y eventos por camión responden vacío o error. Las estadísticas de choferes salen del Panel de Fleteros.",
  "fleteros": {
-  "fecha": "2026-09-29",
-  "esDeHoy": false,
-  "cartonesCargados": true,
+  "fecha": "2026-10-01",
+  "esDeHoy": true,
+  "cartonesCargados": false,
   "rows": [
-   {
-    "fletero": "Alejandro Fabian Maiorano",
-    "zona": "",
-    "repartos": 2,
-    "asignadas": 58,
-    "realizadas": 58,
-    "efectividad": 100.0,
-    "cartonesARetornar": 42,
-    "cartonesRetornados": 0,
-    "efCartones": 0.0
-   },
    {
     "fletero": "Algañaraz German Marcelo",
     "zona": "",
-    "repartos": 2,
-    "asignadas": 98,
-    "realizadas": 98,
+    "repartos": 1,
+    "asignadas": 1,
+    "realizadas": 1,
     "efectividad": 100.0,
-    "cartonesARetornar": 45,
+    "cartonesARetornar": 0,
     "cartonesRetornados": 0,
-    "efCartones": 0.0
+    "efCartones": null
    },
    {
     "fletero": "Diego Andrés Martorello",
     "zona": "",
-    "repartos": 3,
-    "asignadas": 135,
-    "realizadas": 135,
+    "repartos": 1,
+    "asignadas": 1,
+    "realizadas": 1,
     "efectividad": 100.0,
-    "cartonesARetornar": 39,
+    "cartonesARetornar": 0,
     "cartonesRetornados": 0,
-    "efCartones": 0.0
-   },
-   {
-    "fletero": "Edgardo Jacinto Gomez",
-    "zona": "",
-    "repartos": 3,
-    "asignadas": 105,
-    "realizadas": 105,
-    "efectividad": 100.0,
-    "cartonesARetornar": 88,
-    "cartonesRetornados": 0,
-    "efCartones": 0.0
+    "efCartones": null
    },
    {
     "fletero": "Emanuel Valentino Cossu",
     "zona": "",
-    "repartos": 2,
-    "asignadas": 84,
-    "realizadas": 84,
+    "repartos": 1,
+    "asignadas": 1,
+    "realizadas": 1,
     "efectividad": 100.0,
-    "cartonesARetornar": 46,
+    "cartonesARetornar": 0,
     "cartonesRetornados": 0,
-    "efCartones": 0.0
+    "efCartones": null
    },
    {
     "fletero": "Enzo Julián Rizzoni",
     "zona": "",
-    "repartos": 2,
-    "asignadas": 65,
-    "realizadas": 65,
+    "repartos": 1,
+    "asignadas": 2,
+    "realizadas": 2,
     "efectividad": 100.0,
-    "cartonesARetornar": 49,
+    "cartonesARetornar": 0,
     "cartonesRetornados": 0,
-    "efCartones": 0.0
-   },
-   {
-    "fletero": "Leandro Martín Cossu",
-    "zona": "",
-    "repartos": 2,
-    "asignadas": 75,
-    "realizadas": 75,
-    "efectividad": 100.0,
-    "cartonesARetornar": 46,
-    "cartonesRetornados": 0,
-    "efCartones": 0.0
+    "efCartones": null
    },
    {
     "fletero": "Leo Damian Moncada",
     "zona": "",
-    "repartos": 2,
-    "asignadas": 69,
-    "realizadas": 69,
+    "repartos": 1,
+    "asignadas": 1,
+    "realizadas": 1,
     "efectividad": 100.0,
-    "cartonesARetornar": 35,
+    "cartonesARetornar": 0,
     "cartonesRetornados": 0,
-    "efCartones": 0.0
-   },
-   {
-    "fletero": "Marcelo Javier Acuña",
-    "zona": "",
-    "repartos": 2,
-    "asignadas": 66,
-    "realizadas": 66,
-    "efectividad": 100.0,
-    "cartonesARetornar": 47,
-    "cartonesRetornados": 0,
-    "efCartones": 0.0
+    "efCartones": null
    },
    {
     "fletero": "Mario Luis Gastiarena",
     "zona": "",
-    "repartos": 2,
-    "asignadas": 54,
-    "realizadas": 54,
+    "repartos": 1,
+    "asignadas": 4,
+    "realizadas": 4,
     "efectividad": 100.0,
-    "cartonesARetornar": 46,
+    "cartonesARetornar": 0,
     "cartonesRetornados": 0,
-    "efCartones": 0.0
+    "efCartones": null
    },
    {
     "fletero": "Rodrigo Martin Soto",
     "zona": "",
-    "repartos": 2,
-    "asignadas": 53,
-    "realizadas": 53,
+    "repartos": 1,
+    "asignadas": 2,
+    "realizadas": 2,
     "efectividad": 100.0,
-    "cartonesARetornar": 43,
+    "cartonesARetornar": 0,
     "cartonesRetornados": 0,
-    "efCartones": 0.0
+    "efCartones": null
    }
   ],
   "totales": {
-   "choferes": 11,
-   "repartos": 24,
-   "asignadas": 862,
-   "realizadas": 862,
+   "choferes": 7,
+   "repartos": 7,
+   "asignadas": 12,
+   "realizadas": 12,
    "efectividad": 100.0
   }
  },
  "mes": {
-  "clave": "2026-09",
-  "efGeneral": 96.5,
-  "cartonGeneral": 66.5,
-  "repartos": 268,
-  "entregadas": 9805,
-  "boletas": 10159,
-  "actualizado": "2026-09-30",
+  "clave": "2026-10",
+  "efGeneral": 100,
+  "cartonGeneral": 0,
+  "repartos": 7,
+  "entregadas": 12,
+  "boletas": 12,
+  "actualizado": "2026-10-01",
   "ranking": [
    {
-    "nombre": "Marcelo Javier Acuña",
-    "repartos": 15,
-    "asist": 68,
-    "efE": 98.6,
-    "efC": 62,
-    "premio": 0
-   },
-   {
-    "nombre": "Edgardo Jacinto Gomez",
-    "repartos": 27,
-    "asist": 100,
-    "efE": 98.5,
-    "efC": 76.2,
-    "premio": 0
-   },
-   {
-    "nombre": "Mario Luis Gastiarena",
-    "repartos": 22,
-    "asist": 100,
-    "efE": 98.2,
-    "efC": 55.5,
-    "premio": 0
-   },
-   {
-    "nombre": "Leo Damian Moncada",
-    "repartos": 21,
-    "asist": 95,
-    "efE": 98,
-    "efC": 63.1,
-    "premio": 0
-   },
-   {
-    "nombre": "Enzo Julián Rizzoni",
-    "repartos": 29,
-    "asist": 100,
-    "efE": 97.7,
-    "efC": 56.8,
-    "premio": 0
-   },
-   {
-    "nombre": "Algañaraz German Marcelo",
-    "repartos": 12,
-    "asist": 55,
-    "efE": 97.1,
-    "efC": 53.5,
-    "premio": 0
-   },
-   {
-    "nombre": "Ezequiel Dario Gargan",
-    "repartos": 19,
-    "asist": 86,
-    "efE": 96.5,
-    "efC": 68.6,
-    "premio": 0
-   },
-   {
-    "nombre": "Diego Andrés Martorello",
-    "repartos": 35,
-    "asist": 100,
-    "efE": 96.1,
-    "efC": 69.4,
+    "nombre": "Emanuel Valentino Cossu",
+    "repartos": 1,
+    "asist": 5,
+    "efE": 100,
+    "efC": 0,
     "premio": 0
    },
    {
     "nombre": "Rodrigo Martin Soto",
-    "repartos": 22,
-    "asist": 100,
-    "efE": 95.8,
-    "efC": 71.6,
+    "repartos": 1,
+    "asist": 5,
+    "efE": 100,
+    "efC": 0,
     "premio": 0
    },
    {
-    "nombre": "Emanuel Valentino Cossu",
-    "repartos": 22,
-    "asist": 100,
-    "efE": 94.8,
-    "efC": 80.2,
+    "nombre": "Leo Damian Moncada",
+    "repartos": 1,
+    "asist": 5,
+    "efE": 100,
+    "efC": 0,
     "premio": 0
    },
    {
-    "nombre": "Leandro Martín Cossu",
-    "repartos": 22,
-    "asist": 100,
-    "efE": 94.1,
-    "efC": 59.9,
+    "nombre": "Algañaraz German Marcelo",
+    "repartos": 1,
+    "asist": 5,
+    "efE": 100,
+    "efC": 0,
     "premio": 0
    },
    {
-    "nombre": "Alejandro Fabian Maiorano",
-    "repartos": 22,
-    "asist": 100,
-    "efE": 93.6,
-    "efC": 65.5,
+    "nombre": "Enzo Julián Rizzoni",
+    "repartos": 1,
+    "asist": 5,
+    "efE": 100,
+    "efC": 0,
+    "premio": 0
+   },
+   {
+    "nombre": "Diego Andrés Martorello",
+    "repartos": 1,
+    "asist": 5,
+    "efE": 100,
+    "efC": 0,
+    "premio": 0
+   },
+   {
+    "nombre": "Mario Luis Gastiarena",
+    "repartos": 1,
+    "asist": 5,
+    "efE": 100,
+    "efC": 0,
     "premio": 0
    }
   ]
