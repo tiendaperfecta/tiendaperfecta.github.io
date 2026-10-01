@@ -362,9 +362,10 @@ def objetivos_kg(anio, mes):
         todos = json.loads(OBJETIVOS_KG.read_text(encoding="utf-8"))
     except Exception:
         return {}, None
+    claves_validas = [k for k in todos if isinstance(todos[k], dict)]
     clave = "%04d-%02d" % (anio, mes)
-    if clave not in todos:
-        previos = sorted(k for k in todos if k < clave) or sorted(todos)
+    if clave not in claves_validas:
+        previos = sorted(k for k in claves_validas if k < clave) or sorted(claves_validas)
         if not previos:
             return {}, None
         clave = previos[-1]
