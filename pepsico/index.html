@@ -537,7 +537,8 @@ td.ip-base.clickable{cursor:pointer}
   <h2 class="section-title">Mi Negocio+ por vendedor</h2>
   <p class="section-note">
     Ordenado de menor a mayor % de venta por el canal digital. <b>Universo/Registrado/Activos/Fully Digital</b>
-    vienen del Power BI "Mi Negocio +" (PepsiCo), export manual del 22/09.
+    vienen del Power BI "Mi Negocio +" (PepsiCo), cierre de septiembre 2026. <b>Acum. MN/Acumulado/% Mi Negocio</b>
+    salen de Gescom (igual que el resto del tablero).
   </p>
 
   <div class="table-scroll mn-watermark">
@@ -553,8 +554,8 @@ td.ip-base.clickable{cursor:pointer}
       <tfoot>
         <tr>
           <td class="name">Total PepsiCo</td>
-          <td>2.548</td><td>2.217</td><td>1.371</td>
-          <td>15.506</td><td>19.741</td><td>78,6%</td><td>1.128</td>
+          <td>2.548</td><td>2.084</td><td>1.452</td>
+          <td>19.820</td><td>25.999</td><td>76,2%</td><td>1.144</td>
         </tr>
       </tfoot>
     </table>
@@ -581,7 +582,7 @@ td.ip-base.clickable{cursor:pointer}
   </div>
 
   <p class="foot-note">
-    Fuente: Power BI "Mi Negocio +" (PepsiCo), export manual del 22/09, cruzado con la ruta de preventa de
+    Fuente: Power BI "Mi Negocio +" (PepsiCo), cierre de septiembre 2026, cruzado con la ruta de preventa de
     <code>Clientes Claude.xlsx</code>.
   </p>
 
@@ -1627,18 +1628,18 @@ const rowsReadyPromise = Promise.all([
 }).catch(() => {});
 
 const mnRows = [
-  {n:"Ezequiel Hack",           mn:981.90,  acum:1498.03, share:65.55, avanceMn:75.29, universo:221, registrado:188, activos:80,  fullyDigital:67},
-  {n:"Matias Parada",           mn:906.72,  acum:1371.91, share:66.09, avanceMn:79.20, universo:215, registrado:166, activos:79,  fullyDigital:59},
-  {n:"Ludmila Aylen Martinez",  mn:1565.51, acum:2083.93, share:75.12, avanceMn:76.03, universo:203, registrado:171, activos:116, fullyDigital:85},
-  {n:"Lucas Giayetto",          mn:1538.28, acum:1984.26, share:77.52, avanceMn:101.31, universo:234, registrado:184, activos:104, fullyDigital:83},
-  {n:"Agustin Pogorzelski",     mn:1081.67, acum:1387.71, share:77.95, avanceMn:88.35, universo:203, registrado:184, activos:111, fullyDigital:100},
-  {n:"Melanie Larrama",         mn:1102.15, acum:1393.03, share:79.12, avanceMn:85.73, universo:201, registrado:180, activos:98,  fullyDigital:78},
-  {n:"Camila Martinez",         mn:1135.36, acum:1423.15, share:79.78, avanceMn:95.92, universo:217, registrado:200, activos:142, fullyDigital:106},
-  {n:"Nicolas Martinez",        mn:1454.57, acum:1803.65, share:80.65, avanceMn:104.90, universo:211, registrado:206, activos:149, fullyDigital:115},
-  {n:"Ramiro Rando",            mn:1515.96, acum:1834.00, share:82.66, avanceMn:104.76, universo:223, registrado:196, activos:125, fullyDigital:115},
-  {n:"Maria Noelia Madia",      mn:1057.29, acum:1261.48, share:83.81, avanceMn:93.44, universo:176, registrado:169, activos:103, fullyDigital:95},
-  {n:"Martinica Rodriguez",     mn:1576.86, acum:1861.72, share:84.70, avanceMn:108.52, universo:254, registrado:200, activos:131, fullyDigital:110},
-  {n:"Julian Nuñez",            mn:1590.21, acum:1837.64, share:86.54, avanceMn:89.30, universo:190, registrado:173, activos:133, fullyDigital:115},
+  {n:"Matias Parada",           mn:1089.88, acum:1794.87, share:60.72, universo:214, registrado:150, activos:81,  fullyDigital:56},
+  {n:"Ezequiel Hack",           mn:1253.04, acum:1998.07, share:62.71, universo:221, registrado:148, activos:86,  fullyDigital:68},
+  {n:"Melanie Larrama",         mn:1359.23, acum:1816.12, share:74.84, universo:199, registrado:147, activos:108, fullyDigital:86},
+  {n:"Agustin Pogorzelski",     mn:1340.17, acum:1789.69, share:74.88, universo:203, registrado:159, activos:117, fullyDigital:96},
+  {n:"Ludmila Aylen Martinez",  mn:1988.60, acum:2638.01, share:75.38, universo:203, registrado:162, activos:123, fullyDigital:83},
+  {n:"Lucas Giayetto",          mn:2114.91, acum:2803.40, share:75.44, universo:232, registrado:141, activos:112, fullyDigital:87},
+  {n:"Ramiro Rando",            mn:1882.44, acum:2427.44, share:77.55, universo:226, registrado:167, activos:128, fullyDigital:111},
+  {n:"Camila Martinez",         mn:1485.42, acum:1908.17, share:77.85, universo:216, registrado:189, activos:152, fullyDigital:110},
+  {n:"Nicolas Martinez",        mn:1848.89, acum:2314.73, share:79.87, universo:212, registrado:199, activos:154, fullyDigital:116},
+  {n:"Maria Noelia Madia",      mn:1312.85, acum:1615.02, share:81.29, universo:176, registrado:156, activos:107, fullyDigital:92},
+  {n:"Martinica Rodriguez",     mn:2018.54, acum:2417.81, share:83.49, universo:253, registrado:173, activos:141, fullyDigital:117},
+  {n:"Julian Nuñez",            mn:2126.51, acum:2475.88, share:85.89, universo:190, registrado:165, activos:142, fullyDigital:121},
 ];
 
 let marcaVendRows = [];
