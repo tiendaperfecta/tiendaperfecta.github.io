@@ -44,6 +44,10 @@ h1{
   border-radius:99px; padding:6px 14px; cursor:pointer;
 }
 .mes-presets button.activo{background:var(--panel); color:var(--text); box-shadow:var(--shadow)}
+#dia-selector-limpiar{
+  font:600 12.5px "IBM Plex Sans"; color:var(--accent); background:var(--accent-soft); border:none;
+  border-radius:99px; padding:6px 14px; cursor:pointer;
+}
 .sub b{color:var(--text); font-weight:600}
 
 .kpis{
@@ -302,6 +306,9 @@ td.ip-base.clickable{cursor:pointer}
     </div>
     <label for="mes-selector">Otro mes:</label>
     <input type="month" id="mes-selector" min="2026-01">
+    <label for="dia-selector" style="margin-left:10px">Ver un día puntual:</label>
+    <input type="date" id="dia-selector">
+    <button type="button" id="dia-selector-limpiar" style="display:none">Volver a hoy</button>
   </div>
   <div id="banner-archivo" style="display:none; background:var(--accent-soft); color:var(--accent); font-weight:600; padding:8px 14px; border-radius:8px; margin-bottom:16px; font-size:13.5px"></div>
   <p class="sub">
@@ -333,7 +340,7 @@ td.ip-base.clickable{cursor:pointer}
       <div class="value" id="kpi-tendencia">—</div>
     </div>
     <div class="kpi">
-      <div class="label">Venta real hoy</div>
+      <div class="label" id="kpi-real-label">Venta real hoy</div>
       <div class="value" id="kpi-real-hoy">—</div>
     </div>
     <div class="kpi">
@@ -379,20 +386,6 @@ td.ip-base.clickable{cursor:pointer}
   </div>
 
   <div class="tab-panel active" data-tab-panel="por-vendedor">
-
-  <h3 class="subsection-title">Historial de venta por día</h3>
-  <p class="section-note">
-    Kg vendidos (Platino+Gold + Silver&amp;Bronze) por fecha de pedido, últimos días disponibles. La fila de
-    <b>hoy</b> se va actualizando en vivo a medida que se cargan pedidos.
-  </p>
-  <div id="historial-diario-wrap">
-    <div class="table-scroll" style="max-height:300px; overflow-y:auto">
-      <table>
-        <thead><tr class="cols"><th class="name-col">Fecha</th><th style="text-align:right">Kg vendidos</th></tr></thead>
-        <tbody id="tbody-historial-diario"></tbody>
-      </table>
-    </div>
-  </div>
 
   <h2 class="section-title">Por vendedor</h2>
   <p class="section-note">
@@ -1325,6 +1318,41 @@ if (MES_SEL) {
   }).catch(() => {});
 })();
 
+let realHoyActual = 0;
+let diaSeleccionado = '';
+function initSelectorDia(){
+  const sel = document.getElementById('dia-selector');
+  const btnLimpiar = document.getElementById('dia-selector-limpiar');
+  if (!sel) return;
+  const hoy = new Date();
+  sel.max = `${hoy.getFullYear()}-${String(hoy.getMonth()+1).padStart(2,'0')}-${String(hoy.getDate()).padStart(2,'0')}`;
+
+  function mostrarDia(fecha){
+    const entrada = historialDiarioData.find(f => f.fecha === fecha);
+    const [anio, mes, dia] = fecha.split('-');
+    const labelEl = document.getElementById('kpi-real-label');
+    const valorEl = document.getElementById('kpi-real-hoy');
+    if (labelEl) labelEl.textContent = `Venta real — ${dia}/${mes}`;
+    if (valorEl) valorEl.innerHTML = entrada ? `${fmt(entrada.kg)}<span class="unit">kg</span>` : 'Sin datos';
+    btnLimpiar.style.display = 'inline-block';
+  }
+
+  sel.addEventListener('change', () => {
+    if (!sel.value) return;
+    diaSeleccionado = sel.value;
+    mostrarDia(diaSeleccionado);
+  });
+  btnLimpiar.addEventListener('click', () => {
+    diaSeleccionado = '';
+    sel.value = '';
+    btnLimpiar.style.display = 'none';
+    const labelEl = document.getElementById('kpi-real-label');
+    const valorEl = document.getElementById('kpi-real-hoy');
+    if (labelEl) labelEl.textContent = 'Venta real hoy';
+    if (valorEl) valorEl.innerHTML = `${fmt(realHoyActual)}<span class="unit">kg</span>`;
+  });
+}
+
 let noCompradoresDetalle = [];
 fetch(BASE + 'no_compradores_detalle.json').then(r => r.json()).then(data => { noCompradoresDetalle = data; }).catch(() => {});
 
@@ -1764,25 +1792,11 @@ function fmt(n, d=0){ return n.toLocaleString('es-AR', {minimumFractionDigits:d,
 function tier(p){ return p>=100 ? 'good' : p>=90 ? 'warn' : 'bad'; }
 function tierShare(p){ return p>=85 ? 'good' : p>=75 ? 'warn' : 'bad'; }
 
-const DIAS_SEM_CORTO = ['dom','lun','mar','mié','jue','vie','sáb'];
-function renderHistorialDiario(historial) {
-  const tbody = document.getElementById('tbody-historial-diario');
-  if (!tbody) return;
-  const hoyIso = new Date().toISOString().slice(0, 10);
-  const filas = [...historial].sort((a, b) => b.fecha.localeCompare(a.fecha));
-  tbody.innerHTML = filas.map(f => {
-    const [anio, mes, dia] = f.fecha.split('-');
-    const diaSemana = DIAS_SEM_CORTO[new Date(f.fecha + 'T12:00:00').getDay()];
-    const esHoy = f.fecha === hoyIso;
-    return `<tr${esHoy ? ' style="font-weight:700; color:var(--accent)"' : ''}><td class="name">${diaSemana} ${dia}/${mes}${esHoy ? ' (hoy)' : ''}</td><td style="text-align:right">${fmt(f.kg, 1)}</td></tr>`;
-  }).join('') || '<tr><td colspan="2" style="text-align:center;color:var(--muted)">Sin historial disponible</td></tr>';
-}
+let historialDiarioData = [];
 fetch(BASE + 'historial_diario.json').then(r => r.json()).then(data => {
-  renderHistorialDiario(data);
-}).catch(() => {
-  const wrap = document.getElementById('historial-diario-wrap');
-  if (wrap) wrap.innerHTML = '<p class="section-note">Sin historial disponible para este mes.</p>';
-});
+  historialDiarioData = data || [];
+  initSelectorDia();
+}).catch(() => { historialDiarioData = []; initSelectorDia(); });
 
 fetch(BASE + 'tienda_perfecta.json').then(r => r.json()).then(data => {
   renderTiendaPerfecta(data);
@@ -2486,7 +2500,8 @@ if (kgAvanceMeta) {
   const tendTotal = rows.reduce((s,r)=>s+r.tendencia,0);
   document.getElementById('kpi-tendencia').innerHTML = `${fmt(tendTotal)}<span class="unit">kg</span>`;
   const realTotal = rows.reduce((s,r)=>s+r.real,0);
-  document.getElementById('kpi-real-hoy').innerHTML = `${fmt(realTotal)}<span class="unit">kg</span>`;
+  realHoyActual = realTotal;
+  if (!diaSeleccionado) document.getElementById('kpi-real-hoy').innerHTML = `${fmt(realTotal)}<span class="unit">kg</span>`;
   const medianecTotal = rows.reduce((s,r)=>s+r.medianec,0);
   document.getElementById('kpi-media-necesaria').innerHTML = `${fmt(medianecTotal,1)}<span class="unit">kg/día</span>`;
   document.getElementById('seg-pg-pct').textContent = fmt(pctPG,1) + '%';
