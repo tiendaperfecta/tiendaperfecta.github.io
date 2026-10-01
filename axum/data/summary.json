@@ -1,8 +1,8 @@
 {
  "date": "2026-10-01",
- "totalNet": 1292889.41,
- "totalGross": 1564396.18,
- "orders": 6,
+ "totalNet": 3551207.42,
+ "totalGross": 4296960.98,
+ "orders": 36,
  "bySeller": [
   {
    "sellerId": "9",
@@ -11,33 +11,96 @@
    "total": 1230143.5
   },
   {
+   "sellerId": "2",
+   "name": "Julian Nuñez",
+   "orders": 4,
+   "total": 1147251.06
+  },
+  {
+   "sellerId": "8",
+   "name": "Martinica Rodriguez",
+   "orders": 4,
+   "total": 611071.66
+  },
+  {
    "sellerId": "11",
    "name": "Melanie Larrama",
-   "orders": 4,
-   "total": 261466.96
+   "orders": 8,
+   "total": 491494.31
+  },
+  {
+   "sellerId": "7",
+   "name": "Ramiro Rando",
+   "orders": 2,
+   "total": 353571.47
+  },
+  {
+   "sellerId": "5",
+   "name": "Nicolas Martinez",
+   "orders": 1,
+   "total": 187500.11
+  },
+  {
+   "sellerId": "12",
+   "name": "Agustin Pogorzelski",
+   "orders": 1,
+   "total": 102500.21
   },
   {
    "sellerId": "3",
    "name": "Ezequiel Hack",
    "orders": 1,
    "total": 72785.72
+  },
+  {
+   "sellerId": "4",
+   "name": "Lucas Giayetto",
+   "orders": 1,
+   "total": 52714.28
+  },
+  {
+   "sellerId": "1",
+   "name": "Maria Noelia Madia",
+   "orders": 1,
+   "total": 47928.66
+  },
+  {
+   "sellerId": "20",
+   "name": "Deposito",
+   "orders": 12,
+   "total": 0.0
   }
  ],
  "byChannel": [
   {
    "channel": "TRADITIONAL TRADE_A",
-   "orders": 2,
-   "total": 1336572.22
+   "orders": 13,
+   "total": 3330065.23
+  },
+  {
+   "channel": "TRADITIONAL TRADE_B",
+   "orders": 5,
+   "total": 588642.92
   },
   {
    "channel": "TRADITIONAL TRADE_C",
-   "orders": 2,
-   "total": 163928.61
+   "orders": 3,
+   "total": 211857.27
+  },
+  {
+   "channel": "PROXIMITY_D",
+   "orders": 1,
+   "total": 102500.21
   },
   {
    "channel": "PROXIMITY_B",
    "orders": 2,
    "total": 63895.35
+  },
+  {
+   "channel": "s/canal",
+   "orders": 12,
+   "total": 0.0
   }
  ],
  "topClients": [
@@ -48,10 +111,70 @@
    "total": 1230143.5
   },
   {
+   "clientId": "2791",
+   "name": "DUVAL ST.  ALMACEN S. R. L. (Autoservicio Tradicional_A)",
+   "orders": 3,
+   "total": 923108.1
+  },
+  {
+   "clientId": "4770",
+   "name": "COMERCIALIZADORA JUAN GABILAN S. A. (Almacen/Despensa_A)",
+   "orders": 1,
+   "total": 314714.47
+  },
+  {
+   "clientId": "1675",
+   "name": "FRUTICEL TOUCH SRL (Kiosco/Maxikiosco_A)",
+   "orders": 1,
+   "total": 224142.95
+  },
+  {
+   "clientId": "3535",
+   "name": "ANALIA CRISTINA VIVAS (Autoservicio Tradicional_A)",
+   "orders": 1,
+   "total": 187500.11
+  },
+  {
+   "clientId": "3308",
+   "name": "DELIN LIAO (Autoservicio Tradicional_B)",
+   "orders": 1,
+   "total": 186857.16
+  },
+  {
+   "clientId": "4461",
+   "name": "JARANA MULTISERVICIO MYL SOCIEDAD ANONIMA (Almacen/Despensa_B)",
+   "orders": 1,
+   "total": 166714.31
+  },
+  {
+   "clientId": "1576",
+   "name": "KIOSMDQ (Kiosco/Maxikiosco_A)",
+   "orders": 3,
+   "total": 161170.18
+  },
+  {
+   "clientId": "2968",
+   "name": "Sandra sisterna (Kiosco/Maxikiosco_A)",
+   "orders": 1,
+   "total": 126428.58
+  },
+  {
+   "clientId": "131",
+   "name": "MARIO GERBINO (Kiosco/Maxikiosco_B)",
+   "orders": 1,
+   "total": 113500.0
+  },
+  {
    "clientId": "1622",
    "name": "KIOSMDQ (Kiosco/Maxikiosco_A)",
    "orders": 1,
    "total": 106428.72
+  },
+  {
+   "clientId": "1382",
+   "name": "ASARO ROQUE ANTONIO (Estacion de Servicio_D)",
+   "orders": 1,
+   "total": 102500.21
   },
   {
    "clientId": "4576",
@@ -66,10 +189,40 @@
    "total": 72785.72
   },
   {
+   "clientId": "1646",
+   "name": "KIOSMDQ (Kiosco/Maxikiosco_B)",
+   "orders": 1,
+   "total": 68857.17
+  },
+  {
    "clientId": "1165",
    "name": "SALINAS CHICO (Estacion de Servicio - NO OFICIALES_B)",
    "orders": 2,
    "total": 63895.35
+  },
+  {
+   "clientId": "2050",
+   "name": "FRIGORIFICO EL REY DE LA 39 (Almacen/Despensa_A)",
+   "orders": 1,
+   "total": 56428.62
+  },
+  {
+   "clientId": "444",
+   "name": "GRISELDA RAQUEL CANSOBRE (Almacen/Despensa_B)",
+   "orders": 1,
+   "total": 52714.28
+  },
+  {
+   "clientId": "2567",
+   "name": "MARTA ROSA ARMATTA (Kiosco/Maxikiosco_C)",
+   "orders": 1,
+   "total": 47928.66
+  },
+  {
+   "clientId": "6",
+   "name": "",
+   "orders": 1,
+   "total": 0.0
   }
  ]
 }
