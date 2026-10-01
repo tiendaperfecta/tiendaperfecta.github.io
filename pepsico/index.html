@@ -1265,6 +1265,11 @@ if (MES_SEL) {
     bannerEl.style.display = 'block';
     bannerEl.textContent = `📅 Estás viendo el cierre archivado de ${nombreMesSel}. Portafolio, Mi Negocio+ y Combos no tienen historial (solo se ven en el mes actual). Compromiso y Proyección de IPs no aplican a meses cerrados.`;
   }
+} else {
+  const hoyEyebrow = new Date();
+  const nombreMesActual = `${NOMBRES_MES[hoyEyebrow.getMonth() + 1]} ${hoyEyebrow.getFullYear()}`;
+  const eyebrowEl = document.getElementById('eyebrow-label');
+  if (eyebrowEl) eyebrowEl.textContent = `PepsiCo · Tienda Perfecta · Objetivo TN ${nombreMesActual}`;
 }
 
 (function initSelectorMes(){
