@@ -312,7 +312,7 @@ td.ip-base.clickable{cursor:pointer}
   </div>
   <div id="banner-archivo" style="display:none; background:var(--accent-soft); color:var(--accent); font-weight:600; padding:8px 14px; border-radius:8px; margin-bottom:16px; font-size:13.5px"></div>
   <p class="sub">
-    Medida en <b>kilogramos</b>. Acumulado del <b>01/09</b> hasta hoy, actualizado automáticamente por API dos
+    Medida en <b>kilogramos</b>. Acumulado del <b id="sub-periodo-inicio">01/09</b> hasta hoy, actualizado automáticamente por API dos
     veces por día (días hábiles = lunes a sábado, domingo no es día hábil). El <b>Avance</b> es
     contra el objetivo prorrateado a la fecha, no contra el objetivo total del mes.
     Columna <b>Real</b> = kg vendidos hoy. <b>Platino+Gold</b> y <b>Silver&amp;Bronze</b> se arman por
@@ -592,8 +592,8 @@ td.ip-base.clickable{cursor:pointer}
   <h2 class="section-title">Cobertura por marca y vendedor</h2>
   <p class="section-note">
     Cobertura = clientes con 3 o más unidades de la marca en el período ÷ universo de clientes del vendedor.
-    Período 01/09-25/09, actualizado automáticamente por API dos veces por día. Color relativo por columna
-    (rojo = más bajo, verde = más alto dentro de esa marca).
+    Período <b id="cobertura-marca-periodo">01/09 hasta hoy</b>, actualizado automáticamente por API dos veces
+    por día. Color relativo por columna (rojo = más bajo, verde = más alto dentro de esa marca).
   </p>
 
   <div class="table-scroll">
@@ -669,7 +669,7 @@ td.ip-base.clickable{cursor:pointer}
     Tienda Perfecta: A 384 · B 337 · C 669 · D 904 (2.294 clientes) — prorrateado por vendedor según su
     participación de clientes en cada segmento y redondeado a números enteros (el redondeo por vendedor puede
     no cerrar exacto contra el objetivo oficial; el total de la tabla usa siempre el oficial). Cumple = cliente
-    con compra de Pepsico y más de 3 unidades entre el 01/09 y el 25/09, actualizado automáticamente por API dos
+    con compra de Pepsico y más de 3 unidades entre el <b id="ccc-periodo">01/09 y hoy</b>, actualizado automáticamente por API dos
     veces por día. Ordenado de menor a mayor avance total. Click en el % de Avance de cada segmento para ver el
     detalle de los clientes que todavía no compraron.
   </p>
@@ -957,7 +957,7 @@ td.ip-base.clickable{cursor:pointer}
     Productos vencidos o dañados retirados de los clientes este mes. <b>Venta $</b> = filas con
     <code>TipoDeVenta = Venta</code>. <b>Retirado por Canje</b> = filas con
     <code>TipoDeVenta = Devolución por Canje</code> (viene en negativo, es lo que se retiró sin cobrar).
-    <b>% Invendible</b> = Retirado por Canje ÷ Venta $. Período 01/09 hasta hoy vía GesCom API, actualizado
+    <b>% Invendible</b> = Retirado por Canje ÷ Venta $. Período <b id="invendible-periodo-inicio">01/09</b> hasta hoy vía GesCom API, actualizado
     automáticamente dos veces por día. Ordenado de mayor a menor % (peor primero). Click en el
     vendedor para ver el detalle de productos y cantidades retiradas.
   </p>
@@ -989,7 +989,7 @@ td.ip-base.clickable{cursor:pointer}
     Pedidos rechazados o no entregados este mes. <b>Venta $</b> = filas con <code>TipoDeVenta = Venta</code>.
     <b>Devolución por Rechazo</b> = filas con <code>TipoDeVenta = Devolución por Rechazo</code> (viene en
     negativo, es lo que se rechazó sin cobrar). <b>% Rechazo</b> = Devolución por Rechazo ÷ Venta $. Período
-    01/09 hasta hoy vía GesCom API, actualizado automáticamente dos veces por día. Ordenado de mayor
+    <b id="rechazos-periodo-inicio">01/09</b> hasta hoy vía GesCom API, actualizado automáticamente dos veces por día. Ordenado de mayor
     a menor % (peor primero). Click en el vendedor para ver el detalle de motivos de devolución.
   </p>
 
@@ -1262,21 +1262,35 @@ const MES_SEL = new URLSearchParams(location.search).get('mes') || '';
 const BASE = MES_SEL ? `archive/${MES_SEL}/` : '';
 const NOMBRES_MES = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
+function setTextoSiExiste(id, texto) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = texto;
+}
+
 if (MES_SEL) {
   const [anioSel, mesSel] = MES_SEL.split('-');
   const nombreMesSel = `${NOMBRES_MES[Number(mesSel)]} ${anioSel}`;
-  const eyebrowEl = document.getElementById('eyebrow-label');
-  if (eyebrowEl) eyebrowEl.textContent = `PepsiCo · Tienda Perfecta · Objetivo TN ${nombreMesSel}`;
+  setTextoSiExiste('eyebrow-label', `PepsiCo · Tienda Perfecta · Objetivo TN ${nombreMesSel}`);
   const bannerEl = document.getElementById('banner-archivo');
   if (bannerEl) {
     bannerEl.style.display = 'block';
     bannerEl.textContent = `📅 Estás viendo el cierre archivado de ${nombreMesSel}. Portafolio, Mi Negocio+ y Combos no tienen historial (solo se ven en el mes actual). Compromiso y Proyección de IPs no aplican a meses cerrados.`;
   }
+  setTextoSiExiste('cobertura-marca-periodo', `01/${mesSel} hasta el cierre de ${nombreMesSel}`);
+  setTextoSiExiste('sub-periodo-inicio', `01/${mesSel}`);
+  setTextoSiExiste('invendible-periodo-inicio', `01/${mesSel}`);
+  setTextoSiExiste('rechazos-periodo-inicio', `01/${mesSel}`);
+  setTextoSiExiste('ccc-periodo', `01/${mesSel} y el cierre de ${nombreMesSel}`);
 } else {
   const hoyEyebrow = new Date();
+  const mesActualPad = String(hoyEyebrow.getMonth() + 1).padStart(2,'0');
   const nombreMesActual = `${NOMBRES_MES[hoyEyebrow.getMonth() + 1]} ${hoyEyebrow.getFullYear()}`;
-  const eyebrowEl = document.getElementById('eyebrow-label');
-  if (eyebrowEl) eyebrowEl.textContent = `PepsiCo · Tienda Perfecta · Objetivo TN ${nombreMesActual}`;
+  setTextoSiExiste('eyebrow-label', `PepsiCo · Tienda Perfecta · Objetivo TN ${nombreMesActual}`);
+  setTextoSiExiste('cobertura-marca-periodo', `01/${mesActualPad} hasta hoy`);
+  setTextoSiExiste('sub-periodo-inicio', `01/${mesActualPad}`);
+  setTextoSiExiste('invendible-periodo-inicio', `01/${mesActualPad}`);
+  setTextoSiExiste('rechazos-periodo-inicio', `01/${mesActualPad}`);
+  setTextoSiExiste('ccc-periodo', `01/${mesActualPad} y hoy`);
 }
 
 (function initSelectorMes(){
