@@ -394,7 +394,7 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
     objetivos, mes_obj = objetivos_kg(hoy.year, hoy.month)
     vend = {cod(v.get("codigo")): (v.get("nombre") or "").strip() for v in base_get("/api/catalogo/vendedores")}
     acc = {}
-    for l in lineas_pepsico(hoy.replace(day=1), hoy, "entrega"):
+    for l in lineas_pepsico(hoy.replace(day=1), hoy, "pedido"):
         if l.get("tipo") != "VEN":
             continue
         codven = cod(l.get("ven"))
@@ -465,7 +465,7 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
         "objetivoSB": round(sum(v["p2o"] for v in kg_vendedores), 2),
         "diasHabiles": dias_habiles, "diasTrabajados": dias_trabajados,
         "vendedores": kg_vendedores,
-        "fuente": "base propia (renglones por fecha de entrega); objetivos de %s" % mes_obj,
+        "fuente": "base propia (renglones por fecha de pedido); objetivos de %s" % mes_obj,
     }
 
 
