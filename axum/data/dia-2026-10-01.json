@@ -18,7 +18,7 @@
     "entregadas": 54,
     "rechazos": 1,
     "clientes": 30,
-    "importe": 3874318.15,
+    "importe": 3814364.03,
     "importeRechazado": 2759.96,
     "bultosRechazados": 1.0,
     "efectividad": 98.2
@@ -102,7 +102,7 @@
     "entregadas": 67,
     "rechazos": 0,
     "clientes": 28,
-    "importe": 4194956.11,
+    "importe": 4192456.11,
     "importeRechazado": 0.0,
     "bultosRechazados": 0.0,
     "efectividad": 100.0
@@ -119,11 +119,11 @@
     "cerrado": false,
     "cancelado": false,
     "clientesAsignados": 33,
-    "boletas": 63,
-    "entregadas": 63,
+    "boletas": 62,
+    "entregadas": 62,
     "rechazos": 0,
     "clientes": 33,
-    "importe": 3180042.92,
+    "importe": 3166609.06,
     "importeRechazado": 0.0,
     "bultosRechazados": 0.0,
     "efectividad": 100.0
@@ -144,7 +144,7 @@
     "entregadas": 56,
     "rechazos": 0,
     "clientes": 28,
-    "importe": 5881901.82,
+    "importe": 5869642.9,
     "importeRechazado": 0.0,
     "bultosRechazados": 0.0,
     "efectividad": 100.0
@@ -186,7 +186,7 @@
     "entregadas": 50,
     "rechazos": 0,
     "clientes": 21,
-    "importe": 3141691.2,
+    "importe": 3131624.43,
     "importeRechazado": 0.0,
     "bultosRechazados": 0.0,
     "efectividad": 100.0
@@ -207,7 +207,7 @@
     "entregadas": 49,
     "rechazos": 0,
     "clientes": 30,
-    "importe": 3848605.31,
+    "importe": 3843923.18,
     "importeRechazado": 0.0,
     "bultosRechazados": 0.0,
     "efectividad": 100.0
@@ -270,7 +270,7 @@
     "entregadas": 35,
     "rechazos": 0,
     "clientes": 22,
-    "importe": 1385557.74,
+    "importe": 1373272.03,
     "importeRechazado": 0.0,
     "bultosRechazados": 0.0,
     "efectividad": 100.0
@@ -684,12 +684,12 @@
   "totales": {
    "repartos": 25,
    "choferes": 13,
-   "boletas": 587,
-   "entregadas": 583,
+   "boletas": 586,
+   "entregadas": 582,
    "rechazos": 4,
    "repartosFacturados": 13,
    "clientesQueRechazaron": 4,
-   "importe": 42991420.58,
+   "importe": 42876239.07,
    "importeRechazado": 136831.32,
    "efectividad": 99.3
   }
@@ -11070,11 +11070,11 @@
    "minutos": 0.1,
    "visito": true,
    "hora": "14:31",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 48214.2,
+   "fechaVenta": "2026-10-01",
+   "horaVenta": "17:02",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-10-01",
@@ -12218,8 +12218,8 @@
   }
  ],
  "resumen": {
-  "vendio": 216,
-  "paso_sin_vender": 249,
+  "vendio": 217,
+  "paso_sin_vender": 248,
   "sin_visita": 18,
   "vendio_sin_pasar": 123
  },
@@ -12357,9 +12357,9 @@
    "visitas": 45,
    "minutosTotal": 210.2,
    "minutosPromedio": 4.7,
-   "pedidos": 55,
-   "monto": 4515934.44,
-   "pasoSinVender": 20,
+   "pedidos": 56,
+   "monto": 4564148.64,
+   "pasoSinVender": 19,
    "km": 31.0,
    "llegoTarde": false,
    "salioTemprano": false
@@ -16359,7 +16359,7 @@
  "totales": {
   "visitas": 465,
   "minutos": 2211.9,
-  "pedidos": 594,
-  "monto": 52413552.61
+  "pedidos": 595,
+  "monto": 52461766.81
  }
 }
