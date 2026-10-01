@@ -380,6 +380,20 @@ td.ip-base.clickable{cursor:pointer}
 
   <div class="tab-panel active" data-tab-panel="por-vendedor">
 
+  <h3 class="subsection-title">Historial de venta por día</h3>
+  <p class="section-note">
+    Kg vendidos (Platino+Gold + Silver&amp;Bronze) por fecha de pedido, últimos días disponibles. La fila de
+    <b>hoy</b> se va actualizando en vivo a medida que se cargan pedidos.
+  </p>
+  <div id="historial-diario-wrap">
+    <div class="table-scroll" style="max-height:300px; overflow-y:auto">
+      <table>
+        <thead><tr class="cols"><th class="name-col">Fecha</th><th style="text-align:right">Kg vendidos</th></tr></thead>
+        <tbody id="tbody-historial-diario"></tbody>
+      </table>
+    </div>
+  </div>
+
   <h2 class="section-title">Por vendedor</h2>
   <p class="section-note">
     Ordenado de menor a mayor avance — los que necesitan más empuje primero. <b>Promedio</b> = kg/día vendidos en
@@ -1749,6 +1763,26 @@ document.getElementById('tfoot-portseg').innerHTML = `
 function fmt(n, d=0){ return n.toLocaleString('es-AR', {minimumFractionDigits:d, maximumFractionDigits:d}); }
 function tier(p){ return p>=100 ? 'good' : p>=90 ? 'warn' : 'bad'; }
 function tierShare(p){ return p>=85 ? 'good' : p>=75 ? 'warn' : 'bad'; }
+
+const DIAS_SEM_CORTO = ['dom','lun','mar','mié','jue','vie','sáb'];
+function renderHistorialDiario(historial) {
+  const tbody = document.getElementById('tbody-historial-diario');
+  if (!tbody) return;
+  const hoyIso = new Date().toISOString().slice(0, 10);
+  const filas = [...historial].sort((a, b) => b.fecha.localeCompare(a.fecha));
+  tbody.innerHTML = filas.map(f => {
+    const [anio, mes, dia] = f.fecha.split('-');
+    const diaSemana = DIAS_SEM_CORTO[new Date(f.fecha + 'T12:00:00').getDay()];
+    const esHoy = f.fecha === hoyIso;
+    return `<tr${esHoy ? ' style="font-weight:700; color:var(--accent)"' : ''}><td class="name">${diaSemana} ${dia}/${mes}${esHoy ? ' (hoy)' : ''}</td><td style="text-align:right">${fmt(f.kg, 1)}</td></tr>`;
+  }).join('') || '<tr><td colspan="2" style="text-align:center;color:var(--muted)">Sin historial disponible</td></tr>';
+}
+fetch(BASE + 'historial_diario.json').then(r => r.json()).then(data => {
+  renderHistorialDiario(data);
+}).catch(() => {
+  const wrap = document.getElementById('historial-diario-wrap');
+  if (wrap) wrap.innerHTML = '<p class="section-note">Sin historial disponible para este mes.</p>';
+});
 
 fetch(BASE + 'tienda_perfecta.json').then(r => r.json()).then(data => {
   renderTiendaPerfecta(data);
