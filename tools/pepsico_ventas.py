@@ -4,8 +4,8 @@ pepsico_ventas.py - datos del panel Avance Pepsico via API de GesCom.
 Genera no_compradores_detalle.json, no_compradores_por_dia.json,
 pehuamar90_no_comprado.json, invendible_detalle.json, rechazos_detalle.json,
 cobertura_marca_vendedor.json, ccc_segmento.json, subproductos_vendedor.json,
-subproductos_no_comprado.json, venta_vendedor.json, avance_kg_vendedor.json
-y historial_diario.json.
+subproductos_no_comprado.json, venta_vendedor.json, avance_kg_vendedor.json,
+historial_diario.json y censo_clientes.json.
 
 DESDE EL 30/9/2026 NO USA report/render (el usuario de API nuevo recibe 403). Los
 tres reportes se reemplazaron:
@@ -761,6 +761,11 @@ def main():
             "dia": dia,
             "codven": codven,
         }
+
+    escribir("censo_clientes.json", [
+        {"codigo": c["codigo"], "seg": c["seg"], "dia": c["dia"], "codven": c["codven"]}
+        for c in clientes.values() if c["codven"] in VENDEDORES_PEPSICO
+    ])
 
     subgrupo_por_desc = {}
     for grupo, cfg in SUBPRODUCTOS.items():
