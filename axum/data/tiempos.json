@@ -8,6 +8,26 @@
  },
  "bySeller": [
   {
+   "sellerId": "10",
+   "vendedor": "Matias Parada",
+   "inicioJornada": "08:54",
+   "finJornada": "15:47",
+   "entradaZona": "09:04",
+   "salidaZona": "15:20",
+   "zonaConfiable": true,
+   "primera": "08:54",
+   "ultima": "15:47",
+   "visitas": 66,
+   "minutosTotal": 248.1,
+   "minutosPromedio": 3.8,
+   "pedidos": 43,
+   "monto": 3436511.96,
+   "pasoSinVender": 47,
+   "km": 67.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
    "sellerId": "11",
    "vendedor": "Melanie Larrama",
    "inicioJornada": "08:09",
@@ -23,27 +43,7 @@
    "pedidos": 49,
    "monto": 4710955.74,
    "pasoSinVender": 34,
-   "km": 10.0,
-   "llegoTarde": false,
-   "salioTemprano": false
-  },
-  {
-   "sellerId": "10",
-   "vendedor": "Matias Parada",
-   "inicioJornada": "08:54",
-   "finJornada": "15:03",
-   "entradaZona": "09:04",
-   "salidaZona": "15:03",
-   "zonaConfiable": true,
-   "primera": "08:54",
-   "ultima": "14:53",
-   "visitas": 56,
-   "minutosTotal": 241.1,
-   "minutosPromedio": 4.3,
-   "pedidos": 43,
-   "monto": 3436511.96,
-   "pasoSinVender": 38,
-   "km": 37.0,
+   "km": 28.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -63,7 +63,7 @@
    "pedidos": 65,
    "monto": 5406341.92,
    "pasoSinVender": 27,
-   "km": 11.0,
+   "km": 12.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -143,7 +143,7 @@
    "pedidos": 55,
    "monto": 4515934.44,
    "pasoSinVender": 20,
-   "km": 28.0,
+   "km": 29.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -158,12 +158,12 @@
    "primera": "08:53",
    "ultima": "14:57",
    "visitas": 42,
-   "minutosTotal": 208.9,
-   "minutosPromedio": 5.0,
-   "pedidos": 42,
-   "monto": 6003874.19,
-   "pasoSinVender": 23,
-   "km": 22.0,
+   "minutosTotal": 228.2,
+   "minutosPromedio": 5.4,
+   "pedidos": 46,
+   "monto": 6474517.3,
+   "pasoSinVender": 22,
+   "km": 28.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -183,7 +183,7 @@
    "pedidos": 52,
    "monto": 5315859.57,
    "pasoSinVender": 12,
-   "km": 18.0,
+   "km": 19.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -203,7 +203,7 @@
    "pedidos": 40,
    "monto": 4368563.12,
    "pasoSinVender": 5,
-   "km": 24.0,
+   "km": 34.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -1351,19 +1351,9 @@
     "nombre": "CINTIA LORENA DAGANI"
    },
    {
-    "hora": "08:56",
-    "clientId": "1943",
-    "nombre": "GREGSAL GROUP SRL"
-   },
-   {
     "hora": "08:57",
     "clientId": "2661",
     "nombre": "BRANDO SOCIEDAD ANONIMA"
-   },
-   {
-    "hora": "08:58",
-    "clientId": "2926",
-    "nombre": "ROSA CECILIA NUÑEZ PAREDES"
    },
    {
     "hora": "09:05",
@@ -1379,6 +1369,16 @@
     "hora": "14:16",
     "clientId": "2082",
     "nombre": "CIS PREMIUM SPORTS SA"
+   },
+   {
+    "hora": "15:05",
+    "clientId": "1173",
+    "nombre": "MOREL TOBIAS ANDRES"
+   },
+   {
+    "hora": "15:45",
+    "clientId": "4443",
+    "nombre": "WANG ZHENGWEN"
    }
   ],
   "10": [
@@ -1424,6 +1424,11 @@
    },
    {
     "hora": "08:56",
+    "clientId": "1943",
+    "nombre": "GREGSAL GROUP SRL"
+   },
+   {
+    "hora": "08:56",
     "clientId": "40",
     "nombre": "PAÑALERA UNIVERSAL"
    },
@@ -1456,6 +1461,11 @@
     "hora": "08:57",
     "clientId": "989",
     "nombre": "Iron servicios sa"
+   },
+   {
+    "hora": "08:58",
+    "clientId": "2926",
+    "nombre": "ROSA CECILIA NUÑEZ PAREDES"
    },
    {
     "hora": "08:58",
@@ -1661,6 +1671,16 @@
     "hora": "13:59",
     "clientId": "680",
     "nombre": "D'URBANO MARIA CELESTE"
+   },
+   {
+    "hora": "15:13",
+    "clientId": "826",
+    "nombre": "ALEJANDRA PAOLA CARESSA"
+   },
+   {
+    "hora": "15:44",
+    "clientId": "3275",
+    "nombre": "PABLO DAMIAN PORRAS"
    }
   ],
   "12": [
