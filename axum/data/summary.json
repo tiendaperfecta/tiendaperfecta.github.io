@@ -1,8 +1,8 @@
 {
  "date": "2026-10-02",
- "totalNet": 13284200.23,
- "totalGross": 16073882.31,
- "orders": 180,
+ "totalNet": 14908909.35,
+ "totalGross": 18039780.38,
+ "orders": 197,
  "bySeller": [
   {
    "sellerId": "8",
@@ -13,32 +13,44 @@
   {
    "sellerId": "9",
    "name": "Ludmila Aylen Martinez",
-   "orders": 14,
-   "total": 2550915.9
+   "orders": 16,
+   "total": 2712773.23
   },
   {
    "sellerId": "7",
    "name": "Ramiro Rando",
-   "orders": 27,
-   "total": 1787363.29
+   "orders": 28,
+   "total": 1908220.66
   },
   {
    "sellerId": "11",
    "name": "Melanie Larrama",
-   "orders": 17,
-   "total": 1661072.32
+   "orders": 18,
+   "total": 1701419.66
   },
   {
    "sellerId": "5",
    "name": "Nicolas Martinez",
-   "orders": 14,
-   "total": 1193826.54
+   "orders": 16,
+   "total": 1371073.95
+  },
+  {
+   "sellerId": "2",
+   "name": "Julian Nuñez",
+   "orders": 16,
+   "total": 1239196.07
+  },
+  {
+   "sellerId": "4",
+   "name": "Lucas Giayetto",
+   "orders": 11,
+   "total": 1031659.4
   },
   {
    "sellerId": "6",
    "name": "Camila Martinez",
-   "orders": 13,
-   "total": 797526.16
+   "orders": 15,
+   "total": 848026.16
   },
   {
    "sellerId": "10",
@@ -49,32 +61,26 @@
   {
    "sellerId": "1",
    "name": "Maria Noelia Madia",
-   "orders": 16,
-   "total": 632811.82
-  },
-  {
-   "sellerId": "4",
-   "name": "Lucas Giayetto",
-   "orders": 6,
-   "total": 599500.29
+   "orders": 17,
+   "total": 661811.88
   },
   {
    "sellerId": "12",
    "name": "Agustin Pogorzelski",
-   "orders": 5,
-   "total": 508777.97
-  },
-  {
-   "sellerId": "2",
-   "name": "Julian Nuñez",
-   "orders": 15,
-   "total": 410695.2
+   "orders": 6,
+   "total": 539849.41
   },
   {
    "sellerId": "3",
    "name": "Ezequiel Hack",
    "orders": 9,
    "total": 353920.87
+  },
+  {
+   "sellerId": "30",
+   "name": "Agostina Gauna",
+   "orders": 1,
+   "total": 94357.14
   },
   {
    "sellerId": "20",
@@ -86,18 +92,18 @@
  "byChannel": [
   {
    "channel": "TRADITIONAL TRADE_A",
-   "orders": 28,
-   "total": 4161697.82
+   "orders": 32,
+   "total": 5232484.35
   },
   {
    "channel": "TRADITIONAL TRADE_B",
-   "orders": 26,
-   "total": 3555341.48
+   "orders": 29,
+   "total": 3675232.7
   },
   {
    "channel": "TRADITIONAL TRADE_C",
-   "orders": 58,
-   "total": 3107502.38
+   "orders": 61,
+   "total": 3276645.4
   },
   {
    "channel": "PROXIMITY_A",
@@ -106,8 +112,8 @@
   },
   {
    "channel": "TRADITIONAL TRADE_D",
-   "orders": 35,
-   "total": 1377294.93
+   "orders": 41,
+   "total": 1943024.89
   },
   {
    "channel": "Mayorista_C",
@@ -116,8 +122,8 @@
   },
   {
    "channel": "AWAY FROM HOME_D",
-   "orders": 2,
-   "total": 201649.73
+   "orders": 3,
+   "total": 241997.07
   },
   {
    "channel": "LIMPIEZA_D",
@@ -170,6 +176,12 @@
    "total": 1222960.87
   },
   {
+   "clientId": "2479",
+   "name": "MDP COSTEHER S.A. (Autoservicio Tradicional_A)",
+   "orders": 1,
+   "total": 828500.88
+  },
+  {
    "clientId": "5051",
    "name": "CHEGGFIELD SOCIEDAD ANONIMA (Fiambreria_A)",
    "orders": 2,
@@ -218,6 +230,12 @@
    "total": 280537.13
   },
   {
+   "clientId": "307",
+   "name": "CAMACHO FLORES JAIME (Autoservicio Tradicional_D)",
+   "orders": 1,
+   "total": 259015.49
+  },
+  {
    "clientId": "3073",
    "name": "Chen Xiang (Autoservicio Tradicional_A)",
    "orders": 1,
@@ -228,6 +246,12 @@
    "name": "ZHENGJIE WANG (Autoservicio Tradicional_A)",
    "orders": 2,
    "total": 246857.3
+  },
+  {
+   "clientId": "4806",
+   "name": "YESICA ANDREA BELEN LILLO (Almacen/Despensa_B)",
+   "orders": 2,
+   "total": 234215.55
   },
   {
    "clientId": "3404",
@@ -248,28 +272,10 @@
    "total": 191210.71
   },
   {
-   "clientId": "4806",
-   "name": "YESICA ANDREA BELEN LILLO (Almacen/Despensa_B)",
-   "orders": 1,
-   "total": 190000.23
-  },
-  {
    "clientId": "2352",
    "name": "PORRAS PABLO DAMIAN (Fiambreria_C)",
    "orders": 3,
    "total": 174072.01
-  },
-  {
-   "clientId": "427",
-   "name": "LUIS CARLOS GARGIULO (Autoservicio Tradicional_C)",
-   "orders": 1,
-   "total": 173332.63
-  },
-  {
-   "clientId": "3385",
-   "name": "CHOCOCHIA S. A. (Kiosco/Maxikiosco_B)",
-   "orders": 3,
-   "total": 171925.27
   }
  ]
 }
