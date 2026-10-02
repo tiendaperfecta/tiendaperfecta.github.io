@@ -17,7 +17,7 @@
    "ruta": 37,
    "visitadosDeRuta": 35,
    "pendientes": 2,
-   "fueraDeRuta": 5,
+   "fueraDeRuta": 9,
    "pct": 94.6
   },
   {
@@ -26,7 +26,7 @@
    "ruta": 22,
    "visitadosDeRuta": 20,
    "pendientes": 2,
-   "fueraDeRuta": 7,
+   "fueraDeRuta": 8,
    "pct": 90.9
   },
   {
@@ -35,7 +35,7 @@
    "ruta": 37,
    "visitadosDeRuta": 33,
    "pendientes": 4,
-   "fueraDeRuta": 12,
+   "fueraDeRuta": 13,
    "pct": 89.2
   },
   {
@@ -48,22 +48,22 @@
    "pct": 76.7
   },
   {
-   "sellerId": "5",
-   "vendedor": "Nicolas Martinez",
-   "ruta": 37,
-   "visitadosDeRuta": 27,
-   "pendientes": 10,
-   "fueraDeRuta": 0,
-   "pct": 73.0
-  },
-  {
    "sellerId": "3",
    "vendedor": "Ezequiel Hack",
    "ruta": 33,
-   "visitadosDeRuta": 23,
-   "pendientes": 10,
-   "fueraDeRuta": 2,
-   "pct": 69.7
+   "visitadosDeRuta": 25,
+   "pendientes": 8,
+   "fueraDeRuta": 15,
+   "pct": 75.8
+  },
+  {
+   "sellerId": "5",
+   "vendedor": "Nicolas Martinez",
+   "ruta": 37,
+   "visitadosDeRuta": 28,
+   "pendientes": 9,
+   "fueraDeRuta": 0,
+   "pct": 75.7
   },
   {
    "sellerId": "12",
@@ -71,17 +71,17 @@
    "ruta": 36,
    "visitadosDeRuta": 24,
    "pendientes": 12,
-   "fueraDeRuta": 0,
+   "fueraDeRuta": 28,
    "pct": 66.7
   },
   {
    "sellerId": "4",
    "vendedor": "Lucas Giayetto",
    "ruta": 56,
-   "visitadosDeRuta": 33,
-   "pendientes": 23,
+   "visitadosDeRuta": 34,
+   "pendientes": 22,
    "fueraDeRuta": 9,
-   "pct": 58.9
+   "pct": 60.7
   },
   {
    "sellerId": "7",
@@ -127,6 +127,15 @@
    "pendientes": 2,
    "fueraDeRuta": 0,
    "pct": 0.0
+  },
+  {
+   "sellerId": "60",
+   "vendedor": "Ramiro Rando",
+   "ruta": 0,
+   "visitadosDeRuta": 0,
+   "pendientes": 0,
+   "fueraDeRuta": 0,
+   "pct": null
   },
   {
    "sellerId": "8",
@@ -298,12 +307,6 @@
   "20": [],
   "3": [
    {
-    "clientId": "1102",
-    "nombre": "CARABAJAL GUSTAVO DAVID",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_B"
-   },
-   {
     "clientId": "1494",
     "nombre": "GCL DESARROLLADORA SA",
     "localidad": "Mar del Plata",
@@ -332,12 +335,6 @@
     "nombre": "ANAMORA SRL",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Eventos_D"
-   },
-   {
-    "clientId": "2638",
-    "nombre": "CHRISTIAN LEONARDO ACOSTA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_C"
    },
    {
     "clientId": "3788",
@@ -816,12 +813,6 @@
     "taxonomia": "Almacen/Despensa_C"
    },
    {
-    "clientId": "1230",
-    "nombre": "ROSA NATALIA CURILEF JARAMILLO",
-    "localidad": "BARRIO BATAN",
-    "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
     "clientId": "1288",
     "nombre": "LILIANA DEL CARMEN VAZQUEZ",
     "localidad": "BARRIO CHAPADMALAL",
@@ -980,12 +971,6 @@
     "taxonomia": "Almacen/Despensa_D"
    },
    {
-    "clientId": "465",
-    "nombre": "MARCELO NICOLAS CAMBRONERA",
-    "localidad": "COMANDANTE NICANOR OTAMENDI",
-    "taxonomia": "Autoservicio Tradicional_D"
-   },
-   {
     "clientId": "507",
     "nombre": "ríos virginia soledad",
     "localidad": "Comandante Nicanor Otamendi",
@@ -1036,6 +1021,7 @@
     "taxonomia": "Almacen/Despensa_D"
    }
   ],
+  "60": [],
   "7": [
    {
     "clientId": "1037",
