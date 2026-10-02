@@ -3,29 +3,56 @@
  "diaSemana": "viernes",
  "bySeller": [
   {
-   "sellerId": "1",
-   "vendedor": "Maria Noelia Madia",
-   "ruta": 38,
-   "visitadosDeRuta": 0,
-   "pendientes": 38,
+   "sellerId": "11",
+   "vendedor": "Melanie Larrama",
+   "ruta": 37,
+   "visitadosDeRuta": 4,
+   "pendientes": 33,
+   "fueraDeRuta": 4,
+   "pct": 10.8
+  },
+  {
+   "sellerId": "5",
+   "vendedor": "Nicolas Martinez",
+   "ruta": 37,
+   "visitadosDeRuta": 3,
+   "pendientes": 34,
    "fueraDeRuta": 0,
-   "pct": 0.0
+   "pct": 8.1
+  },
+  {
+   "sellerId": "7",
+   "vendedor": "Ramiro Rando",
+   "ruta": 43,
+   "visitadosDeRuta": 3,
+   "pendientes": 40,
+   "fueraDeRuta": 0,
+   "pct": 7.0
   },
   {
    "sellerId": "10",
    "vendedor": "Matias Parada",
    "ruta": 22,
-   "visitadosDeRuta": 0,
-   "pendientes": 22,
+   "visitadosDeRuta": 1,
+   "pendientes": 21,
    "fueraDeRuta": 0,
-   "pct": 0.0
+   "pct": 4.5
   },
   {
-   "sellerId": "11",
-   "vendedor": "Melanie Larrama",
-   "ruta": 37,
+   "sellerId": "3",
+   "vendedor": "Ezequiel Hack",
+   "ruta": 33,
+   "visitadosDeRuta": 1,
+   "pendientes": 32,
+   "fueraDeRuta": 0,
+   "pct": 3.0
+  },
+  {
+   "sellerId": "1",
+   "vendedor": "Maria Noelia Madia",
+   "ruta": 38,
    "visitadosDeRuta": 0,
-   "pendientes": 37,
+   "pendientes": 38,
    "fueraDeRuta": 0,
    "pct": 0.0
   },
@@ -55,15 +82,6 @@
    "pendientes": 0,
    "fueraDeRuta": 0,
    "pct": null
-  },
-  {
-   "sellerId": "3",
-   "vendedor": "Ezequiel Hack",
-   "ruta": 33,
-   "visitadosDeRuta": 0,
-   "pendientes": 33,
-   "fueraDeRuta": 0,
-   "pct": 0.0
   },
   {
    "sellerId": "30",
@@ -102,29 +120,11 @@
    "pct": 0.0
   },
   {
-   "sellerId": "5",
-   "vendedor": "Nicolas Martinez",
-   "ruta": 37,
-   "visitadosDeRuta": 0,
-   "pendientes": 37,
-   "fueraDeRuta": 0,
-   "pct": 0.0
-  },
-  {
    "sellerId": "6",
    "vendedor": "Camila Martinez",
    "ruta": 37,
    "visitadosDeRuta": 0,
    "pendientes": 37,
-   "fueraDeRuta": 0,
-   "pct": 0.0
-  },
-  {
-   "sellerId": "7",
-   "vendedor": "Ramiro Rando",
-   "ruta": 43,
-   "visitadosDeRuta": 0,
-   "pendientes": 43,
    "fueraDeRuta": 0,
    "pct": 0.0
   },
@@ -398,12 +398,6 @@
     "taxonomia": "Autoservicio Tradicional_D"
    },
    {
-    "clientId": "2018",
-    "nombre": "HENRIK PABLO PEDRO",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_C"
-   },
-   {
     "clientId": "2024",
     "nombre": "MASCARO NATALIA AMANDA",
     "localidad": "MAR DEL PLATA",
@@ -514,18 +508,6 @@
   ],
   "11": [
    {
-    "clientId": "1085",
-    "nombre": "CHEN WEILI",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_C"
-   },
-   {
-    "clientId": "1086",
-    "nombre": "CREMONA SA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Mayoristas_C"
-   },
-   {
     "clientId": "1173",
     "nombre": "MOREL TOBIAS ANDRES",
     "localidad": "MAR DEL PLATA",
@@ -604,12 +586,6 @@
     "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
-    "clientId": "1659",
-    "nombre": "FRUTICEL TOUCH S.R.L.",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_C"
-   },
-   {
     "clientId": "1708",
     "nombre": "Alejandra Pippi",
     "localidad": "Mar del Plata",
@@ -656,12 +632,6 @@
     "nombre": "MONTENEGRO JOSE MATIAS",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
-    "clientId": "2403",
-    "nombre": "NICADELO SA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_A"
    },
    {
     "clientId": "3111",
@@ -1167,12 +1137,6 @@
     "nombre": "SEBASTIAN RAU",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Kiosco/Maxikiosco_C"
-   },
-   {
-    "clientId": "124",
-    "nombre": "PADILLA VERONICA CRISTINA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
     "clientId": "1494",
@@ -2139,12 +2103,6 @@
     "taxonomia": "Almacen/Despensa_D"
    },
    {
-    "clientId": "2848",
-    "nombre": "LA CURVA DE OTAMENDI S.R.L",
-    "localidad": "COMANDANTE NICANOR OTAMENDI",
-    "taxonomia": "Estacion de Servicio - NO OFICIALES_B"
-   },
-   {
     "clientId": "3098",
     "nombre": "María Lourdes Potin",
     "localidad": "Comandante Nicanor Otamendi",
@@ -2167,12 +2125,6 @@
     "nombre": "Dora Liliana Bravo",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Almacen/Despensa_C"
-   },
-   {
-    "clientId": "421",
-    "nombre": "DANIEL HORACIO ATLANTE",
-    "localidad": "COMANDANTE NICANOR OTAMENDI",
-    "taxonomia": "Almacen/Despensa_D"
    },
    {
     "clientId": "427",
@@ -2298,12 +2250,6 @@
     "clientId": "569",
     "nombre": "ALDANA ROMERO",
     "localidad": "COMANDANTE NICANOR OTAMENDI",
-    "taxonomia": "Almacen/Despensa_C"
-   },
-   {
-    "clientId": "579",
-    "nombre": "ARIEL SEBASTIAN FRANCUCCI",
-    "localidad": "BARRIO BATAN",
     "taxonomia": "Almacen/Despensa_C"
    },
    {
@@ -2593,12 +2539,6 @@
     "taxonomia": "Autoservicio Tradicional_A"
    },
    {
-    "clientId": "1168",
-    "nombre": "PETROLERA CRUZ DEL SUR S A",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Estacion de Servicio - SHELL_C"
-   },
-   {
     "clientId": "1186",
     "nombre": "LAPRIMARDEL FULL S.R.L",
     "localidad": "MAR DEL PLATA",
@@ -2737,22 +2677,10 @@
     "taxonomia": "Almacen/Despensa_C"
    },
    {
-    "clientId": "2350",
-    "nombre": "ARISTEO SRL",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_C"
-   },
-   {
     "clientId": "2351",
     "nombre": "CREMONA SA",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Mayoristas_D"
-   },
-   {
-    "clientId": "2352",
-    "nombre": "PORRAS PABLO DAMIAN",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Fiambreria_C"
    },
    {
     "clientId": "2586",
