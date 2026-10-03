@@ -582,6 +582,26 @@ td.ip-base.clickable{cursor:pointer}
     </table>
   </div>
 
+  <h3 class="subsection-title">Clientes registrados que todavía no compran por la app, por segmento y día (Tienda Perfecta)</h3>
+  <p class="section-note">
+    Clientes registrados en Mi Negocio+ que en <span id="mnsc-periodo">septiembre</span> no hicieron ningún pedido por la app
+    (no figuran como activos), por segmento de Tienda Perfecta y día de ruta. Formato <b>registrados sin comprar/registrados</b>
+    (registrados = activos + registrados sin comprar). Click en cualquier celda para ver qué clientes son los que faltan.
+    Mismo cruce manual que la tabla anterior.
+  </p>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr class="cols">
+          <th class="name-col">Segmento</th>
+          <th>Lunes</th><th>Martes</th><th>Miércoles</th><th>Jueves</th><th>Viernes</th><th>Sábado</th><th>Total</th><th>% sin comprar</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-mnsc"></tbody>
+      <tfoot id="tfoot-mnsc"></tfoot>
+    </table>
+  </div>
+
   <h3 class="subsection-title">Clientes no registrados en Mi Negocio+ por día</h3>
   <p class="section-note">
     Clientes del universo de cada vendedor que todavía no se registraron en Mi Negocio+, agrupados por día de
@@ -2526,12 +2546,15 @@ if (MES_SEL) {
 // Clientes activos / no Fully Digital por segmento y dia (cierre de septiembre, export de Power BI + censo Gescom)
 const MNFD_DIAS = [['Lunes','Lunes'],['Martes','Martes'],['Miercoles','Miércoles'],['Jueves','Jueves'],['Viernes','Viernes'],['Sabado','Sábado']];
 let mnNoFd = null;
-function drillMnNoFd(seg, dia) {
-  const list = mnNoFd.clientes
+// tipo 'fd' = activos que todavia no son Fully Digital; tipo 'sin' = registrados en la app que todavia no compran por la app
+function drillMnNoFd(seg, dia, tipo) {
+  const base = tipo === 'sin' ? mnNoFd.clientesSinCompra : mnNoFd.clientes;
+  const list = base
     .filter(c => (seg === 'Total' || c.seg === seg) && (dia === 'Total' || c.dia === dia))
     .sort((a,b) => a.vendedor.localeCompare(b.vendedor) || a.razon.localeCompare(b.razon));
+  const desc = tipo === 'sin' ? 'registrados en la app que todavía no compran por la app' : 'activos que todavía no son Fully Digital';
   const html = `
-    <p class="modal-count">${list.length} clientes activos que todavía no son Fully Digital</p>
+    <p class="modal-count">${list.length} clientes ${desc}</p>
     <table>
       <thead><tr><th>Código</th><th>Cliente</th><th>Localidad</th><th>Vendedor</th><th>Segmento</th><th>Día</th></tr></thead>
       <tbody>
@@ -2540,33 +2563,51 @@ function drillMnNoFd(seg, dia) {
     </table>
   `;
   const titulo = seg === 'Total' ? 'Todos los segmentos' : `Segmento ${seg}`;
-  openDrillCustom(titulo, dia === 'Total' ? 'Todos los días — no Fully Digital' : `Ruta de ${dia} — no Fully Digital`, html);
+  const etiqueta = tipo === 'sin' ? 'registrados sin comprar por la app' : 'no Fully Digital';
+  openDrillCustom(titulo, dia === 'Total' ? `Todos los días — ${etiqueta}` : `Ruta de ${dia} — ${etiqueta}`, html);
+}
+// matriz[seg][dia] = [faltan, base]; cada celda se muestra como faltan/base y abre el listado de clientes
+function pintarMnSegDia(matriz, tipo, tbodyId, tfootId) {
+  const celda = (seg, dia, v) => `<td class="clickable" onclick="drillMnNoFd('${seg}','${dia}','${tipo}')">${v[0]}/${v[1]}</td>`;
+  const tot = {};
+  MNFD_DIAS.forEach(([k]) => { tot[k] = [0,0]; });
+  let totNo = 0, totBase = 0;
+  document.getElementById(tbodyId).innerHTML = ['A','B','C','D'].map(seg => {
+    const fila = matriz[seg];
+    let no = 0, base = 0;
+    const tds = MNFD_DIAS.map(([k]) => {
+      const v = fila[k] || [0,0];
+      no += v[0]; base += v[1]; tot[k][0] += v[0]; tot[k][1] += v[1];
+      return celda(seg, k, v);
+    }).join('');
+    const sinDia = fila['Sin dia'] || [0,0];
+    no += sinDia[0]; base += sinDia[1];
+    totNo += no; totBase += base;
+    return `<tr><td class="name">${seg}</td>${tds}<td class="clickable" onclick="drillMnNoFd('${seg}','Total','${tipo}')">${no}/${base}</td><td>${fmt(base ? no / base * 100 : 0,1)}%</td></tr>`;
+  }).join('');
+  document.getElementById(tfootId).innerHTML = `<tr><td class="name">Total PepsiCo</td>${
+    MNFD_DIAS.map(([k]) => celda('Total', k, tot[k])).join('')
+  }<td class="clickable" onclick="drillMnNoFd('Total','Total','${tipo}')">${totNo}/${totBase}</td><td>${fmt(totBase ? totNo / totBase * 100 : 0,1)}%</td></tr>`;
 }
 fetch('mn_no_fd.json' + CACHE_BUST).then(r => r.ok ? r.json() : null).then(d => {
   if (!d) return;
   mnNoFd = d;
   const [y, m] = d.periodo.split('-');
-  setTextoSiExiste('mnfd-periodo', (NOMBRES_MES[parseInt(m, 10)] || '').toLowerCase() + ' ' + y);
-  const celda = (seg, dia, v) => `<td class="clickable" onclick="drillMnNoFd('${seg}','${dia}')">${v[0]}/${v[1]}</td>`;
-  const tot = {};
-  MNFD_DIAS.forEach(([k]) => { tot[k] = [0,0]; });
-  let totNo = 0, totAct = 0;
-  document.getElementById('tbody-mnfd').innerHTML = ['A','B','C','D'].map(seg => {
-    const fila = d.matriz[seg];
-    let no = 0, act = 0;
-    const tds = MNFD_DIAS.map(([k]) => {
-      const v = fila[k] || [0,0];
-      no += v[0]; act += v[1]; tot[k][0] += v[0]; tot[k][1] += v[1];
-      return celda(seg, k, v);
-    }).join('');
-    const sinDia = fila['Sin dia'] || [0,0];
-    no += sinDia[0]; act += sinDia[1];
-    totNo += no; totAct += act;
-    return `<tr><td class="name">${seg}</td>${tds}<td class="clickable" onclick="drillMnNoFd('${seg}','Total')">${no}/${act}</td><td>${fmt(act ? no / act * 100 : 0,1)}%</td></tr>`;
-  }).join('');
-  document.getElementById('tfoot-mnfd').innerHTML = `<tr><td class="name">Total PepsiCo</td>${
-    MNFD_DIAS.map(([k]) => celda('Total', k, tot[k])).join('')
-  }<td class="clickable" onclick="drillMnNoFd('Total','Total')">${totNo}/${totAct}</td><td>${fmt(totAct ? totNo / totAct * 100 : 0,1)}%</td></tr>`;
+  const periodo = (NOMBRES_MES[parseInt(m, 10)] || '').toLowerCase() + ' ' + y;
+  setTextoSiExiste('mnfd-periodo', periodo);
+  setTextoSiExiste('mnsc-periodo', periodo);
+  pintarMnSegDia(d.matriz, 'fd', 'tbody-mnfd', 'tfoot-mnfd');
+  if (d.matrizSinCompra) {
+    // base = registrados = activos + registrados sin comprar
+    const reg = {};
+    ['A','B','C','D'].forEach(seg => {
+      reg[seg] = {};
+      Object.keys(d.matrizSinCompra[seg]).forEach(k => {
+        reg[seg][k] = [d.matrizSinCompra[seg][k][0], d.matrizSinCompra[seg][k][0] + (d.matriz[seg][k] || [0,0])[1]];
+      });
+    });
+    pintarMnSegDia(reg, 'sin', 'tbody-mnsc', 'tfoot-mnsc');
+  }
 }).catch(() => {});
 
 const mnSegRows = [
