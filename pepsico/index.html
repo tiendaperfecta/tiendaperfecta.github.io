@@ -1521,14 +1521,22 @@ const LAYS_SUB_LABELS = {Caprese:"Lays Rústicas Caprese", SalMarina:"Lays Rúst
 const TOSTITOS_SUB_OBJ = 20;
 const TOSTITOS_SUB_LABELS = {G144:"Tostitos Hierbas y Limón 144g", G90:"Tostitos Hierbas y Limón 90g"};
 let subproductoNoComprado = {};
+let censoPorVendDia = {};
 Promise.all([
   fetch(BASE + 'subproductos_vendedor.json' + CACHE_BUST).then(r => r.json()),
   fetch(BASE + 'subproductos_no_comprado.json' + CACHE_BUST).then(r => r.json()).catch(() => ({})),
-]).then(([data, noComprado]) => {
+  MES_SEL ? Promise.resolve([]) : fetch('censo_clientes.json' + CACHE_BUST).then(r => r.json()).catch(() => []),
+]).then(([data, noComprado, censo]) => {
   pehuamarSubRows = data.pehuamar.vendedores;
   laysSubRows = data.lays.vendedores;
   tostitosSubRows = data.tostitos.vendedores;
   subproductoNoComprado = noComprado || {};
+  // clientes de cada vendedor por dia de ruta (para la vista "solo los de hoy")
+  censoPorVendDia = {};
+  (censo || []).forEach(c => {
+    const k = `${String(c.codven).trim()}|${c.dia}`;
+    censoPorVendDia[k] = (censoPorVendDia[k] || 0) + 1;
+  });
   renderInnovaciones();
 }).catch(() => {});
 
@@ -1550,17 +1558,28 @@ function renderInnovaciones(){
   const laysHtml = Object.keys(LAYS_SUB_LABELS).map(k => productSubTable(laysSubRows, 'lays', k, LAYS_SUB_LABELS[k], LAYS_SUB_OBJ)).join('');
   const tostitosHtml = Object.keys(TOSTITOS_SUB_LABELS).map(k => productSubTable(tostitosSubRows, 'tostitos', k, TOSTITOS_SUB_LABELS[k], TOSTITOS_SUB_OBJ)).join('');
   const pehuamarHtml = Object.keys(PEHUAMAR_SUB_LABELS).map(k => productSubTable(pehuamarSubRows, 'pehuamar', k, PEHUAMAR_SUB_LABELS[k], PEHUAMAR_SUB_OBJ)).join('');
+  const nota = (!MES_SEL && Object.keys(censoPorVendDia).length > 0)
+    ? `<p class="section-note">Ruta de hoy (${hoyDiaIp}): Base, Clientes y Cobertura se calculan solo con los clientes de la ruta de hoy de cada vendedor. Un cliente cuenta cuando compró al menos 3 unidades del producto en el mes.</p>`
+    : '';
   const innovEl = document.getElementById('innovaciones-content');
-  if (innovEl) innovEl.innerHTML = laysHtml + tostitosHtml;
+  if (innovEl) innovEl.innerHTML = nota + laysHtml + tostitosHtml;
   const cobEl = document.getElementById('cobertura-innovaciones-content');
-  if (cobEl) cobEl.innerHTML = pehuamarHtml;
+  if (cobEl) cobEl.innerHTML = nota + pehuamarHtml;
 }
 
 function productSubTable(rowsData, grupo, key, label, obj){
+  // Mes en curso: base, clientes y cobertura se calculan solo con los clientes de la ruta de hoy.
+  // Meses archivados: universo completo del vendedor.
+  const soloHoy = !MES_SEL && Object.keys(censoPorVendDia).length > 0;
   const items = rowsData.map(r => {
-    const cob = r.universo ? r[key] / r.universo * 100 : 0;
+    let universo = r.universo, count = r[key];
+    if (soloHoy) {
+      universo = censoPorVendDia[`${String(r.codven).trim()}|${hoyDiaIp}`] || 0;
+      count = Math.max(0, universo - (subproductoNoComprado[`${grupo}_${key}`] || []).filter(c => c.vendedor === r.n && c.dia === hoyDiaIp).length);
+    }
+    const cob = universo ? count / universo * 100 : 0;
     const cump = obj ? cob / obj * 100 : 0;
-    return {n: r.n, universo: r.universo, count: r[key], cob, cump};
+    return {n: r.n, universo, count, cob, cump};
   });
   const totU = items.reduce((s,i)=>s+i.universo,0);
   const totC = items.reduce((s,i)=>s+i.count,0);
