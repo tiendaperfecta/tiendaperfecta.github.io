@@ -1536,6 +1536,13 @@ function drillSubproducto(vendedor, grupoClave, label) {
   const list = (subproductoNoComprado[grupoClave] || []).filter(c => c.vendedor === vendedor);
   openDrillPortafolio(vendedor, `Sin compra de ${label} en lo que va del mes`, list);
 }
+// Clientes de la ruta de hoy que todavia no compraron el producto en el mes
+function clientesHoySinCompra(vendedor, grupoClave) {
+  return (subproductoNoComprado[grupoClave] || []).filter(c => c.vendedor === vendedor && c.dia === hoyDiaIp);
+}
+function drillSubproductoHoy(vendedor, grupoClave, label) {
+  openDrillPortafolio(vendedor, `Ruta de hoy (${hoyDiaIp}) — todavía no compraron ${label} en el mes`, clientesHoySinCompra(vendedor, grupoClave));
+}
 
 function renderInnovaciones(){
   const laysHtml = Object.keys(LAYS_SUB_LABELS).map(k => productSubTable(laysSubRows, 'lays', k, LAYS_SUB_LABELS[k], LAYS_SUB_OBJ)).join('');
@@ -1558,14 +1565,22 @@ function productSubTable(rowsData, grupo, key, label, obj){
   const totCob = totU ? totC/totU*100 : 0;
   const totCump = obj ? totCob / obj * 100 : 0;
   const grupoClave = `${grupo}_${key}`;
+  // En meses archivados no tiene sentido "hoy": la columna solo se muestra en el mes en curso.
+  const conHoy = !MES_SEL;
+  const hoyPorVend = {};
+  let totHoy = 0;
+  if (conHoy) {
+    items.forEach(i => { hoyPorVend[i.n] = clientesHoySinCompra(i.n, grupoClave).length; totHoy += hoyPorVend[i.n]; });
+  }
+  const thHoy = conHoy ? `<th style="text-align:right" title="Clientes de la ruta de hoy que todavía no compraron este producto en el mes">Faltan hoy (${hoyDiaIp})</th>` : '';
   return `
     <h4 style="font-family:'Fraunces',serif;font-weight:600;font-size:14.5px;margin:18px 0 8px">${label}</h4>
     <table>
-      <thead><tr><th>Vendedor</th><th style="text-align:right">Base</th><th style="text-align:right">Clientes</th><th style="text-align:right">Objetivo</th><th style="text-align:right">Cobertura</th><th style="text-align:right">Cump. %</th></tr></thead>
+      <thead><tr><th>Vendedor</th><th style="text-align:right">Base</th><th style="text-align:right">Clientes</th><th style="text-align:right">Objetivo</th><th style="text-align:right">Cobertura</th><th style="text-align:right">Cump. %</th>${thHoy}</tr></thead>
       <tbody>
-        ${items.map(i => `<tr><td class="clickable" onclick="drillSubproducto('${i.n}','${grupoClave}','${label}')">${i.n}</td><td class="ip-base" style="text-align:right">${fmt(i.universo,0)}</td><td style="text-align:right">${fmt(i.count,0)}</td><td style="text-align:right">${fmt(obj,0)}%</td><td style="text-align:right">${fmt(i.cob,1)}%</td><td style="text-align:right"><span class="pill ${tier(i.cump)}">${fmt(i.cump,1)}%</span></td></tr>`).join('')}
+        ${items.map(i => `<tr><td class="clickable" onclick="drillSubproducto('${i.n}','${grupoClave}','${label}')">${i.n}</td><td class="ip-base" style="text-align:right">${fmt(i.universo,0)}</td><td style="text-align:right">${fmt(i.count,0)}</td><td style="text-align:right">${fmt(obj,0)}%</td><td style="text-align:right">${fmt(i.cob,1)}%</td><td style="text-align:right"><span class="pill ${tier(i.cump)}">${fmt(i.cump,1)}%</span></td>${conHoy ? `<td class="clickable" style="text-align:right" onclick="drillSubproductoHoy('${i.n}','${grupoClave}','${label}')">${fmt(hoyPorVend[i.n],0)}</td>` : ''}</tr>`).join('')}
       </tbody>
-      <tfoot><tr style="font-weight:700"><td>Total PepsiCo</td><td class="ip-base" style="text-align:right">${fmt(totU,0)}</td><td style="text-align:right">${fmt(totC,0)}</td><td style="text-align:right">${fmt(obj,0)}%</td><td style="text-align:right">${fmt(totCob,1)}%</td><td style="text-align:right">${fmt(totCump,1)}%</td></tr></tfoot>
+      <tfoot><tr style="font-weight:700"><td>Total PepsiCo</td><td class="ip-base" style="text-align:right">${fmt(totU,0)}</td><td style="text-align:right">${fmt(totC,0)}</td><td style="text-align:right">${fmt(obj,0)}%</td><td style="text-align:right">${fmt(totCob,1)}%</td><td style="text-align:right">${fmt(totCump,1)}%</td>${conHoy ? `<td style="text-align:right">${fmt(totHoy,0)}</td>` : ''}</tr></tfoot>
     </table>
   `;
 }
