@@ -562,29 +562,23 @@ td.ip-base.clickable{cursor:pointer}
   </div>
 
 <div id="mn-extra-sep">
-  <h3 class="subsection-title">Clientes activos por segmento (Tienda Perfecta)</h3>
+  <h3 class="subsection-title">Clientes activos y no Fully Digital por segmento y día (Tienda Perfecta)</h3>
   <p class="section-note">
-    Clientes Mi Negocio activos en septiembre, agrupados por segmento de Tienda Perfecta. <b>No Fully Digital</b> =
-    activos que todavía no llegaron al 100% de pedidos por canal digital. Cruce manual: export de Power BI "Mi
-    Negocio +" (detalle de clientes, cierre de septiembre) contra el censo de clientes de Gescom.
+    Clientes Mi Negocio activos en <span id="mnfd-periodo">septiembre</span>, por segmento de Tienda Perfecta y día de ruta.
+    Formato <b>no Fully Digital/activos</b>. <b>No Fully Digital</b> = activos que todavía no llegaron al 100% de pedidos
+    por canal digital. Click en cualquier celda para ver qué clientes son los que faltan. Cruce manual: export de
+    Power BI "Mi Negocio +" (detalle de clientes) contra el censo de clientes de Gescom.
   </p>
   <div class="table-scroll">
     <table>
       <thead>
         <tr class="cols">
           <th class="name-col">Segmento</th>
-          <th>Activos</th><th>No Fully Digital</th><th>% No Fully Digital</th>
+          <th>Lunes</th><th>Martes</th><th>Miércoles</th><th>Jueves</th><th>Viernes</th><th>Sábado</th><th>Total</th><th>% No Fully Digital</th>
         </tr>
       </thead>
-      <tbody>
-        <tr><td class="name">A</td><td>346</td><td>47</td><td>13,6%</td></tr>
-        <tr><td class="name">B</td><td>253</td><td>44</td><td>17,4%</td></tr>
-        <tr><td class="name">C</td><td>464</td><td>118</td><td>25,4%</td></tr>
-        <tr><td class="name">D</td><td>388</td><td>99</td><td>25,5%</td></tr>
-      </tbody>
-      <tfoot>
-        <tr><td class="name">Total PepsiCo</td><td>1.451</td><td>308</td><td>21,2%</td></tr>
-      </tfoot>
+      <tbody id="tbody-mnfd"></tbody>
+      <tfoot id="tfoot-mnfd"></tfoot>
     </table>
   </div>
 
@@ -2479,6 +2473,33 @@ tbodyMn.innerHTML = mnRows.map(r => `
   </tr>
 `).join('');
 
+// Pinta la tabla "Mi Negocio+ por vendedor". Los kg (Acum. MN / Acumulado / %) salen de los mismos datos que el
+// % de arriba; universo/registrado/activos/fully digital son del Power BI y se pasan en tot.
+function pintarTablaMn(filas, tot) {
+  const ord = filas.slice().sort((a,b) => a.share - b.share);
+  document.getElementById('tbody-mn').innerHTML = ord.map(r => `
+    <tr>
+      <td class="name">${r.n}</td>
+      <td>${fmt(r.universo)}</td><td>${r.registrado == null ? '—' : fmt(r.registrado)}</td><td>${fmt(r.activos)}</td>
+      <td>${fmt(r.mn)}</td><td>${fmt(r.acum)}</td>
+      <td>
+        <div class="cell-avance">
+          <span class="mini-bar"><span style="width:${Math.min(r.share,100)}%; background:var(--${tierShare(r.share)})"></span></span>
+          ${fmt(r.share,1)}%
+        </div>
+      </td>
+      <td>${fmt(r.fullyDigital)}</td>
+    </tr>
+  `).join('');
+  const mn = filas.reduce((s,r) => s + r.mn, 0), ac = filas.reduce((s,r) => s + r.acum, 0);
+  document.getElementById('tfoot-mn').innerHTML = `
+    <tr>
+      <td class="name">Total PepsiCo</td>
+      <td>${fmt(tot.universo)}</td><td>${tot.registrado == null ? '—' : fmt(tot.registrado)}</td><td>${fmt(tot.activos)}</td>
+      <td>${fmt(mn)}</td><td>${fmt(ac)}</td><td>${fmt(ac ? mn / ac * 100 : 0,1)}%</td><td>${fmt(tot.fullyDigital)}</td>
+    </tr>`;
+}
+
 if (MES_SEL) {
   Promise.all([
     fetch(BASE + 'mi_negocio.json' + CACHE_BUST).then(r => r.ok ? r.json() : null),
@@ -2492,33 +2513,61 @@ if (MES_SEL) {
       const mn = a.acumuladoMN || 0, acum = a.ta || 0;
       return {n:m.n, universo:m.universo, activos:m.activos, fullyDigital:m.fullyDigital, mn, acum, share: acum ? mn / acum * 100 : 0};
     }).sort((a,b) => a.share - b.share);
-    tbodyMn.innerHTML = filas.map(r => `
-      <tr>
-        <td class="name">${r.n}</td>
-        <td>${fmt(r.universo)}</td><td>—</td><td>${fmt(r.activos)}</td>
-        <td>${fmt(r.mn)}</td><td>${fmt(r.acum)}</td>
-        <td>
-          <div class="cell-avance">
-            <span class="mini-bar"><span style="width:${Math.min(r.share,100)}%; background:var(--${tierShare(r.share)})"></span></span>
-            ${fmt(r.share,1)}%
-          </div>
-        </td>
-        <td>${fmt(r.fullyDigital)}</td>
-      </tr>
-    `).join('');
-    const t = filas.reduce((s,r) => ({u:s.u+r.universo, a:s.a+r.activos, f:s.f+r.fullyDigital, mn:s.mn+r.mn, ac:s.ac+r.acum}), {u:0,a:0,f:0,mn:0,ac:0});
-    document.getElementById('tfoot-mn').innerHTML = `
-      <tr>
-        <td class="name">Total PepsiCo</td>
-        <td>${fmt(t.u)}</td><td>—</td><td>${fmt(t.a)}</td>
-        <td>${fmt(t.mn)}</td><td>${fmt(t.ac)}</td><td>${fmt(t.ac ? t.mn / t.ac * 100 : 0,1)}%</td><td>${fmt(t.f)}</td>
-      </tr>`;
+    filas.forEach(r => { r.registrado = null; });
+    const t = filas.reduce((s,r) => ({u:s.u+r.universo, a:s.a+r.activos, f:s.f+r.fullyDigital}), {u:0,a:0,f:0});
+    pintarTablaMn(filas, {universo:t.u, registrado:null, activos:t.a, fullyDigital:t.f});
     const nm = (NOMBRES_MES[parseInt(MES_SEL.slice(5), 10)] || '').toLowerCase();
     setTextoSiExiste('mn-cierre-txt', 'cierre de ' + nm + ' ' + MES_SEL.slice(0,4) + '; el dato de Registrados no está disponible para meses anteriores');
     const extra = document.getElementById('mn-extra-sep');
     if (extra) extra.style.display = 'none';
   }).catch(() => {});
 }
+
+// Clientes activos / no Fully Digital por segmento y dia (cierre de septiembre, export de Power BI + censo Gescom)
+const MNFD_DIAS = [['Lunes','Lunes'],['Martes','Martes'],['Miercoles','Miércoles'],['Jueves','Jueves'],['Viernes','Viernes'],['Sabado','Sábado']];
+let mnNoFd = null;
+function drillMnNoFd(seg, dia) {
+  const list = mnNoFd.clientes
+    .filter(c => (seg === 'Total' || c.seg === seg) && (dia === 'Total' || c.dia === dia))
+    .sort((a,b) => a.vendedor.localeCompare(b.vendedor) || a.razon.localeCompare(b.razon));
+  const html = `
+    <p class="modal-count">${list.length} clientes activos que todavía no son Fully Digital</p>
+    <table>
+      <thead><tr><th>Código</th><th>Cliente</th><th>Localidad</th><th>Vendedor</th><th>Segmento</th><th>Día</th></tr></thead>
+      <tbody>
+        ${list.map(c => `<tr><td>${c.codigo}</td><td>${c.razon}</td><td>${c.localidad || ''}</td><td>${c.vendedor}</td><td>${c.seg}</td><td>${c.dia === 'Sin dia' ? '—' : c.dia}</td></tr>`).join('')}
+      </tbody>
+    </table>
+  `;
+  const titulo = seg === 'Total' ? 'Todos los segmentos' : `Segmento ${seg}`;
+  openDrillCustom(titulo, dia === 'Total' ? 'Todos los días — no Fully Digital' : `Ruta de ${dia} — no Fully Digital`, html);
+}
+fetch('mn_no_fd.json' + CACHE_BUST).then(r => r.ok ? r.json() : null).then(d => {
+  if (!d) return;
+  mnNoFd = d;
+  const [y, m] = d.periodo.split('-');
+  setTextoSiExiste('mnfd-periodo', (NOMBRES_MES[parseInt(m, 10)] || '').toLowerCase() + ' ' + y);
+  const celda = (seg, dia, v) => `<td class="clickable" onclick="drillMnNoFd('${seg}','${dia}')">${v[0]}/${v[1]}</td>`;
+  const tot = {};
+  MNFD_DIAS.forEach(([k]) => { tot[k] = [0,0]; });
+  let totNo = 0, totAct = 0;
+  document.getElementById('tbody-mnfd').innerHTML = ['A','B','C','D'].map(seg => {
+    const fila = d.matriz[seg];
+    let no = 0, act = 0;
+    const tds = MNFD_DIAS.map(([k]) => {
+      const v = fila[k] || [0,0];
+      no += v[0]; act += v[1]; tot[k][0] += v[0]; tot[k][1] += v[1];
+      return celda(seg, k, v);
+    }).join('');
+    const sinDia = fila['Sin dia'] || [0,0];
+    no += sinDia[0]; act += sinDia[1];
+    totNo += no; totAct += act;
+    return `<tr><td class="name">${seg}</td>${tds}<td class="clickable" onclick="drillMnNoFd('${seg}','Total')">${no}/${act}</td><td>${fmt(act ? no / act * 100 : 0,1)}%</td></tr>`;
+  }).join('');
+  document.getElementById('tfoot-mnfd').innerHTML = `<tr><td class="name">Total PepsiCo</td>${
+    MNFD_DIAS.map(([k]) => celda('Total', k, tot[k])).join('')
+  }<td class="clickable" onclick="drillMnNoFd('Total','Total')">${totNo}/${totAct}</td><td>${fmt(totAct ? totNo / totAct * 100 : 0,1)}%</td></tr>`;
+}).catch(() => {});
 
 const mnSegRows = [
   {n:"Ezequiel Hack",           lu:22, ma:24, mi:31, ju:22, vi:14, sa:8,  totNc:121},
@@ -2662,6 +2711,16 @@ if (kgAvanceMeta) {
     document.getElementById('mn-goal-txt').textContent = faltan > 0
       ? `Compromiso 85% · faltan ${fmt(faltan,1)} pts`
       : `Compromiso 85% · superado por ${fmt(-faltan,1)} pts`;
+    if (!MES_SEL) {
+      const porNombre = {};
+      rows.forEach(r => { porNombre[r.n] = r; });
+      const filas = mnRows.map(m => {
+        const a = porNombre[m.n];
+        if (!a || typeof a.acumuladoMN !== 'number') return m;
+        return {...m, mn: a.acumuladoMN, acum: a.ta, share: a.ta ? a.acumuladoMN / a.ta * 100 : 0};
+      });
+      pintarTablaMn(filas, {universo:2548, registrado:2084, activos:1452, fullyDigital:1144});
+    }
   }
 }
 const tbody = document.getElementById('tbody');
