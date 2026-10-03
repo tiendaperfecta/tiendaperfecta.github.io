@@ -395,7 +395,7 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
     objetivos, mes_obj = objetivos_kg(hoy.year, hoy.month)
     vend = {cod(v.get("codigo")): (v.get("nombre") or "").strip() for v in base_get("/api/catalogo/vendedores")}
     acc = {}
-    for l in lineas_pepsico(hoy.replace(day=1), hoy, "pedido"):
+    for l in lineas_pepsico(hoy.replace(day=1), hoy, "entrega"):
         if l.get("tipo") != "VEN":
             continue
         codven = cod(l.get("ven"))
@@ -413,10 +413,11 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
         x[g + "a"] += kg
         if l.get("canal") == "MiNegocio":
             x["mn"] += kg
-    # Ultima / penultima visita / real: kg (*P01 + *P02) cargados el mismo dia de la semana
-    # hace 7 y 14 dias, y hoy, por fecha de PEDIDO (asi coincide con el reporte de Gescom,
-    # comparado el 30/9/2026 contra el del 28/9: 99,95 vs 100,0; 178,72 vs 178,7).
-    for l in lineas_pepsico(hoy - dt.timedelta(days=45), hoy, "pedido"):
+    # Ultima / penultima visita / real: kg (*P01 + *P02) del mismo dia de la semana hace 7 y 14
+    # dias, y hoy, por fecha de ENTREGA. Verificado el 3/10/2026 contra el reporte de Gescom:
+    # el acumulado (3.110 kg) y el "Real" (761 kg) coinciden con la fecha de entrega, no con la
+    # de pedido (con pedido el acumulado daba 1.691 kg porque los pedidos del viernes se entregan el sabado).
+    for l in lineas_pepsico(hoy - dt.timedelta(days=45), hoy, "entrega"):
         if l.get("tipo") != "VEN" or cod(l.get("ven")) not in VENDEDORES_PEPSICO:
             continue
         a = articulo_de(cod(l.get("item")), cod(l.get("emp")))
@@ -424,33 +425,8 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
         if not a or not ("*P01" in tags or "*P02" in tags):
             continue
         x = acc.setdefault(cod(l.get("ven")), {"p1a": 0.0, "p2a": 0.0, "mn": 0.0, "dias": {}})
-        fp = (l.get("fp") or "")[:10]
+        fp = (l.get("fe") or "")[:10]
         x["dias"][fp] = x["dias"].get(fp, 0.0) + num(l.get("cant")) * num(a.get("factorPeso")) / 1000
-    try:
-        diag = lineas_pepsico(hoy - dt.timedelta(days=4), hoy, "pedido")
-        print("DIAG claves de una linea:", sorted(diag[0].keys()) if diag else "sin lineas")
-        por_tipo = {}
-        for l in diag:
-            a = articulo_de(cod(l.get("item")), cod(l.get("emp")))
-            tags = (a or {}).get("tags") or []
-            if "*P01" in tags or "*P02" in tags:
-                clave = ((l.get("fp") or "")[:10], l.get("tipo"))
-                por_tipo[clave] = por_tipo.get(clave, 0.0) + num(l.get("cant")) * num(a.get("factorPeso")) / 1000
-        for clave in sorted(por_tipo):
-            print("DIAG pedido %s tipo %s kg %.1f" % (clave[0], clave[1], por_tipo[clave]))
-        diag_e = lineas_pepsico(hoy - dt.timedelta(days=4), hoy + dt.timedelta(days=3), "entrega")
-        por_ent = {}
-        for l in diag_e:
-            if l.get("tipo") != "VEN":
-                continue
-            a = articulo_de(cod(l.get("item")), cod(l.get("emp")))
-            tags = (a or {}).get("tags") or []
-            if "*P01" in tags or "*P02" in tags:
-                f = (l.get("fe") or l.get("fecha") or "")[:10]
-                por_ent[f] = por_ent.get(f, 0.0) + num(l.get("cant")) * num(a.get("factorPeso")) / 1000
-        print("DIAG entrega por fecha:", {k: round(v, 1) for k, v in sorted(por_ent.items())})
-    except Exception as e:
-        print("DIAG error:", e)
     hoy_iso = hoy.isoformat()
     hace7, hace14 = (hoy - dt.timedelta(days=7)).isoformat(), (hoy - dt.timedelta(days=14)).isoformat()
     kg_vendedores = []
@@ -484,14 +460,14 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
             historial_por_dia[fecha] = historial_por_dia.get(fecha, 0.0) + kg
     historial_out = [{"fecha": f, "kg": round(k, 2)} for f, k in sorted(historial_por_dia.items())]
     escribir("historial_diario.json", historial_out)
-    print("Historial diario: %d dias (por fecha de pedido)" % len(historial_out))
+    print("Historial diario: %d dias (por fecha de entrega)" % len(historial_out))
 
     return {
         "objetivoPG": round(sum(v["p1o"] for v in kg_vendedores), 2),
         "objetivoSB": round(sum(v["p2o"] for v in kg_vendedores), 2),
         "diasHabiles": dias_habiles, "diasTrabajados": dias_trabajados,
         "vendedores": kg_vendedores,
-        "fuente": "base propia (renglones por fecha de pedido); objetivos de %s" % mes_obj,
+        "fuente": "base propia (renglones por fecha de entrega); objetivos de %s" % mes_obj,
     }
 
 
