@@ -426,6 +426,31 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
         x = acc.setdefault(cod(l.get("ven")), {"p1a": 0.0, "p2a": 0.0, "mn": 0.0, "dias": {}})
         fp = (l.get("fp") or "")[:10]
         x["dias"][fp] = x["dias"].get(fp, 0.0) + num(l.get("cant")) * num(a.get("factorPeso")) / 1000
+    try:
+        diag = lineas_pepsico(hoy - dt.timedelta(days=4), hoy, "pedido")
+        print("DIAG claves de una linea:", sorted(diag[0].keys()) if diag else "sin lineas")
+        por_tipo = {}
+        for l in diag:
+            a = articulo_de(cod(l.get("item")), cod(l.get("emp")))
+            tags = (a or {}).get("tags") or []
+            if "*P01" in tags or "*P02" in tags:
+                clave = ((l.get("fp") or "")[:10], l.get("tipo"))
+                por_tipo[clave] = por_tipo.get(clave, 0.0) + num(l.get("cant")) * num(a.get("factorPeso")) / 1000
+        for clave in sorted(por_tipo):
+            print("DIAG pedido %s tipo %s kg %.1f" % (clave[0], clave[1], por_tipo[clave]))
+        diag_e = lineas_pepsico(hoy - dt.timedelta(days=4), hoy + dt.timedelta(days=3), "entrega")
+        por_ent = {}
+        for l in diag_e:
+            if l.get("tipo") != "VEN":
+                continue
+            a = articulo_de(cod(l.get("item")), cod(l.get("emp")))
+            tags = (a or {}).get("tags") or []
+            if "*P01" in tags or "*P02" in tags:
+                f = (l.get("fe") or l.get("fecha") or "")[:10]
+                por_ent[f] = por_ent.get(f, 0.0) + num(l.get("cant")) * num(a.get("factorPeso")) / 1000
+        print("DIAG entrega por fecha:", {k: round(v, 1) for k, v in sorted(por_ent.items())})
+    except Exception as e:
+        print("DIAG error:", e)
     hoy_iso = hoy.isoformat()
     hace7, hace14 = (hoy - dt.timedelta(days=7)).isoformat(), (hoy - dt.timedelta(days=14)).isoformat()
     kg_vendedores = []
