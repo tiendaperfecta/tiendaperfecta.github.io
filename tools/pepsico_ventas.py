@@ -471,6 +471,65 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
     }
 
 
+OVERRIDE_GESCOM = DIR / "override_gescom_avance.json"
+
+
+def aplicar_override_gescom(avance, hoy, dias_habiles, dias_trabajados):
+    """Parche temporal mientras la base propia no sincroniza con Gescom.
+
+    Si existe pepsico/override_gescom_avance.json (acumulado por vendedor sacado a mano del reporte
+    "Avance de Ventas Pepsico" de Gescom), es DE HOY y suma mas kg que lo que trae la base, se usan esos
+    valores (acumulado, Mi Negocio, ultima/penultima visita y real) y se recalculan los derivados con
+    los objetivos del mes. Apenas la base alcanza ese acumulado, el parche se ignora solo.
+    Devuelve (avance, total_gescom o None)."""
+    try:
+        ov = json.loads(OVERRIDE_GESCOM.read_text(encoding="utf-8"))
+    except Exception:
+        return avance, None
+    if ov.get("fecha") != hoy.isoformat():
+        return avance, None
+    por = {}
+    for f in ov.get("filas", []):
+        d = por.setdefault(f["vendedor"], {"p1a": 0.0, "p2a": 0.0, "mn": 0.0, "ultima": 0.0, "penult": 0.0, "real": 0.0})
+        d["p1a" if f["grupo"] == "*P01" else "p2a"] += num(f.get("acumulado"))
+        d["mn"] += num(f.get("acumuladoMN"))
+        d["ultima"] += num(f.get("ultima"))
+        d["penult"] += num(f.get("penult"))
+        d["real"] += num(f.get("real"))
+    total_ov = sum(d["p1a"] + d["p2a"] for d in por.values())
+    total_base = sum(v["ta"] for v in avance["vendedores"])
+    if total_ov <= total_base + 1:
+        return avance, None
+    ratio = dias_trabajados / dias_habiles if dias_habiles else 0
+    for v in avance["vendedores"]:
+        o = por.get(v["n"])
+        if not o:
+            continue
+        p1o, p2o = v["p1o"], v["p2o"]
+        p1a, p2a = round(o["p1a"], 2), round(o["p2a"], 2)
+        to, ta = round(p1o + p2o, 2), round(p1a + p2a, 2)
+        v.update({
+            "p1a": p1a, "p1p": round(p1a / (p1o * ratio) * 100, 2) if p1o and ratio else 0.0,
+            "p2a": p2a, "p2p": round(p2a / (p2o * ratio) * 100, 2) if p2o and ratio else 0.0,
+            "ta": ta, "tp": round(ta / (to * ratio) * 100, 2) if to and ratio else 0.0,
+            "promedio": round(ta / dias_trabajados, 2) if dias_trabajados else 0.0,
+            "medianec": round((to - ta) / (dias_habiles - dias_trabajados), 2) if dias_habiles > dias_trabajados else 0.0,
+            "tendencia": round(ta / dias_trabajados * dias_habiles, 2) if dias_trabajados else 0.0,
+            "real": round(o["real"], 2), "ultima": round(o["ultima"], 2), "penult": round(o["penult"], 2),
+            "acumuladoMN": round(o["mn"], 2),
+        })
+    avance["fuente"] = "Gescom (reporte Avance de Ventas Pepsico, extraido %s) mientras la base no sincroniza; objetivos de octubre" % ov.get("extraido", "")
+    try:
+        hist = json.loads((DIR / "historial_diario.json").read_text(encoding="utf-8"))
+        hoy_iso = hoy.isoformat()
+        kg_hoy = round(sum(d["real"] for d in por.values()), 2)
+        hist = [h for h in hist if h.get("fecha") != hoy_iso] + [{"fecha": hoy_iso, "kg": kg_hoy}]
+        escribir("historial_diario.json", sorted(hist, key=lambda h: h["fecha"]))
+    except Exception as e:
+        print("No se pudo actualizar el historial diario con el dato de Gescom:", e)
+    return avance, total_ov
+
+
 def traer_avance_kg_reporte(api, hoy, dias_habiles, dias_trabajados):
     """(ANTES, sin uso desde el 30/9/2026: report/render da 403.) Trae el Avance de Ventas Pepsico (kg) directo del reporte de Gescom, ya
     prorrateado y clasificado por el propio sistema (Platino+Gold = *P01,
@@ -983,6 +1042,9 @@ def main():
         print("Hoy todavia no hay pedidos cargados: no cuenta como dia trabajado")
     try:
         avance_kg = traer_avance_kg(api, hoy, dias_habiles, dias_trabajados)
+        avance_kg, total_gescom = aplicar_override_gescom(avance_kg, hoy, dias_habiles, dias_trabajados)
+        if total_gescom:
+            print("AVISO: la base trae menos kg que Gescom; se usa el acumulado de Gescom (%.1f kg)" % total_gescom)
         escribir("avance_kg_vendedor.json", avance_kg)
         print("Avance kg: %d vendedores | dias %g/%g | objetivo PG %.1f kg | objetivo SB %.1f kg" %
               (len(avance_kg["vendedores"]), dias_trabajados, dias_habiles,
