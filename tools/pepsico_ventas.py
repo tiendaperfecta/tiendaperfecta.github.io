@@ -974,6 +974,14 @@ def main():
     dias_habiles = dias_habiles_mes(hoy.year, hoy.month)
     dias_trabajados = dias_habiles_mes(hoy.year, hoy.month, hasta=hoy)
     try:
+        hoy_con_pedidos = any(l.get("tipo") == "VEN" for l in lineas_pepsico(hoy, hoy, "pedido"))
+    except Exception as e:
+        print("No se pudo verificar si hoy ya hay pedidos, se cuenta el dia:", e)
+        hoy_con_pedidos = True
+    if not hoy_con_pedidos:
+        dias_trabajados = dias_habiles_mes(hoy.year, hoy.month, hasta=hoy - dt.timedelta(days=1))
+        print("Hoy todavia no hay pedidos cargados: no cuenta como dia trabajado")
+    try:
         avance_kg = traer_avance_kg(api, hoy, dias_habiles, dias_trabajados)
         escribir("avance_kg_vendedor.json", avance_kg)
         print("Avance kg: %d vendedores | dias %g/%g | objetivo PG %.1f kg | objetivo SB %.1f kg" %
