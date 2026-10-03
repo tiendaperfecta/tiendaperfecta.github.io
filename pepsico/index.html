@@ -1141,7 +1141,7 @@ td.ip-base.clickable{cursor:pointer}
 
   <h2 class="section-title">Combos Tradicionales Axum</h2>
   <p class="section-note">
-    Combos usados por vendedor, período 02/09 al 25/09. <b>Combos vendidos</b> = cantidad de combos aplicados.
+    Combos usados por vendedor, período <span id="combos-periodo-axum">02/09 al 25/09</span>. <b>Combos vendidos</b> = cantidad de combos aplicados.
     <b>A Reconocer</b> = monto en $ que Axum reconoce por esos combos. Ordenado de mayor a menor $.
   </p>
 
@@ -1196,7 +1196,7 @@ td.ip-base.clickable{cursor:pointer}
 
   <h2 class="section-title">Combos Mi Negocio</h2>
   <p class="section-note">
-    Combos del canal digital Mi Negocio+ usados por vendedor, período 02/09 al 23/09. Ordenado de mayor a menor $.
+    Combos del canal digital Mi Negocio+ usados por vendedor, período <span id="combos-periodo-mn">02/09 al 23/09</span>. Ordenado de mayor a menor $.
   </p>
 
   <div class="tp-summary">
@@ -1464,7 +1464,7 @@ function drillCombos(vendedor) {
       </tbody>
     </table>
   `;
-  openDrillCustom(vendedor, 'Combos Tradicionales Axum · período 02/09-23/09', html);
+  openDrillCustom(vendedor, 'Combos Tradicionales Axum · período ' + (combosPeriodoAxum || '').replace(' al ', '-'), html);
 }
 
 function drillInvendible(vendedor) {
@@ -2011,84 +2011,8 @@ fetch(BASE + 'rechazos_ultima_fecha.json' + CACHE_BUST).then(r => r.json()).then
 `).join('');
 }).catch(() => {});
 
-const comboRows = [
-  {n:"Ezequiel Hack",           combos:70, reconocer:947077.09},
-  {n:"Ludmila Aylen Martinez",  combos:28, reconocer:876555.79},
-  {n:"Lucas Giayetto",          combos:14, reconocer:607992.24},
-  {n:"Julian Nuñez",            combos:41, reconocer:580452.03},
-  {n:"Nicolas Martinez",        combos:43, reconocer:565421.08},
-  {n:"Camila Martinez",         combos:17, reconocer:482213.49},
-  {n:"Matias Parada",           combos:9,  reconocer:263077.29},
-  {n:"Agustin Pogorzelski",     combos:16, reconocer:234113.40},
-  {n:"Ramiro Rando",            combos:5,  reconocer:210508.04},
-  {n:"Maria Noelia Madia",      combos:4,  reconocer:109568.10},
-  {n:"Melanie Larrama",         combos:3,  reconocer:96330.80},
-  {n:"Martinica Rodriguez",     combos:2,  reconocer:87882.18},
-];
-comboRows.sort((a,b) => b.reconocer - a.reconocer);
-const comboTot = comboRows.reduce((acc,r) => { acc.combos += r.combos; acc.reconocer += r.reconocer; return acc; }, {combos:0, reconocer:0});
-document.getElementById('combo-tot-cant').textContent = fmt(comboTot.combos);
-document.getElementById('combo-tot-monto').textContent = '$ ' + fmt(comboTot.reconocer);
-
-const tbodyCombos = document.getElementById('tbody-combos');
-tbodyCombos.innerHTML = comboRows.map(r => `
-  <tr>
-    <td class="name clickable" onclick="drillCombos('${r.n}')">${r.n}</td>
-    <td>${fmt(r.combos)}</td>
-    <td>$ ${fmt(r.reconocer)}</td>
-  </tr>
-`).join('');
-document.getElementById('tfoot-combos').innerHTML = `
-  <tr>
-    <td class="name">Total PepsiCo</td>
-    <td>${fmt(comboTot.combos)}</td>
-    <td>$ ${fmt(comboTot.reconocer)}</td>
-  </tr>
-`;
-
-const comboDetalleRows = [
-  {n:"Ezequiel Hack",           combo:"Combo FDS LB (Lays + Doritos) 12+4", cantidad:46, reconocer:498776.16},
-  {n:"Ezequiel Hack",           combo:"Lays y Pehua MB 33+33",              cantidad:9,  reconocer:393075.47},
-  {n:"Ezequiel Hack",           combo:"GLOBAL MB 12+3",                     cantidad:7,  reconocer:29008.26},
-  {n:"Ezequiel Hack",           combo:"Combo TW MB 8+2",                    cantidad:4,  reconocer:13997.60},
-  {n:"Ezequiel Hack",           combo:"GLOBAL SB 12+3",                     cantidad:4,  reconocer:12219.60},
-  {n:"Ludmila Aylen Martinez",  combo:"Lays y Pehua MB 33+33",              cantidad:18, reconocer:786150.94},
-  {n:"Ludmila Aylen Martinez",  combo:"Combo FDS LB (Lays + Doritos) 12+4", cantidad:7,  reconocer:75900.72},
-  {n:"Ludmila Aylen Martinez",  combo:"GLOBAL MB 12+3",                     cantidad:3,  reconocer:14504.13},
-  {n:"Lucas Giayetto",          combo:"Lays y Pehua MB 33+33",              cantidad:14, reconocer:607992.24},
-  {n:"Julian Nuñez",            combo:"Combo FDS LB (Lays + Doritos) 12+4", cantidad:22, reconocer:238545.12},
-  {n:"Julian Nuñez",            combo:"Lays y Pehua MB 33+33",              cantidad:7,  reconocer:282447.06},
-  {n:"Julian Nuñez",            combo:"GLOBAL MB 12+3",                     cantidad:10, reconocer:48347.10},
-  {n:"Julian Nuñez",            combo:"Reg Global MB 20+5",                 cantidad:1,  reconocer:8057.85},
-  {n:"Julian Nuñez",            combo:"GLOBAL SB 12+3",                     cantidad:1,  reconocer:3054.90},
-  {n:"Nicolas Martinez",        combo:"Lays y Pehua MB 33+33",              cantidad:8,  reconocer:346740.04},
-  {n:"Nicolas Martinez",        combo:"Combo FDS LB (Lays + Doritos) 12+4", cantidad:12, reconocer:130115.52},
-  {n:"Nicolas Martinez",        combo:"GLOBAL MB 12+3",                     cantidad:13, reconocer:58016.52},
-  {n:"Nicolas Martinez",        combo:"GLOBAL SB 12+3",                     cantidad:10, reconocer:30549.00},
-  {n:"Camila Martinez",         combo:"Lays y Pehua MB 33+33",              cantidad:9,  reconocer:395469.81},
-  {n:"Camila Martinez",         combo:"Combo FDS LB (Lays + Doritos) 12+4", cantidad:8,  reconocer:86743.68},
-  {n:"Matias Parada",           combo:"Lays y Pehua MB 33+33",              cantidad:5,  reconocer:219705.45},
-  {n:"Matias Parada",           combo:"Combo FDS LB (Lays + Doritos) 12+4", cantidad:4,  reconocer:43371.84},
-  {n:"Agustin Pogorzelski",     combo:"Combo FDS LB (Lays + Doritos) 12+4", cantidad:12, reconocer:130115.52},
-  {n:"Agustin Pogorzelski",     combo:"Lays y Pehua MB 33+33",              cantidad:2,  reconocer:87882.18},
-  {n:"Agustin Pogorzelski",     combo:"Reg Global MB 20+5",                 cantidad:2,  reconocer:16115.70},
-  {n:"Ramiro Rando",            combo:"Lays y Pehua MB 33+33",              cantidad:4,  reconocer:159003.98},
-  {n:"Ramiro Rando",            combo:"Combo Mundial Doritos LB 3+1 Cajas", cantidad:1,  reconocer:51504.06},
-  {n:"Maria Noelia Madia",      combo:"Lays y Pehua MB 33+33",              cantidad:2,  reconocer:87882.18},
-  {n:"Maria Noelia Madia",      combo:"Combo FDS LB (Lays + Doritos) 12+4", cantidad:2,  reconocer:21685.92},
-  {n:"Melanie Larrama",         combo:"Lays y Pehua MB 33+33",              cantidad:2,  reconocer:85487.84},
-  {n:"Melanie Larrama",         combo:"Combo FDS LB (Lays + Doritos) 12+4", cantidad:1,  reconocer:10842.96},
-  {n:"Martinica Rodriguez",     combo:"Lays y Pehua MB 33+33",              cantidad:2,  reconocer:87882.18},
-];
-const COMBO_TYPES = [
-  "Lays y Pehua MB 33+33",
-  "Combo FDS LB (Lays + Doritos) 12+4",
-  "GLOBAL MB 12+3",
-  "Combo Mundial Doritos LB 3+1 Cajas",
-  "GLOBAL SB 12+3",
-  "Reg Global MB 20+5",
-  "Combo TW MB 8+2",
-];
+// Combos (Axum y Mi Negocio): los datos salen de pepsico/combos_datos.json (reportes de Gescom "Analisis Combos" y
+// "Analisis Promociones MiNegocio"), no estan escritos en el HTML.
 const COMBO_LABELS = {
   "Lays y Pehua MB 33+33": "Lays+Pehua 33+33",
   "Combo FDS LB (Lays + Doritos) 12+4": "FDS Lays+Dor 12+4",
@@ -2098,193 +2022,81 @@ const COMBO_LABELS = {
   "Reg Global MB 20+5": "Reg Global 20+5",
   "Combo TW MB 8+2": "TW MB 8+2",
 };
-
-const comboPivot = comboRows.map(cr => {
-  const byCombo = {};
-  COMBO_TYPES.forEach(c => { byCombo[c] = {cantidad:0, reconocer:0}; });
-  comboDetalleRows.filter(d => d.n === cr.n).forEach(d => { byCombo[d.combo] = {cantidad:d.cantidad, reconocer:d.reconocer}; });
-  return {n: cr.n, byCombo, totCantidad: cr.combos, totReconocer: cr.reconocer};
-});
-
-document.getElementById('grp-combosDetalle').innerHTML = `
-  <th></th>
-  ${COMBO_TYPES.map(c => `<th colspan="2">${COMBO_LABELS[c]}</th><th></th>`).join('')}
-  <th colspan="2">Total</th>
-`;
-document.getElementById('cols-combosDetalle').innerHTML = `
-  <th class="name-col">Vendedor</th>
-  ${COMBO_TYPES.map(() => `<th>Cant.</th><th>$</th><th></th>`).join('')}
-  <th>Cant.</th><th>$</th>
-`;
-document.getElementById('tbody-combosDetalle').innerHTML = comboPivot.map(r => `
-  <tr>
-    <td class="name">${r.n}</td>
-    ${COMBO_TYPES.map(c => `<td>${r.byCombo[c].cantidad ? fmt(r.byCombo[c].cantidad) : '-'}</td><td>${r.byCombo[c].reconocer ? '$ '+fmt(r.byCombo[c].reconocer) : '-'}</td><td></td>`).join('')}
-    <td>${fmt(r.totCantidad)}</td><td>$ ${fmt(r.totReconocer)}</td>
-  </tr>
-`).join('');
-document.getElementById('tfoot-combosDetalle').innerHTML = `
-  <tr>
-    <td class="name">Total PepsiCo</td>
-    ${COMBO_TYPES.map(c => {
-      const cant = comboPivot.reduce((s,r) => s + r.byCombo[c].cantidad, 0);
-      const rec = comboPivot.reduce((s,r) => s + r.byCombo[c].reconocer, 0);
-      return `<td>${fmt(cant)}</td><td>$ ${fmt(rec)}</td><td></td>`;
-    }).join('')}
-    <td>${fmt(comboTot.combos)}</td><td>$ ${fmt(comboTot.reconocer)}</td>
-  </tr>
-`;
-
-const comboMnRows = [
-  {n:"Nicolas Martinez",       combos:288, reconocer:718244.87},
-  {n:"Ludmila Aylen Martinez", combos:187, reconocer:450338.14},
-  {n:"Lucas Giayetto",         combos:153, reconocer:419420.80},
-  {n:"Ramiro Rando",           combos:208, reconocer:398303.93},
-  {n:"Ezequiel Hack",          combos:121, reconocer:274126.27},
-  {n:"Martinica Rodriguez",    combos:192, reconocer:271783.27},
-  {n:"Matias Parada",          combos:174, reconocer:270656.95},
-  {n:"Agustin Pogorzelski",    combos:204, reconocer:267375.40},
-  {n:"Julian Nuñez",           combos:142, reconocer:238880.69},
-  {n:"Melanie Larrama",        combos:140, reconocer:232159.93},
-  {n:"Maria Noelia Madia",     combos:145, reconocer:219791.56},
-  {n:"Camila Martinez",        combos:213, reconocer:191435.01},
-];
-comboMnRows.sort((a,b) => b.reconocer - a.reconocer);
-const comboMnTot = comboMnRows.reduce((acc,r) => { acc.combos += r.combos; acc.reconocer += r.reconocer; return acc; }, {combos:0, reconocer:0});
-document.getElementById('comboMn-tot-cant').textContent = fmt(comboMnTot.combos);
-document.getElementById('comboMn-tot-monto').textContent = '$ ' + fmt(comboMnTot.reconocer);
-
-const tbodyCombosMn = document.getElementById('tbody-combosMn');
-tbodyCombosMn.innerHTML = comboMnRows.map(r => `
-  <tr>
-    <td class="name">${r.n}</td>
-    <td>${fmt(r.combos)}</td>
-    <td>$ ${fmt(r.reconocer)}</td>
-  </tr>
-`).join('');
-document.getElementById('tfoot-combosMn').innerHTML = `
-  <tr>
-    <td class="name">Total PepsiCo</td>
-    <td>${fmt(comboMnTot.combos)}</td>
-    <td>$ ${fmt(comboMnTot.reconocer)}</td>
-  </tr>
-`;
-
-const comboMnDetalleRows = [
-  {n:"Maria Noelia Madia",     combo:"MB20x5",          cantidad:44, reconocer:153099.15},
-  {n:"Maria Noelia Madia",     combo:"SB20x5",          cantidad:43, reconocer:40732.00},
-  {n:"Maria Noelia Madia",     combo:"TwistosMB8x1",    cantidad:28, reconocer:13997.60},
-  {n:"Maria Noelia Madia",     combo:"TwistosSB8x1",    cantidad:25, reconocer:5091.50},
-  {n:"Maria Noelia Madia",     combo:"MB8x1",           cantidad:3,  reconocer:4834.71},
-  {n:"Maria Noelia Madia",     combo:"SB8x1",           cantidad:2,  reconocer:2036.60},
-  {n:"Julian Nuñez",           combo:"MB20x5",          cantidad:48, reconocer:136983.45},
-  {n:"Julian Nuñez",           combo:"SB20x5",          cantidad:39, reconocer:56006.50},
-  {n:"Julian Nuñez",           combo:"TwistosMB8x1",    cantidad:23, reconocer:19246.70},
-  {n:"Julian Nuñez",           combo:"Sin Descripcion", cantidad:2,  reconocer:13237.90},
-  {n:"Julian Nuñez",           combo:"TwistosSB8x1",    cantidad:27, reconocer:9164.70},
-  {n:"Julian Nuñez",           combo:"MB8x1",           cantidad:2,  reconocer:3223.14},
-  {n:"Julian Nuñez",           combo:"SB8x1",           cantidad:1,  reconocer:1018.30},
-  {n:"Ezequiel Hack",          combo:"MB20x5",          cantidad:34, reconocer:145041.30},
-  {n:"Ezequiel Hack",          combo:"SB20x5",          cantidad:35, reconocer:76372.50},
-  {n:"Ezequiel Hack",          combo:"TwistosMB8x1",    cantidad:17, reconocer:17497.00},
-  {n:"Ezequiel Hack",          combo:"Sin Descripcion", cantidad:2,  reconocer:17311.10},
-  {n:"Ezequiel Hack",          combo:"TwistosSB8x1",    cantidad:30, reconocer:16292.80},
-  {n:"Ezequiel Hack",          combo:"MB8x1",           cantidad:3,  reconocer:1611.57},
-  {n:"Lucas Giayetto",         combo:"MB20x5",          cantidad:46, reconocer:233677.65},
-  {n:"Lucas Giayetto",         combo:"SB20x5",          cantidad:46, reconocer:127287.50},
-  {n:"Lucas Giayetto",         combo:"TwistosMB8x1",    cantidad:25, reconocer:27995.20},
-  {n:"Lucas Giayetto",         combo:"TwistosSB8x1",    cantidad:30, reconocer:21384.30},
-  {n:"Lucas Giayetto",         combo:"MB8x1",           cantidad:5,  reconocer:8057.85},
-  {n:"Lucas Giayetto",         combo:"SB8x1",           cantidad:1,  reconocer:1018.30},
-  {n:"Nicolas Martinez",       combo:"MB20x5",          cantidad:83, reconocer:362603.25},
-  {n:"Nicolas Martinez",       combo:"Sin Descripcion", cantidad:21, reconocer:156641.10},
-  {n:"Nicolas Martinez",       combo:"SB20x5",          cantidad:84, reconocer:137470.50},
-  {n:"Nicolas Martinez",       combo:"TwistosMB8x1",    cantidad:44, reconocer:31494.60},
-  {n:"Nicolas Martinez",       combo:"TwistosSB8x1",    cantidad:50, reconocer:20366.00},
-  {n:"Nicolas Martinez",       combo:"MB8x1",           cantidad:6,  reconocer:9669.42},
-  {n:"Camila Martinez",        combo:"MB20x5",          cantidad:60, reconocer:112809.90},
-  {n:"Camila Martinez",        combo:"SB20x5",          cantidad:59, reconocer:35640.50},
-  {n:"Camila Martinez",        combo:"TwistosMB8x1",    cantidad:34, reconocer:15747.30},
-  {n:"Camila Martinez",        combo:"TwistosSB8x1",    cantidad:53, reconocer:11201.30},
-  {n:"Camila Martinez",        combo:"Sin Descripcion", cantidad:2,  reconocer:10183.00},
-  {n:"Camila Martinez",        combo:"MB8x1",           cantidad:4,  reconocer:4834.71},
-  {n:"Camila Martinez",        combo:"SB8x1",           cantidad:1,  reconocer:1018.30},
-  {n:"Ramiro Rando",           combo:"MB20x5",          cantidad:66, reconocer:233677.65},
-  {n:"Ramiro Rando",           combo:"SB20x5",          cantidad:68, reconocer:122196.00},
-  {n:"Ramiro Rando",           combo:"TwistosMB8x1",    cantidad:39, reconocer:22746.10},
-  {n:"Ramiro Rando",           combo:"TwistosSB8x1",    cantidad:30, reconocer:7128.10},
-  {n:"Ramiro Rando",           combo:"MB8x1",           cantidad:4,  reconocer:6446.28},
-  {n:"Ramiro Rando",           combo:"Sin Descripcion", cantidad:1,  reconocer:6109.80},
-  {n:"Martinica Rodriguez",    combo:"MB20x5",          cantidad:58, reconocer:161157.00},
-  {n:"Martinica Rodriguez",    combo:"SB20x5",          cantidad:57, reconocer:71281.00},
-  {n:"Martinica Rodriguez",    combo:"TwistosMB8x1",    cantidad:33, reconocer:24495.80},
-  {n:"Martinica Rodriguez",    combo:"TwistosSB8x1",    cantidad:42, reconocer:13237.90},
-  {n:"Martinica Rodriguez",    combo:"MB8x1",           cantidad:2,  reconocer:1611.57},
-  {n:"Ludmila Aylen Martinez", combo:"MB20x5",          cantidad:64, reconocer:290082.60},
-  {n:"Ludmila Aylen Martinez", combo:"SB20x5",          cantidad:55, reconocer:106921.50},
-  {n:"Ludmila Aylen Martinez", combo:"TwistosMB8x1",    cantidad:36, reconocer:29744.90},
-  {n:"Ludmila Aylen Martinez", combo:"TwistosSB8x1",    cantidad:27, reconocer:13237.90},
-  {n:"Ludmila Aylen Martinez", combo:"Sin Descripcion", cantidad:3,  reconocer:7128.10},
-  {n:"Ludmila Aylen Martinez", combo:"MB8x1",           cantidad:2,  reconocer:3223.14},
-  {n:"Matias Parada",          combo:"MB20x5",          cantidad:56, reconocer:169214.85},
-  {n:"Matias Parada",          combo:"SB20x5",          cantidad:51, reconocer:71281.00},
-  {n:"Matias Parada",          combo:"TwistosMB8x1",    cantidad:41, reconocer:20996.40},
-  {n:"Matias Parada",          combo:"TwistosSB8x1",    cantidad:25, reconocer:9164.70},
-  {n:"Matias Parada",          combo:"MB8x1",           cantidad:1,  reconocer:0},
-  {n:"Melanie Larrama",        combo:"MB20x5",          cantidad:41, reconocer:153099.15},
-  {n:"Melanie Larrama",        combo:"SB20x5",          cantidad:41, reconocer:50915.00},
-  {n:"Melanie Larrama",        combo:"TwistosMB8x1",    cantidad:22, reconocer:10498.20},
-  {n:"Melanie Larrama",        combo:"MB8x1",           cantidad:4,  reconocer:6446.28},
-  {n:"Melanie Larrama",        combo:"TwistosSB8x1",    cantidad:31, reconocer:6109.80},
-  {n:"Melanie Larrama",        combo:"Sin Descripcion", cantidad:1,  reconocer:5091.50},
-  {n:"Agustin Pogorzelski",    combo:"MB20x5",          cantidad:66, reconocer:161157.00},
-  {n:"Agustin Pogorzelski",    combo:"SB20x5",          cantidad:63, reconocer:81464.00},
-  {n:"Agustin Pogorzelski",    combo:"TwistosSB8x1",    cantidad:43, reconocer:13237.90},
-  {n:"Agustin Pogorzelski",    combo:"TwistosMB8x1",    cantidad:31, reconocer:10498.20},
-  {n:"Agustin Pogorzelski",    combo:"SB8x1",           cantidad:1,  reconocer:1018.30},
-];
-
-const COMBO_MN_TYPES = ["MB20x5", "SB20x5", "TwistosMB8x1", "TwistosSB8x1", "MB8x1", "SB8x1"];
 const COMBO_MN_LABELS = {
   "MB20x5": "MB 20x5", "SB20x5": "SB 20x5", "TwistosMB8x1": "Twistos MB 8x1",
   "Sin Descripcion": "Sin descripción", "TwistosSB8x1": "Twistos SB 8x1", "MB8x1": "MB 8x1", "SB8x1": "SB 8x1",
 };
+let combosPeriodoAxum = '';
 
-const comboMnPivot = comboMnRows.map(cr => {
-  const byCombo = {};
-  COMBO_MN_TYPES.forEach(c => { byCombo[c] = {cantidad:0, reconocer:0}; });
-  comboMnDetalleRows.filter(d => d.n === cr.n).forEach(d => { byCombo[d.combo] = {cantidad:d.cantidad, reconocer:d.reconocer}; });
-  return {n: cr.n, byCombo, totCantidad: cr.combos, totReconocer: cr.reconocer};
-});
+function renderComboBloque(prefijo, bloque, labels) {
+  const rowsOrd = bloque.rows.slice().sort((a,b) => b.reconocer - a.reconocer);
+  const tot = rowsOrd.reduce((acc,r) => { acc.combos += r.combos; acc.reconocer += r.reconocer; return acc; }, {combos:0, reconocer:0});
+  document.getElementById(prefijo + '-tot-cant').textContent = fmt(tot.combos);
+  document.getElementById(prefijo + '-tot-monto').textContent = '$ ' + fmt(tot.reconocer);
+  const clic = prefijo === 'combo';
+  document.getElementById(clic ? 'tbody-combos' : 'tbody-combosMn').innerHTML = rowsOrd.map(r => `
+    <tr>
+      <td class="name${clic ? ' clickable" onclick="drillCombos(\'' + r.n + '\')' : ''}">${r.n}</td>
+      <td>${fmt(r.combos)}</td>
+      <td>$ ${fmt(r.reconocer)}</td>
+    </tr>
+  `).join('');
+  document.getElementById(clic ? 'tfoot-combos' : 'tfoot-combosMn').innerHTML = `
+    <tr>
+      <td class="name">Total PepsiCo</td>
+      <td>${fmt(tot.combos)}</td>
+      <td>$ ${fmt(tot.reconocer)}</td>
+    </tr>
+  `;
+  // tipos de combo ordenados por $ total (los que aparezcan en el periodo)
+  const porTipo = {};
+  bloque.detalle.forEach(d => { porTipo[d.combo] = (porTipo[d.combo] || 0) + d.reconocer; });
+  const tipos = Object.keys(porTipo).sort((a,b) => porTipo[b] - porTipo[a]);
+  const etiqueta = c => labels[c] || c;
+  const pivot = rowsOrd.map(cr => {
+    const byCombo = {};
+    tipos.forEach(c => { byCombo[c] = {cantidad:0, reconocer:0}; });
+    bloque.detalle.filter(d => d.n === cr.n).forEach(d => { byCombo[d.combo] = {cantidad:d.cantidad, reconocer:d.reconocer}; });
+    return {n: cr.n, byCombo, totCantidad: cr.combos, totReconocer: cr.reconocer};
+  });
+  const id = clic ? 'combosDetalle' : 'combosMnDetalle';
+  document.getElementById('grp-' + id).innerHTML = `
+    <th></th>
+    ${tipos.map(c => `<th colspan="2">${etiqueta(c)}</th><th></th>`).join('')}
+    <th colspan="2">Total</th>
+  `;
+  document.getElementById('cols-' + id).innerHTML = `
+    <th class="name-col">Vendedor</th>
+    ${tipos.map(() => `<th>Cant.</th><th>$</th><th></th>`).join('')}
+    <th>Cant.</th><th>$</th>
+  `;
+  document.getElementById('tbody-' + id).innerHTML = pivot.map(r => `
+    <tr>
+      <td class="name">${r.n}</td>
+      ${tipos.map(c => `<td>${r.byCombo[c].cantidad ? fmt(r.byCombo[c].cantidad) : '-'}</td><td>${r.byCombo[c].reconocer ? '$ '+fmt(r.byCombo[c].reconocer) : '-'}</td><td></td>`).join('')}
+      <td>${fmt(r.totCantidad)}</td><td>$ ${fmt(r.totReconocer)}</td>
+    </tr>
+  `).join('');
+  document.getElementById('tfoot-' + id).innerHTML = `
+    <tr>
+      <td class="name">Total PepsiCo</td>
+      ${tipos.map(c => {
+        const cant = pivot.reduce((s,r) => s + r.byCombo[c].cantidad, 0);
+        const rec = pivot.reduce((s,r) => s + r.byCombo[c].reconocer, 0);
+        return `<td>${fmt(cant)}</td><td>$ ${fmt(rec)}</td><td></td>`;
+      }).join('')}
+      <td>${fmt(tot.combos)}</td><td>$ ${fmt(tot.reconocer)}</td>
+    </tr>
+  `;
+}
 
-document.getElementById('grp-combosMnDetalle').innerHTML = `
-  <th></th>
-  ${COMBO_MN_TYPES.map(c => `<th colspan="2">${COMBO_MN_LABELS[c]}</th><th></th>`).join('')}
-  <th colspan="2">Total</th>
-`;
-document.getElementById('cols-combosMnDetalle').innerHTML = `
-  <th class="name-col">Vendedor</th>
-  ${COMBO_MN_TYPES.map(() => `<th>Cant.</th><th>$</th><th></th>`).join('')}
-  <th>Cant.</th><th>$</th>
-`;
-document.getElementById('tbody-combosMnDetalle').innerHTML = comboMnPivot.map(r => `
-  <tr>
-    <td class="name">${r.n}</td>
-    ${COMBO_MN_TYPES.map(c => `<td>${r.byCombo[c].cantidad ? fmt(r.byCombo[c].cantidad) : '-'}</td><td>${r.byCombo[c].reconocer ? '$ '+fmt(r.byCombo[c].reconocer) : '-'}</td><td></td>`).join('')}
-    <td>${fmt(r.totCantidad)}</td><td>$ ${fmt(r.totReconocer)}</td>
-  </tr>
-`).join('');
-document.getElementById('tfoot-combosMnDetalle').innerHTML = `
-  <tr>
-    <td class="name">Total PepsiCo</td>
-    ${COMBO_MN_TYPES.map(c => {
-      const cant = comboMnPivot.reduce((s,r) => s + r.byCombo[c].cantidad, 0);
-      const rec = comboMnPivot.reduce((s,r) => s + r.byCombo[c].reconocer, 0);
-      return `<td>${fmt(cant)}</td><td>$ ${fmt(rec)}</td><td></td>`;
-    }).join('')}
-    <td>${fmt(comboMnTot.combos)}</td><td>$ ${fmt(comboMnTot.reconocer)}</td>
-  </tr>
-`;
+fetch('combos_datos.json' + CACHE_BUST).then(r => r.json()).then(d => {
+  combosPeriodoAxum = d.periodoAxum;
+  setTextoSiExiste('combos-periodo-axum', d.periodoAxum);
+  setTextoSiExiste('combos-periodo-mn', d.periodoMn);
+  renderComboBloque('combo', d.axum, COMBO_LABELS);
+  renderComboBloque('comboMn', d.mn, COMBO_MN_LABELS);
+}).catch(() => {});
 
 function renderMarcaSection(){
   if (!marcaVendRows.length) return;
