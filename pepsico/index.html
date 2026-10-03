@@ -605,7 +605,8 @@ td.ip-base.clickable{cursor:pointer}
   <h3 class="subsection-title">Clientes no registrados en Mi Negocio+ por día</h3>
   <p class="section-note">
     Clientes del universo de cada vendedor que todavía no se registraron en Mi Negocio+, agrupados por día de
-    ruta. Formato <b>no registrados/universo</b>. Mismo cruce manual que la tabla anterior.
+    ruta. Formato <b>no registrados/universo</b>. Click en cualquier celda para ver qué clientes son los que faltan.
+    Mismo cruce manual que la tabla anterior.
   </p>
   <div class="table-scroll">
     <table>
@@ -615,45 +616,11 @@ td.ip-base.clickable{cursor:pointer}
           <th>Lunes</th><th>Martes</th><th>Miércoles</th><th>Jueves</th><th>Viernes</th><th>Sábado</th><th>Total</th>
         </tr>
       </thead>
-      <tbody>
-        <tr><td class="name">Maria Noelia Madia</td><td>5/39</td><td>1/28</td><td>6/33</td><td>5/29</td><td>3/38</td><td>2/13</td><td>22/180</td></tr>
-        <tr><td class="name">Julian Nuñez</td><td>3/37</td><td>6/40</td><td>3/35</td><td>5/38</td><td>4/30</td><td>4/10</td><td>25/190</td></tr>
-        <tr><td class="name">Ezequiel Hack</td><td>11/42</td><td>24/42</td><td>10/49</td><td>14/41</td><td>10/33</td><td>4/14</td><td>73/221</td></tr>
-        <tr><td class="name">Lucas Giayetto</td><td>8/30</td><td>17/45</td><td>16/41</td><td>11/37</td><td>26/55</td><td>14/25</td><td>92/233</td></tr>
-        <tr><td class="name">Nicolas Martinez</td><td>4/42</td><td>1/39</td><td>1/35</td><td>4/37</td><td>2/37</td><td>1/22</td><td>13/212</td></tr>
-        <tr><td class="name">Camila Martinez</td><td>3/40</td><td>3/40</td><td>5/39</td><td>11/44</td><td>3/36</td><td>2/15</td><td>27/214</td></tr>
-        <tr><td class="name">Ramiro Rando</td><td>11/33</td><td>20/40</td><td>5/41</td><td>11/52</td><td>9/42</td><td>4/19</td><td>60/227</td></tr>
-        <tr><td class="name">Martinica Rodriguez</td><td>10/43</td><td>13/48</td><td>16/48</td><td>14/43</td><td>13/35</td><td>15/37</td><td>81/254</td></tr>
-        <tr><td class="name">Ludmila Aylen Martinez</td><td>9/40</td><td>6/37</td><td>7/42</td><td>4/29</td><td>7/34</td><td>8/21</td><td>41/203</td></tr>
-        <tr><td class="name">Matias Parada</td><td>8/45</td><td>12/41</td><td>21/42</td><td>14/42</td><td>3/22</td><td>6/22</td><td>64/214</td></tr>
-        <tr><td class="name">Melanie Larrama</td><td>10/39</td><td>6/36</td><td>6/22</td><td>12/42</td><td>11/37</td><td>7/23</td><td>52/199</td></tr>
-        <tr><td class="name">Agustin Pogorzelski</td><td>11/32</td><td>8/33</td><td>10/45</td><td>6/43</td><td>8/36</td><td>1/14</td><td>44/203</td></tr>
-      </tbody>
-      <tfoot>
-        <tr><td class="name">Total PepsiCo</td><td>93/462</td><td>117/469</td><td>106/472</td><td>111/477</td><td>99/435</td><td>68/235</td><td>594/2.550</td></tr>
-      </tfoot>
+      <tbody id="tbody-mnnr"></tbody>
+      <tfoot id="tfoot-mnnr"></tfoot>
     </table>
   </div>
 
-  <h3 class="subsection-title" style="margin:0">Seguimiento Mi Negocio+ por día</h3>
-  <p class="section-note">
-    Clientes registrados que necesitan seguimiento: sin activar en Mi Negocio+, o activos pero con menos del 70%
-    de su venta por el canal digital. Agrupados por día de ruta. Click en cualquier celda para ver el listado de
-    clientes.
-  </p>
-
-  <div class="table-scroll mn-watermark">
-    <table>
-      <thead>
-        <tr class="cols">
-          <th class="name-col">Vendedor</th>
-          <th>Lunes</th><th>Martes</th><th>Miércoles</th><th>Jueves</th><th>Viernes</th><th>Sábado</th><th>Total</th>
-        </tr>
-      </thead>
-      <tbody id="tbody-mnSeg"></tbody>
-      <tfoot id="tfoot-mnSeg"></tfoot>
-    </table>
-  </div>
 </div>
 
   <p class="foot-note">
@@ -1464,8 +1431,6 @@ let ventaPorVendedor = {};
 const ventaVendedorPromise = fetch(BASE + 'venta_vendedor.json' + CACHE_BUST).then(r => r.json())
   .then(data => { ventaPorVendedor = data; return data; }).catch(() => ({}));
 
-let mnSeguimientoDetalle = [];
-fetch(BASE + 'mn_seguimiento.json' + CACHE_BUST).then(r => r.json()).then(data => { mnSeguimientoDetalle = data; }).catch(() => {});
 
 let frescuraData = null;
 fetch(BASE + 'frescura_data.json' + CACHE_BUST).then(r => r.json()).then(data => {
@@ -1613,23 +1578,6 @@ function drillByDia(vendedor, dia) {
   openDrill(vendedor, sub, list);
 }
 
-function drillMnSeguimiento(vendedor, dia) {
-  const vendMatch = c => c.vendedor === vendedor || c.vendedor.split(' - ').pop() === vendedor;
-  const list = dia === 'Total'
-    ? mnSeguimientoDetalle.filter(vendMatch)
-    : mnSeguimientoDetalle.filter(c => vendMatch(c) && c.dia === dia);
-  const html = `
-    <p class="modal-count">${list.length} clientes</p>
-    <table>
-      <thead><tr><th>Código</th><th>Cliente</th><th>Localidad</th><th>Activo</th><th style="text-align:right">% Venta MN</th><th>Motivo</th></tr></thead>
-      <tbody>
-        ${list.map(c => `<tr><td>${c.cod}</td><td>${c.nombre||''}</td><td>${c.localidad||''}</td><td>${c.activo?'Sí':'No'}</td><td style="text-align:right">${c.ratio!==null?fmt(c.ratio,1)+'%':'-'}</td><td>${c.motivo}</td></tr>`).join('')}
-      </tbody>
-    </table>
-  `;
-  const sub = dia === 'Total' ? 'Todos los días — necesita seguimiento en Mi Negocio+' : `Ruta de ${dia} — necesita seguimiento en Mi Negocio+`;
-  openDrillCustom(vendedor, sub, html);
-}
 
 function fmtFechaFrescura(iso) {
   const [y,m,d] = iso.split('-');
@@ -2589,6 +2537,41 @@ function pintarMnSegDia(matriz, tipo, tbodyId, tfootId) {
     MNFD_DIAS.map(([k]) => celda('Total', k, tot[k])).join('')
   }<td class="clickable" onclick="drillMnNoFd('Total','Total','${tipo}')">${totNo}/${totBase}</td><td>${fmt(totBase ? totNo / totBase * 100 : 0,1)}%</td></tr>`;
 }
+const MNNR_DIAS = [['Lunes','Lunes'],['Martes','Martes'],['Miercoles','Miércoles'],['Jueves','Jueves'],['Viernes','Viernes'],['Sabado','Sábado']];
+function drillMnNoReg(vendedor, dia) {
+  const list = mnNoFd.noRegistrados.clientes
+    .filter(c => (vendedor === 'Total' || c.vendedor === vendedor) && (dia === 'Total' || c.dia === dia))
+    .sort((a,b) => a.vendedor.localeCompare(b.vendedor) || a.razon.localeCompare(b.razon));
+  const html = `
+    <p class="modal-count">${list.length} clientes que todavía no se registraron en Mi Negocio+</p>
+    <table>
+      <thead><tr><th>Código</th><th>Cliente</th><th>Localidad</th><th>Vendedor</th><th>Segmento</th><th>Día</th></tr></thead>
+      <tbody>
+        ${list.map(c => `<tr><td>${c.codigo}</td><td>${c.razon}</td><td>${c.localidad || ''}</td><td>${c.vendedor}</td><td>${c.seg}</td><td>${c.dia}</td></tr>`).join('')}
+      </tbody>
+    </table>
+  `;
+  openDrillCustom(vendedor === 'Total' ? 'Todos los vendedores' : vendedor,
+    dia === 'Total' ? 'Todos los días — sin registrar en Mi Negocio+' : `Ruta de ${dia} — sin registrar en Mi Negocio+`, html);
+}
+function pintarMnNoReg(nr) {
+  const tot = {};
+  MNNR_DIAS.forEach(([k]) => { tot[k] = [0,0]; });
+  let totNo = 0, totU = 0;
+  document.getElementById('tbody-mnnr').innerHTML = nr.filas.map(f => {
+    let no = 0, u = 0;
+    const tds = MNNR_DIAS.map(([k]) => {
+      const v = f.dias[k] || [0,0];
+      no += v[0]; u += v[1]; tot[k][0] += v[0]; tot[k][1] += v[1];
+      return `<td class="clickable" onclick="drillMnNoReg('${f.n}','${k}')">${v[0]}/${v[1]}</td>`;
+    }).join('');
+    totNo += no; totU += u;
+    return `<tr><td class="name">${f.n}</td>${tds}<td class="clickable" onclick="drillMnNoReg('${f.n}','Total')">${no}/${fmt(u)}</td></tr>`;
+  }).join('');
+  document.getElementById('tfoot-mnnr').innerHTML = `<tr><td class="name">Total PepsiCo</td>${
+    MNNR_DIAS.map(([k]) => `<td class="clickable" onclick="drillMnNoReg('Total','${k}')">${tot[k][0]}/${tot[k][1]}</td>`).join('')
+  }<td class="clickable" onclick="drillMnNoReg('Total','Total')">${totNo}/${fmt(totU)}</td></tr>`;
+}
 fetch('mn_no_fd.json' + CACHE_BUST).then(r => r.ok ? r.json() : null).then(d => {
   if (!d) return;
   mnNoFd = d;
@@ -2597,6 +2580,7 @@ fetch('mn_no_fd.json' + CACHE_BUST).then(r => r.ok ? r.json() : null).then(d => 
   setTextoSiExiste('mnfd-periodo', periodo);
   setTextoSiExiste('mnsc-periodo', periodo);
   pintarMnSegDia(d.matriz, 'fd', 'tbody-mnfd', 'tfoot-mnfd');
+  if (d.noRegistrados) pintarMnNoReg(d.noRegistrados);
   if (d.matrizSinCompra) {
     // base = registrados = activos + registrados sin comprar
     const reg = {};
@@ -2610,42 +2594,6 @@ fetch('mn_no_fd.json' + CACHE_BUST).then(r => r.ok ? r.json() : null).then(d => 
   }
 }).catch(() => {});
 
-const mnSegRows = [
-  {n:"Ezequiel Hack",           lu:22, ma:24, mi:31, ju:22, vi:14, sa:8,  totNc:121},
-  {n:"Matias Parada",           lu:27, ma:20, mi:17, ju:20, vi:14, sa:9,  totNc:107},
-  {n:"Melanie Larrama",         lu:20, ma:16, mi:10, ju:20, vi:20, sa:16, totNc:102},
-  {n:"Lucas Giayetto",          lu:10, ma:23, mi:16, ju:15, vi:21, sa:16, totNc:101},
-  {n:"Camila Martinez",         lu:19, ma:22, mi:12, ju:28, vi:13, sa:0,  totNc:94},
-  {n:"Nicolas Martinez",        lu:18, ma:10, mi:17, ju:15, vi:17, sa:14, totNc:91},
-  {n:"Martinica Rodriguez",     lu:16, ma:17, mi:18, ju:20, vi:13, sa:6,  totNc:90},
-  {n:"Ludmila Aylen Martinez",  lu:16, ma:24, mi:13, ju:8,  vi:15, sa:10, totNc:86},
-  {n:"Agustin Pogorzelski",     lu:12, ma:13, mi:20, ju:16, vi:18, sa:5,  totNc:84},
-  {n:"Ramiro Rando",            lu:9,  ma:13, mi:12, ju:27, vi:10, sa:10, totNc:81},
-  {n:"Maria Noelia Madia",      lu:15, ma:9,  mi:18, ju:12, vi:20, sa:1,  totNc:75},
-  {n:"Julian Nuñez",            lu:10, ma:8,  mi:14, ju:12, vi:8,  sa:6,  totNc:58},
-];
-document.getElementById('tbody-mnSeg').innerHTML = mnSegRows.map(r => `
-  <tr>
-    <td class="name">${r.n}</td>
-    <td class="clickable" onclick="drillMnSeguimiento('${r.n}','Lunes')">${fmt(r.lu)}</td>
-    <td class="clickable" onclick="drillMnSeguimiento('${r.n}','Martes')">${fmt(r.ma)}</td>
-    <td class="clickable" onclick="drillMnSeguimiento('${r.n}','Miercoles')">${fmt(r.mi)}</td>
-    <td class="clickable" onclick="drillMnSeguimiento('${r.n}','Jueves')">${fmt(r.ju)}</td>
-    <td class="clickable" onclick="drillMnSeguimiento('${r.n}','Viernes')">${fmt(r.vi)}</td>
-    <td class="clickable" onclick="drillMnSeguimiento('${r.n}','Sabado')">${fmt(r.sa)}</td>
-    <td class="clickable" onclick="drillMnSeguimiento('${r.n}','Total')"><span class="pill">${fmt(r.totNc)}</span></td>
-  </tr>
-`).join('');
-const mnSegTot = mnSegRows.reduce((acc,r) => {
-  acc.lu+=r.lu; acc.ma+=r.ma; acc.mi+=r.mi; acc.ju+=r.ju; acc.vi+=r.vi; acc.sa+=r.sa; acc.totNc+=r.totNc;
-  return acc;
-}, {lu:0,ma:0,mi:0,ju:0,vi:0,sa:0,totNc:0});
-document.getElementById('tfoot-mnSeg').innerHTML = `
-  <tr>
-    <td class="name">Total PepsiCo</td>
-    <td>${fmt(mnSegTot.lu)}</td><td>${fmt(mnSegTot.ma)}</td><td>${fmt(mnSegTot.mi)}</td><td>${fmt(mnSegTot.ju)}</td><td>${fmt(mnSegTot.vi)}</td><td>${fmt(mnSegTot.sa)}</td><td>${fmt(mnSegTot.totNc)}</td>
-  </tr>
-`;
 
 async function fetchIpApiConReintentos(url, intentos = 4, esperaMs = 1200) {
   let ultimoError = null;
