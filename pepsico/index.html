@@ -1533,8 +1533,10 @@ Promise.all([
 }).catch(() => {});
 
 function drillSubproducto(vendedor, grupoClave, label) {
+  // Mes en curso: solo los clientes de la ruta de hoy. Meses archivados: todos los sin compra del mes.
+  if (!MES_SEL) { drillSubproductoHoy(vendedor, grupoClave, label); return; }
   const list = (subproductoNoComprado[grupoClave] || []).filter(c => c.vendedor === vendedor);
-  openDrillPortafolio(vendedor, `Sin compra de ${label} en lo que va del mes`, list);
+  openDrillPortafolio(vendedor, `Sin compra de ${label} en el mes`, list);
 }
 // Clientes de la ruta de hoy que todavia no compraron el producto en el mes
 function clientesHoySinCompra(vendedor, grupoClave) {
