@@ -356,6 +356,34 @@ def filas_desde_base(api, desde, hasta):
     return filas
 
 
+OVERRIDE_FILAS = DIR / "override_filas_gescom.json"
+_ESTADO_OVERRIDE = {}
+
+
+def aplicar_override_filas(filas, hoy):
+    """Parche temporal mientras la base propia no sincroniza con Gescom.
+
+    Si existe pepsico/override_filas_gescom.json (el "Detallado de ventas extendido Pepsico" exportado de
+    Gescom y reducido a las columnas que usa el loop), es DE HOY y tiene mas filas que la base, se usa ese
+    detalle para todos los indicadores (venta, cobertura, rechazos, invendibles, no compradores, CCC,
+    innovaciones). Apenas la base trae igual o mas filas, el parche se ignora solo."""
+    try:
+        ov = json.loads(OVERRIDE_FILAS.read_text(encoding="utf-8"))
+    except Exception:
+        return filas
+    if ov.get("fecha") != hoy.isoformat():
+        return filas
+    nuevas = ov.get("filas") or []
+    if len(nuevas) <= len(filas):
+        return filas
+    _ESTADO_OVERRIDE["usado"] = True
+    _ESTADO_OVERRIDE["hoy_con_pedidos"] = any(
+        f.get("TipoDeVenta") == TIPO_VENTA and f.get("FechaComprobante") == hoy.isoformat() for f in nuevas)
+    print("AVISO: la base trae %d filas y el detalle de Gescom %d (extraido %s); se usa el de Gescom" %
+          (len(filas), len(nuevas), ov.get("extraido", "")))
+    return nuevas
+
+
 def objetivos_kg(anio, mes):
     """{nombre vendedor: (p1o, p2o)} del mes, o los del ultimo mes cargado."""
     try:
@@ -853,6 +881,7 @@ def main():
         return 0
     filas = filas_desde_base(api, inicio_mes, hoy)
     print("Filas del detalle de ventas (mes en curso, todos los proveedores):", len(filas))
+    filas = aplicar_override_filas(filas, hoy)
 
     compra_cliente = {}
     compra_cliente_marca = {}
@@ -1037,6 +1066,8 @@ def main():
     except Exception as e:
         print("No se pudo verificar si hoy ya hay pedidos, se cuenta el dia:", e)
         hoy_con_pedidos = True
+    if _ESTADO_OVERRIDE.get("usado"):
+        hoy_con_pedidos = _ESTADO_OVERRIDE["hoy_con_pedidos"]
     if not hoy_con_pedidos:
         dias_trabajados = dias_habiles_mes(hoy.year, hoy.month, hasta=hoy - dt.timedelta(days=1))
         print("Hoy todavia no hay pedidos cargados: no cuenta como dia trabajado")
