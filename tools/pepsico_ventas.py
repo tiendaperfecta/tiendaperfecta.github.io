@@ -373,14 +373,15 @@ def objetivos_kg(anio, mes):
 
 
 def dias_habiles_mes(anio, mes, hasta=None):
-    """Cuenta dias lunes a sabado (domingo no es habil) del mes. Si `hasta`
-    se pasa, cuenta solo hasta esa fecha inclusive (dias trabajados)."""
+    """Cuenta dias habiles del mes: lunes a viernes valen 1, el sabado vale 0,5
+    (se trabaja medio dia) y el domingo no cuenta. Si `hasta` se pasa, cuenta
+    solo hasta esa fecha inclusive (dias trabajados)."""
     d = dt.date(anio, mes, 1)
-    total = 0
+    total = 0.0
     while d.month == mes:
         if d.weekday() != 6:
             if hasta is None or d <= hasta:
-                total += 1
+                total += 0.5 if d.weekday() == 5 else 1.0
         d += dt.timedelta(days=1)
     return total
 
@@ -974,7 +975,7 @@ def main():
     try:
         avance_kg = traer_avance_kg(api, hoy, dias_habiles, dias_trabajados)
         escribir("avance_kg_vendedor.json", avance_kg)
-        print("Avance kg: %d vendedores | dias %d/%d | objetivo PG %.1f kg | objetivo SB %.1f kg" %
+        print("Avance kg: %d vendedores | dias %g/%g | objetivo PG %.1f kg | objetivo SB %.1f kg" %
               (len(avance_kg["vendedores"]), dias_trabajados, dias_habiles,
                avance_kg["objetivoPG"], avance_kg["objetivoSB"]))
     except Exception as e:
