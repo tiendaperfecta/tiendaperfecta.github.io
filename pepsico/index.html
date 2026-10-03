@@ -1,4 +1,4 @@
-<meta charset="utf-8">
+﻿<meta charset="utf-8">
 <title>Avance PepsiCo TP</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -537,7 +537,7 @@ td.ip-base.clickable{cursor:pointer}
   <h2 class="section-title">Mi Negocio+ por vendedor</h2>
   <p class="section-note">
     Ordenado de menor a mayor % de venta por el canal digital. <b>Universo/Registrado/Activos/Fully Digital</b>
-    vienen del Power BI "Mi Negocio +" (PepsiCo), cierre de septiembre 2026. <b>Acum. MN/Acumulado/% Mi Negocio</b>
+    vienen del Power BI "Mi Negocio +" (PepsiCo), <span id="mn-cierre-txt">cierre de septiembre 2026</span>. <b>Acum. MN/Acumulado/% Mi Negocio</b>
     salen de Gescom (igual que el resto del tablero).
   </p>
 
@@ -551,7 +551,7 @@ td.ip-base.clickable{cursor:pointer}
         </tr>
       </thead>
       <tbody id="tbody-mn"></tbody>
-      <tfoot>
+      <tfoot id="tfoot-mn">
         <tr>
           <td class="name">Total PepsiCo</td>
           <td>2.548</td><td>2.084</td><td>1.452</td>
@@ -561,6 +561,7 @@ td.ip-base.clickable{cursor:pointer}
     </table>
   </div>
 
+<div id="mn-extra-sep">
   <h3 class="subsection-title">Clientes activos por segmento (Tienda Perfecta)</h3>
   <p class="section-note">
     Clientes Mi Negocio activos en septiembre, agrupados por segmento de Tienda Perfecta. <b>No Fully Digital</b> =
@@ -639,6 +640,7 @@ td.ip-base.clickable{cursor:pointer}
       <tfoot id="tfoot-mnSeg"></tfoot>
     </table>
   </div>
+</div>
 
   <p class="foot-note">
     Fuente: Power BI "Mi Negocio +" (PepsiCo), cierre de septiembre 2026, cruzado con la ruta de preventa de
@@ -2476,6 +2478,47 @@ tbodyMn.innerHTML = mnRows.map(r => `
     <td>${fmt(r.fullyDigital)}</td>
   </tr>
 `).join('');
+
+if (MES_SEL) {
+  Promise.all([
+    fetch(BASE + 'mi_negocio.json' + CACHE_BUST).then(r => r.ok ? r.json() : null),
+    fetch(BASE + 'avance_kg_vendedor.json' + CACHE_BUST).then(r => r.json())
+  ]).then(([mnArc, av]) => {
+    if (!mnArc) return;
+    const porNombre = {};
+    av.vendedores.forEach(v => { porNombre[v.n] = v; });
+    const filas = mnArc.map(m => {
+      const a = porNombre[m.n] || {};
+      const mn = a.acumuladoMN || 0, acum = a.ta || 0;
+      return {n:m.n, universo:m.universo, activos:m.activos, fullyDigital:m.fullyDigital, mn, acum, share: acum ? mn / acum * 100 : 0};
+    }).sort((a,b) => a.share - b.share);
+    tbodyMn.innerHTML = filas.map(r => `
+      <tr>
+        <td class="name">${r.n}</td>
+        <td>${fmt(r.universo)}</td><td>—</td><td>${fmt(r.activos)}</td>
+        <td>${fmt(r.mn)}</td><td>${fmt(r.acum)}</td>
+        <td>
+          <div class="cell-avance">
+            <span class="mini-bar"><span style="width:${Math.min(r.share,100)}%; background:var(--${tierShare(r.share)})"></span></span>
+            ${fmt(r.share,1)}%
+          </div>
+        </td>
+        <td>${fmt(r.fullyDigital)}</td>
+      </tr>
+    `).join('');
+    const t = filas.reduce((s,r) => ({u:s.u+r.universo, a:s.a+r.activos, f:s.f+r.fullyDigital, mn:s.mn+r.mn, ac:s.ac+r.acum}), {u:0,a:0,f:0,mn:0,ac:0});
+    document.getElementById('tfoot-mn').innerHTML = `
+      <tr>
+        <td class="name">Total PepsiCo</td>
+        <td>${fmt(t.u)}</td><td>—</td><td>${fmt(t.a)}</td>
+        <td>${fmt(t.mn)}</td><td>${fmt(t.ac)}</td><td>${fmt(t.ac ? t.mn / t.ac * 100 : 0,1)}%</td><td>${fmt(t.f)}</td>
+      </tr>`;
+    const nm = (NOMBRES_MES[parseInt(MES_SEL.slice(5), 10)] || '').toLowerCase();
+    setTextoSiExiste('mn-cierre-txt', 'cierre de ' + nm + ' ' + MES_SEL.slice(0,4) + '; el dato de Registrados no está disponible para meses anteriores');
+    const extra = document.getElementById('mn-extra-sep');
+    if (extra) extra.style.display = 'none';
+  }).catch(() => {});
+}
 
 const mnSegRows = [
   {n:"Ezequiel Hack",           lu:22, ma:24, mi:31, ju:22, vi:14, sa:8,  totNc:121},
