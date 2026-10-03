@@ -1320,6 +1320,7 @@ td.ip-base.clickable{cursor:pointer}
 
 const MES_SEL = new URLSearchParams(location.search).get('mes') || '';
 const BASE = MES_SEL ? `archive/${MES_SEL}/` : '';
+const CACHE_BUST = '?t=' + Math.floor(Date.now() / 60000);
 const NOMBRES_MES = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
 function setTextoSiExiste(id, texto) {
@@ -1383,7 +1384,7 @@ if (MES_SEL) {
     location.href = `?mes=${v}`;
   });
 
-  fetch('archive/index.json').then(r => r.json()).then(meses => {
+  fetch('archive/index.json' + CACHE_BUST).then(r => r.json()).then(meses => {
     if (MES_SEL && !meses.includes(MES_SEL)) {
       const bannerEl = document.getElementById('banner-archivo');
       if (bannerEl) {
@@ -1430,28 +1431,28 @@ function initSelectorDia(){
 }
 
 let noCompradoresDetalle = [];
-fetch(BASE + 'no_compradores_detalle.json').then(r => r.json()).then(data => { noCompradoresDetalle = data; }).catch(() => {});
+fetch(BASE + 'no_compradores_detalle.json' + CACHE_BUST).then(r => r.json()).then(data => { noCompradoresDetalle = data; }).catch(() => {});
 
 let invendibleDetalle = {};
-const invendibleDetallePromise = fetch(BASE + 'invendible_detalle.json').then(r => r.json())
+const invendibleDetallePromise = fetch(BASE + 'invendible_detalle.json' + CACHE_BUST).then(r => r.json())
   .then(data => { invendibleDetalle = data; return data; }).catch(() => ({}));
 
 let combosDetalle = {};
-fetch(BASE + 'combos_detalle.json').then(r => r.json()).then(data => { combosDetalle = data; }).catch(() => {});
+fetch(BASE + 'combos_detalle.json' + CACHE_BUST).then(r => r.json()).then(data => { combosDetalle = data; }).catch(() => {});
 
 let rechazosDetalle = {};
-const rechazosDetallePromise = fetch(BASE + 'rechazos_detalle.json').then(r => r.json())
+const rechazosDetallePromise = fetch(BASE + 'rechazos_detalle.json' + CACHE_BUST).then(r => r.json())
   .then(data => { rechazosDetalle = data; return data; }).catch(() => ({}));
 
 let ventaPorVendedor = {};
-const ventaVendedorPromise = fetch(BASE + 'venta_vendedor.json').then(r => r.json())
+const ventaVendedorPromise = fetch(BASE + 'venta_vendedor.json' + CACHE_BUST).then(r => r.json())
   .then(data => { ventaPorVendedor = data; return data; }).catch(() => ({}));
 
 let mnSeguimientoDetalle = [];
-fetch(BASE + 'mn_seguimiento.json').then(r => r.json()).then(data => { mnSeguimientoDetalle = data; }).catch(() => {});
+fetch(BASE + 'mn_seguimiento.json' + CACHE_BUST).then(r => r.json()).then(data => { mnSeguimientoDetalle = data; }).catch(() => {});
 
 let frescuraData = null;
-fetch(BASE + 'frescura_data.json').then(r => r.json()).then(data => {
+fetch(BASE + 'frescura_data.json' + CACHE_BUST).then(r => r.json()).then(data => {
   frescuraData = data;
   renderFrescura();
 }).catch(() => {});
@@ -1540,8 +1541,8 @@ const TOSTITOS_SUB_OBJ = 20;
 const TOSTITOS_SUB_LABELS = {G144:"Tostitos Hierbas y Limón 144g", G90:"Tostitos Hierbas y Limón 90g"};
 let subproductoNoComprado = {};
 Promise.all([
-  fetch(BASE + 'subproductos_vendedor.json').then(r => r.json()),
-  fetch(BASE + 'subproductos_no_comprado.json').then(r => r.json()).catch(() => ({})),
+  fetch(BASE + 'subproductos_vendedor.json' + CACHE_BUST).then(r => r.json()),
+  fetch(BASE + 'subproductos_no_comprado.json' + CACHE_BUST).then(r => r.json()).catch(() => ({})),
 ]).then(([data, noComprado]) => {
   pehuamarSubRows = data.pehuamar.vendedores;
   laysSubRows = data.lays.vendedores;
@@ -1679,7 +1680,7 @@ function drillFrescura(codigo) {
 let rows = [];
 let kgAvanceMeta = null;
 const rowsReadyPromise = Promise.all([
-  fetch(BASE + 'avance_kg_vendedor.json').then(r => r.json()),
+  fetch(BASE + 'avance_kg_vendedor.json' + CACHE_BUST).then(r => r.json()),
   ventaVendedorPromise,
 ]).then(([data, venta]) => {
   kgAvanceMeta = data;
@@ -1716,7 +1717,7 @@ const marcaObjRows = [
   {marca:"Tostitos", obj:14.02},
   {marca:"Twistos",  obj:54.71},
 ];
-fetch(BASE + 'cobertura_marca_vendedor.json').then(r => r.json()).then(data => {
+fetch(BASE + 'cobertura_marca_vendedor.json' + CACHE_BUST).then(r => r.json()).then(data => {
   marcaVendRows = data.vendedores;
   renderMarcaSection();
 }).catch(() => {});
@@ -1728,7 +1729,7 @@ function heatColor(v, min, max){
 }
 
 let portafolioDetalle = [];
-const portafolioDetallePromise = fetch(BASE + 'oportunidad_portafolio.json').then(r => r.json()).then(data => {
+const portafolioDetallePromise = fetch(BASE + 'oportunidad_portafolio.json' + CACHE_BUST).then(r => r.json()).then(data => {
   portafolioDetalle = data;
 }).catch(() => {});
 
@@ -1869,12 +1870,12 @@ function tier(p){ return p>=100 ? 'good' : p>=90 ? 'warn' : 'bad'; }
 function tierShare(p){ return p>=85 ? 'good' : p>=75 ? 'warn' : 'bad'; }
 
 let historialDiarioData = [];
-fetch(BASE + 'historial_diario.json').then(r => r.json()).then(data => {
+fetch(BASE + 'historial_diario.json' + CACHE_BUST).then(r => r.json()).then(data => {
   historialDiarioData = data || [];
   initSelectorDia();
 }).catch(() => { historialDiarioData = []; initSelectorDia(); });
 
-fetch(BASE + 'tienda_perfecta.json').then(r => r.json()).then(data => {
+fetch(BASE + 'tienda_perfecta.json' + CACHE_BUST).then(r => r.json()).then(data => {
   renderTiendaPerfecta(data);
 }).catch(() => {});
 
@@ -2020,7 +2021,7 @@ Promise.all([rechazosDetallePromise, ventaVendedorPromise]).then(([detalle, vent
 `).join('');
 }).catch(() => {});
 
-fetch(BASE + 'rechazos_ultima_fecha.json').then(r => r.json()).then(data => {
+fetch(BASE + 'rechazos_ultima_fecha.json' + CACHE_BUST).then(r => r.json()).then(data => {
   const fechaEl = document.getElementById('rechazos-ultima-fecha');
   if (fechaEl && data.fecha) {
     const [anio, mes, dia] = data.fecha.split('-');
@@ -2364,7 +2365,7 @@ function renderMarcaSection(){
 let ccc2Rows = [];
 function segAvance(o,c){ return o ? c/o*100 : 0; }
 let ccc2ObjetivoOficial = null;
-fetch(BASE + 'ccc_segmento.json').then(r => r.json()).then(data => {
+fetch(BASE + 'ccc_segmento.json' + CACHE_BUST).then(r => r.json()).then(data => {
   ccc2Rows = data.vendedores;
   ccc2ObjetivoOficial = data.objetivoOficial || null;
   renderCcc2Section();
@@ -2418,7 +2419,7 @@ function renderCcc2Section(){
 }
 
 let noCompraRows = [];
-const noCompraReadyPromise = fetch(BASE + 'no_compradores_por_dia.json').then(r => r.json()).then(data => {
+const noCompraReadyPromise = fetch(BASE + 'no_compradores_por_dia.json' + CACHE_BUST).then(r => r.json()).then(data => {
   noCompraRows = data.vendedores;
   renderNoCompraSection();
 }).catch(() => {});
@@ -2824,7 +2825,7 @@ if (hoyLabelEl) hoyLabelEl.textContent = hoyDiaIp;
 function findByNameIp(arr, name){ return arr.find(x => x.n === name); }
 
 let pehuamar90Detalle = [];
-const pehuamar90DetallePromise = fetch(BASE + 'pehuamar90_no_comprado.json').then(r => r.json()).then(data => { pehuamar90Detalle = data; }).catch(() => {});
+const pehuamar90DetallePromise = fetch(BASE + 'pehuamar90_no_comprado.json' + CACHE_BUST).then(r => r.json()).then(data => { pehuamar90Detalle = data; }).catch(() => {});
 
 function drillPehuamar90(vendedor) {
   const list = pehuamar90Detalle.filter(c => c.vendedor === vendedor);
