@@ -1,20 +1,32 @@
 {
  "date": "2026-10-04",
- "totalNet": 422668.63,
- "totalGross": 511429.05,
- "orders": 2,
+ "totalNet": 594569.61,
+ "totalGross": 719429.21,
+ "orders": 5,
  "bySeller": [
   {
    "sellerId": "1",
    "name": "Maria Noelia Madia",
-   "orders": 1,
-   "total": 300286.0
+   "orders": 2,
+   "total": 382714.62
   },
   {
    "sellerId": "3",
    "name": "Ezequiel Hack",
    "orders": 1,
    "total": 211143.05
+  },
+  {
+   "sellerId": "7",
+   "name": "Ramiro Rando",
+   "orders": 1,
+   "total": 110785.82
+  },
+  {
+   "sellerId": "2",
+   "name": "Julian Nuñez",
+   "orders": 1,
+   "total": 14785.73
   }
  ],
  "byChannel": [
@@ -22,6 +34,16 @@
    "channel": "TRADITIONAL TRADE_A",
    "orders": 2,
    "total": 511429.05
+  },
+  {
+   "channel": "TRADITIONAL TRADE_B",
+   "orders": 1,
+   "total": 110785.82
+  },
+  {
+   "channel": "TRADITIONAL TRADE_C",
+   "orders": 2,
+   "total": 97214.35
   }
  ],
  "topClients": [
@@ -36,6 +58,24 @@
    "name": "NICADELO SA (Kiosco/Maxikiosco_A)",
    "orders": 1,
    "total": 211143.05
+  },
+  {
+   "clientId": "2176",
+   "name": "PROXIMORESTO S A (Almacen/Despensa_B)",
+   "orders": 1,
+   "total": 110785.82
+  },
+  {
+   "clientId": "1572",
+   "name": "FRUTICEL TOUCH (Kiosco/Maxikiosco_C)",
+   "orders": 1,
+   "total": 82428.62
+  },
+  {
+   "clientId": "1131",
+   "name": "TOMATTIS EDUARDO ADRIAN (Almacen/Despensa_C)",
+   "orders": 1,
+   "total": 14785.73
   }
  ]
 }
