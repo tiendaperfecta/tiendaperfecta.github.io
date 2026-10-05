@@ -843,7 +843,6 @@ def traer_tienda_perfecta(api, nombre_por_codven, clientes):
 
 def main():
     gescom.usar_base()   # desde el 5/10/2026 todo sale de la base propia, nada de Gescom
-        return 0
 
     hoy = dt.datetime.now(TZ_AR).date()
     inicio_mes = hoy.replace(day=1)
@@ -1144,7 +1143,6 @@ def cmd_backfill(anio, mes):
     pasada) ni pehuamar90_no_comprado.json (es un concepto de "ruta de hoy",
     no tiene sentido para un mes ya cerrado)."""
     gescom.usar_base()   # desde el 5/10/2026 todo sale de la base propia, nada de Gescom
-        return 1
 
     global MES_ARCHIVO, SOLO_ARCHIVO
     SOLO_ARCHIVO = True
