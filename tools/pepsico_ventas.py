@@ -458,26 +458,20 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
         x = acc.setdefault(cod(l.get("ven")), {"p1a": 0.0, "p2a": 0.0, "mn": 0.0, "dias": {}})
         fp = (l.get("fe") or "")[:10]
         x["dias"][fp] = x["dias"].get(fp, 0.0) + num(l.get("cant")) * num(a.get("factorPeso")) / 1000
-    # DIAGNOSTICO TEMPORAL: kg P01+P02 por fecha de PEDIDO (para comparar con Real/Ultima/Penultima de Gescom)
-    try:
-        por_ped = {}
-        for l in lineas_pepsico(hoy - dt.timedelta(days=21), hoy, "pedido"):
-            if l.get("tipo") != "VEN" or cod(l.get("ven")) not in VENDEDORES_PEPSICO:
-                continue
-            a = articulo_de(cod(l.get("item")), cod(l.get("emp")))
-            tags = (a or {}).get("tags") or []
-            if not a or not ("*P01" in tags or "*P02" in tags):
-                continue
-            fp = (l.get("fp") or l.get("fcomp") or "")[:10]
-            por_ped[fp] = por_ped.get(fp, 0.0) + num(l.get("cant")) * num(a.get("factorPeso")) / 1000
-        print("DIAG pedido:", {k: round(v, 1) for k, v in sorted(por_ped.items())})
-        ped_ent = {}
-        for l in lineas_pepsico(hoy - dt.timedelta(days=21), hoy, "pedido"):
-            if l.get("tipo") != "VEN":
-                continue
-            ped_ent[(l.get("fp") or "")[:10]] = ped_ent.get((l.get("fp") or "")[:10], 0) + 1
-    except Exception as e:
-        print("DIAG fallo:", e)
+    # Real / Ultima visita / Penultima visita: el reporte de Gescom los calcula por fecha de PEDIDO (lo que los
+    # preventistas cargaron ese dia), no por entrega. Verificado el 5/10/2026: por pedido el 21/9 da 1.536 kg y el
+    # 28/9 da 81 kg, contra 1.533 y 79 kg de Penultima y Ultima en el reporte. El acumulado sigue siendo por entrega.
+    dias_pedido = {}
+    for l in lineas_pepsico(hoy - dt.timedelta(days=21), hoy, "pedido"):
+        if l.get("tipo") != "VEN" or cod(l.get("ven")) not in VENDEDORES_PEPSICO:
+            continue
+        a = articulo_de(cod(l.get("item")), cod(l.get("emp")))
+        tags = (a or {}).get("tags") or []
+        if not a or not ("*P01" in tags or "*P02" in tags):
+            continue
+        fpd = (l.get("fp") or l.get("fcomp") or "")[:10]
+        dp = dias_pedido.setdefault(cod(l.get("ven")), {})
+        dp[fpd] = dp.get(fpd, 0.0) + num(l.get("cant")) * num(a.get("factorPeso")) / 1000
     hoy_iso = hoy.isoformat()
     hace7, hace14 = (hoy - dt.timedelta(days=7)).isoformat(), (hoy - dt.timedelta(days=14)).isoformat()
     kg_vendedores = []
@@ -498,9 +492,9 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
             "promedio": round(ta / dias_trabajados, 2) if dias_trabajados else 0.0,
             "medianec": round((to - ta) / (dias_habiles - dias_trabajados), 2) if dias_habiles > dias_trabajados else 0.0,
             "tendencia": round(ta / dias_trabajados * dias_habiles, 2) if dias_trabajados else 0.0,
-            "real": round(x["dias"].get(hoy_iso, 0.0), 2),
-            "penult": round(x["dias"].get(hace14, 0.0), 2),
-            "ultima": round(x["dias"].get(hace7, 0.0), 2),
+            "real": round(dias_pedido.get(codven, {}).get(hoy_iso, 0.0), 2),
+            "penult": round(dias_pedido.get(codven, {}).get(hace14, 0.0), 2),
+            "ultima": round(dias_pedido.get(codven, {}).get(hace7, 0.0), 2),
             "acumuladoMN": round(x["mn"], 2),
         })
     print("Avance kg desde la base: objetivos de %s%s" % (mes_obj, "" if mes_obj == hoy.strftime("%Y-%m") else " (congelados)"))
