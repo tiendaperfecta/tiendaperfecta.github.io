@@ -462,7 +462,7 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
     # preventistas cargaron ese dia), no por entrega. Verificado el 5/10/2026: por pedido el 21/9 da 1.536 kg y el
     # 28/9 da 81 kg, contra 1.533 y 79 kg de Penultima y Ultima en el reporte. El acumulado sigue siendo por entrega.
     dias_pedido = {}
-    for l in lineas_pepsico(hoy - dt.timedelta(days=21), hoy, "pedido"):
+    for l in lineas_pepsico(hoy - dt.timedelta(days=45), hoy, "pedido"):
         if l.get("tipo") != "VEN" or cod(l.get("ven")) not in VENDEDORES_PEPSICO:
             continue
         a = articulo_de(cod(l.get("item")), cod(l.get("emp")))
@@ -499,13 +499,14 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
         })
     print("Avance kg desde la base: objetivos de %s%s" % (mes_obj, "" if mes_obj == hoy.strftime("%Y-%m") else " (congelados)"))
 
+    # Historial diario (selector de fecha): kg de los pedidos tomados cada dia, igual que el "Real" de Gescom.
     historial_por_dia = {}
-    for x in acc.values():
-        for fecha, kg in x["dias"].items():
+    for dp in dias_pedido.values():
+        for fecha, kg in dp.items():
             historial_por_dia[fecha] = historial_por_dia.get(fecha, 0.0) + kg
-    historial_out = [{"fecha": f, "kg": round(k, 2)} for f, k in sorted(historial_por_dia.items())]
+    historial_out = [{"fecha": f, "kg": round(k, 2)} for f, k in sorted(historial_por_dia.items()) if abs(k) > 0.005]
     escribir("historial_diario.json", historial_out)
-    print("Historial diario: %d dias (por fecha de entrega)" % len(historial_out))
+    print("Historial diario: %d dias (por fecha de pedido)" % len(historial_out))
 
     return {
         "objetivoPG": round(sum(v["p1o"] for v in kg_vendedores), 2),
