@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """
-ctacte.py — Cuentas corrientes de clientes, desde la API oficial de GesCom.
+ctacte.py — Cuentas corrientes de clientes, desde la BASE PROPIA de Gescom.
 
-Desde el 30/9/2026 usa el endpoint OFICIAL de cuenta corriente (el usuario de API
-nuevo recibe 403 en report/render, que es lo que se usaba antes):
+Desde el 5/10/2026 no le pregunta nada a Gescom: lee todo de la ventanilla
+/gescom/ del worker "base" (tiendaperfecta/base), que tiene la misma forma que la
+API. La base baja la cuenta corriente a las 04:30 y cada ~2 h de 08:00 a 16:00.
+Los datos son los del endpoint OFICIAL de cuenta corriente:
 
     GET ctacte/api/v4/get-ctacte-clientes-detalle   cada deuda y credito pendiente:
          tipo, numero, cuota, importe original, saldo, fecha, vencimiento,
@@ -11,7 +13,8 @@ nuevo recibe 403 en report/render, que es lo que se usaba antes):
          (la cuenta madre), todo en una sola llamada y sin paginar.
     GET distribucion/api/v2/get-repartos (ultimos 180 dias)   reparto y chofer
          de cada deuda, por la venta que la genero (ventaId). Las deudas que no
-         vienen de una venta de esos repartos quedan sin reparto/chofer.
+         vienen de una venta de esos repartos quedan sin reparto/chofer. La base
+         tiene repartos desde el 1/8/2026: las deudas anteriores van sin chofer.
 
 Incluye las deudas de ventas todavia no finalizadas (comprobanteFinalizado =
 false), como el reporte de antes. Solo moneda ARS.
@@ -32,7 +35,7 @@ PBKDF2-SHA256 de CTACTE_CLAVE (GitHub Secret). El panel la pide y descifra en
 el navegador.
 
 Variables de entorno:
-    GESCOM_REALM, GESCOM_CLIENT_ID, GESCOM_USERNAME, GESCOM_PASSWORD
+    BASE_CLAVE     clave de lectura de la base propia
     CTACTE_CLAVE
     CTACTE_DISPATCH  token para el boton "Actualizar" del panel (opcional)
 
@@ -86,6 +89,9 @@ def bajar():
     tok = gescom._token(s)
     hoy = dt.datetime.now(ART).date()
     v4 = gescom._traer(s, tok, "ctacte/api/v4/get-ctacte-clientes-detalle", 300)
+    if not v4:
+        # Base sin foto todavia (o vacia): mejor el panel de antes que uno en cero.
+        raise SystemExit("La base no tiene la cuenta corriente: se deja el panel anterior sin tocar.")
     sin_finalizar = sum(1 for d in v4 if (d.get("saldo") or 0) > 0 and d.get("comprobanteFinalizado") is False)
     otra_moneda = sum(1 for d in v4 if (d.get("monedaCodigo") or "ARS") != "ARS")
     # Las deudas de ventas todavia no finalizadas SI entran: el reporte de antes las
@@ -262,9 +268,10 @@ def cifrar(obj, clave):
 
 def main():
     clave = os.environ.get("CTACTE_CLAVE", "").strip()
-    if not gescom.hay_credenciales() or not clave:
-        print("Faltan credenciales de GesCom o CTACTE_CLAVE: no se refresca.")
+    if not clave:
+        print("Falta CTACTE_CLAVE: no se refresca.")
         return 0
+    gescom.usar_base()   # desde el 5/10/2026 lee de la base propia, no de Gescom
     data = armar(*bajar())
     # Token de GitHub (fine-grained, solo "Actions: read and write" de este repo)
     # para el boton "Actualizar" del panel. Viaja dentro del JSON cifrado.

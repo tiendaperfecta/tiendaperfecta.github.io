@@ -28,10 +28,6 @@ jobs:
 
       - name: Fetch Pepsico data (GesCom)
         env:
-          GESCOM_REALM: ${{ secrets.GESCOM_REALM }}
-          GESCOM_CLIENT_ID: ${{ secrets.GESCOM_CLIENT_ID }}
-          GESCOM_USERNAME: ${{ secrets.GESCOM_USERNAME }}
-          GESCOM_PASSWORD: ${{ secrets.GESCOM_PASSWORD }}
           # Clave de lectura de la base propia de Gescom (worker "base"): el detalle de
           # ventas y los kg salen de ahi desde el 30/9/2026 (report/render da 403).
           BASE_CLAVE: ${{ secrets.BASE_CLAVE }}

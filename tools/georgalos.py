@@ -38,7 +38,7 @@ instructivo):
 Devoluciones (DEV-RE, DEV-CA, AJU-MEN, COM-PD) restan. Todo lo que no esta en
 SIGNO se ignora.
 
-Credenciales: GESCOM_REALM, GESCOM_CLIENT_ID, GESCOM_USERNAME, GESCOM_PASSWORD.
+Credenciales: BASE_CLAVE (lee de la base propia, no de Gescom).
 Sin credenciales no hace nada y quedan publicados los datos anteriores.
 
 Uso:

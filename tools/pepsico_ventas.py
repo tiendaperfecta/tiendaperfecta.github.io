@@ -42,7 +42,7 @@ ya trae Proveedor, Marca y PesoKg como campos legibles -- no hace falta cruzar
 contra el catalogo de articulos ni matchear marca por substring.
 
 Credenciales por variables de entorno (GitHub Secrets):
-GESCOM_REALM, GESCOM_CLIENT_ID, GESCOM_USERNAME, GESCOM_PASSWORD
+BASE_CLAVE (clave de lectura de la base propia; ya no usa credenciales de Gescom)
 """
 import calendar
 import csv
@@ -842,8 +842,7 @@ def traer_tienda_perfecta(api, nombre_por_codven, clientes):
 
 
 def main():
-    if not gescom.hay_credenciales():
-        print("Sin credenciales de GesCom: no se corre.")
+    gescom.usar_base()   # desde el 5/10/2026 todo sale de la base propia, nada de Gescom
         return 0
 
     hoy = dt.datetime.now(TZ_AR).date()
@@ -1144,8 +1143,7 @@ def cmd_backfill(anio, mes):
     Gescom es una foto del estado actual, no se puede consultar a una fecha
     pasada) ni pehuamar90_no_comprado.json (es un concepto de "ruta de hoy",
     no tiene sentido para un mes ya cerrado)."""
-    if not gescom.hay_credenciales():
-        print("Sin credenciales de GesCom: no se corre.")
+    gescom.usar_base()   # desde el 5/10/2026 todo sale de la base propia, nada de Gescom
         return 1
 
     global MES_ARCHIVO, SOLO_ARCHIVO
