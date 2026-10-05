@@ -33,11 +33,11 @@ DIAS = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"
 
 
 # BASE PROPIA DE GESCOM (desde el 30/9/2026). Los scripts que ya no le preguntan a Gescom
-# (georgalos, axum) llaman a usar_base() al arrancar: desde ahi API apunta a la ventanilla
+# (axum, ctacte, pepsico) llaman a usar_base() al arrancar: desde ahi API apunta a la ventanilla
 # /gescom/ del worker "base" (misma forma que la API de Gescom) y el "token" es la clave de
 # lectura BASE_CLAVE. Sin la clave no corren: nunca vuelven a Gescom por su cuenta.
-# Desde el 5/10/2026 tambien ctacte y pepsico: ningun panel de este repo usa ya las
-# credenciales de Gescom.
+# Desde el 5/10/2026 tambien ctacte y pepsico. Georgalos NO: va directo a Gescom (pedido
+# del 5/10/2026).
 BASE_GESCOM = "https://base.tienda-perfecta.workers.dev/gescom"
 
 

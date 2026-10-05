@@ -38,7 +38,7 @@ instructivo):
 Devoluciones (DEV-RE, DEV-CA, AJU-MEN, COM-PD) restan. Todo lo que no esta en
 SIGNO se ignora.
 
-Credenciales: BASE_CLAVE (lee de la base propia, no de Gescom).
+Credenciales: GESCOM_REALM, GESCOM_CLIENT_ID, GESCOM_USERNAME, GESCOM_PASSWORD.
 Sin credenciales no hace nada y quedan publicados los datos anteriores.
 
 Uso:
@@ -272,7 +272,6 @@ def meses_a_bajar(args, hoy):
 
 
 def main():
-    gescom.usar_base()   # desde el 30/9/2026 lee de la base propia, no de Gescom
     if not gescom.hay_credenciales():
         print("Sin credenciales de GesCom: quedan publicados los datos anteriores.")
         return 0
