@@ -423,7 +423,10 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
     objetivos, mes_obj = objetivos_kg(hoy.year, hoy.month)
     vend = {cod(v.get("codigo")): (v.get("nombre") or "").strip() for v in base_get("/api/catalogo/vendedores")}
     acc = {}
-    for l in lineas_pepsico(hoy.replace(day=1), hoy, "entrega"):
+    # El acumulado cuenta TODAS las entregas del mes (incluidas las ya programadas para los proximos dias),
+    # igual que el reporte "Avance de Ventas Pepsico" de Gescom, cuya fecha final por defecto es el fin de mes.
+    fin_mes = hoy.replace(day=calendar.monthrange(hoy.year, hoy.month)[1])
+    for l in lineas_pepsico(hoy.replace(day=1), fin_mes, "entrega"):
         if l.get("tipo") != "VEN":
             continue
         codven = cod(l.get("ven"))
