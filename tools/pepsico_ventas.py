@@ -458,6 +458,26 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
         x = acc.setdefault(cod(l.get("ven")), {"p1a": 0.0, "p2a": 0.0, "mn": 0.0, "dias": {}})
         fp = (l.get("fe") or "")[:10]
         x["dias"][fp] = x["dias"].get(fp, 0.0) + num(l.get("cant")) * num(a.get("factorPeso")) / 1000
+    # DIAGNOSTICO TEMPORAL: kg P01+P02 por fecha de PEDIDO (para comparar con Real/Ultima/Penultima de Gescom)
+    try:
+        por_ped = {}
+        for l in lineas_pepsico(hoy - dt.timedelta(days=21), hoy, "pedido"):
+            if l.get("tipo") != "VEN" or cod(l.get("ven")) not in VENDEDORES_PEPSICO:
+                continue
+            a = articulo_de(cod(l.get("item")), cod(l.get("emp")))
+            tags = (a or {}).get("tags") or []
+            if not a or not ("*P01" in tags or "*P02" in tags):
+                continue
+            fp = (l.get("fp") or l.get("fcomp") or "")[:10]
+            por_ped[fp] = por_ped.get(fp, 0.0) + num(l.get("cant")) * num(a.get("factorPeso")) / 1000
+        print("DIAG pedido:", {k: round(v, 1) for k, v in sorted(por_ped.items())})
+        ped_ent = {}
+        for l in lineas_pepsico(hoy - dt.timedelta(days=21), hoy, "pedido"):
+            if l.get("tipo") != "VEN":
+                continue
+            ped_ent[(l.get("fp") or "")[:10]] = ped_ent.get((l.get("fp") or "")[:10], 0) + 1
+    except Exception as e:
+        print("DIAG fallo:", e)
     hoy_iso = hoy.isoformat()
     hace7, hace14 = (hoy - dt.timedelta(days=7)).isoformat(), (hoy - dt.timedelta(days=14)).isoformat()
     kg_vendedores = []
