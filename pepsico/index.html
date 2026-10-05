@@ -315,7 +315,8 @@ td.ip-base.clickable{cursor:pointer}
     Medida en <b>kilogramos</b>. Acumulado del <b id="sub-periodo-inicio">01/09</b> hasta hoy, actualizado automáticamente por API dos
     veces por día (días hábiles = lunes a viernes, el sábado cuenta medio día y el domingo no cuenta). El <b>Avance</b> es
     contra el objetivo prorrateado a la fecha, no contra el objetivo total del mes.
-    Columna <b>Real</b> = kg vendidos hoy. <b>Platino+Gold</b> y <b>Silver&amp;Bronze</b> se arman por
+    Columna <b>Real</b> = kg de los <b>pedidos tomados hoy</b> (fecha de pedido, como el reporte de Gescom); el
+    <b>Acumulado</b> cuenta las entregas del mes. <b>Platino+Gold</b> y <b>Silver&amp;Bronze</b> se arman por
     clasificación de producto (no de cliente), según la segmentación de portafolio confirmada.
     <b>Media necesaria</b> = suma de los kg/día que necesita cada vendedor en los días que quedan para llegar al
     objetivo. <b>Compromiso vendedores</b> = suma en vivo de lo que cada vendedor cargó en la tabla de abajo.
@@ -342,6 +343,7 @@ td.ip-base.clickable{cursor:pointer}
     <div class="kpi">
       <div class="label" id="kpi-real-label">Venta real hoy</div>
       <div class="value" id="kpi-real-hoy">—</div>
+      <div id="kpi-real-nota" style="font-size:11px;color:var(--muted);margin-top:4px">Pedidos tomados hoy (fecha de pedido)</div>
     </div>
     <div class="kpi">
       <div class="label">Media necesaria</div>
@@ -391,7 +393,8 @@ td.ip-base.clickable{cursor:pointer}
   <p class="section-note">
     Ordenado de menor a mayor avance — los que necesitan más empuje primero. <b>Promedio</b> = kg/día vendidos en
     lo que va del mes, <b>Media Nec.</b> = kg/día necesarios en los días que quedan para llegar al objetivo,
-    <b>Penúlt./Últ. Vis.</b> = kg vendidos en las últimas dos visitas — los tres del reporte
+    <b>Penúlt./Últ. Vis.</b> = kg de los pedidos tomados el mismo día de la semana hace 14 y 7 días (fecha de pedido), y
+    <b>Real hoy</b> = pedidos tomados hoy — los tres del reporte
     <code>Avance de Ventas Pepsico</code>. <b>Compromiso</b> es editable por separado para Platino+Gold y para
     Silver&amp;Bronze; la columna <b>Total</b> suma ambos automáticamente. Cada vendedor carga su proyección de
     cierre de mes y queda guardado para todos.
@@ -1394,6 +1397,8 @@ function initSelectorDia(){
     const valorEl = document.getElementById('kpi-real-hoy');
     if (labelEl) labelEl.textContent = `Venta real — ${dia}/${mes}`;
     if (valorEl) valorEl.innerHTML = entrada ? `${fmt(entrada.kg)}<span class="unit">kg</span>` : 'Sin datos';
+    const notaEl = document.getElementById('kpi-real-nota');
+    if (notaEl) notaEl.textContent = `Pedidos tomados el ${dia}/${mes} (fecha de pedido)`;
     btnLimpiar.style.display = 'inline-block';
   }
 
@@ -1410,6 +1415,8 @@ function initSelectorDia(){
     const valorEl = document.getElementById('kpi-real-hoy');
     if (labelEl) labelEl.textContent = 'Venta real hoy';
     if (valorEl) valorEl.innerHTML = `${fmt(realHoyActual)}<span class="unit">kg</span>`;
+    const notaEl = document.getElementById('kpi-real-nota');
+    if (notaEl) notaEl.textContent = 'Pedidos tomados hoy (fecha de pedido)';
   });
 }
 
