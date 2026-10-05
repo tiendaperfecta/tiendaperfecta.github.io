@@ -132,6 +132,15 @@ h1{
   background-size:320px auto; opacity:.4; mix-blend-mode:multiply;
 }
 .mn-watermark > *{ position:relative; z-index:1 }
+.lays-watermark{ position:relative; isolation:isolate }
+.lays-watermark::before{
+  content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
+  background:url('lays-rusticas.webp') no-repeat center;
+  background-size:min(760px,92%) auto; opacity:.16; mix-blend-mode:multiply;
+  -webkit-mask-image:radial-gradient(ellipse 48% 42% at 50% 50%, #000 55%, transparent 100%);
+  mask-image:radial-gradient(ellipse 48% 42% at 50% 50%, #000 55%, transparent 100%);
+}
+.lays-watermark > *{ position:relative; z-index:1 }
 .subsection-title{
   font-family:"Fraunces",serif; font-weight:600; font-size:15.5px; color:var(--accent);
   margin:28px 0 4px; text-transform:uppercase; letter-spacing:.03em;
@@ -1558,7 +1567,7 @@ function renderInnovaciones(){
   const tostitosHtml = Object.keys(TOSTITOS_SUB_LABELS).map(k => productSubTable(tostitosSubRows, 'tostitos', k, TOSTITOS_SUB_LABELS[k], TOSTITOS_SUB_OBJ)).join('');
   const pehuamarHtml = Object.keys(PEHUAMAR_SUB_LABELS).map(k => productSubTable(pehuamarSubRows, 'pehuamar', k, PEHUAMAR_SUB_LABELS[k], PEHUAMAR_SUB_OBJ)).join('');
   const innovEl = document.getElementById('innovaciones-content');
-  if (innovEl) innovEl.innerHTML = laysHtml + tostitosHtml;
+  if (innovEl) innovEl.innerHTML = `<div class="lays-watermark">${laysHtml}</div>` + tostitosHtml;
   const cobEl = document.getElementById('cobertura-innovaciones-content');
   if (cobEl) cobEl.innerHTML = pehuamarHtml;
 }
