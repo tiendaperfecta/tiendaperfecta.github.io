@@ -136,11 +136,13 @@ h1{
 .lays-watermark::before{
   content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
   background:url('lays-rusticas.webp') no-repeat center;
-  background-size:min(980px,100%) auto; opacity:.27; mix-blend-mode:multiply;
-  -webkit-mask-image:radial-gradient(ellipse 62% 55% at 50% 50%, #000 62%, transparent 100%);
-  mask-image:radial-gradient(ellipse 62% 55% at 50% 50%, #000 62%, transparent 100%);
+  background-size:contain; opacity:.27; mix-blend-mode:multiply;
+  -webkit-mask-image:radial-gradient(ellipse 70% 62% at 50% 52%, #000 62%, transparent 100%);
+  mask-image:radial-gradient(ellipse 70% 62% at 50% 52%, #000 62%, transparent 100%);
 }
 .lays-watermark > *{ position:relative; z-index:1 }
+/* la columna Base queda sin fondo para que se vea la imagen */
+.lays-watermark td.ip-base, .lays-watermark th.ip-base{ background:transparent }
 .subsection-title{
   font-family:"Fraunces",serif; font-weight:600; font-size:15.5px; color:var(--accent);
   margin:28px 0 4px; text-transform:uppercase; letter-spacing:.03em;
@@ -1563,11 +1565,11 @@ function drillSubproductoHoy(vendedor, grupoClave, label) {
 }
 
 function renderInnovaciones(){
-  const laysHtml = Object.keys(LAYS_SUB_LABELS).map(k => productSubTable(laysSubRows, 'lays', k, LAYS_SUB_LABELS[k], LAYS_SUB_OBJ)).join('');
+  const laysHtml = Object.keys(LAYS_SUB_LABELS).map(k => `<div class="lays-watermark">${productSubTable(laysSubRows, 'lays', k, LAYS_SUB_LABELS[k], LAYS_SUB_OBJ)}</div>`).join('');
   const tostitosHtml = Object.keys(TOSTITOS_SUB_LABELS).map(k => productSubTable(tostitosSubRows, 'tostitos', k, TOSTITOS_SUB_LABELS[k], TOSTITOS_SUB_OBJ)).join('');
   const pehuamarHtml = Object.keys(PEHUAMAR_SUB_LABELS).map(k => productSubTable(pehuamarSubRows, 'pehuamar', k, PEHUAMAR_SUB_LABELS[k], PEHUAMAR_SUB_OBJ)).join('');
   const innovEl = document.getElementById('innovaciones-content');
-  if (innovEl) innovEl.innerHTML = `<div class="lays-watermark">${laysHtml}</div>` + tostitosHtml;
+  if (innovEl) innovEl.innerHTML = laysHtml + tostitosHtml;
   const cobEl = document.getElementById('cobertura-innovaciones-content');
   if (cobEl) cobEl.innerHTML = pehuamarHtml;
 }
