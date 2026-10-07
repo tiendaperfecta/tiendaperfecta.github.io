@@ -146,6 +146,13 @@ h1{
   mask-image:radial-gradient(ellipse 80% 72% at 50% 52%, #000 70%, transparent 100%);
 }
 .lays-watermark > *{ position:relative; z-index:1 }
+/* los numeros y nombres sobre la imagen: mas oscuros, en negrita y con un halo blanco para que se lean bien */
+.lays-watermark td, .lays-watermark th{
+  font-weight:700;
+  text-shadow:0 0 2px #fff, 0 0 3px #fff, 0 0 5px #fff, 0 0 8px rgba(255,255,255,.9);
+}
+.lays-watermark td{ color:#1c1409 }
+.lays-watermark td.ip-base{ color:#8a3d00 }
 /* la columna Base queda sin fondo para que se vea la imagen */
 .lays-watermark td.ip-base, .lays-watermark th.ip-base{ background:transparent }
 .subsection-title{
@@ -201,6 +208,10 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
 #tfoot-ip td{text-align:center}
 #tfoot-ip td.name{text-align:left}
 #tfoot-ip td.ip-base{background:var(--accent-soft); color:var(--accent)}
+/* en la tabla de IP los campos y los totales van centrados en su columna, asi cada total queda justo debajo de su casillero */
+#tbody-ip td{text-align:center}
+#tbody-ip td.name{text-align:left}
+#tbody-ip .ip-freq-cell, #tfoot-ip .ip-freq-cell{justify-content:center}
 
 .tp-summary{margin-bottom:20px}
 .tp-total-card{
@@ -3088,8 +3099,8 @@ async function renderIpSection(){
   if (elPehuamar) elPehuamar.textContent = fmt(pehuamarTotal);
   const elMn = document.getElementById('tfoot-ip-mn-comp');
   if (elMn) {
-    elMn.style.textAlign = 'right';
-    elMn.innerHTML = selloutCount ? `<span style="display:inline-block; width:90px; text-align:center">${fmt(selloutSum)}</span>` : '—';
+    elMn.style.textAlign = 'center';
+    elMn.innerHTML = selloutCount ? fmt(selloutSum) : '—';
   }
   const elMnPct = document.getElementById('tfoot-ip-mn-comp-pct');
   if (elMnPct) elMnPct.innerHTML = ipMnBaseTotal ? `<span class="ip-mnpct">${fmt(selloutSum / ipMnBaseTotal * 100, 1)}%</span>` : '—';
