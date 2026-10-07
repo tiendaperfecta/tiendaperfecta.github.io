@@ -44,6 +44,11 @@ h1{
   border-radius:99px; padding:6px 14px; cursor:pointer;
 }
 .mes-presets button.activo{background:var(--panel); color:var(--text); box-shadow:var(--shadow)}
+.seg-click{cursor:pointer}
+.seg-click:hover{text-decoration:underline}
+.seg-prod h4{margin:14px 0 4px; font:600 13px "IBM Plex Sans"; color:var(--text)}
+.seg-prod ul{margin:0 0 4px; padding-left:18px; font-size:13px; color:var(--muted)}
+.seg-prod li small{color:var(--muted)}
 #dia-selector-limpiar{
   font:600 12.5px "IBM Plex Sans"; color:var(--accent); background:var(--accent-soft); border:none;
   border-radius:99px; padding:6px 14px; cursor:pointer;
@@ -373,12 +378,12 @@ td.ip-base.clickable{cursor:pointer}
 
   <div class="segments">
     <div class="seg">
-      <div class="seg-head"><span class="name">Platino + Gold</span><span class="pct" id="seg-pg-pct">—</span></div>
+      <div class="seg-head"><span class="name seg-click" onclick="drillSegmento('p1')" title="Ver qué productos entran en Platino + Gold">Platino + Gold ⓘ</span><span class="pct" id="seg-pg-pct">—</span></div>
       <div class="bar-track"><div class="bar-fill" id="seg-pg-bar" style="width:0%"></div></div>
       <div class="seg-foot"><span id="seg-pg-obj">Objetivo — kg</span><span id="seg-pg-acum">Acumulado — kg</span></div>
     </div>
     <div class="seg">
-      <div class="seg-head"><span class="name">Silver &amp; Bronze</span><span class="pct" id="seg-sb-pct">—</span></div>
+      <div class="seg-head"><span class="name seg-click" onclick="drillSegmento('p2')" title="Ver qué productos entran en Silver &amp; Bronze">Silver &amp; Bronze ⓘ</span><span class="pct" id="seg-sb-pct">—</span></div>
       <div class="bar-track"><div class="bar-fill" id="seg-sb-bar" style="width:0%"></div></div>
       <div class="seg-foot"><span id="seg-sb-obj">Objetivo — kg</span><span id="seg-sb-acum">Acumulado — kg</span></div>
     </div>
@@ -424,9 +429,9 @@ td.ip-base.clickable{cursor:pointer}
       <thead>
         <tr class="grp">
           <th></th>
-          <th class="g-platino" colspan="4">Platino + Gold</th>
+          <th class="g-platino seg-click" colspan="4" onclick="drillSegmento('p1')" title="Ver qué productos entran en Platino + Gold">Platino + Gold ⓘ</th>
           <th></th>
-          <th colspan="4">Silver &amp; Bronze</th>
+          <th class="seg-click" colspan="4" onclick="drillSegmento('p2')" title="Ver qué productos entran en Silver &amp; Bronze">Silver &amp; Bronze ⓘ</th>
           <th></th>
           <th colspan="9">Total vendedor</th>
           <th></th>
@@ -1635,6 +1640,34 @@ function openDrillCustom(title, subtitle, html) {
   document.getElementById('drillModal').classList.add('open');
 }
 function closeDrill() { document.getElementById('drillModal').classList.remove('open'); }
+
+// Productos que entran en cada grupo del tablero (Platino + Gold = *P01, Silver & Bronze = *P02), sacados del
+// catalogo de articulos Pepsico de Gescom: son los mismos que se usan para sumar los kg.
+let productosSegmentoPromise = null;
+function cargarProductosSegmento(){
+  if (!productosSegmentoPromise) {
+    productosSegmentoPromise = fetch(BASE + 'productos_segmento.json' + CACHE_BUST).then(r => r.json()).catch(() => null);
+  }
+  return productosSegmentoPromise;
+}
+function escHtml(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+async function drillSegmento(grupo){
+  const nombre = grupo === 'p1' ? 'Platino + Gold' : 'Silver & Bronze';
+  openDrillCustom(nombre, 'Cargando productos…', '<p class="modal-count">Cargando…</p>');
+  const data = await cargarProductosSegmento();
+  const lista = data && data[grupo];
+  if (!lista || !lista.length) {
+    openDrillCustom(nombre, 'No hay datos', '<p class="modal-count">Todavía no hay listado de productos publicado. Se genera en la próxima actualización.</p>');
+    return;
+  }
+  const porMarca = {};
+  lista.forEach(p => { (porMarca[p.marca || 'Otras'] = porMarca[p.marca || 'Otras'] || []).push(p); });
+  const html = '<div class="seg-prod">' + Object.keys(porMarca).sort().map(m =>
+    `<h4>${escHtml(m)} <small style="color:var(--muted);font-weight:400">(${porMarca[m].length})</small></h4><ul>` +
+    porMarca[m].map(p => `<li>${escHtml(p.descripcion)}${p.gramos ? ` <small>· ${fmt(p.gramos)} g</small>` : ''}</li>`).join('') + '</ul>'
+  ).join('') + '</div>';
+  openDrillCustom(nombre, `${lista.length} productos · se suman en los kg de ${nombre}`, html);
+}
 
 function drillBySegmento(vendedor, seg) {
   const list = noCompradoresDetalle.filter(c => c.vendedor === vendedor && c.seg === seg);
