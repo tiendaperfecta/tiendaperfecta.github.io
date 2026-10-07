@@ -321,6 +321,7 @@ td.ip-base.clickable{cursor:pointer}
     <input type="date" id="dia-selector">
     <button type="button" id="dia-selector-limpiar" style="display:none">Volver a hoy</button>
   </div>
+  <p id="kpi-vista-dia" style="display:none; background:var(--accent-soft); color:var(--accent); font-weight:600; padding:8px 14px; border-radius:8px; margin-bottom:16px; font-size:13.5px"></p>
   <div id="banner-archivo" style="display:none; background:var(--accent-soft); color:var(--accent); font-weight:600; padding:8px 14px; border-radius:8px; margin-bottom:16px; font-size:13.5px"></div>
   <p class="sub">
     Medida en <b>kilogramos</b>. Acumulado del <b id="sub-periodo-inicio">01/09</b> hasta hoy, actualizado automáticamente por API dos
@@ -1395,14 +1396,113 @@ if (MES_SEL) {
 
 let realHoyActual = 0;
 let diaSeleccionado = '';
+let kpiBase = null;            // valores actuales (los de hoy) con los que se reconstruye un dia pasado
+let kpiHoyHTML = null;         // lo que mostraban los KPI antes de elegir un dia
+let historialProy = null;      // lo que cargaron los vendedores cada dia (Apps Script, action=historial)
+
+function hoyISO(){
+  const h = new Date();
+  return `${h.getFullYear()}-${String(h.getMonth()+1).padStart(2,'0')}-${String(h.getDate()).padStart(2,'0')}`;
+}
+function esDiaPasado(){ return !!diaSeleccionado && diaSeleccionado < hoyISO(); }
+
+async function cargarHistorialProy(){
+  try {
+    const r = await fetch(IP_API + '?action=historial');
+    const j = await r.json();
+    if (j && j.ok) historialProy = j;
+  } catch (err) { console.error('historial de proyecciones:', err); }
+}
+
+// dias habiles del mes hasta la fecha (inclusive): lunes a viernes = 1, sabado = 0,5
+function diasHabilesHasta(fechaISO){
+  const [y, m, d] = fechaISO.split('-').map(Number);
+  let tot = 0;
+  for (let i = 1; i <= d; i++) {
+    const wd = new Date(y, m - 1, i).getDay();
+    if (wd === 6) tot += 0.5; else if (wd !== 0) tot += 1;
+  }
+  return tot;
+}
+
+// Acumulado de un dia pasado = lo que ya habia al cierre de ese dia: el acumulado de hoy menos lo que se pidio
+// despues (el historial diario trae los kg pedidos por dia y por grupo *P01 / *P02).
+function kpisDelDia(fecha){
+  if (!kpiBase || MES_SEL) return null;
+  const mes = fecha.slice(0, 7);
+  const delMes = historialDiarioData.filter(f => f.fecha.slice(0, 7) === mes);
+  if (!delMes.length || !delMes.some(f => typeof f.p1 === 'number')) return null;
+  const suma = (k, hasta) => delMes.filter(f => f.fecha <= hasta).reduce((s, f) => s + (Number(f[k]) || 0), 0);
+  const hoy = hoyISO();
+  const p1 = kpiBase.acumPG - (suma('p1', hoy) - suma('p1', fecha));
+  const p2 = kpiBase.acumSB - (suma('p2', hoy) - suma('p2', fecha));
+  const dt = diasHabilesHasta(fecha), dh = kpiBase.diasHabiles;
+  if (!dt || !dh) return null;
+  const acum = p1 + p2, ratio = dt / dh;
+  return {
+    acum, p1, p2, dt, dh,
+    avance: kpiBase.totTo && ratio ? acum / (kpiBase.totTo * ratio) * 100 : 0,
+    pctPG: kpiBase.totPG && ratio ? p1 / (kpiBase.totPG * ratio) * 100 : 0,
+    pctSB: kpiBase.totSB && ratio ? p2 / (kpiBase.totSB * ratio) * 100 : 0,
+    tendencia: acum / dt * dh,
+    medianec: dh > dt ? (kpiBase.totTo - acum) / (dh - dt) : 0,
+  };
+}
+
+const KPI_IDS = ['kpi-acumulado', 'kpi-avance-fecha', 'kpi-tendencia', 'kpi-media-necesaria', 'seg-pg-pct', 'seg-pg-acum', 'seg-sb-pct', 'seg-sb-acum'];
+function guardarKpisHoy(){
+  kpiHoyHTML = {};
+  KPI_IDS.forEach(id => { const el = document.getElementById(id); if (el) kpiHoyHTML[id] = el.innerHTML; });
+  ['seg-pg-bar', 'seg-sb-bar'].forEach(id => { const el = document.getElementById(id); if (el) kpiHoyHTML[id] = el.style.width; });
+}
+function restaurarKpisHoy(){
+  if (!kpiHoyHTML) return;
+  KPI_IDS.forEach(id => { const el = document.getElementById(id); if (el && kpiHoyHTML[id] !== undefined) el.innerHTML = kpiHoyHTML[id]; });
+  ['seg-pg-bar', 'seg-sb-bar'].forEach(id => { const el = document.getElementById(id); if (el && kpiHoyHTML[id] !== undefined) el.style.width = kpiHoyHTML[id]; });
+  const nota = document.getElementById('kpi-vista-dia'); if (nota) nota.style.display = 'none';
+}
+function pintarKpisDia(fecha){
+  const nota = document.getElementById('kpi-vista-dia');
+  const [anio, mes, dia] = fecha.split('-');
+  const k = kpisDelDia(fecha);
+  if (!k) {
+    restaurarKpisHoy();
+    if (nota) { nota.style.display = 'block'; nota.textContent = `No hay datos para reconstruir el acumulado del ${dia}/${mes}. Se muestran los valores de hoy; la venta real y las proyecciones sí son del ${dia}/${mes}.`; }
+    return;
+  }
+  const set = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+  set('kpi-acumulado', `${fmt(k.acum)}<span class="unit">kg</span>`);
+  set('kpi-avance-fecha', `${fmt(k.avance,1)}<span class="unit">%</span>`);
+  set('kpi-tendencia', `${fmt(k.tendencia)}<span class="unit">kg</span>`);
+  set('kpi-media-necesaria', `${fmt(k.medianec,1)}<span class="unit">kg/día</span>`);
+  set('seg-pg-pct', fmt(k.pctPG,1) + '%'); set('seg-pg-acum', `Acumulado ${fmt(k.p1)} kg`);
+  set('seg-sb-pct', fmt(k.pctSB,1) + '%'); set('seg-sb-acum', `Acumulado ${fmt(k.p2)} kg`);
+  const bPg = document.getElementById('seg-pg-bar'); if (bPg) bPg.style.width = Math.min(k.pctPG, 100) + '%';
+  const bSb = document.getElementById('seg-sb-bar'); if (bSb) bSb.style.width = Math.min(k.pctSB, 100) + '%';
+  if (nota) {
+    nota.style.display = 'block';
+    nota.textContent = `Vista del ${dia}/${mes}: acumulado, avance, tendencia y media necesaria al cierre de ese día (${fmt(k.dt,1)} de ${fmt(k.dh,1)} días hábiles). La tabla por vendedor muestra el estado actual.`;
+  }
+}
+
 function initSelectorDia(){
   const sel = document.getElementById('dia-selector');
   const btnLimpiar = document.getElementById('dia-selector-limpiar');
   if (!sel) return;
-  const hoy = new Date();
-  sel.max = `${hoy.getFullYear()}-${String(hoy.getMonth()+1).padStart(2,'0')}-${String(hoy.getDate()).padStart(2,'0')}`;
+  sel.max = hoyISO();
 
-  function mostrarDia(fecha){
+  function refrescarIp(intento){
+    if (typeof renderIpSection !== 'function') return;
+    // si justo se esta dibujando la tabla (carga inicial o refresco automatico), se vuelve a intentar enseguida
+    if (ipRenderBusy && intento < 10) { setTimeout(() => refrescarIp(intento + 1), 1500); return; }
+    renderIpSection().catch(() => { ipRenderBusy = false; });
+  }
+  function refrescarProyecciones(){
+    if (typeof window.refrescarCompromisosDia === 'function') window.refrescarCompromisosDia();
+    refrescarIp(0);
+  }
+
+  async function mostrarDia(fecha){
     const entrada = historialDiarioData.find(f => f.fecha === fecha);
     const [anio, mes, dia] = fecha.split('-');
     const labelEl = document.getElementById('kpi-real-label');
@@ -1412,14 +1512,15 @@ function initSelectorDia(){
     const notaEl = document.getElementById('kpi-real-nota');
     if (notaEl) notaEl.textContent = `Pedidos tomados el ${dia}/${mes} (fecha de pedido)`;
     btnLimpiar.style.display = 'inline-block';
+    if (!MES_SEL) {
+      if (!kpiHoyHTML) guardarKpisHoy();
+      pintarKpisDia(fecha);
+      await cargarHistorialProy();
+      if (diaSeleccionado === fecha) refrescarProyecciones();
+    }
   }
 
-  sel.addEventListener('change', () => {
-    if (!sel.value) return;
-    diaSeleccionado = sel.value;
-    mostrarDia(diaSeleccionado);
-  });
-  btnLimpiar.addEventListener('click', () => {
+  function volverAHoy(){
     diaSeleccionado = '';
     sel.value = '';
     btnLimpiar.style.display = 'none';
@@ -1429,7 +1530,16 @@ function initSelectorDia(){
     if (valorEl) valorEl.innerHTML = `${fmt(realHoyActual)}<span class="unit">kg</span>`;
     const notaEl = document.getElementById('kpi-real-nota');
     if (notaEl) notaEl.textContent = 'Pedidos tomados hoy (fecha de pedido)';
+    if (!MES_SEL) { restaurarKpisHoy(); kpiHoyHTML = null; refrescarProyecciones(); }
+  }
+
+  sel.addEventListener('change', () => {
+    if (!sel.value) return;
+    if (sel.value >= hoyISO()) { volverAHoy(); return; }
+    diaSeleccionado = sel.value;
+    mostrarDia(diaSeleccionado);
   });
+  btnLimpiar.addEventListener('click', volverAHoy);
 }
 
 let noCompradoresDetalle = [];
@@ -2510,6 +2620,7 @@ if (kgAvanceMeta) {
   document.getElementById('seg-sb-bar').style.width = Math.min(pctSB,100) + '%';
   document.getElementById('seg-sb-obj').textContent = `Objetivo ${fmt(totSB)} kg`;
   document.getElementById('seg-sb-acum').textContent = `Acumulado ${fmt(acumSB)} kg`;
+  kpiBase = { totTo, totPG, totSB, acumPG, acumSB, diasHabiles: m.diasHabiles };
   const ventaTotal = rows.reduce((s,r)=>s+r.venta,0);
   document.getElementById('tfoot-main').innerHTML = `
     <tr>
@@ -2676,25 +2787,43 @@ if (MES_SEL) {
     input.title = 'Ya pasaron los 15 minutos para corregir. Se vuelve a habilitar mañana.';
   }
 
+  let ultimaDataComp = data;
   function aplicarCompromisos(data) {
+    ultimaDataComp = data;
+    // si se esta viendo un dia pasado, se muestra lo que cargaron los vendedores ese dia (solo lectura)
+    const pasado = esDiaPasado();
+    const histC = pasado ? (((historialProy || {}).compromiso || {})[diaSeleccionado] || {}) : null;
     compromisoRefs.forEach(({ vendedor, inputPg, inputSb, updateTotal }) => {
-      const saved = data.compromisos[vendedor] || {};
-      const enfocado = document.activeElement === inputPg || document.activeElement === inputSb;
+      const saved = pasado ? (histC[vendedor] || {}) : (data.compromisos[vendedor] || {});
+      const enfocado = !pasado && (document.activeElement === inputPg || document.activeElement === inputSb);
       if (!enfocado) {
         inputPg.value = typeof saved.pg === 'number' ? saved.pg : '';
         inputSb.value = typeof saved.sb === 'number' ? saved.sb : '';
-        if (saved.bloqueado) {
+        if (pasado) {
+          inputPg.disabled = true; inputSb.disabled = true;
+          inputPg.title = inputSb.title = 'Compromiso cargado ese día (solo lectura)';
+        } else if (saved.bloqueado) {
           bloquear(inputPg);
           bloquear(inputSb);
+        } else {
+          inputPg.disabled = false; inputSb.disabled = false;
+          inputPg.title = inputSb.title = '';
         }
       }
       updateTotal();
     });
     recomputeTotal();
-    if (document.activeElement !== supInput) {
-      supInput.value = typeof data.supervisor === 'number' ? data.supervisor : '';
+    if (pasado) {
+      supInput.value = '';
+      supInput.disabled = true;
+    } else {
+      supInput.disabled = false;
+      if (document.activeElement !== supInput) {
+        supInput.value = typeof data.supervisor === 'number' ? data.supervisor : '';
+      }
     }
   }
+  window.refrescarCompromisosDia = () => aplicarCompromisos(ultimaDataComp);
 
   aplicarCompromisos(data);
 
@@ -2792,8 +2921,12 @@ async function renderIpSection(){
   } catch (err) {
     console.error('ip: fetch failed:', err);
   }
-  const compromisos = (data && data.ok && data.compromisos) || {};
-  const ipGuardado = (data && data.ok && data.ipProyecciones) || {};
+  // si se esta viendo un dia pasado, se muestra lo que cargaron los vendedores ese dia (solo lectura)
+  const pasadoIp = esDiaPasado();
+  const compromisos = pasadoIp ? (((historialProy || {}).compromiso || {})[diaSeleccionado] || {})
+                               : ((data && data.ok && data.compromisos) || {});
+  const ipGuardado = pasadoIp ? (((historialProy || {}).ip || {})[diaSeleccionado] || {})
+                              : ((data && data.ok && data.ipProyecciones) || {});
 
   const ipRows = rows.map(r => {
     const nc = findByNameIp(noCompraRows, r.n);
@@ -2903,6 +3036,7 @@ async function renderIpSection(){
     ['frecuencia','portafolio','pehuamar','sellout'].forEach(metric => {
       const input = inputs[metric];
       if (!input) return;
+      if (pasadoIp) { input.disabled = true; input.title = 'Proyección cargada ese día (solo lectura)'; return; }
       input.addEventListener('change', () => guardarIp(r.n, inputs));
     });
     if (inputs.sellout) {
