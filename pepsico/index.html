@@ -36,6 +36,15 @@ h1{
   font:600 13px "IBM Plex Sans"; color:var(--text); background:var(--panel);
   border:1px solid var(--border); border-radius:8px; padding:6px 10px; cursor:pointer;
 }
+.vend-filter{
+  display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin:0 0 14px;
+  font:600 12px "IBM Plex Sans"; color:var(--muted);
+}
+.vend-filter select{
+  font:600 13px "IBM Plex Sans"; color:var(--text); background:var(--panel);
+  border:1px solid var(--border); border-radius:8px; padding:7px 12px; cursor:pointer; min-width:210px;
+}
+.vend-filter-nota{font-weight:500; font-size:12.5px}
 .mes-presets{
   display:inline-flex; background:var(--panel-2); border-radius:99px; padding:3px; gap:2px;
 }
@@ -409,6 +418,11 @@ td.ip-base.clickable{cursor:pointer}
 
   <div class="tab-panel active" data-tab-panel="por-vendedor">
 
+  <div class="vend-filter">
+    <label for="vendedor-selector">Ver vendedor:</label>
+    <select id="vendedor-selector"><option value="">Todos</option></select>
+    <span class="vend-filter-nota" id="vendedor-nota"></span>
+  </div>
   <h2 class="section-title">Por vendedor</h2>
   <p class="section-note">
     Ordenado de menor a mayor avance — los que necesitan más empuje primero. <b>Promedio</b> = kg/día vendidos en
@@ -1457,7 +1471,94 @@ function kpisDelDia(fecha){
   };
 }
 
-const KPI_IDS = ['kpi-acumulado', 'kpi-avance-fecha', 'kpi-tendencia', 'kpi-media-necesaria', 'seg-pg-pct', 'seg-pg-acum', 'seg-sb-pct', 'seg-sb-acum'];
+const KPI_IDS = ['kpi-objetivo-mes', 'kpi-acumulado', 'kpi-avance-fecha', 'kpi-tendencia', 'kpi-media-necesaria',
+                 'seg-pg-pct', 'seg-pg-obj', 'seg-pg-acum', 'seg-sb-pct', 'seg-sb-obj', 'seg-sb-acum'];
+let vendedorSel = '';          // '' = Todos
+function filaVendedor(){ return vendedorSel ? rows.find(r => r.n === vendedorSel) : null; }
+
+// KPI y barras con los numeros de un solo vendedor (los que ya trae la tabla por vendedor)
+function pintarKpisVendedor(){
+  const r = filaVendedor(); if (!r) return;
+  const set = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+  set('kpi-objetivo-mes', `${fmt(r.to)}<span class="unit">kg</span>`);
+  set('kpi-acumulado', `${fmt(r.ta)}<span class="unit">kg</span>`);
+  set('kpi-avance-fecha', `${fmt(r.tp,1)}<span class="unit">%</span>`);
+  set('kpi-tendencia', `${fmt(r.tendencia)}<span class="unit">kg</span>`);
+  set('kpi-media-necesaria', `${fmt(r.medianec,1)}<span class="unit">kg/día</span>`);
+  set('seg-pg-pct', fmt(r.p1p,1) + '%'); set('seg-pg-obj', `Objetivo ${fmt(r.p1o)} kg`); set('seg-pg-acum', `Acumulado ${fmt(r.p1a)} kg`);
+  set('seg-sb-pct', fmt(r.p2p,1) + '%'); set('seg-sb-obj', `Objetivo ${fmt(r.p2o)} kg`); set('seg-sb-acum', `Acumulado ${fmt(r.p2a)} kg`);
+  const bPg = document.getElementById('seg-pg-bar'); if (bPg) bPg.style.width = Math.min(r.p1p, 100) + '%';
+  const bSb = document.getElementById('seg-sb-bar'); if (bSb) bSb.style.width = Math.min(r.p2p, 100) + '%';
+}
+function pintarRealTile(){
+  const labelEl = document.getElementById('kpi-real-label');
+  const valorEl = document.getElementById('kpi-real-hoy');
+  const notaEl = document.getElementById('kpi-real-nota');
+  const r = filaVendedor();
+  if (esDiaPasado()) {
+    const [anio, mes, dia] = diaSeleccionado.split('-');
+    if (labelEl) labelEl.textContent = `Venta real — ${dia}/${mes}`;
+    if (r) {
+      if (valorEl) valorEl.innerHTML = 'n/d';
+      if (notaEl) notaEl.textContent = 'La venta por día de cada vendedor no se guarda: elegí Todos para ver el total del día';
+    } else {
+      const entrada = historialDiarioData.find(f => f.fecha === diaSeleccionado);
+      if (valorEl) valorEl.innerHTML = entrada ? `${fmt(entrada.kg)}<span class="unit">kg</span>` : 'Sin datos';
+      if (notaEl) notaEl.textContent = `Pedidos tomados el ${dia}/${mes} (fecha de pedido)`;
+    }
+  } else {
+    if (labelEl) labelEl.textContent = 'Venta real hoy';
+    if (valorEl) valorEl.innerHTML = `${fmt(r ? r.real : realHoyActual)}<span class="unit">kg</span>`;
+    if (notaEl) notaEl.textContent = 'Pedidos tomados hoy (fecha de pedido)';
+  }
+}
+// Pinta los KPI segun lo elegido: un vendedor, un dia pasado o todo (hoy)
+function repintarKpis(){
+  const nota = document.getElementById('kpi-vista-dia');
+  const sup = document.querySelector('.kpi.editable');
+  if (sup) sup.style.display = vendedorSel ? 'none' : '';
+  if (vendedorSel && filaVendedor()) {
+    restaurarKpisHoy();
+    pintarKpisVendedor();
+    if (nota) {
+      nota.style.display = 'block';
+      nota.textContent = `Vista de ${vendedorSel}: sus indicadores del mes.` + (esDiaPasado() && !MES_SEL ? ' El acumulado y el avance por día solo están disponibles para Todos; acá se ven los valores actuales.' : '');
+    }
+  } else if (esDiaPasado() && !MES_SEL) {
+    pintarKpisDia(diaSeleccionado);
+  } else {
+    restaurarKpisHoy();
+    if (nota) nota.style.display = 'none';
+  }
+  pintarRealTile();
+}
+// Solo la fila del vendedor elegido en las tablas por vendedor (y sin la fila de totales)
+function aplicarFiltroVendedor(){
+  const v = vendedorSel;
+  ['tbody', 'tbody-ip'].forEach(id => {
+    document.querySelectorAll('#' + id + ' tr').forEach(tr => {
+      const n = tr.querySelector('td.name');
+      tr.style.display = (!v || (n && n.textContent.trim() === v)) ? '' : 'none';
+    });
+  });
+  ['tfoot-main', 'tfoot-ip'].forEach(id => { const e = document.getElementById(id); if (e) e.style.display = v ? 'none' : ''; });
+  const nota = document.getElementById('vendedor-nota');
+  if (nota) nota.textContent = v ? 'Mostrando solo a ' + v + '. Elegí "Todos" para ver el resto.' : '';
+}
+function initSelectorVendedor(){
+  const vs = document.getElementById('vendedor-selector');
+  if (!vs || vs.dataset.listo) return;
+  vs.dataset.listo = '1';
+  rows.map(r => r.n).sort((a, b) => a.localeCompare(b, 'es')).forEach(n => {
+    const o = document.createElement('option'); o.value = n; o.textContent = n; vs.appendChild(o);
+  });
+  vs.addEventListener('change', () => {
+    vendedorSel = vs.value;
+    repintarKpis();
+    aplicarFiltroVendedor();
+    if (typeof window.refrescarCompromisosDia === 'function') window.refrescarCompromisosDia();   // recalcula el compromiso total
+  });
+}
 function guardarKpisHoy(){
   kpiHoyHTML = {};
   KPI_IDS.forEach(id => { const el = document.getElementById(id); if (el) kpiHoyHTML[id] = el.innerHTML; });
@@ -1511,18 +1612,9 @@ function initSelectorDia(){
   }
 
   async function mostrarDia(fecha){
-    const entrada = historialDiarioData.find(f => f.fecha === fecha);
-    const [anio, mes, dia] = fecha.split('-');
-    const labelEl = document.getElementById('kpi-real-label');
-    const valorEl = document.getElementById('kpi-real-hoy');
-    if (labelEl) labelEl.textContent = `Venta real — ${dia}/${mes}`;
-    if (valorEl) valorEl.innerHTML = entrada ? `${fmt(entrada.kg)}<span class="unit">kg</span>` : 'Sin datos';
-    const notaEl = document.getElementById('kpi-real-nota');
-    if (notaEl) notaEl.textContent = `Pedidos tomados el ${dia}/${mes} (fecha de pedido)`;
     btnLimpiar.style.display = 'inline-block';
+    repintarKpis();
     if (!MES_SEL) {
-      if (!kpiHoyHTML) guardarKpisHoy();
-      pintarKpisDia(fecha);
       await cargarHistorialProy();
       if (diaSeleccionado === fecha) refrescarProyecciones();
     }
@@ -1532,13 +1624,8 @@ function initSelectorDia(){
     diaSeleccionado = '';
     sel.value = '';
     btnLimpiar.style.display = 'none';
-    const labelEl = document.getElementById('kpi-real-label');
-    const valorEl = document.getElementById('kpi-real-hoy');
-    if (labelEl) labelEl.textContent = 'Venta real hoy';
-    if (valorEl) valorEl.innerHTML = `${fmt(realHoyActual)}<span class="unit">kg</span>`;
-    const notaEl = document.getElementById('kpi-real-nota');
-    if (notaEl) notaEl.textContent = 'Pedidos tomados hoy (fecha de pedido)';
-    if (!MES_SEL) { restaurarKpisHoy(); kpiHoyHTML = null; refrescarProyecciones(); }
+    repintarKpis();
+    if (!MES_SEL) refrescarProyecciones();
   }
 
   sel.addEventListener('change', () => {
@@ -2657,6 +2744,8 @@ if (kgAvanceMeta) {
   document.getElementById('seg-sb-obj').textContent = `Objetivo ${fmt(totSB)} kg`;
   document.getElementById('seg-sb-acum').textContent = `Acumulado ${fmt(acumSB)} kg`;
   kpiBase = { totTo, totPG, totSB, acumPG, acumSB, diasHabiles: m.diasHabiles };
+  guardarKpisHoy();
+  initSelectorVendedor();
   const ventaTotal = rows.reduce((s,r)=>s+r.venta,0);
   document.getElementById('tfoot-main').innerHTML = `
     <tr>
@@ -2802,7 +2891,8 @@ if (MES_SEL) {
     let count = 0;
     let totalPg = 0, countPg = 0;
     let totalSb = 0, countSb = 0;
-    compromisoRefs.forEach(({ inputPg, inputSb }) => {
+    compromisoRefs.forEach(({ vendedor, inputPg, inputSb }) => {
+      if (vendedorSel && vendedor !== vendedorSel) return;     // con un vendedor elegido, el KPI es solo el suyo
       const pg = inputPg.value === '' ? null : Number(inputPg.value);
       const sb = inputSb.value === '' ? null : Number(inputSb.value);
       if (pg !== null || sb !== null) { total += (pg || 0) + (sb || 0); count++; }
@@ -3096,6 +3186,7 @@ async function renderIpSection(){
   }
   const elMnPct = document.getElementById('tfoot-ip-mn-comp-pct');
   if (elMnPct) elMnPct.innerHTML = ipMnBaseTotal ? `<span class="ip-mnpct">${fmt(selloutSum / ipMnBaseTotal * 100, 1)}%</span>` : '—';
+  aplicarFiltroVendedor();
   ipSectionReady = true;
   ipRenderBusy = false;
 }
