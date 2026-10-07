@@ -547,6 +547,29 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
     }
 
 
+def escribir_productos_segmento(api):
+    """productos_segmento.json: que articulos Pepsico entran en Platino + Gold (*P01) y en Silver & Bronze (*P02),
+    con su marca y gramos. Es el mismo catalogo que se usa para sumar los kg."""
+    marcas = {cod(m.get("codigo")): (m.get("descripcion") or "").strip()
+              for m in api.get("/data/cmd/inventario/api/v1/get-marcas")}
+    vistos, out = set(), {"p1": [], "p2": []}
+    for a in articulos_pepsico().values():
+        clave = cod(a.get("codigo"))
+        if clave in vistos:
+            continue
+        tags = a.get("tags") or []
+        g = "p1" if "*P01" in tags else "p2" if "*P02" in tags else None
+        if not g:
+            continue
+        vistos.add(clave)
+        out[g].append({"descripcion": (a.get("descripcion") or "").strip(), "marca": marcas.get(cod(a.get("codigoMarca")), "") or "Otras",
+                       "gramos": round(num(a.get("factorPeso")))})
+    for g in out:
+        out[g].sort(key=lambda x: (x["marca"], x["descripcion"]))
+    escribir("productos_segmento.json", out)
+    print("Productos por segmento: Platino+Gold %d | Silver&Bronze %d" % (len(out["p1"]), len(out["p2"])))
+
+
 def leer_historial_previo():
     """{fecha: kg} del historial_diario.json de la corrida anterior (antes de que esta corrida lo reescriba)."""
     try:
@@ -1207,6 +1230,10 @@ def main():
             print("AVISO: la base trae menos kg que Gescom; se usa el acumulado de Gescom (%.1f kg)" % total_gescom)
         escribir("avance_kg_vendedor.json", avance_kg)
         corregir_historial_diario(filas, hist_previo, hoy)
+        try:
+            escribir_productos_segmento(api)
+        except Exception as e:
+            print("No se pudo armar productos_segmento.json:", e)
         print("Avance kg: %d vendedores | dias %g/%g | objetivo PG %.1f kg | objetivo SB %.1f kg" %
               (len(avance_kg["vendedores"]), dias_trabajados, dias_habiles,
                avance_kg["objetivoPG"], avance_kg["objetivoSB"]))
