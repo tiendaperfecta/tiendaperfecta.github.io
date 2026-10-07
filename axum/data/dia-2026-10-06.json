@@ -6082,6 +6082,25 @@
   },
   {
    "fecha": "2026-10-06",
+   "sellerId": "3",
+   "vendedor": "Ezequiel Hack",
+   "clientId": "4944",
+   "nombre": "MARIA LAURA MIGUEL",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 2,
+   "monto": 131428.27,
+   "fechaVenta": "2026-10-06",
+   "horaVenta": "18:59",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-10-06",
    "sellerId": "4",
    "vendedor": "Lucas Giayetto",
    "clientId": "4514",
@@ -8533,6 +8552,25 @@
   },
   {
    "fecha": "2026-10-06",
+   "sellerId": "6",
+   "vendedor": "Camila Martinez",
+   "clientId": "1046",
+   "nombre": "GRIMALDI ARNALDO EZEQUIEL",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Autoservicio Tradicional_B",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 113857.31,
+   "fechaVenta": "2026-10-06",
+   "horaVenta": "20:57",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-10-06",
    "sellerId": "7",
    "vendedor": "Ramiro Rando",
    "clientId": "206",
@@ -10645,7 +10683,7 @@
   "vendio": 175,
   "paso_sin_vender": 188,
   "sin_visita": 29,
-  "vendio_sin_pasar": 140
+  "vendio_sin_pasar": 142
  },
  "bySeller": [
   {
@@ -10661,8 +10699,8 @@
    "visitas": 48,
    "minutosTotal": 219.4,
    "minutosPromedio": 4.6,
-   "pedidos": 45,
-   "monto": 1700843.29,
+   "pedidos": 46,
+   "monto": 1814700.61,
    "pasoSinVender": 25,
    "km": 11.0,
    "llegoTarde": false,
@@ -10781,8 +10819,8 @@
    "visitas": 33,
    "minutosTotal": 165.6,
    "minutosPromedio": 5.0,
-   "pedidos": 37,
-   "monto": 3065170.87,
+   "pedidos": 39,
+   "monto": 3196599.14,
    "pasoSinVender": 18,
    "km": 33.0,
    "llegoTarde": true,
@@ -14748,7 +14786,7 @@
  "totales": {
   "visitas": 363,
   "minutos": 2082.4,
-  "pedidos": 561,
-  "monto": 42129284.04
+  "pedidos": 564,
+  "monto": 42374569.63
  }
 }
