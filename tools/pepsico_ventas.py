@@ -541,6 +541,48 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
     }
 
 
+def leer_historial_previo():
+    """{fecha: kg} del historial_diario.json de la corrida anterior (antes de que esta corrida lo reescriba)."""
+    try:
+        return {x["fecha"]: float(x["kg"]) for x in json.loads((DIR / "historial_diario.json").read_text(encoding="utf-8"))}
+    except Exception:
+        return {}
+
+
+def corregir_historial_diario(filas, previo, hoy):
+    """Un dia ya cerrado no puede 'bajar': si la base propia perdio pedidos (pasa cuando se corta la sincronizacion),
+    el historial de esa fecha quedaba mas bajo que lo real. Se queda con el MAYOR entre lo que trae la base, lo que
+    traia la corrida anterior y, si se esta usando el detalle de Gescom, lo que da ese detalle por fecha de pedido."""
+    try:
+        actual = {x["fecha"]: float(x["kg"]) for x in json.loads((DIR / "historial_diario.json").read_text(encoding="utf-8"))}
+    except Exception:
+        actual = {}
+    if _ESTADO_OVERRIDE.get("usado"):
+        por_desc = {}
+        for a in articulos_pepsico().values():
+            por_desc.setdefault((a.get("descripcion") or "").strip().upper(), a)
+        det = {}
+        for f in filas:
+            if f.get("TipoDeVenta") != TIPO_VENTA or "PEPSICO" not in (f.get("Proveedor") or "").upper():
+                continue
+            if cod(f.get("CodVendedor")) not in VENDEDORES_PEPSICO:
+                continue
+            a = por_desc.get((f.get("Articulo") or "").strip().upper())
+            tags = (a or {}).get("tags") or []
+            if not a or not ("*P01" in tags or "*P02" in tags):
+                continue
+            fecha = (f.get("FechaComprobante") or "")[:10]
+            if fecha:
+                det[fecha] = det.get(fecha, 0.0) + num_ar(f.get("CantBase")) * num(a.get("factorPeso")) / 1000
+        for fecha, kg in det.items():
+            actual[fecha] = max(actual.get(fecha, 0.0), kg)
+    for fecha, kg in previo.items():
+        actual[fecha] = max(actual.get(fecha, 0.0), kg)
+    salida = [{"fecha": f, "kg": round(k, 2)} for f, k in sorted(actual.items()) if abs(k) > 0.005]
+    escribir("historial_diario.json", salida)
+    print("Historial diario corregido: %d dias (nunca baja respecto de la corrida anterior)" % len(salida))
+
+
 OVERRIDE_GESCOM = DIR / "override_gescom_avance.json"
 
 
@@ -1131,23 +1173,22 @@ def main():
     print("CCC por segmento: %d vendedores" % len(ccc_vendedores))
 
     dias_habiles = dias_habiles_mes(hoy.year, hoy.month)
-    dias_trabajados = dias_habiles_mes(hoy.year, hoy.month, hasta=hoy)
-    try:
-        hoy_con_pedidos = any(l.get("tipo") == "VEN" for l in lineas_pepsico(hoy, hoy, "pedido"))
-    except Exception as e:
-        print("No se pudo verificar si hoy ya hay pedidos, se cuenta el dia:", e)
-        hoy_con_pedidos = True
-    if _ESTADO_OVERRIDE.get("usado"):
-        hoy_con_pedidos = _ESTADO_OVERRIDE["hoy_con_pedidos"]
-    if not hoy_con_pedidos:
-        dias_trabajados = dias_habiles_mes(hoy.year, hoy.month, hasta=hoy - dt.timedelta(days=1))
-        print("Hoy todavia no hay pedidos cargados: no cuenta como dia trabajado")
+    # Dias trabajados = dias COMPLETOS (hasta ayer). El dia en curso no cuenta hasta que termina: asi el "avance a la
+    # fecha" no se cae al cambiar de dia (antes el dia sumaba entero apenas entraba el primer pedido, con casi nada
+    # vendido). El acumulado ya trae las entregas de pedidos de dias anteriores, por eso es consistente.
+    dias_trabajados = dias_habiles_mes(hoy.year, hoy.month, hasta=hoy - dt.timedelta(days=1))
+    if not dias_trabajados:
+        # primer dia del mes (todavia no hay dia completo): se usa el dia en curso para no mostrar 0%
+        dias_trabajados = dias_habiles_mes(hoy.year, hoy.month, hasta=hoy)
+    print("Dias trabajados (completos, sin contar hoy): %g de %g" % (dias_trabajados, dias_habiles))
+    hist_previo = leer_historial_previo()
     try:
         avance_kg = traer_avance_kg(api, hoy, dias_habiles, dias_trabajados)
         avance_kg, total_gescom = aplicar_override_gescom(avance_kg, hoy, dias_habiles, dias_trabajados)
         if total_gescom:
             print("AVISO: la base trae menos kg que Gescom; se usa el acumulado de Gescom (%.1f kg)" % total_gescom)
         escribir("avance_kg_vendedor.json", avance_kg)
+        corregir_historial_diario(filas, hist_previo, hoy)
         print("Avance kg: %d vendedores | dias %g/%g | objetivo PG %.1f kg | objetivo SB %.1f kg" %
               (len(avance_kg["vendedores"]), dias_trabajados, dias_habiles,
                avance_kg["objetivoPG"], avance_kg["objetivoSB"]))
