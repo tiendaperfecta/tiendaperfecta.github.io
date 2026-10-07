@@ -45,6 +45,15 @@ h1{
   border:1px solid var(--border); border-radius:8px; padding:7px 12px; cursor:pointer; min-width:210px;
 }
 .vend-filter-nota{font-weight:500; font-size:12.5px}
+#ficha-vendedor{margin:6px 0 20px}
+.ficha-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(250px, 1fr)); gap:12px}
+.ficha-card{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:14px 16px; box-shadow:var(--shadow)}
+.ficha-card h4{margin:0 0 8px; font:600 13px "IBM Plex Sans"; color:var(--accent); text-transform:uppercase; letter-spacing:.03em}
+.ficha-linea{display:flex; justify-content:space-between; align-items:center; gap:10px; padding:4px 0; font-size:13px; border-bottom:1px dashed var(--border)}
+.ficha-linea:last-of-type{border-bottom:none}
+.ficha-linea span{color:var(--muted)}
+.ficha-linea b{font-family:"IBM Plex Mono",monospace; font-weight:600; text-align:right}
+.ficha-card small{color:var(--muted); font-size:11.5px}
 .mes-presets{
   display:inline-flex; background:var(--panel-2); border-radius:99px; padding:3px; gap:2px;
 }
@@ -400,6 +409,8 @@ td.ip-base.clickable{cursor:pointer}
       <div class="seg-foot"><span id="seg-sb-obj">Objetivo — kg</span><span id="seg-sb-acum">Acumulado — kg</span></div>
     </div>
   </div>
+
+  <div id="ficha-vendedor" style="display:none"></div>
 
   <div class="tabs-bar" id="tabs-bar">
     <button type="button" class="tab-btn active" data-tab-btn="por-vendedor">Por vendedor</button>
@@ -1545,6 +1556,122 @@ function aplicarFiltroVendedor(){
   const nota = document.getElementById('vendedor-nota');
   if (nota) nota.textContent = v ? 'Mostrando solo a ' + v + '. Elegí "Todos" para ver el resto.' : '';
 }
+// ---- Ficha del vendedor: todos sus indicadores juntos (se ve al elegir un vendedor) ----
+let fichaDatos = null;
+async function cargarFichaDatos(){
+  if (fichaDatos) return fichaDatos;
+  const get = f => fetch(BASE + f + CACHE_BUST).then(r => r.json()).catch(() => null);
+  const [cob, ccc, tp, venta, inv, rech, nc, combos, sub] = await Promise.all(
+    ['cobertura_marca_vendedor.json', 'ccc_segmento.json', 'tienda_perfecta.json', 'venta_vendedor.json', 'invendible_detalle.json',
+     'rechazos_detalle.json', 'no_compradores_por_dia.json', 'combos_datos.json', 'subproductos_vendedor.json'].map(get));
+  fichaDatos = {cob, ccc, tp, venta, inv, rech, nc, combos, sub};
+  return fichaDatos;
+}
+function fichaPill(valor, obj){
+  const p = obj ? valor / obj * 100 : 0;
+  return `<span class="pill ${tier(p)}">${fmt(valor,1)}%</span>`;
+}
+function fichaLinea(etiqueta, valor){ return `<div class="ficha-linea"><span>${etiqueta}</span><b>${valor}</b></div>`; }
+function fichaCard(titulo, cuerpo){ return `<div class="ficha-card"><h4>${titulo}</h4>${cuerpo}</div>`; }
+async function renderFichaVendedor(){
+  const cont = document.getElementById('ficha-vendedor');
+  if (!cont) return;
+  const v = vendedorSel;
+  if (!v) { cont.style.display = 'none'; cont.innerHTML = ''; return; }
+  cont.style.display = 'block';
+  cont.innerHTML = '<p class="section-note">Cargando indicadores de ' + escHtml(v) + '…</p>';
+  const d = await cargarFichaDatos();
+  if (vendedorSel !== v) return;                       // se cambio la seleccion mientras cargaba
+  const r = rows.find(x => x.n === v) || {};
+  const porNombre = arr => (arr || []).find(x => x.n === v);
+  const cards = [];
+
+  // Venta en $ y kg
+  let venta = d.venta && typeof d.venta[v] === 'number' ? fichaLinea('Venta neta ($, sin IVA)', '$ ' + fmt(d.venta[v])) : '';
+  venta += fichaLinea('Promedio diario', fmt(r.promedio || 0, 1) + ' kg/día');
+  venta += fichaLinea('Penúltima visita (hace 14 días)', fmt(r.penult || 0, 1) + ' kg');
+  venta += fichaLinea('Última visita (hace 7 días)', fmt(r.ultima || 0, 1) + ' kg');
+  cards.push(fichaCard('Venta', venta));
+
+  // Cobertura por marca
+  const cob = porNombre(d.cob && d.cob.vendedores);
+  if (cob) {
+    cards.push(fichaCard('Cobertura por marca', marcaObjRows.map(o =>
+      fichaLinea(o.marca, `${fichaPill(cob[o.marca] || 0, o.obj)} <small>obj. ${fmt(o.obj,1)}%</small>`)).join('') +
+      fichaLinea('Universo de clientes', fmt(cob.universo || 0))));
+  }
+
+  // Innovaciones (Pehuamar, Lays Rusticas, Tostitos)
+  if (d.sub) {
+    let inn = '';
+    Object.keys(d.sub).forEach(g => {
+      const fila = porNombre(d.sub[g].vendedores);
+      if (!fila) return;
+      Object.keys(d.sub[g].labels).forEach(k => {
+        const pct = fila.universo ? (fila[k] || 0) / fila.universo * 100 : 0;
+        inn += fichaLinea(escHtml(d.sub[g].labels[k]), `${fmt(fila[k] || 0)} clientes · ${fichaPill(pct, d.sub[g].obj)} <small>obj. ${d.sub[g].obj}%</small>`);
+      });
+    });
+    if (inn) cards.push(fichaCard('Innovaciones', inn));
+  }
+
+  // CCC y Tienda Perfecta (cumplen / objetivo por segmento)
+  const segLineas = f => ['A','B','C','D'].map((s, i) => {
+    const o = f[['ao','bo','co','do_'][i]] || 0, c = f[['ac','bc','cc','dc'][i]] || 0;
+    return fichaLinea('Segmento ' + s, `${fmt(c)} / ${fmt(o)} ${o ? fichaPill(c / o * 100, 100) : ''}`);
+  }).join('') + fichaLinea('Total', `${fmt(['ac','bc','cc','dc'].reduce((s,k)=>s+(f[k]||0),0))} / ${fmt(['ao','bo','co','do_'].reduce((s,k)=>s+(f[k]||0),0))}`);
+  const ccc = porNombre(d.ccc && d.ccc.vendedores);
+  if (ccc) cards.push(fichaCard('CCC (clientes con compra)', segLineas(ccc)));
+  const tp = porNombre(d.tp && d.tp.vendedores);
+  if (tp) cards.push(fichaCard('Tienda Perfecta', segLineas(tp)));
+
+  // Mi Negocio
+  const mn = mnRows.find(x => x.n === v);
+  if (mn) {
+    const share = r.ta && typeof r.acumuladoMN === 'number' ? r.acumuladoMN / r.ta * 100 : mn.share;
+    cards.push(fichaCard('Mi Negocio+',
+      fichaLinea('Share de venta por la app', fichaPill(share, 85) + ' <small>obj. 85%</small>') +
+      fichaLinea('Universo', fmt(mn.universo)) + fichaLinea('Registrados', fmt(mn.registrado)) +
+      fichaLinea('Activos', fmt(mn.activos)) + fichaLinea('Fully Digital', fmt(mn.fullyDigital)) +
+      '<small>Registrados, activos y Fully Digital: cierre de septiembre.</small>'));
+  }
+
+  // Clientes sin compra
+  const nc = porNombre(d.nc && d.nc.vendedores);
+  if (nc) {
+    const dias = {lu:'Lunes', ma:'Martes', mi:'Miércoles', ju:'Jueves', vi:'Viernes', sa:'Sábado'};
+    cards.push(fichaCard('Clientes sin compra',
+      fichaLinea('No compradores', `${fmt(nc.totNc)} de ${fmt(nc.totU)}`) +
+      Object.keys(dias).map(k => nc[k] ? fichaLinea(dias[k], `${fmt(nc[k][0])} de ${fmt(nc[k][1])}`) : '').join('')));
+  }
+
+  // Combos
+  if (d.combos) {
+    const cx = porNombre(d.combos.axum && d.combos.axum.rows), cm = porNombre(d.combos.mn && d.combos.mn.rows);
+    let c = '';
+    if (cx) c += fichaLinea('Combos Axum', `${fmt(cx.combos)} · $ ${fmt(cx.reconocer)}`);
+    if (cm) c += fichaLinea('Combos Mi Negocio', `${fmt(cm.combos)} · $ ${fmt(cm.reconocer)}`);
+    if (c) cards.push(fichaCard('Combos (a reconocer)', c));
+  }
+
+  // Invendible y rechazos
+  const inv = d.inv && d.inv[v];
+  if (inv && inv.length) {
+    const tot = inv.reduce((s, x) => s + (x.importe || 0), 0);
+    cards.push(fichaCard('Invendible (canjes)', fichaLinea('Total', '$ ' + fmt(-tot)) +
+      inv.slice(0, 3).map(x => fichaLinea(escHtml(x.articulo), fmt(x.cant) + ' u')).join('')));
+  }
+  const rech = d.rech && d.rech[v];
+  if (rech && rech.length) {
+    const tot = rech.reduce((s, x) => s + (x.importe || 0), 0);
+    cards.push(fichaCard('Rechazos', fichaLinea('Total', '$ ' + fmt(-tot)) +
+      rech.slice(0, 4).map(x => fichaLinea(escHtml(x.motivo), fmt(x.cant) + ' u')).join('')));
+  }
+
+  cont.innerHTML = `<h2 class="section-title">Todos los indicadores de ${escHtml(v)}</h2>
+    <p class="section-note">Las proyecciones que cargó hoy están en la tabla de abajo.</p><div class="ficha-grid">${cards.join('')}</div>`;
+}
+
 function initSelectorVendedor(){
   const vs = document.getElementById('vendedor-selector');
   if (!vs || vs.dataset.listo) return;
@@ -1556,6 +1683,7 @@ function initSelectorVendedor(){
     vendedorSel = vs.value;
     repintarKpis();
     aplicarFiltroVendedor();
+    renderFichaVendedor();
     if (typeof window.refrescarCompromisosDia === 'function') window.refrescarCompromisosDia();   // recalcula el compromiso total
   });
 }
