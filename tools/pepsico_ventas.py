@@ -321,18 +321,19 @@ def lineas_pepsico(desde, hasta, por):
     return filas
 
 
-def filas_desde_base(api, desde, hasta):
+def filas_desde_base(api, desde, hasta, por="pedido"):
     """Reemplaza al CSV "Detallado de ventas extendido": mismas claves que usaba el
     loop (Proveedor, TipoDeVenta, Cliente, Articulo, CantBase, CodVendedor, Vendedor,
     Marca, ImporteNetoItem, MotivoDevolucion, FechaComprobante). Las devoluciones
-    van en negativo, como venian en el reporte."""
+    van en negativo, como venian en el reporte. `por` = "pedido" (fecha de carga) o
+    "entrega" (fecha de entrega, la que usa Pepsico para la cobertura)."""
     tipos = {"VEN": TIPO_VENTA, "DEV-RE": TIPO_RECHAZO, "DEV-CA": TIPO_CANJE}
     marcas = {cod(m.get("codigo")): (m.get("descripcion") or "").strip()
               for m in api.get("/data/cmd/inventario/api/v1/get-marcas")}
     vend = {cod(v.get("codigo")): (v.get("nombre") or "").strip() for v in base_get("/api/catalogo/vendedores")}
     prov = nombre_proveedor_pepsico()
     filas, sin_articulo = [], 0
-    for l in lineas_pepsico(desde, hasta, "pedido"):
+    for l in lineas_pepsico(desde, hasta, por):
         tipo = tipos.get(l.get("tipo"))
         if not tipo:
             continue
@@ -381,6 +382,29 @@ def aplicar_override_filas(filas, hoy):
         f.get("TipoDeVenta") == TIPO_VENTA and f.get("FechaComprobante") == hoy.isoformat() for f in nuevas)
     print("AVISO: la base trae %d filas y el detalle de Gescom %d (extraido %s); se usa el de Gescom" %
           (len(filas), len(nuevas), ov.get("extraido", "")))
+    return nuevas
+
+
+OVERRIDE_FILAS_ENTREGA = DIR / "override_filas_entrega_gescom.json"
+
+
+def aplicar_override_filas_entrega(filas_e, hoy):
+    """Igual que aplicar_override_filas pero para el detalle por FECHA DE ENTREGA (mes completo), que usa la
+    cobertura. Se usa solo si es de hoy y el parche de ventas por pedido tambien se esta usando (es decir, la
+    base esta atrasada respecto de Gescom)."""
+    if not _ESTADO_OVERRIDE.get("usado"):
+        return filas_e
+    try:
+        ov = json.loads(OVERRIDE_FILAS_ENTREGA.read_text(encoding="utf-8"))
+    except Exception:
+        return filas_e
+    if ov.get("fecha") != hoy.isoformat():
+        return filas_e
+    nuevas = ov.get("filas") or []
+    if len(nuevas) <= len(filas_e):
+        return filas_e
+    print("AVISO: cobertura por entrega: la base trae %d filas y el detalle de Gescom %d (extraido %s); se usa el de Gescom" %
+          (len(filas_e), len(nuevas), ov.get("extraido", "")))
     return nuevas
 
 
@@ -899,6 +923,14 @@ def main():
     print("Filas del detalle de ventas (mes en curso, todos los proveedores):", len(filas))
     filas = aplicar_override_filas(filas, hoy)
 
+    # Cobertura (marca, subproductos, Pehuamar): igual que el cuadro de Pepsico, por FECHA DE ENTREGA del mes
+    # completo y con las cantidades con signo (los rechazos y canjes restan). La venta real, los no compradores
+    # y el resto siguen por fecha de pedido.
+    fin_mes_cob = (inicio_mes.replace(day=28) + dt.timedelta(days=4)).replace(day=1) - dt.timedelta(days=1)
+    filas_entrega = filas_desde_base(api, inicio_mes, fin_mes_cob, "entrega")
+    filas_entrega = aplicar_override_filas_entrega(filas_entrega, hoy)
+    print("Filas por fecha de entrega (cobertura):", len(filas_entrega))
+
     compra_cliente = {}
     compra_cliente_marca = {}
     compra_cliente_subgrupo = {}
@@ -951,6 +983,29 @@ def main():
                     })
             acc[0] += abs(q)
             acc[1] += importe
+
+    # Cobertura por fecha de entrega y neta de devoluciones (ver arriba): reemplaza lo acumulado por pedido.
+    compra_cliente_marca = {}
+    compra_cliente_subgrupo = {}
+    pehuamar_compra = {}
+    for fila in filas_entrega:
+        if "PEPSICO" not in (fila.get("Proveedor") or "").upper():
+            continue
+        if (fila.get("TipoDeVenta") or "") not in (TIPO_VENTA, TIPO_CANJE, TIPO_RECHAZO):
+            continue
+        cli = cod(fila.get("Cliente"))
+        articulo = (fila.get("Articulo") or "").strip()
+        q = num_ar(fila.get("CantBase"))     # las devoluciones ya vienen negativas
+        marca = MARCA_LABEL.get((fila.get("Marca") or "").strip().upper())
+        if marca:
+            porcli = compra_cliente_marca.setdefault(cli, {})
+            porcli[marca] = porcli.get(marca, 0) + q
+        if articulo.upper() in PEHUAMAR_SKUS:
+            pehuamar_compra[cli] = pehuamar_compra.get(cli, 0) + q
+        sub = subgrupo_por_desc.get(articulo.upper())
+        if sub:
+            porcli_sub = compra_cliente_subgrupo.setdefault(cli, {})
+            porcli_sub[sub] = porcli_sub.get(sub, 0) + q
 
     print("DIAG items de venta Pepsico contados:", items_pepsico_vistos,
           "| clientes con al menos 1 unidad:", len(compra_cliente))
