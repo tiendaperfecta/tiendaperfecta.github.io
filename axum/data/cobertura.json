@@ -21,12 +21,21 @@
    "pct": 93.2
   },
   {
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "ruta": 38,
+   "visitadosDeRuta": 34,
+   "pendientes": 4,
+   "fueraDeRuta": 11,
+   "pct": 89.5
+  },
+  {
    "sellerId": "1",
    "vendedor": "Maria Noelia Madia",
    "ruta": 28,
    "visitadosDeRuta": 25,
    "pendientes": 3,
-   "fueraDeRuta": 24,
+   "fueraDeRuta": 25,
    "pct": 89.3
   },
   {
@@ -39,21 +48,12 @@
    "pct": 87.5
   },
   {
-   "sellerId": "4",
-   "vendedor": "Lucas Giayetto",
-   "ruta": 38,
-   "visitadosDeRuta": 31,
-   "pendientes": 7,
-   "fueraDeRuta": 4,
-   "pct": 81.6
-  },
-  {
    "sellerId": "10",
    "vendedor": "Matias Parada",
    "ruta": 42,
    "visitadosDeRuta": 31,
    "pendientes": 11,
-   "fueraDeRuta": 26,
+   "fueraDeRuta": 30,
    "pct": 73.8
   },
   {
@@ -78,10 +78,10 @@
    "sellerId": "7",
    "vendedor": "Ramiro Rando",
    "ruta": 52,
-   "visitadosDeRuta": 29,
-   "pendientes": 23,
-   "fueraDeRuta": 23,
-   "pct": 55.8
+   "visitadosDeRuta": 30,
+   "pendientes": 22,
+   "fueraDeRuta": 24,
+   "pct": 57.7
   },
   {
    "sellerId": "3",
@@ -89,7 +89,7 @@
    "ruta": 41,
    "visitadosDeRuta": 21,
    "pendientes": 20,
-   "fueraDeRuta": 14,
+   "fueraDeRuta": 16,
    "pct": 51.2
   },
   {
@@ -751,18 +751,6 @@
   ],
   "4": [
    {
-    "clientId": "114",
-    "nombre": "LI LIN",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_B"
-   },
-   {
-    "clientId": "1766",
-    "nombre": "LODEPEDRITO",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Fiambreria_C"
-   },
-   {
     "clientId": "2053",
     "nombre": "ILBERA SEBASTIANA GALLARDO",
     "localidad": "Mar del Plata",
@@ -785,12 +773,6 @@
     "nombre": "LAUTARO PACHECO",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Almacen/Despensa_C"
-   },
-   {
-    "clientId": "793",
-    "nombre": "LUIS ALBERTO RUGNA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_A"
    }
   ],
   "5": [
@@ -923,12 +905,6 @@
     "nombre": "WEI SUPERMARKET SA",
     "localidad": "Mar del Plata",
     "taxonomia": "Autoservicio Tradicional_A"
-   },
-   {
-    "clientId": "1989",
-    "nombre": "CANO SOFIA ELIZABETH",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Vinoteca_B"
    },
    {
     "clientId": "2036",
