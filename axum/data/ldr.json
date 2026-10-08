@@ -1,75 +1,82 @@
 {
- "date": "2026-10-07",
+ "date": "2026-10-08",
  "camiones": [
   {
-   "id": "3",
-   "lat": -37.9975886,
-   "lng": -57.5431627,
-   "hora": "4:58 PM",
-   "etiqueta": "nnn"
-  },
-  {
-   "id": "10",
-   "lat": -37.9714108,
-   "lng": -57.542934,
-   "hora": "4:59 PM",
-   "etiqueta": "nnn"
-  },
-  {
-   "id": "1",
-   "lat": -37.9739123,
-   "lng": -57.5613405,
-   "hora": "4:59 PM",
-   "etiqueta": "nnn"
-  },
-  {
-   "id": "12",
-   "lat": -38.018088,
-   "lng": -57.5693936,
-   "hora": "4:59 PM",
-   "etiqueta": "nnn"
+   "id": "11",
+   "lat": -37.9949547,
+   "lng": -57.5558019,
+   "hora": "11:24 AM",
+   "etiqueta": "48"
   },
   {
    "id": "4",
-   "lat": -37.9997744,
-   "lng": -57.5468479,
-   "hora": "4:59 PM",
-   "etiqueta": "nnn"
+   "lat": -37.9754211,
+   "lng": -57.5986613,
+   "hora": "11:24 AM",
+   "etiqueta": "45"
+  },
+  {
+   "id": "1",
+   "lat": -38.0025898,
+   "lng": -57.5496703,
+   "hora": "11:24 AM",
+   "etiqueta": "47"
+  },
+  {
+   "id": "3",
+   "lat": -38.0623785,
+   "lng": -57.5516037,
+   "hora": "11:23 AM",
+   "etiqueta": "52"
   },
   {
    "id": "5",
-   "lat": -38.0346486,
-   "lng": -57.5882161,
-   "hora": "4:59 PM",
-   "etiqueta": "nnn"
+   "lat": -37.9710694,
+   "lng": -57.5698327,
+   "hora": "11:23 AM",
+   "etiqueta": "50"
   },
   {
-   "id": "6",
-   "lat": -38.0074575,
-   "lng": -57.5381605,
-   "hora": "4:24 PM",
-   "etiqueta": "nnn"
+   "id": "10",
+   "lat": -37.8337821,
+   "lng": -57.4993283,
+   "hora": "11:24 AM",
+   "etiqueta": "47"
   },
   {
-   "id": "11",
-   "lat": -38.092335,
-   "lng": -57.5640633,
-   "hora": "4:59 PM",
-   "etiqueta": "nnn"
+   "id": "2",
+   "lat": -38.0113345,
+   "lng": -57.5412648,
+   "hora": "11:24 AM",
+   "etiqueta": "43"
   },
   {
    "id": "7",
-   "lat": -38.0077887,
-   "lng": -57.5479382,
-   "hora": "4:59 PM",
-   "etiqueta": "nnn"
+   "lat": -38.0191006,
+   "lng": -57.562666,
+   "hora": "11:23 AM",
+   "etiqueta": "49"
+  },
+  {
+   "id": "12",
+   "lat": -37.9838558,
+   "lng": -57.5688123,
+   "hora": "11:24 AM",
+   "etiqueta": "48"
+  },
+  {
+   "id": "6",
+   "lat": -38.0063117,
+   "lng": -57.5678265,
+   "hora": "11:24 AM",
+   "etiqueta": "48"
   }
  ],
  "fuente": "Panel de Fleteros (API GesCom) + posiciones de Axum GPS",
  "nota": "Axum solo expone la posición de los camiones: sus reportes de reparto, km y eventos por camión responden vacío o error. Las estadísticas de choferes salen del Panel de Fleteros.",
  "fleteros": {
   "fecha": "2026-10-07",
-  "esDeHoy": true,
+  "esDeHoy": false,
   "cartonesCargados": false,
   "rows": [
    {
