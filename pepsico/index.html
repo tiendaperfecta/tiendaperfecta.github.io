@@ -160,14 +160,13 @@ h1{
 .lays-side .lays-main{ flex:1 1 auto; min-width:0; overflow-x:auto }
 .lays-side .lays-main table{ min-width:0; width:100% }
 .lays-side .lays-img{
-  flex:0 0 230px; height:380px; align-self:flex-start; border-radius:12px; background-repeat:no-repeat;
-  background-image:url('lays-rusticas.webp');
+  flex:0 0 230px; height:300px; align-self:flex-start; border-radius:12px; background-repeat:no-repeat;
 }
-/* cada tabla muestra el paquete de su sabor: se recorta de la imagen con los tres paquetes */
-.lays-side .lays-img-LimonHierbas{ background-size:704px auto; background-position:0 -103px }
-.lays-side .lays-img-SalMarina{ background-size:607px auto; background-position:-196px -25px }
-.lays-side .lays-img-Tostitos{ background-image:url('tostitos-hierbas-limon.jpg'); background-size:contain; background-position:center top }
-.lays-side .lays-img-Caprese{ background-size:723px auto; background-position:-509px -116px }
+/* cada tabla muestra el paquete de su sabor (foto de producto; se encuadra solo el paquete, sin los carteles de la foto) */
+.lays-side .lays-img-LimonHierbas{ background-image:url('lays-rusticas-limon-hierbas.jpg'); background-size:342px auto; background-position:-21px -21px }
+.lays-side .lays-img-SalMarina{ background-image:url('lays-rusticas-sal-marina.jpg'); background-size:342px auto; background-position:-21px -21px }
+.lays-side .lays-img-Caprese{ background-image:url('lays-rusticas-caprese.jpg'); background-size:342px auto; background-position:-21px -21px }
+.lays-side .lays-img-Tostitos{ background-image:url('tostitos-hierbas-limon.jpg'); background-size:contain; background-position:center top; height:240px }
 /* si la pantalla es angosta la imagen no entra al costado: se oculta para no pisar la tabla */
 @media (max-width: 1280px){ .lays-side .lays-img{ display:none } }
 .subsection-title{
