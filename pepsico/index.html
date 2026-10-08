@@ -160,9 +160,13 @@ h1{
 .lays-side .lays-main{ flex:1 1 auto; min-width:0; overflow-x:auto }
 .lays-side .lays-main table{ min-width:0; width:100% }
 .lays-side .lays-img{
-  flex:0 0 250px; background:url('lays-rusticas.webp') no-repeat center 40px; background-size:contain;
-  min-height:260px; border-radius:12px;
+  flex:0 0 230px; height:380px; align-self:flex-start; border-radius:12px; background-repeat:no-repeat;
+  background-image:url('lays-rusticas.webp');
 }
+/* cada tabla muestra el paquete de su sabor: se recorta de la imagen con los tres paquetes */
+.lays-side .lays-img-LimonHierbas{ background-size:704px auto; background-position:0 -103px }
+.lays-side .lays-img-SalMarina{ background-size:607px auto; background-position:-196px -25px }
+.lays-side .lays-img-Caprese{ background-size:723px auto; background-position:-509px -116px }
 /* si la pantalla es angosta la imagen no entra al costado: se oculta para no pisar la tabla */
 @media (max-width: 1280px){ .lays-side .lays-img{ display:none } }
 .subsection-title{
@@ -1927,7 +1931,7 @@ function drillSubproductoHoy(vendedor, grupoClave, label) {
 }
 
 function renderInnovaciones(){
-  const laysHtml = Object.keys(LAYS_SUB_LABELS).map(k => `<div class="lays-side"><div class="lays-main">${productSubTable(laysSubRows, 'lays', k, LAYS_SUB_LABELS[k], LAYS_SUB_OBJ)}</div><div class="lays-img" role="img" aria-label="Lays Rústicas"></div></div>`).join('');
+  const laysHtml = Object.keys(LAYS_SUB_LABELS).map(k => `<div class="lays-side"><div class="lays-main">${productSubTable(laysSubRows, 'lays', k, LAYS_SUB_LABELS[k], LAYS_SUB_OBJ)}</div><div class="lays-img lays-img-${k}" role="img" aria-label="${LAYS_SUB_LABELS[k]}"></div></div>`).join('');
   const tostitosHtml = Object.keys(TOSTITOS_SUB_LABELS).map(k => productSubTable(tostitosSubRows, 'tostitos', k, TOSTITOS_SUB_LABELS[k], TOSTITOS_SUB_OBJ)).join('');
   const pehuamarHtml = Object.keys(PEHUAMAR_SUB_LABELS).map(k => productSubTable(pehuamarSubRows, 'pehuamar', k, PEHUAMAR_SUB_LABELS[k], PEHUAMAR_SUB_OBJ)).join('');
   const innovEl = document.getElementById('innovaciones-content');
