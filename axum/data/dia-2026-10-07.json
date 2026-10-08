@@ -7271,11 +7271,11 @@
    "minutos": 2.2,
    "visito": true,
    "hora": "14:27",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 42500.09,
+   "fechaVenta": "2026-10-07",
+   "horaVenta": "21:13",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-10-07",
@@ -12181,8 +12181,8 @@
   }
  ],
  "resumen": {
-  "vendio": 233,
-  "paso_sin_vender": 242,
+  "vendio": 234,
+  "paso_sin_vender": 241,
   "sin_visita": 26,
   "vendio_sin_pasar": 112
  },
@@ -12340,9 +12340,9 @@
    "visitas": 37,
    "minutosTotal": 295.9,
    "minutosPromedio": 8.0,
-   "pedidos": 47,
-   "monto": 7341033.18,
-   "pasoSinVender": 15,
+   "pedidos": 48,
+   "monto": 7383533.27,
+   "pasoSinVender": 14,
    "km": 25.0,
    "llegoTarde": false,
    "salioTemprano": false
@@ -16688,7 +16688,7 @@
  "totales": {
   "visitas": 475,
   "minutos": 2421.8,
-  "pedidos": 643,
-  "monto": 56512914.97
+  "pedidos": 644,
+  "monto": 56555415.06
  }
 }

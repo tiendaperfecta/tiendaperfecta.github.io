@@ -6740,11 +6740,11 @@
    "minutos": 2.2,
    "visito": true,
    "hora": "14:27",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 42500.09,
+   "fechaVenta": "2026-10-07",
+   "horaVenta": "21:13",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-10-07",
@@ -11650,8 +11650,8 @@
   }
  ],
  "resumen": {
-  "vendio": 233,
-  "paso_sin_vender": 242,
+  "vendio": 234,
+  "paso_sin_vender": 241,
   "sin_visita": 26,
   "vendio_sin_pasar": 112
  }
