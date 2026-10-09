@@ -69,7 +69,7 @@ MARCA_LABEL = {
     "PEHUAMAR": "Pehuamar", "PEP": "Pep", "QUAKER": "Quaker", "TOSTITOS": "Tostitos", "TWISTOS": "Twistos",
 }
 SEGMENTOS = ["A", "B", "C", "D"]
-CCC_OBJETIVO_SEG = {"A": 387, "B": 339, "C": 674, "D": 910}
+CCC_OBJETIVO_SEG = {"A": 371, "B": 318, "C": 675, "D": 913}     # octubre 2026: 2.277 clientes
 
 # Avance de Ventas Pepsico (kg): reporte generico de Gescom, mismo motor que
 # usa la UI (Reportes > Objetivos > Avance de Ventas Pepsico). Da Objetivo,
@@ -828,7 +828,7 @@ GUID_TIENDA_PERFECTA = "81221fe2-5545-47ec-a149-6c95d47afb44"
 # Hotel, etc.) que no son parte de este universo.
 SUBCANALES_TP = {"Kiosco/Maxikiosco", "Almacen/Despensa", "Autoservicio Tradicional",
                   "Estacion de Servicio - NO OFICIALES", "Fiambreria"}
-TP_OBJETIVO_SEG = {"A": 251, "B": 188, "C": 328, "D": 441}
+TP_OBJETIVO_SEG = {"A": 246, "B": 184, "C": 328, "D": 442}      # octubre 2026: 1.200 tiendas perfectas
 
 
 def es_si(v):
