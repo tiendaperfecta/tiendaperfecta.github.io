@@ -8,7 +8,7 @@
    "ruta": 37,
    "visitadosDeRuta": 36,
    "pendientes": 1,
-   "fueraDeRuta": 8,
+   "fueraDeRuta": 9,
    "pct": 97.3
   },
   {
@@ -26,7 +26,7 @@
    "ruta": 31,
    "visitadosDeRuta": 29,
    "pendientes": 2,
-   "fueraDeRuta": 25,
+   "fueraDeRuta": 39,
    "pct": 93.5
   },
   {
@@ -35,7 +35,7 @@
    "ruta": 37,
    "visitadosDeRuta": 33,
    "pendientes": 4,
-   "fueraDeRuta": 9,
+   "fueraDeRuta": 10,
    "pct": 89.2
   },
   {
@@ -44,8 +44,17 @@
    "ruta": 22,
    "visitadosDeRuta": 19,
    "pendientes": 3,
-   "fueraDeRuta": 11,
+   "fueraDeRuta": 20,
    "pct": 86.4
+  },
+  {
+   "sellerId": "5",
+   "vendedor": "Nicolas Martinez",
+   "ruta": 37,
+   "visitadosDeRuta": 29,
+   "pendientes": 8,
+   "fueraDeRuta": 0,
+   "pct": 78.4
   },
   {
    "sellerId": "3",
@@ -53,17 +62,8 @@
    "ruta": 34,
    "visitadosDeRuta": 24,
    "pendientes": 10,
-   "fueraDeRuta": 11,
+   "fueraDeRuta": 16,
    "pct": 70.6
-  },
-  {
-   "sellerId": "5",
-   "vendedor": "Nicolas Martinez",
-   "ruta": 37,
-   "visitadosDeRuta": 26,
-   "pendientes": 11,
-   "fueraDeRuta": 0,
-   "pct": 70.3
   },
   {
    "sellerId": "12",
@@ -78,10 +78,10 @@
    "sellerId": "4",
    "vendedor": "Lucas Giayetto",
    "ruta": 56,
-   "visitadosDeRuta": 34,
-   "pendientes": 22,
-   "fueraDeRuta": 0,
-   "pct": 60.7
+   "visitadosDeRuta": 35,
+   "pendientes": 21,
+   "fueraDeRuta": 1,
+   "pct": 62.5
   },
   {
    "sellerId": "9",
@@ -817,12 +817,6 @@
     "taxonomia": "Almacen/Despensa_C"
    },
    {
-    "clientId": "1230",
-    "nombre": "ROSA NATALIA CURILEF JARAMILLO",
-    "localidad": "BARRIO BATAN",
-    "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
     "clientId": "1288",
     "nombre": "LILIANA DEL CARMEN VAZQUEZ",
     "localidad": "BARRIO CHAPADMALAL",
@@ -951,12 +945,6 @@
     "taxonomia": "Almacen/Despensa_D"
    },
    {
-    "clientId": "2848",
-    "nombre": "LA CURVA DE OTAMENDI S.R.L",
-    "localidad": "COMANDANTE NICANOR OTAMENDI",
-    "taxonomia": "Estacion de Servicio - NO OFICIALES_B"
-   },
-   {
     "clientId": "433",
     "nombre": "ROMINA MICAELA BRAVO",
     "localidad": "COMANDANTE NICANOR OTAMENDI",
@@ -965,12 +953,6 @@
    {
     "clientId": "436",
     "nombre": "JUAN JOSE MARRERO",
-    "localidad": "COMANDANTE NICANOR OTAMENDI",
-    "taxonomia": "Almacen/Despensa_D"
-   },
-   {
-    "clientId": "437",
-    "nombre": "MABEL BEATRIZ CRESPO",
     "localidad": "COMANDANTE NICANOR OTAMENDI",
     "taxonomia": "Almacen/Despensa_D"
    },
@@ -997,12 +979,6 @@
     "nombre": "ARIEL SEBASTIAN FRANCUCCI",
     "localidad": "BARRIO BATAN",
     "taxonomia": "Almacen/Despensa_C"
-   },
-   {
-    "clientId": "653",
-    "nombre": "JAVIER DAMIAN RODRIGUEZ",
-    "localidad": "COMANDANTE NICANOR OTAMENDI",
-    "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
     "clientId": "654",
