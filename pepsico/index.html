@@ -45,6 +45,9 @@ h1{
   border:1px solid var(--border); border-radius:8px; padding:7px 12px; cursor:pointer; min-width:210px;
 }
 .vend-filter-nota{font-weight:500; font-size:12.5px}
+.mn-obj{color:var(--muted); font-weight:500}
+.mn-obj-valor{font:600 22px "Fraunces",serif}
+.mn-obj-valor small{font:500 12px "IBM Plex Sans"; color:var(--muted)}
 #ficha-vendedor{margin:6px 0 20px}
 .ficha-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(250px, 1fr)); gap:12px}
 .ficha-card{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:14px 16px; box-shadow:var(--shadow)}
@@ -586,6 +589,8 @@ td.ip-base.clickable{cursor:pointer}
     </p>
   </div>
 
+  <div id="mn-objetivos" style="display:none; margin:6px 0 22px"></div>
+
   <h2 class="section-title">Mi Negocio+ por vendedor</h2>
   <p class="section-note">
     Ordenado de menor a mayor % de venta por el canal digital. <b>Universo/Registrado/Activos/Fully Digital</b>
@@ -599,7 +604,7 @@ td.ip-base.clickable{cursor:pointer}
         <tr class="cols">
           <th class="name-col">Vendedor</th>
           <th>Universo</th><th>Registrados</th><th>Activos</th>
-          <th>Acum. MN</th><th>Acumulado</th><th>% Mi Negocio</th><th>Fully Digital</th>
+          <th>Acum. MN</th><th>Acumulado</th><th>% Mi Negocio</th><th>Fully Digital</th><th>Autónomos</th>
         </tr>
       </thead>
       <tbody id="tbody-mn"></tbody>
@@ -761,8 +766,8 @@ td.ip-base.clickable{cursor:pointer}
 
   <h2 class="section-title">CCC por segmento</h2>
   <p class="section-note">
-    CCC = clientes con compra sobre el universo asignado, por segmento de cliente (A/B/C/D). Objetivo total
-    Tienda Perfecta: A 387 · B 339 · C 674 · D 910 (2.310 clientes) — prorrateado por vendedor según su
+    CCC = clientes con compra sobre el universo asignado, por segmento de cliente (A/B/C/D). El objetivo total
+    del mes (fila Total de la tabla) se prorratea por vendedor según su
     participación de clientes en cada segmento y redondeado a números enteros (el redondeo por vendedor puede
     no cerrar exacto contra el objetivo oficial; el total de la tabla usa siempre el oficial). Cumple = cliente
     con compra de Pepsico y más de 3 unidades entre el <b id="ccc-periodo">01/09 y hoy</b>, actualizado automáticamente por API dos
@@ -822,7 +827,7 @@ td.ip-base.clickable{cursor:pointer}
 
   <p class="foot-note">
     Fuente: GesCom API (segmento y vendedor del cliente, unidades vendidas del mes en curso). El objetivo
-    global (387/339/674/910) es el que confirmaste; el reparto por vendedor es una estimación proporcional según
+    global del mes (el de la fila Total) es el que confirmaste; el reparto por vendedor es una estimación proporcional según
     la composición real de clientes por segmento, no un objetivo oficial cargado en Gescom. Actualizado
     automáticamente dos veces por día.
   </p>
@@ -976,7 +981,7 @@ td.ip-base.clickable{cursor:pointer}
 
   <p class="foot-note">
     Fuente: <code>Ventas / Reportes / Rumbo Pepsico / LATAM (Desde 04-2024) 6.1 Censo Tienda perfecta</code> (2.260
-    clientes de subcanal TP con segmento asignado). El objetivo global (251/188/328/441) es el que confirmaste; el
+    clientes de subcanal TP con segmento asignado). El objetivo global del mes (el de la fila Total) es el que confirmaste; el
     reparto por vendedor es una estimación proporcional según la composición de clientes de cada segmento, no un
     objetivo oficial cargado en Gescom.
   </p>
@@ -1634,9 +1639,12 @@ async function renderFichaVendedor(){
   if (mn) {
     const share = r.ta && typeof r.acumuladoMN === 'number' ? r.acumuladoMN / r.ta * 100 : mn.share;
     cards.push(fichaCard('Mi Negocio+',
-      fichaLinea('Share de venta por la app', fichaPill(share, 85) + ' <small>obj. 85%</small>') +
-      fichaLinea('Universo', fmt(mn.universo)) + fichaLinea('Registrados', fmt(mn.registrado)) +
-      fichaLinea('Activos', fmt(mn.activos)) + fichaLinea('Fully Digital', fmt(mn.fullyDigital)) +
+      fichaLinea('Sell out digital', fichaPill(share, MN_SELLOUT_OBJ) + ` <small>obj. ${MN_SELLOUT_OBJ}%</small>`) +
+      fichaLinea('Universo', fmt(mn.universo)) +
+      fichaLinea('Registrados', fmt(mn.registrado) + (objMnProrr ? ` <small>/ obj. ${fmt(objMnProrr.registrados[v])}</small>` : '')) +
+      fichaLinea('Activos', fmt(mn.activos) + (objMnProrr ? ` <small>/ obj. ${fmt(objMnProrr.activos[v])}</small>` : '')) +
+      fichaLinea('Fully Digital', fmt(mn.fullyDigital) + (objMnProrr ? ` <small>/ obj. ${fmt(objMnProrr.fullyDigital[v])}</small>` : '')) +
+      (objMnProrr ? fichaLinea('Clientes autónomos', `<small>obj. ${fmt(objMnProrr.autonomos[v])} · sin dato</small>`) : '') +
       '<small>Registrados, activos y Fully Digital: cierre de septiembre.</small>'));
   }
 
@@ -2063,17 +2071,38 @@ const mnRows = [
 
 let marcaVendRows = [];
 const MARCA_COLS = ["3Ds","Cheetos","Doritos","Lays","Pehuamar","Pep","Quaker","Tostitos","Twistos"];
-const marcaObjRows = [
-  {marca:"3Ds",      obj:72.98},
-  {marca:"Cheetos",  obj:70.79},
-  {marca:"Doritos",  obj:87.31},
-  {marca:"Lays",     obj:81.46},
-  {marca:"Pehuamar", obj:53.51},
-  {marca:"Pep",      obj:58.57},
-  {marca:"Quaker",   obj:6.23},
-  {marca:"Tostitos", obj:14.02},
-  {marca:"Twistos",  obj:54.71},
-];
+// Objetivos de cobertura por marca (% del universo). Los meses que no tienen su propia carga usan los de septiembre.
+const OBJ_COBERTURA = {
+  '2026-09': {"3Ds":72.98, "Cheetos":70.79, "Doritos":87.31, "Lays":81.46, "Pehuamar":53.51, "Pep":58.57, "Quaker":6.23, "Tostitos":14.02, "Twistos":54.71},
+  '2026-10': {"3Ds":72, "Cheetos":70, "Doritos":84, "Lays":80, "Pehuamar":62, "Pep":62, "Quaker":6, "Tostitos":19, "Twistos":56},
+};
+// Objetivos de Mi Negocio del mes (clientes y % de venta por la app). Se prorratean por vendedor segun su universo.
+const OBJ_MN = {
+  '2026-10': {registrados:2191, activos:1740, fullyDigital:1496, sellout:81, autonomos:288},
+};
+const MES_OBJ = MES_SEL || hoyISO().slice(0, 7);
+function objDelMes(tabla){
+  const claves = Object.keys(tabla).sort();
+  const k = claves.filter(c => c <= MES_OBJ).pop();
+  return k ? tabla[k] : null;
+}
+const objCoberturaMes = objDelMes(OBJ_COBERTURA) || OBJ_COBERTURA['2026-09'];
+const objMnMes = OBJ_MN[MES_OBJ] || null;                    // solo el mes que tiene carga propia
+const MN_SELLOUT_OBJ = objMnMes ? objMnMes.sellout : 85;
+const marcaObjRows = MARCA_COLS.map(m => ({marca: m, obj: objCoberturaMes[m]}));
+// reparte un total entero entre los vendedores en proporcion a su universo (la suma da exacto)
+function prorratear(total, filas){
+  const suma = filas.reduce((s, r) => s + (r.universo || 0), 0);
+  const e = filas.map(r => { const x = suma ? total * (r.universo || 0) / suma : 0; return {n: r.n, v: Math.floor(x), rem: x - Math.floor(x)}; });
+  let falta = total - e.reduce((s, x) => s + x.v, 0);
+  e.slice().sort((a, b) => b.rem - a.rem).slice(0, Math.max(falta, 0)).forEach(x => { x.v++; });
+  const out = {}; e.forEach(x => { out[x.n] = x.v; });
+  return out;
+}
+const objMnProrr = objMnMes ? {
+  registrados: prorratear(objMnMes.registrados, mnRows), activos: prorratear(objMnMes.activos, mnRows),
+  fullyDigital: prorratear(objMnMes.fullyDigital, mnRows), autonomos: prorratear(objMnMes.autonomos, mnRows),
+} : null;
 fetch(BASE + 'cobertura_marca_vendedor.json' + CACHE_BUST).then(r => r.json()).then(data => {
   marcaVendRows = data.vendedores;
   renderMarcaSection();
@@ -2224,7 +2253,7 @@ document.getElementById('tfoot-portseg').innerHTML = `
 
 function fmt(n, d=0){ return n.toLocaleString('es-AR', {minimumFractionDigits:d, maximumFractionDigits:d}); }
 function tier(p){ return p>=100 ? 'good' : p>=90 ? 'warn' : 'bad'; }
-function tierShare(p){ return p>=85 ? 'good' : p>=75 ? 'warn' : 'bad'; }
+function tierShare(p){ return p>=MN_SELLOUT_OBJ ? 'good' : p>=MN_SELLOUT_OBJ-10 ? 'warn' : 'bad'; }
 
 let historialDiarioData = [];
 fetch(BASE + 'historial_diario.json' + CACHE_BUST).then(r => r.json()).then(data => {
@@ -2650,10 +2679,14 @@ tbodyMn.innerHTML = mnRows.map(r => `
 // % de arriba; universo/registrado/activos/fully digital son del Power BI y se pasan en tot.
 function pintarTablaMn(filas, tot) {
   const ord = filas.slice().sort((a,b) => a.share - b.share);
+  const op = objMnProrr;     // objetivos del mes prorrateados por vendedor (null si el mes no tiene carga)
+  const conObj = (valor, objVend) => valor + (op ? ` <small class="mn-obj">/ ${fmt(objVend)}</small>` : '');
   document.getElementById('tbody-mn').innerHTML = ord.map(r => `
     <tr>
       <td class="name">${r.n}</td>
-      <td>${fmt(r.universo)}</td><td>${r.registrado == null ? '—' : fmt(r.registrado)}</td><td>${fmt(r.activos)}</td>
+      <td>${fmt(r.universo)}</td>
+      <td>${conObj(r.registrado == null ? '—' : fmt(r.registrado), op && op.registrados[r.n])}</td>
+      <td>${conObj(fmt(r.activos), op && op.activos[r.n])}</td>
       <td>${fmt(r.mn)}</td><td>${fmt(r.acum)}</td>
       <td>
         <div class="cell-avance">
@@ -2661,16 +2694,52 @@ function pintarTablaMn(filas, tot) {
           ${fmt(r.share,1)}%
         </div>
       </td>
-      <td>${fmt(r.fullyDigital)}</td>
+      <td>${conObj(fmt(r.fullyDigital), op && op.fullyDigital[r.n])}</td>
+      <td>${op ? `<small class="mn-obj">obj. ${fmt(op.autonomos[r.n])}</small>` : '—'}</td>
     </tr>
   `).join('');
   const mn = filas.reduce((s,r) => s + r.mn, 0), ac = filas.reduce((s,r) => s + r.acum, 0);
+  const shareTot = ac ? mn / ac * 100 : 0;
+  const to = OBJ_MN[MES_OBJ] || null;
+  const tc = (valor, obj) => valor + (to ? ` <small class="mn-obj">/ ${fmt(obj)}</small>` : '');
   document.getElementById('tfoot-mn').innerHTML = `
     <tr>
       <td class="name">Total PepsiCo</td>
-      <td>${fmt(tot.universo)}</td><td>${tot.registrado == null ? '—' : fmt(tot.registrado)}</td><td>${fmt(tot.activos)}</td>
-      <td>${fmt(mn)}</td><td>${fmt(ac)}</td><td>${fmt(ac ? mn / ac * 100 : 0,1)}%</td><td>${fmt(tot.fullyDigital)}</td>
+      <td>${fmt(tot.universo)}</td><td>${tc(tot.registrado == null ? '—' : fmt(tot.registrado), to && to.registrados)}</td><td>${tc(fmt(tot.activos), to && to.activos)}</td>
+      <td>${fmt(mn)}</td><td>${fmt(ac)}</td><td>${fmt(shareTot,1)}%</td><td>${tc(fmt(tot.fullyDigital), to && to.fullyDigital)}</td>
+      <td>${to ? `<small class="mn-obj">obj. ${fmt(to.autonomos)}</small>` : '—'}</td>
     </tr>`;
+  pintarObjetivosMn(tot, shareTot);
+}
+// Tarjetas con el avance contra los objetivos de Mi Negocio del mes (si el mes tiene carga)
+function pintarObjetivosMn(tot, shareTot) {
+  const el = document.getElementById('mn-objetivos');
+  const to = OBJ_MN[MES_OBJ];
+  if (!el) return;
+  if (!to) { el.style.display = 'none'; return; }
+  const tarjeta = (titulo, actual, obj, extra) => {
+    const pct = actual == null ? null : actual / obj * 100;
+    return `<div class="ficha-card"><h4>${titulo}</h4>
+      <div class="mn-obj-valor">${actual == null ? '—' : fmt(actual)} <small>de ${fmt(obj)}</small></div>
+      ${pct == null ? '' : `<div class="bar-track" style="margin:8px 0 4px"><div class="bar-fill" style="width:${Math.min(pct,100)}%"></div></div><small>${fmt(pct,1)}% del objetivo</small>`}
+      ${extra || ''}</div>`;
+  };
+  el.style.display = 'block';
+  el.innerHTML = `<h3 class="subsection-title">Objetivos de Mi Negocio+ del mes</h3>
+    <p class="section-note">Se prorratean por vendedor según su universo (columna "/ objetivo" de la tabla de abajo).
+    Registrados, activos y Fully Digital son del cierre de septiembre (Power BI); el sell out digital es el de este mes.</p>
+    <div class="ficha-grid">
+      ${tarjeta('Clientes registrados', tot.registrado, to.registrados)}
+      ${tarjeta('Clientes activos', tot.activos, to.activos)}
+      ${tarjeta('Clientes Fully Digital', tot.fullyDigital, to.fullyDigital)}
+      <div class="ficha-card"><h4>Sell out digital</h4>
+        <div class="mn-obj-valor">${fmt(shareTot,1)}% <small>de ${to.sellout}%</small></div>
+        <div class="bar-track" style="margin:8px 0 4px"><div class="bar-fill" style="width:${Math.min(shareTot / to.sellout * 100,100)}%"></div></div>
+        <small>${shareTot >= to.sellout ? 'superado por' : 'faltan'} ${fmt(Math.abs(to.sellout - shareTot),1)} pts</small></div>
+      <div class="ficha-card"><h4>Clientes autónomos</h4>
+        <div class="mn-obj-valor">— <small>de ${fmt(to.autonomos)}</small></div>
+        <small>Todavía no tenemos el dato de autónomos: pasame el reporte y lo cargo.</small></div>
+    </div>`;
 }
 
 if (MES_SEL) {
@@ -2904,10 +2973,13 @@ if (kgAvanceMeta) {
     document.getElementById('mn-pct').innerHTML = fmt(pctMN,1) + '<span class="unit">%</span>';
     document.getElementById('mn-fill').style.width = Math.min(pctMN,100) + '%';
     document.getElementById('mn-acum-txt').textContent = `Acumulado ${fmt(acumMN)} kg de ${fmt(totTa)} kg Pepsico`;
-    const faltan = 85 - pctMN;
+    const faltan = MN_SELLOUT_OBJ - pctMN;
+    const etiquetaObj = objMnMes ? 'Objetivo' : 'Compromiso';
     document.getElementById('mn-goal-txt').textContent = faltan > 0
-      ? `Compromiso 85% · faltan ${fmt(faltan,1)} pts`
-      : `Compromiso 85% · superado por ${fmt(-faltan,1)} pts`;
+      ? `${etiquetaObj} ${MN_SELLOUT_OBJ}% · faltan ${fmt(faltan,1)} pts`
+      : `${etiquetaObj} ${MN_SELLOUT_OBJ}% · superado por ${fmt(-faltan,1)} pts`;
+    const marcador = document.querySelector('.mn-track .goal-marker');
+    if (marcador) { marcador.style.left = MN_SELLOUT_OBJ + '%'; marcador.title = `${etiquetaObj}: ${MN_SELLOUT_OBJ}%`; }
     if (!MES_SEL) {
       const porNombre = {};
       rows.forEach(r => { porNombre[r.n] = r; });
