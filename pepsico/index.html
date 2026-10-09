@@ -151,13 +151,9 @@ h1{
   display:flex; align-items:center; justify-content:space-between; gap:16px; margin:0 0 4px;
 }
 .section-title-row .section-title, .section-title-row .subsection-title{ margin:0 }
-.mn-watermark{ position:relative; isolation:isolate }
-.mn-watermark::before{
-  content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
-  background:url('logo_mi_negocio.png') no-repeat center;
-  background-size:320px auto; opacity:.4; mix-blend-mode:multiply;
-}
-.mn-watermark > *{ position:relative; z-index:1 }
+/* el logo de Mi Negocio+ ya no va de marca de agua detras de las tablas: va chico en el encabezado y al costado de las tablas grandes */
+.mn-logo-mini{ height:40px; width:auto; vertical-align:middle; margin-right:10px }
+.mn-logo-card{ float:right; height:44px; width:auto; margin:-2px 0 0 12px }
 /* tablas de Lays Rusticas: la tabla a la izquierda y la imagen del producto en un costado, sin tapar los numeros */
 .lays-side{ display:flex; align-items:stretch; gap:18px }
 .lays-side .lays-main{ flex:1 1 auto; min-width:0; overflow-x:auto }
@@ -169,6 +165,7 @@ h1{
 .lays-side .lays-img-LimonHierbas{ background-image:url('lays-rusticas-limon-hierbas.jpg'); background-size:342px auto; background-position:-21px -21px }
 .lays-side .lays-img-SalMarina{ background-image:url('lays-rusticas-sal-marina.jpg'); background-size:342px auto; background-position:-21px -21px }
 .lays-side .lays-img-Caprese{ background-image:url('lays-rusticas-caprese.jpg'); background-size:342px auto; background-position:-21px -21px }
+.lays-side .lays-img-MN{ background-image:url('logo_mi_negocio.png'); background-size:contain; background-position:center top; height:150px }
 .lays-side .lays-img-Tostitos{ background-image:url('tostitos-hierbas-limon.jpg'); background-size:contain; background-position:center top; height:240px }
 /* si la pantalla es angosta la imagen no entra al costado: se oculta para no pisar la tabla */
 @media (max-width: 1280px){ .lays-side .lays-img{ display:none } }
@@ -567,10 +564,10 @@ td.ip-base.clickable{cursor:pointer}
 
   <div class="tab-panel" data-tab-panel="mi-negocio">
 
-  <div class="mn-panel mn-watermark">
+  <div class="mn-panel">
     <div class="mn-head">
       <div>
-        <span class="name">Mi Negocio+</span>
+        <img class="mn-logo-mini" src="logo_mi_negocio.png" alt="Mi Negocio+"><span class="name">Mi Negocio+</span>
         <span class="mn-sub">venta Pepsico pedida por el canal digital, sin visita de preventa</span>
       </div>
       <span class="pct" id="mn-pct">—<span class="unit">%</span></span>
@@ -598,7 +595,7 @@ td.ip-base.clickable{cursor:pointer}
     salen de Gescom (igual que el resto del tablero).
   </p>
 
-  <div class="table-scroll mn-watermark">
+  <div class="lays-side"><div class="lays-main table-scroll">
     <table>
       <thead>
         <tr class="cols">
@@ -616,7 +613,7 @@ td.ip-base.clickable{cursor:pointer}
         </tr>
       </tfoot>
     </table>
-  </div>
+  </div><div class="lays-img lays-img-MN" role="img" aria-label="Mi Negocio+"></div></div>
 
 <div id="mn-extra-sep">
   <h3 class="subsection-title">Clientes activos y no Fully Digital por segmento y día (Tienda Perfecta)</h3>
@@ -1258,7 +1255,8 @@ td.ip-base.clickable{cursor:pointer}
   </p>
 
   <div class="tp-summary">
-    <div class="tp-total-card mn-watermark">
+    <div class="tp-total-card">
+      <img class="mn-logo-card" src="logo_mi_negocio.png" alt="Mi Negocio+">
       <div class="tp-total-title">Total Combos Mi Negocio</div>
       <div class="tp-tiles" style="grid-template-columns:1fr 1fr">
         <div class="tp-tile"><div class="v good" id="comboMn-tot-cant">—</div><div class="l">Combos vendidos</div></div>
@@ -1267,7 +1265,7 @@ td.ip-base.clickable{cursor:pointer}
     </div>
   </div>
 
-  <div class="table-scroll mn-watermark">
+  <div class="lays-side"><div class="lays-main table-scroll">
     <table>
       <thead>
         <tr class="cols">
@@ -1278,7 +1276,7 @@ td.ip-base.clickable{cursor:pointer}
       <tbody id="tbody-combosMn"></tbody>
       <tfoot id="tfoot-combosMn"></tfoot>
     </table>
-  </div>
+  </div><div class="lays-img lays-img-MN" role="img" aria-label="Mi Negocio+"></div></div>
 
   <h3 class="subsection-title">Detalle de combos Mi Negocio por vendedor</h3>
   <p class="section-note">
@@ -1286,7 +1284,7 @@ td.ip-base.clickable{cursor:pointer}
     menor total $.
   </p>
 
-  <div class="table-scroll mn-watermark">
+  <div class="table-scroll">
     <table id="tabla-combosMnDetalle">
       <thead>
         <tr class="grp" id="grp-combosMnDetalle"></tr>
