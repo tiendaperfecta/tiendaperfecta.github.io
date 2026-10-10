@@ -1005,6 +1005,7 @@ def main():
     filas = filas_desde_base(api, inicio_mes, hoy)
     print("Filas del detalle de ventas (mes en curso, todos los proveedores):", len(filas))
     filas = aplicar_override_filas(filas, hoy)
+    filas_detalle = filas        # la variable "filas" se reutiliza mas abajo (subproductos): esta copia queda intacta
 
     # Cobertura (marca, subproductos, Pehuamar): igual que el cuadro de Pepsico, por FECHA DE ENTREGA del mes
     # completo y con las cantidades con signo (los rechazos y canjes restan). La venta real, los no compradores
@@ -1229,7 +1230,7 @@ def main():
         if total_gescom:
             print("AVISO: la base trae menos kg que Gescom; se usa el acumulado de Gescom (%.1f kg)" % total_gescom)
         escribir("avance_kg_vendedor.json", avance_kg)
-        corregir_historial_diario(filas, hist_previo, hoy)
+        corregir_historial_diario(filas_detalle, hist_previo, hoy)
         try:
             escribir_productos_segmento(api)
         except Exception as e:
