@@ -1151,6 +1151,32 @@ def main():
 
     escribir("no_compradores_detalle.json", no_compradores)
     escribir("pehuamar90_no_comprado.json", pehuamar_no_comprado)
+
+    # Foto diaria de las "bases" de la tabla de IP (clientes de la ruta del dia y sin Pehuamar 90gr): asi, al mirar un dia
+    # pasado, se ven las bases que tenian los vendedores ese dia y no las de hoy. Se guarda la primera foto de cada dia
+    # (la mas parecida a lo que vio el vendedor al cargar su proyeccion).
+    try:
+        ruta_bases = DIR / "ip_bases_diarias.json"
+        try:
+            bases_prev = json.loads(ruta_bases.read_text(encoding="utf-8"))
+        except Exception:
+            bases_prev = {}
+        clave_hoy = hoy.isoformat()
+        if not bases_prev.get(clave_hoy) and DIA_CLAVE.get(hoy_key):
+            peh_por_vend = {}
+            for c in pehuamar_no_comprado:
+                peh_por_vend[c["vendedor"]] = peh_por_vend.get(c["vendedor"], 0) + 1
+            hoy_bases = {}
+            for codven_b, dias_b in nc_dia_por_vend.items():
+                nombre_b = nombre_por_codven.get(codven_b, codven_b)
+                hoy_bases[nombre_b] = {"freq": dias_b[DIA_CLAVE[hoy_key]][1], "pehuamar": peh_por_vend.get(nombre_b, 0)}
+            bases_prev[clave_hoy] = hoy_bases
+        for k in sorted(bases_prev)[:-60]:
+            bases_prev.pop(k, None)
+        escribir("ip_bases_diarias.json", bases_prev)
+        print("Bases de IP del dia guardadas: %d dias en el historial" % len(bases_prev))
+    except Exception as e:
+        print("No se pudo guardar la foto diaria de las bases de IP:", e)
     escribir("subproductos_no_comprado.json", {f"{g}_{k}": v for (g, k), v in subproducto_no_comprado.items()})
     print("No compradores:", len(no_compradores), "| Sin Pehuamar 90gr hoy:", len(pehuamar_no_comprado))
 
