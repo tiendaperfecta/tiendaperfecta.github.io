@@ -1,20 +1,20 @@
 {
  "date": "2026-10-10",
- "totalNet": 15658091.55,
- "totalGross": 18929279.53,
- "orders": 147,
+ "totalNet": 16250830.93,
+ "totalGross": 19646494.17,
+ "orders": 152,
  "bySeller": [
   {
    "sellerId": "4",
    "name": "Lucas Giayetto",
-   "orders": 19,
-   "total": 5631733.07
+   "orders": 20,
+   "total": 5801161.74
   },
   {
    "sellerId": "11",
    "name": "Melanie Larrama",
-   "orders": 14,
-   "total": 2276360.59
+   "orders": 15,
+   "total": 2430146.47
   },
   {
    "sellerId": "5",
@@ -47,22 +47,22 @@
    "total": 1115958.69
   },
   {
-   "sellerId": "12",
-   "name": "Agustin Pogorzelski",
-   "orders": 8,
-   "total": 967474.88
-  },
-  {
    "sellerId": "10",
    "name": "Matias Parada",
-   "orders": 16,
-   "total": 793837.19
+   "orders": 17,
+   "total": 1054908.64
+  },
+  {
+   "sellerId": "12",
+   "name": "Agustin Pogorzelski",
+   "orders": 9,
+   "total": 1005903.42
   },
   {
    "sellerId": "3",
    "name": "Ezequiel Hack",
-   "orders": 9,
-   "total": 754353.78
+   "orders": 10,
+   "total": 848853.89
   },
   {
    "sellerId": "2",
@@ -80,8 +80,8 @@
  "byChannel": [
   {
    "channel": "TRADITIONAL TRADE_A",
-   "orders": 39,
-   "total": 8361642.72
+   "orders": 40,
+   "total": 8515428.59
   },
   {
    "channel": "TRADITIONAL TRADE_C",
@@ -89,19 +89,24 @@
    "total": 3613111.53
   },
   {
+   "channel": "TRADITIONAL TRADE_D",
+   "orders": 41,
+   "total": 3405239.13
+  },
+  {
    "channel": "TRADITIONAL TRADE_B",
    "orders": 18,
    "total": 3148962.3
   },
   {
-   "channel": "TRADITIONAL TRADE_D",
-   "orders": 38,
-   "total": 3102881.81
-  },
-  {
    "channel": "PROXIMITY_D",
    "orders": 2,
    "total": 281785.89
+  },
+  {
+   "channel": "Mayorista_C",
+   "orders": 1,
+   "total": 261071.45
   },
   {
    "channel": "AWAY FROM HOME_D",
@@ -230,6 +235,12 @@
    "total": 261285.77
   },
   {
+   "clientId": "1935",
+   "name": "CREMONA SA (Mayoristas_C)",
+   "orders": 1,
+   "total": 261071.45
+  },
+  {
    "clientId": "1025",
    "name": "QIU XIAOYAN (Almacen/Despensa_A)",
    "orders": 2,
@@ -258,12 +269,6 @@
    "name": "HORACIO MIGUEL LANCHEZ (Autoservicio Tradicional_C)",
    "orders": 2,
    "total": 218548.74
-  },
-  {
-   "clientId": "4834",
-   "name": "SHI AICHUN (Kiosco/Maxikiosco_B)",
-   "orders": 1,
-   "total": 214357.2
   }
  ]
 }
