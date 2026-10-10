@@ -3215,6 +3215,10 @@ function findByNameIp(arr, name){ return arr.find(x => x.n === name); }
 let pehuamar90Detalle = [];
 const pehuamar90DetallePromise = fetch(BASE + 'pehuamar90_no_comprado.json' + CACHE_BUST).then(r => r.json()).then(data => { pehuamar90Detalle = data; }).catch(() => {});
 
+// Bases de la tabla de IP que tenia cada vendedor en cada dia (foto diaria que arma la actualizacion automatica)
+let ipBasesDiarias = {};
+const ipBasesPromise = fetch(BASE + 'ip_bases_diarias.json' + CACHE_BUST).then(r => r.ok ? r.json() : {}).then(d => { ipBasesDiarias = d || {}; }).catch(() => {});
+
 function drillPehuamar90(vendedor) {
   const list = pehuamar90Detalle.filter(c => c.vendedor === vendedor);
   openDrillPortafolio(vendedor, `Sin compra de Pehuamar 90gr Lisa o Acanalada en lo que va del mes`, list);
@@ -3251,7 +3255,7 @@ async function renderIpSection(){
   if (ipRenderStarted && haySpanEnfocadoEn('ip-input')) return;
   ipRenderBusy = true;
   ipRenderStarted = true;
-  await Promise.all([rowsReadyPromise, portDiaReadyPromise, pehuamar90DetallePromise]);
+  await Promise.all([rowsReadyPromise, portDiaReadyPromise, pehuamar90DetallePromise, ipBasesPromise]);
   if (!rows.length || !noCompraRows.length) { ipRenderStarted = false; ipRenderBusy = false; return; }
 
   const dIp = diaIpActual();
@@ -3281,10 +3285,13 @@ async function renderIpSection(){
 
   const ipRows = rows.map(r => {
     const nc = findByNameIp(noCompraRows, r.n);
-    const freqBase = nc && dIp.key ? nc[dIp.key][1] : 0;
+    let freqBase = nc && dIp.key ? nc[dIp.key][1] : 0;
     const port = findByNameIp(portDiaRows, r.n);
     const portBase = port && port[dIp.dia] ? port[dIp.dia][0] : 0;
-    const pehuamarBase = pehuamarBaseByVendedor[r.n] || 0;
+    let pehuamarBase = pehuamarBaseByVendedor[r.n] || 0;
+    // dia pasado con foto guardada: se usan las bases que tenia el vendedor ese dia
+    const foto = esDiaPasado() ? ((ipBasesDiarias[diaSeleccionado] || {})[r.n]) : null;
+    if (foto) { freqBase = foto.freq; pehuamarBase = foto.pehuamar; }
     const guardado = ipGuardado[r.n] || {};
     const comp = compromisos[r.n] || {};
     const mnBase = (typeof comp.pg === 'number' || typeof comp.sb === 'number') ? (comp.pg||0) + (comp.sb||0) : null;
