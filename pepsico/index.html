@@ -438,6 +438,7 @@ td.ip-base.clickable{cursor:pointer}
     <select id="vendedor-selector"><option value="">Todos</option></select>
     <span class="vend-filter-nota" id="vendedor-nota"></span>
   </div>
+  <p id="proy-nota" class="section-note" style="display:none"></p>
   <h2 class="section-title">Por vendedor</h2>
   <p class="section-note">
     Ordenado de menor a mayor avance — los que necesitan más empuje primero. <b>Promedio</b> = kg/día vendidos en
@@ -1445,6 +1446,31 @@ function hoyISO(){
   return `${h.getFullYear()}-${String(h.getMonth()+1).padStart(2,'0')}-${String(h.getDate()).padStart(2,'0')}`;
 }
 function esDiaPasado(){ return !!diaSeleccionado && diaSeleccionado < hoyISO(); }
+// Proyecciones (kg e IP) que se muestran cuando no es "hoy": las del dia elegido o, si se eligio un mes anterior,
+// las del ultimo dia de ese mes que tenga datos cargados.
+function proyHistorica(){ return !!MES_SEL || esDiaPasado(); }
+function ultimaFechaMes(mes){
+  const h = historialProy; if (!h) return '';
+  const fs = new Set([...Object.keys(h.compromiso || {}), ...Object.keys(h.ip || {})]);
+  return [...fs].filter(f => f.slice(0, 7) === mes).sort().pop() || '';
+}
+function fechaProy(){
+  if (MES_SEL && !diaSeleccionado) return ultimaFechaMes(MES_SEL);
+  return diaSeleccionado;
+}
+function notaProyecciones(){
+  const el = document.getElementById('proy-nota');
+  if (!el) return;
+  if (!MES_SEL) { el.style.display = 'none'; return; }
+  const f = fechaProy();
+  el.style.display = 'block';
+  if (f) {
+    const [y, m, d] = f.split('-');
+    el.textContent = `Proyecciones del ${d}/${m}${diaSeleccionado ? '' : ' (último día cargado del mes)'}, en solo lectura. Elegí otro día en el calendario para ver las de esa fecha.`;
+  } else {
+    el.textContent = `No hay proyecciones guardadas para ${MES_SEL}: el tablero empezó a guardarlas el 06/10/2026.`;
+  }
+}
 
 async function cargarHistorialProy(){
   try {
@@ -1737,6 +1763,11 @@ function initSelectorDia(){
   const btnLimpiar = document.getElementById('dia-selector-limpiar');
   if (!sel) return;
   sel.max = hoyISO();
+  if (MES_SEL) {          // en un mes anterior el calendario queda limitado a ese mes
+    const [ya, ma] = MES_SEL.split('-').map(Number);
+    sel.min = `${MES_SEL}-01`;
+    sel.max = `${MES_SEL}-${String(new Date(ya, ma, 0).getDate()).padStart(2,'0')}`;
+  }
 
   function refrescarIp(intento){
     if (typeof renderIpSection !== 'function') return;
@@ -1752,10 +1783,8 @@ function initSelectorDia(){
   async function mostrarDia(fecha){
     btnLimpiar.style.display = 'inline-block';
     repintarKpis();
-    if (!MES_SEL) {
-      await cargarHistorialProy();
-      if (diaSeleccionado === fecha) refrescarProyecciones();
-    }
+    await cargarHistorialProy();
+    if (diaSeleccionado === fecha) { refrescarProyecciones(); notaProyecciones(); }
   }
 
   function volverAHoy(){
@@ -1763,7 +1792,8 @@ function initSelectorDia(){
     sel.value = '';
     btnLimpiar.style.display = 'none';
     repintarKpis();
-    if (!MES_SEL) refrescarProyecciones();
+    refrescarProyecciones();
+    notaProyecciones();
   }
 
   sel.addEventListener('change', () => {
@@ -3048,10 +3078,31 @@ const compTotalEl = document.getElementById('kpi-compromiso-total');
 const supInput = document.getElementById('compromiso-supervisor-input');
 
 if (MES_SEL) {
-  compromisoRefs.forEach(({ inputPg, inputSb }) => { inputPg.disabled = true; inputSb.disabled = true; inputPg.placeholder = 'n/a'; inputSb.placeholder = 'n/a'; });
-  compTotalEl.textContent = 'n/a';
+  compromisoRefs.forEach(({ inputPg, inputSb }) => { inputPg.disabled = true; inputSb.disabled = true; inputPg.placeholder = '—'; inputSb.placeholder = '—'; });
+  compTotalEl.textContent = '—';
   supInput.disabled = true;
   supInput.placeholder = 'n/a';
+  // mes anterior: el compromiso en kg que cargo cada vendedor el ultimo dia del mes con datos (o el dia que se elija)
+  function pintarCompromisoHistorico(){
+    const histC = (((historialProy || {}).compromiso || {})[fechaProy()] || {});
+    let total = 0, count = 0, totalPg = 0, countPg = 0, totalSb = 0, countSb = 0;
+    compromisoRefs.forEach(({ vendedor, inputPg, inputSb, updateTotal }) => {
+      const s = histC[vendedor] || {};
+      inputPg.value = typeof s.pg === 'number' ? s.pg : '';
+      inputSb.value = typeof s.sb === 'number' ? s.sb : '';
+      updateTotal();
+      if (vendedorSel && vendedor !== vendedorSel) return;
+      const pg = typeof s.pg === 'number' ? s.pg : null, sb = typeof s.sb === 'number' ? s.sb : null;
+      if (pg !== null || sb !== null) { total += (pg || 0) + (sb || 0); count++; }
+      if (pg !== null) { totalPg += pg; countPg++; }
+      if (sb !== null) { totalSb += sb; countSb++; }
+    });
+    compTotalEl.innerHTML = count ? `${fmt(total)}<span class="unit">kg</span>` : '—';
+    const set = (id, v, c) => { const el = document.getElementById(id); if (el) el.textContent = c ? fmt(v) : ''; };
+    set('tfoot-compromiso-total', total, count); set('tfoot-compromiso-pg', totalPg, countPg); set('tfoot-compromiso-sb', totalSb, countSb);
+  }
+  window.refrescarCompromisosDia = pintarCompromisoHistorico;
+  cargarHistorialProy().then(() => { pintarCompromisoHistorico(); notaProyecciones(); });
 } else {
 (async () => {
   const COMPROMISO_API = 'https://script.google.com/macros/s/AKfycby29cOLAt2nSOU-jbpaLxwRSiK1_eG-0eWhKrbitGks8U7eJzqdkPBsI7kwkxsT6-K0/exec';
@@ -3119,8 +3170,8 @@ if (MES_SEL) {
   function aplicarCompromisos(data) {
     ultimaDataComp = data;
     // si se esta viendo un dia pasado, se muestra lo que cargaron los vendedores ese dia (solo lectura)
-    const pasado = esDiaPasado();
-    const histC = pasado ? (((historialProy || {}).compromiso || {})[diaSeleccionado] || {}) : null;
+    const pasado = proyHistorica();
+    const histC = pasado ? (((historialProy || {}).compromiso || {})[fechaProy()] || {}) : null;
     compromisoRefs.forEach(({ vendedor, inputPg, inputSb, updateTotal }) => {
       const saved = pasado ? (histC[vendedor] || {}) : (data.compromisos[vendedor] || {});
       const enfocado = !pasado && (document.activeElement === inputPg || document.activeElement === inputSb);
@@ -3225,8 +3276,8 @@ function drillPehuamar90(vendedor) {
 }
 // Dia de ruta con el que se calculan las bases de la tabla de IP: el de hoy, o el del dia elegido en el calendario
 function diaIpActual(){
-  if (!esDiaPasado()) return {dia: hoyDiaIp, key: hoyKeyIp, fecha: ''};
-  const [y, m, d] = diaSeleccionado.split('-').map(Number);
+  if (!proyHistorica() || !fechaProy()) return {dia: hoyDiaIp, key: hoyKeyIp, fecha: ''};
+  const [y, m, d] = fechaProy().split('-').map(Number);
   const nombre = DIAS_JS_IP[new Date(y, m - 1, d).getDay()];
   return {dia: nombre, key: DIA_KEY_IP[nombre] || null, fecha: `${String(d).padStart(2,'0')}/${String(m).padStart(2,'0')}`};
 }
@@ -3258,9 +3309,10 @@ async function renderIpSection(){
   await Promise.all([rowsReadyPromise, portDiaReadyPromise, pehuamar90DetallePromise, ipBasesPromise]);
   if (!rows.length || !noCompraRows.length) { ipRenderStarted = false; ipRenderBusy = false; return; }
 
+  if (MES_SEL && !historialProy) await cargarHistorialProy();
   const dIp = diaIpActual();
   let pehuamarBaseByVendedor = {};
-  if (esDiaPasado()) {
+  if (proyHistorica()) {
     pehuamarBaseByVendedor = pehuamarBaseDia(dIp.dia);
   } else {
     pehuamar90Detalle.forEach(c => {
@@ -3269,28 +3321,31 @@ async function renderIpSection(){
   }
   if (hoyLabelEl) hoyLabelEl.textContent = dIp.fecha ? `${dIp.dia} ${dIp.fecha}` : dIp.dia;
 
+  // si se esta viendo un dia pasado o un mes anterior, se muestra lo que cargaron los vendedores ese dia (solo lectura)
+  const pasadoIp = proyHistorica();
+  const fProy = fechaProy();
   let data = null;
-  try {
-    const r = await fetchIpApiConReintentos(IP_API);
-    data = await r.json();
-  } catch (err) {
-    console.error('ip: fetch failed:', err);
+  if (!pasadoIp) {
+    try {
+      const r = await fetchIpApiConReintentos(IP_API);
+      data = await r.json();
+    } catch (err) {
+      console.error('ip: fetch failed:', err);
+    }
   }
-  // si se esta viendo un dia pasado, se muestra lo que cargaron los vendedores ese dia (solo lectura)
-  const pasadoIp = esDiaPasado();
-  const compromisos = pasadoIp ? (((historialProy || {}).compromiso || {})[diaSeleccionado] || {})
+  const compromisos = pasadoIp ? (((historialProy || {}).compromiso || {})[fProy] || {})
                                : ((data && data.ok && data.compromisos) || {});
-  const ipGuardado = pasadoIp ? (((historialProy || {}).ip || {})[diaSeleccionado] || {})
+  const ipGuardado = pasadoIp ? (((historialProy || {}).ip || {})[fProy] || {})
                               : ((data && data.ok && data.ipProyecciones) || {});
 
   const ipRows = rows.map(r => {
     const nc = findByNameIp(noCompraRows, r.n);
     let freqBase = nc && dIp.key ? nc[dIp.key][1] : 0;
     const port = findByNameIp(portDiaRows, r.n);
-    const portBase = port && port[dIp.dia] ? port[dIp.dia][0] : 0;
+    const portBase = !portDiaRows.length ? null : (port && port[dIp.dia] ? port[dIp.dia][0] : 0);   // null = el mes no tiene portafolio guardado
     let pehuamarBase = pehuamarBaseByVendedor[r.n] || 0;
     // dia pasado con foto guardada: se usan las bases que tenia el vendedor ese dia
-    const foto = esDiaPasado() ? ((ipBasesDiarias[diaSeleccionado] || {})[r.n]) : null;
+    const foto = pasadoIp ? ((ipBasesDiarias[fProy] || {})[r.n]) : null;
     if (foto) { freqBase = foto.freq; pehuamarBase = foto.pehuamar; }
     const guardado = ipGuardado[r.n] || {};
     const comp = compromisos[r.n] || {};
@@ -3310,10 +3365,10 @@ async function renderIpSection(){
       </div>
     </td>
     <td></td>
-    <td class="clickable ip-base" onclick="drillPortDia('${r.n}','${dIp.dia}')">${fmt(r.portBase)}</td>
+    <td class="clickable ip-base" onclick="drillPortDia('${r.n}','${dIp.dia}')">${r.portBase === null ? '—' : fmt(r.portBase)}</td>
     <td><input class="ip-input" data-vendedor="${r.n}" data-metric="portafolio" type="number" step="1" placeholder="clientes" /></td>
     <td></td>
-    <td class="clickable ip-base" onclick="${esDiaPasado() ? `drillPehuamar90Dia('${r.n}','${dIp.dia}')` : `drillPehuamar90('${r.n}')`}">${fmt(r.pehuamarBase)}</td>
+    <td class="clickable ip-base" onclick="${pasadoIp ? `drillPehuamar90Dia('${r.n}','${dIp.dia}')` : `drillPehuamar90('${r.n}')`}">${fmt(r.pehuamarBase)}</td>
     <td><input class="ip-input" data-vendedor="${r.n}" data-metric="pehuamar" type="number" step="1" placeholder="clientes" /></td>
     <td></td>
     <td class="ip-base"><span class="ip-mnbase" data-vendedor-mnbase="${r.n}">${r.mnBase === null ? '—' : fmt(r.mnBase)}</span></td>
@@ -3323,10 +3378,10 @@ async function renderIpSection(){
 `).join('');
 
   const ipFreqBaseTotal = ipRows.reduce((s,r)=>s+r.freqBase,0);
-  const ipPortBaseTotal = ipRows.reduce((s,r)=>s+r.portBase,0);
+  const ipPortBaseTotal = ipRows.reduce((s,r)=>s+(r.portBase||0),0);
   const ipPehuamarBaseTotal = ipRows.reduce((s,r)=>s+r.pehuamarBase,0);
   document.getElementById('tfoot-ip-freq-base').textContent = fmt(ipFreqBaseTotal);
-  document.getElementById('tfoot-ip-port-base').textContent = fmt(ipPortBaseTotal);
+  document.getElementById('tfoot-ip-port-base').textContent = portDiaRows.length ? fmt(ipPortBaseTotal) : '—';
   document.getElementById('tfoot-ip-pehuamar-base').textContent = fmt(ipPehuamarBaseTotal);
   const ipMnBaseTotal = ipRows.reduce((s,r)=>s+(r.mnBase||0),0);
   document.getElementById('tfoot-ip-mn-base').textContent = fmt(ipMnBaseTotal);
@@ -3423,8 +3478,8 @@ async function renderIpSection(){
   ipRenderBusy = false;
 }
 
+rowsReadyPromise.then(renderIpSection);
 if (!MES_SEL) {
-  rowsReadyPromise.then(renderIpSection);
   setInterval(() => { renderIpSection().catch(() => { ipRenderBusy = false; }); }, 60000);
 }
 </script>
