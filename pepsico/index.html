@@ -3219,6 +3219,23 @@ function drillPehuamar90(vendedor) {
   const list = pehuamar90Detalle.filter(c => c.vendedor === vendedor);
   openDrillPortafolio(vendedor, `Sin compra de Pehuamar 90gr Lisa o Acanalada en lo que va del mes`, list);
 }
+// Dia de ruta con el que se calculan las bases de la tabla de IP: el de hoy, o el del dia elegido en el calendario
+function diaIpActual(){
+  if (!esDiaPasado()) return {dia: hoyDiaIp, key: hoyKeyIp, fecha: ''};
+  const [y, m, d] = diaSeleccionado.split('-').map(Number);
+  const nombre = DIAS_JS_IP[new Date(y, m - 1, d).getDay()];
+  return {dia: nombre, key: DIA_KEY_IP[nombre] || null, fecha: `${String(d).padStart(2,'0')}/${String(m).padStart(2,'0')}`};
+}
+// Pehuamar de un dia pasado: clientes de esa ruta que todavia no llegaron a 3 unidades de Lisa/Acanalada x90g (a la fecha de hoy)
+function pehuamarBaseDia(dia){
+  const por = {};
+  (subproductoNoComprado['pehuamar_LisaAcanalada90'] || []).filter(c => c.dia === dia).forEach(c => { por[c.vendedor] = (por[c.vendedor] || 0) + 1; });
+  return por;
+}
+function drillPehuamar90Dia(vendedor, dia) {
+  const list = (subproductoNoComprado['pehuamar_LisaAcanalada90'] || []).filter(c => c.vendedor === vendedor && c.dia === dia);
+  openDrillPortafolio(vendedor, `Ruta del ${dia} — todavía no llegaron a 3 unidades de Pehuamar Lisa/Acanalada x90g en el mes`, list);
+}
 
 const IP_API = 'https://script.google.com/macros/s/AKfycby29cOLAt2nSOU-jbpaLxwRSiK1_eG-0eWhKrbitGks8U7eJzqdkPBsI7kwkxsT6-K0/exec';
 let ipRenderStarted = false;
@@ -3237,10 +3254,16 @@ async function renderIpSection(){
   await Promise.all([rowsReadyPromise, portDiaReadyPromise, pehuamar90DetallePromise]);
   if (!rows.length || !noCompraRows.length) { ipRenderStarted = false; ipRenderBusy = false; return; }
 
-  const pehuamarBaseByVendedor = {};
-  pehuamar90Detalle.forEach(c => {
-    pehuamarBaseByVendedor[c.vendedor] = (pehuamarBaseByVendedor[c.vendedor] || 0) + 1;
-  });
+  const dIp = diaIpActual();
+  let pehuamarBaseByVendedor = {};
+  if (esDiaPasado()) {
+    pehuamarBaseByVendedor = pehuamarBaseDia(dIp.dia);
+  } else {
+    pehuamar90Detalle.forEach(c => {
+      pehuamarBaseByVendedor[c.vendedor] = (pehuamarBaseByVendedor[c.vendedor] || 0) + 1;
+    });
+  }
+  if (hoyLabelEl) hoyLabelEl.textContent = dIp.fecha ? `${dIp.dia} ${dIp.fecha}` : dIp.dia;
 
   let data = null;
   try {
@@ -3258,9 +3281,9 @@ async function renderIpSection(){
 
   const ipRows = rows.map(r => {
     const nc = findByNameIp(noCompraRows, r.n);
-    const freqBase = nc ? nc[hoyKeyIp][1] : 0;
+    const freqBase = nc && dIp.key ? nc[dIp.key][1] : 0;
     const port = findByNameIp(portDiaRows, r.n);
-    const portBase = port && port[hoyDiaIp] ? port[hoyDiaIp][0] : 0;
+    const portBase = port && port[dIp.dia] ? port[dIp.dia][0] : 0;
     const pehuamarBase = pehuamarBaseByVendedor[r.n] || 0;
     const guardado = ipGuardado[r.n] || {};
     const comp = compromisos[r.n] || {};
@@ -3280,10 +3303,10 @@ async function renderIpSection(){
       </div>
     </td>
     <td></td>
-    <td class="clickable ip-base" onclick="drillPortDia('${r.n}','${hoyDiaIp}')">${fmt(r.portBase)}</td>
+    <td class="clickable ip-base" onclick="drillPortDia('${r.n}','${dIp.dia}')">${fmt(r.portBase)}</td>
     <td><input class="ip-input" data-vendedor="${r.n}" data-metric="portafolio" type="number" step="1" placeholder="clientes" /></td>
     <td></td>
-    <td class="clickable ip-base" onclick="drillPehuamar90('${r.n}')">${fmt(r.pehuamarBase)}</td>
+    <td class="clickable ip-base" onclick="${esDiaPasado() ? `drillPehuamar90Dia('${r.n}','${dIp.dia}')` : `drillPehuamar90('${r.n}')`}">${fmt(r.pehuamarBase)}</td>
     <td><input class="ip-input" data-vendedor="${r.n}" data-metric="pehuamar" type="number" step="1" placeholder="clientes" /></td>
     <td></td>
     <td class="ip-base"><span class="ip-mnbase" data-vendedor-mnbase="${r.n}">${r.mnBase === null ? '—' : fmt(r.mnBase)}</span></td>
