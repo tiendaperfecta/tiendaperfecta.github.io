@@ -1,17 +1,34 @@
 {
  "date": "2026-10-11",
- "totalNet": 126859.61,
- "totalGross": 153500.12,
- "orders": 1,
+ "totalNet": 685065.31,
+ "totalGross": 828929.03,
+ "orders": 3,
  "bySeller": [
+  {
+   "sellerId": "1",
+   "name": "Maria Noelia Madia",
+   "orders": 1,
+   "total": 595000.31
+  },
   {
    "sellerId": "2",
    "name": "Julian Nuñez",
    "orders": 1,
    "total": 153500.12
+  },
+  {
+   "sellerId": "4",
+   "name": "Lucas Giayetto",
+   "orders": 1,
+   "total": 80428.59
   }
  ],
  "byChannel": [
+  {
+   "channel": "TRADITIONAL TRADE_A",
+   "orders": 2,
+   "total": 675428.91
+  },
   {
    "channel": "TRADITIONAL TRADE_B",
    "orders": 1,
@@ -20,10 +37,22 @@
  ],
  "topClients": [
   {
+   "clientId": "1493",
+   "name": "MILKI MDQ SA (Kiosco/Maxikiosco_A)",
+   "orders": 1,
+   "total": 595000.31
+  },
+  {
    "clientId": "3097",
    "name": "CHOCOCHIA S. A. (Kiosco/Maxikiosco_B)",
    "orders": 1,
    "total": 153500.12
+  },
+  {
+   "clientId": "976",
+   "name": "Fiore María Cecilia  (Almacen/Despensa_A)",
+   "orders": 1,
+   "total": 80428.59
   }
  ]
 }
