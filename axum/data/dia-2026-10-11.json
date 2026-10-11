@@ -1,0 +1,96 @@
+{
+ "repartos": {
+  "fecha": "2026-10-11",
+  "repartos": [],
+  "rechazos": [],
+  "porCliente": [],
+  "porMotivo": [],
+  "porResponsable": {},
+  "totales": {
+   "repartos": 0,
+   "choferes": 0,
+   "boletas": 0,
+   "entregadas": 0,
+   "rechazos": 0,
+   "repartosFacturados": 0,
+   "clientesQueRechazaron": 0,
+   "importe": 0,
+   "importeRechazado": 0,
+   "efectividad": null
+  }
+ },
+ "date": "2026-10-11",
+ "diaSemana": "domingo",
+ "jornadaCerrada": false,
+ "umbrales": {
+  "llegada": "09:00",
+  "salida": "14:00"
+ },
+ "rows": [
+  {
+   "fecha": "2026-10-11",
+   "sellerId": "2",
+   "vendedor": "Julian Nuñez",
+   "clientId": "3097",
+   "nombre": "CHOCOCHIA S.A.",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Kiosco/Maxikiosco_B",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 153500.12,
+   "fechaVenta": "2026-10-11",
+   "horaVenta": "12:59",
+   "estado": "vendio_sin_pasar"
+  }
+ ],
+ "resumen": {
+  "vendio_sin_pasar": 1
+ },
+ "bySeller": [
+  {
+   "sellerId": "2",
+   "vendedor": "Julian Nuñez",
+   "inicioJornada": null,
+   "finJornada": null,
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": null,
+   "ultima": null,
+   "visitas": 0,
+   "minutosTotal": 0.0,
+   "minutosPromedio": 0,
+   "pedidos": 1,
+   "monto": 153500.12,
+   "pasoSinVender": 0,
+   "km": 0.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  }
+ ],
+ "timeline": {},
+ "cobertura": [
+  {
+   "sellerId": "2",
+   "vendedor": "Julian Nuñez",
+   "ruta": 0,
+   "visitadosDeRuta": 0,
+   "pendientes": 0,
+   "fueraDeRuta": 0,
+   "pct": null
+  }
+ ],
+ "pendientes": {
+  "2": []
+ },
+ "totales": {
+  "visitas": 0,
+  "minutos": 0.0,
+  "pedidos": 1,
+  "monto": 153500.12
+ }
+}
