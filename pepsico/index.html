@@ -77,7 +77,7 @@ h1{
 .sub b{color:var(--text); font-weight:600}
 
 .kpis{
-  display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px;
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; margin-bottom:20px;
 }
 @media (max-width:860px){ .kpis{grid-template-columns:repeat(2,1fr)} }
 .kpi{
@@ -381,6 +381,11 @@ td.ip-base.clickable{cursor:pointer}
     <div class="kpi">
       <div class="label">Tendencia cierre</div>
       <div class="value" id="kpi-tendencia">—</div>
+    </div>
+    <div class="kpi">
+      <div class="label" id="kpi-ayer-label">Venta real — día anterior</div>
+      <div class="value" id="kpi-ayer">—</div>
+      <div id="kpi-ayer-nota" style="font-size:11px;color:var(--muted);margin-top:4px">Pedidos tomados el día anterior</div>
     </div>
     <div class="kpi">
       <div class="label" id="kpi-real-label">Venta real hoy</div>
@@ -1543,8 +1548,10 @@ function pintarRealTile(){
     const [anio, mes, dia] = diaSeleccionado.split('-');
     if (labelEl) labelEl.textContent = `Venta real — ${dia}/${mes}`;
     if (r) {
-      if (valorEl) valorEl.innerHTML = 'n/d';
-      if (notaEl) notaEl.textContent = 'La venta por día de cada vendedor no se guarda: elegí Todos para ver el total del día';
+      const e = historialDiarioData.find(f => f.fecha === diaSeleccionado);
+      const kgV = e && e.v && typeof e.v[vendedorSel] === 'number' ? e.v[vendedorSel] : null;
+      if (valorEl) valorEl.innerHTML = kgV === null ? 'n/d' : `${fmt(kgV)}<span class="unit">kg</span>`;
+      if (notaEl) notaEl.textContent = kgV === null ? 'Este día no tiene el detalle por vendedor guardado' : `Pedidos de ${vendedorSel} el ${dia}/${mes}`;
     } else {
       const entrada = historialDiarioData.find(f => f.fecha === diaSeleccionado);
       if (valorEl) valorEl.innerHTML = entrada ? `${fmt(entrada.kg)}<span class="unit">kg</span>` : 'Sin datos';
@@ -1575,6 +1582,30 @@ function repintarKpis(){
     if (nota) nota.style.display = 'none';
   }
   pintarRealTile();
+  pintarRealAyerTile();
+}
+// "Venta real del dia anterior": el ultimo dia con venta anterior al que se esta mirando (hoy, o el dia elegido)
+function pintarRealAyerTile(){
+  const labelEl = document.getElementById('kpi-ayer-label');
+  const valorEl = document.getElementById('kpi-ayer');
+  const notaEl = document.getElementById('kpi-ayer-nota');
+  if (!valorEl) return;
+  const base = diaSeleccionado || (MES_SEL ? MES_SEL + '-99' : hoyISO());
+  const previas = historialDiarioData.filter(f => f.fecha < base).sort((a, b) => a.fecha.localeCompare(b.fecha));
+  const e = previas.length ? previas[previas.length - 1] : null;
+  if (!e) { if (labelEl) labelEl.textContent = 'Venta real — día anterior'; valorEl.innerHTML = 'Sin datos'; if (notaEl) notaEl.textContent = ''; return; }
+  const [y, m, d] = e.fecha.split('-').map(Number);
+  const dias = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  if (labelEl) labelEl.textContent = `Venta real — ${dias[new Date(y, m - 1, d).getDay()]} ${String(d).padStart(2,'0')}/${String(m).padStart(2,'0')}`;
+  const r = filaVendedor();
+  if (r) {
+    const kgV = e.v && typeof e.v[vendedorSel] === 'number' ? e.v[vendedorSel] : null;
+    valorEl.innerHTML = kgV === null ? 'n/d' : `${fmt(kgV)}<span class="unit">kg</span>`;
+    if (notaEl) notaEl.textContent = kgV === null ? 'Este día no tiene el detalle por vendedor guardado' : `Pedidos de ${vendedorSel} (fecha de pedido)`;
+  } else {
+    valorEl.innerHTML = `${fmt(e.kg)}<span class="unit">kg</span>`;
+    if (notaEl) notaEl.textContent = 'Pedidos tomados ese día (fecha de pedido)';
+  }
 }
 // Solo la fila del vendedor elegido en las tablas por vendedor (y sin la fila de totales)
 function aplicarFiltroVendedor(){
@@ -1803,6 +1834,7 @@ function initSelectorDia(){
     mostrarDia(diaSeleccionado);
   });
   btnLimpiar.addEventListener('click', volverAHoy);
+  pintarRealAyerTile();
 }
 
 let noCompradoresDetalle = [];
