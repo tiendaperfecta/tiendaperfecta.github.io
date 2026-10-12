@@ -424,17 +424,23 @@ def objetivos_kg(anio, mes):
     return {n: (num(v.get("p1o")), num(v.get("p2o"))) for n, v in todos[clave].items()}, clave
 
 
+# Dias habiles totales del mes tal como los carga el usuario en el reporte de Gescom (feriados ya descontados).
+DIAS_HABILES_MES = {(2026, 10): 25.0}
+
+
 def dias_habiles_mes(anio, mes, hasta=None):
-    """Cuenta dias habiles del mes: lunes a viernes valen 1, el sabado vale 0,5
-    (se trabaja medio dia) y el domingo no cuenta. Si `hasta` se pasa, cuenta
-    solo hasta esa fecha inclusive (dias trabajados)."""
+    """Cuenta dias habiles del mes como en el cuadro del usuario y en el reporte de Gescom: de lunes a sabado cada
+    dia vale 1 y el domingo no cuenta. Si `hasta` se pasa, cuenta solo hasta esa fecha inclusive (dias trabajados,
+    con el dia en curso incluido). Los meses con total cargado en DIAS_HABILES_MES usan ese total."""
     d = dt.date(anio, mes, 1)
     total = 0.0
     while d.month == mes:
         if d.weekday() != 6:
             if hasta is None or d <= hasta:
-                total += 0.5 if d.weekday() == 5 else 1.0
+                total += 1.0
         d += dt.timedelta(days=1)
+    if hasta is None and (anio, mes) in DIAS_HABILES_MES:
+        return DIAS_HABILES_MES[(anio, mes)]
     return total
 
 
@@ -1270,11 +1276,9 @@ def main():
     # Dias trabajados = dias COMPLETOS (hasta ayer). El dia en curso no cuenta hasta que termina: asi el "avance a la
     # fecha" no se cae al cambiar de dia (antes el dia sumaba entero apenas entraba el primer pedido, con casi nada
     # vendido). El acumulado ya trae las entregas de pedidos de dias anteriores, por eso es consistente.
-    dias_trabajados = dias_habiles_mes(hoy.year, hoy.month, hasta=hoy - dt.timedelta(days=1))
-    if not dias_trabajados:
-        # primer dia del mes (todavia no hay dia completo): se usa el dia en curso para no mostrar 0%
-        dias_trabajados = dias_habiles_mes(hoy.year, hoy.month, hasta=hoy)
-    print("Dias trabajados (completos, sin contar hoy): %g de %g" % (dias_trabajados, dias_habiles))
+    # Igual que el cuadro del usuario: lunes a sabado valen 1 y el dia en curso cuenta como trabajado.
+    dias_trabajados = dias_habiles_mes(hoy.year, hoy.month, hasta=hoy)
+    print("Dias trabajados (lunes a sabado, con hoy): %g de %g" % (dias_trabajados, dias_habiles))
     hist_previo = leer_historial_previo()
     try:
         avance_kg = traer_avance_kg(api, hoy, dias_habiles, dias_trabajados)
