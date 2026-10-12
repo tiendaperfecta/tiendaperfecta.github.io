@@ -45,6 +45,13 @@ h1{
   border:1px solid var(--border); border-radius:8px; padding:7px 12px; cursor:pointer; min-width:210px;
 }
 .vend-filter-nota{font-weight:500; font-size:12.5px}
+.cmp-up{color:var(--good); font-weight:600}
+.cmp-down{color:var(--bad); font-weight:600}
+.cmp-na{color:var(--muted)}
+.cmp-fila{display:flex; justify-content:space-between; gap:10px; padding:4px 0; font-size:13px; border-bottom:1px dashed var(--border)}
+.cmp-fila span{color:var(--muted)}
+.cmp-fila b{font-family:"IBM Plex Mono",monospace; font-weight:600; text-align:right}
+.cmp-lista{margin:6px 0 14px; padding-left:20px; font-size:13.5px; line-height:1.7}
 .mn-obj{color:var(--muted); font-weight:500}
 .mn-obj-valor{font:600 22px "Fraunces",serif}
 .mn-obj-valor small{font:500 12px "IBM Plex Sans"; color:var(--muted)}
@@ -423,6 +430,7 @@ td.ip-base.clickable{cursor:pointer}
 
   <div class="tabs-bar" id="tabs-bar">
     <button type="button" class="tab-btn active" data-tab-btn="por-vendedor">Por vendedor</button>
+    <button type="button" class="tab-btn" data-tab-btn="comparacion">Comparación</button>
     <button type="button" class="tab-btn" data-tab-btn="mi-negocio">Mi Negocio+</button>
     <button type="button" class="tab-btn" data-tab-btn="cobertura">Cobertura</button>
     <button type="button" class="tab-btn" data-tab-btn="innovaciones">Innovaciones</button>
@@ -1308,6 +1316,10 @@ td.ip-base.clickable{cursor:pointer}
 
   </div>
 
+  <div class="tab-panel" data-tab-panel="comparacion">
+    <div id="comparacion-contenido"></div>
+  </div>
+
   <div class="tab-panel" data-tab-panel="frase-dia">
 
   <div class="closing-quote">
@@ -1738,6 +1750,154 @@ async function renderFichaVendedor(){
   cont.innerHTML = `<h2 class="section-title">Todos los indicadores de ${escHtml(v)}</h2>
     <p class="section-note">Las proyecciones que cargó hoy están en la tabla de abajo.</p><div class="ficha-grid">${cards.join('')}</div>`;
 }
+
+// ---- Solapa "Comparación": el mes que se mira contra el mes anterior (para ver en que mejorar) ----
+let comparacionHecha = false;
+function mesAnteriorDe(mes){
+  const [y, m] = mes.split('-').map(Number);
+  const d = new Date(y, m - 2, 1);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+}
+async function cargarMesComparacion(mes, esActual){
+  const ruta = esActual ? '' : `archive/${mes}/`;
+  const get = f => fetch(ruta + f + CACHE_BUST).then(r => r.ok ? r.json() : null).catch(() => null);
+  const [av, venta, cob, ccc, tp, rech, inv] = await Promise.all(['avance_kg_vendedor.json', 'venta_vendedor.json', 'cobertura_marca_vendedor.json',
+    'ccc_segmento.json', 'tienda_perfecta.json', 'rechazos_detalle.json', 'invendible_detalle.json'].map(get));
+  return {mes, av, venta, cob, ccc, tp, rech, inv};
+}
+function resumenMes(d){
+  if (!d || !d.av) return null;
+  const vend = d.av.vendedores || [];
+  const dt = d.av.diasTrabajados || 0, dh = d.av.diasHabiles || 0;
+  const sum = k => vend.reduce((s, r) => s + (r[k] || 0), 0);
+  const ventaTot = d.venta ? Object.values(d.venta).reduce((s, x) => s + x, 0) : 0;
+  const imp = o => o ? Object.values(o).reduce((s, arr) => s + arr.reduce((a, x) => a + Math.abs(x.importe || 0), 0), 0) : 0;
+  const por = {};
+  vend.forEach(r => {
+    const v = d.venta ? (d.venta[r.n] || 0) : 0;
+    const rj = d.rech && d.rech[r.n] ? d.rech[r.n].reduce((a, x) => a + Math.abs(x.importe || 0), 0) : 0;
+    const iv = d.inv && d.inv[r.n] ? d.inv[r.n].reduce((a, x) => a + Math.abs(x.importe || 0), 0) : 0;
+    const cb = d.cob ? (d.cob.vendedores || []).find(x => x.n === r.n) : null;
+    const cc = d.ccc ? (d.ccc.vendedores || []).find(x => x.n === r.n) : null;
+    const co = cc ? (cc.ao + cc.bo + cc.co + cc.do_) : 0, ca = cc ? (cc.ac + cc.bc + cc.cc + cc.dc) : 0;
+    por[r.n] = {
+      prom: dt ? r.ta / dt : 0, avance: r.tp || 0,
+      cob: cb ? MARCA_COLS.reduce((s, m) => s + (cb[m] || 0), 0) / MARCA_COLS.length : null,
+      ccc: co ? ca / co * 100 : null,
+      rech: v ? rj / v * 100 : null, inv: v ? iv / v * 100 : null,
+    };
+  });
+  const ccT = d.ccc ? (d.ccc.vendedores || []) : [];
+  const cOb = ccT.reduce((s, x) => s + x.ao + x.bo + x.co + x.do_, 0), cAc = ccT.reduce((s, x) => s + x.ac + x.bc + x.cc + x.dc, 0);
+  const tpT = d.tp ? (d.tp.vendedores || []) : [];
+  const tOb = tpT.reduce((s, x) => s + x.ao + x.bo + x.co + x.do_, 0), tAc = tpT.reduce((s, x) => s + x.ac + x.bc + x.cc + x.dc, 0);
+  // cobertura total por marca, ponderada por el universo de cada vendedor
+  const cobMarca = {};
+  if (d.cob) {
+    const vs = d.cob.vendedores || [], uni = vs.reduce((s, x) => s + (x.universo || 0), 0);
+    MARCA_COLS.forEach(m => { cobMarca[m] = uni ? vs.reduce((s, x) => s + (x[m] || 0) * (x.universo || 0), 0) / uni : 0; });
+  }
+  return {
+    mes: d.mes, dt, dh, por, cobMarca,
+    ta: sum('ta'), to: sum('to'),
+    prom: dt ? sum('ta') / dt : 0,
+    avance: sum('to') && dh ? sum('ta') / (sum('to') * dt / dh) * 100 : 0,
+    ventaDia: dt ? ventaTot / dt : 0, ventaTot,
+    rech: ventaTot ? imp(d.rech) / ventaTot * 100 : null, inv: ventaTot ? imp(d.inv) / ventaTot * 100 : null,
+    ccc: cOb ? cAc / cOb * 100 : null, tp: tOb ? tAc / tOb * 100 : null,
+  };
+}
+function cmpDelta(a, b, tipo, masEsMejor){
+  // a = mes anterior, b = mes actual. tipo: 'pct' (variacion %) o 'pts' (diferencia en puntos)
+  if (a == null || b == null) return '<span class="cmp-na">—</span>';
+  const dif = tipo === 'pct' ? (a ? (b - a) / a * 100 : 0) : (b - a);
+  const mejora = masEsMejor ? dif >= 0 : dif <= 0;
+  const txt = (dif > 0 ? '+' : '') + fmt(dif, 1) + (tipo === 'pct' ? '%' : ' pts');
+  return `<span class="${Math.abs(dif) < 0.05 ? 'cmp-na' : mejora ? 'cmp-up' : 'cmp-down'}">${txt}</span>`;
+}
+async function renderComparacion(){
+  const cont = document.getElementById('comparacion-contenido');
+  if (!cont || comparacionHecha) return;
+  comparacionHecha = true;
+  cont.innerHTML = '<p class="section-note">Cargando la comparación…</p>';
+  const mesAct = MES_SEL || hoyISO().slice(0, 7), mesPrev = mesAnteriorDe(mesAct);
+  const [dA, dP] = await Promise.all([cargarMesComparacion(mesAct, !MES_SEL), cargarMesComparacion(mesPrev, false)]);
+  const A = resumenMes(dA), P = resumenMes(dP);
+  if (!A || !P) { cont.innerHTML = `<p class="section-note">No hay datos guardados de ${mesPrev} para comparar.</p>`; comparacionHecha = false; return; }
+  const nombreMes = m => `${NOMBRES_MES[parseInt(m.slice(5), 10)] || m} ${m.slice(0, 4)}`;
+  const nP = nombreMes(P.mes), nA = nombreMes(A.mes);
+  const tarjeta = (titulo, a, b, fmtv, tipo, masMejor) =>
+    `<div class="ficha-card"><h4>${titulo}</h4>
+      <div class="cmp-fila"><span>${nP}</span><b>${a == null ? '—' : fmtv(a)}</b></div>
+      <div class="cmp-fila"><span>${nA}</span><b>${b == null ? '—' : fmtv(b)}</b></div>
+      <div class="cmp-fila"><span>Diferencia</span><b>${cmpDelta(a, b, tipo, masMejor)}</b></div></div>`;
+  const kg = x => fmt(x, 1) + ' kg/día', pct = x => fmt(x, 1) + '%', plata = x => '$ ' + fmt(x);
+  const resumen = `<div class="ficha-grid">
+    ${tarjeta('Venta promedio por día', P.prom, A.prom, kg, 'pct', true)}
+    ${tarjeta('Avance contra el objetivo prorrateado', P.avance, A.avance, pct, 'pts', true)}
+    ${tarjeta('Venta $ promedio por día (sin IVA)', P.ventaDia, A.ventaDia, plata, 'pct', true)}
+    ${tarjeta('Rechazos sobre la venta', P.rech, A.rech, pct, 'pts', false)}
+    ${tarjeta('Invendible (canjes) sobre la venta', P.inv, A.inv, pct, 'pts', false)}
+    ${tarjeta('CCC: clientes con compra vs objetivo', P.ccc, A.ccc, pct, 'pts', true)}
+    ${tarjeta('Tienda Perfecta vs objetivo', P.tp, A.tp, pct, 'pts', true)}
+  </div>`;
+
+  // por vendedor
+  const nombres = Object.keys(A.por).sort((x, y) => x.localeCompare(y, 'es'));
+  const celda = (a, b, f, tipo, masMejor) => `<td>${a == null ? '—' : f(a)} → <b>${b == null ? '—' : f(b)}</b><br>${cmpDelta(a, b, tipo, masMejor)}</td>`;
+  const filas = nombres.map(n => {
+    const a = P.por[n] || {}, b = A.por[n];
+    return `<tr><td class="name">${escHtml(n)}</td>
+      ${celda(a.prom, b.prom, x => fmt(x, 1), 'pct', true)}
+      ${celda(a.avance, b.avance, x => fmt(x, 1) + '%', 'pts', true)}
+      ${celda(a.cob, b.cob, x => fmt(x, 1) + '%', 'pts', true)}
+      ${celda(a.ccc, b.ccc, x => fmt(x, 1) + '%', 'pts', true)}
+      ${celda(a.rech, b.rech, x => fmt(x, 1) + '%', 'pts', false)}
+      ${celda(a.inv, b.inv, x => fmt(x, 1) + '%', 'pts', false)}</tr>`;
+  }).join('');
+  const porVendedor = `<div class="table-scroll"><table><thead><tr class="cols">
+      <th class="name-col">Vendedor</th><th>Promedio kg/día</th><th>Avance a la fecha</th><th>Cobertura (prom. marcas)</th><th>CCC vs objetivo</th><th>Rechazos / venta</th><th>Invendible / venta</th>
+    </tr></thead><tbody>${filas}</tbody></table></div>`;
+
+  // cobertura por marca
+  const objM = Object.fromEntries(marcaObjRows.map(o => [o.marca, o.obj]));
+  const marcas = MARCA_COLS.map(m => ({m, p: P.cobMarca[m], a: A.cobMarca[m], obj: objM[m]})).sort((x, y) => (y.obj - y.a) - (x.obj - x.a));
+  const tablaMarcas = `<div class="table-scroll"><table><thead><tr class="cols"><th class="name-col">Marca</th><th>${nP} (cierre)</th><th>${nA} (hoy)</th>
+      <th>Objetivo del mes</th><th>Falta para el objetivo</th><th>Falta para igualar ${nP}</th></tr></thead><tbody>` +
+    marcas.map(x => `<tr><td class="name">${x.m}</td><td>${fmt(x.p, 1)}%</td><td><b>${fmt(x.a, 1)}%</b></td><td>${fmt(x.obj, 1)}%</td>
+      <td>${x.obj - x.a > 0 ? `<span class="cmp-down">${fmt(x.obj - x.a, 1)} pts</span>` : '<span class="cmp-up">cumplido</span>'}</td>
+      <td>${x.p - x.a > 0 ? `<span class="cmp-down">${fmt(x.p - x.a, 1)} pts</span>` : '<span class="cmp-up">superado</span>'}</td></tr>`).join('') +
+    '</tbody></table></div>';
+
+  // para mejorar: lo que mas empeoro en los indicadores comparables (promedio, avance, rechazos, invendible) + las marcas mas lejos del objetivo
+  const items = [];
+  nombres.forEach(n => {
+    const a = P.por[n], b = A.por[n]; if (!a) return;
+    if (a.prom) { const d = (b.prom - a.prom) / a.prom * 100; if (d < -3) items.push({peso: -d, txt: `<b>${escHtml(n)}</b>: vende ${fmt(-d, 1)}% menos por día que en ${nP} (${fmt(a.prom,1)} → ${fmt(b.prom,1)} kg/día)`}); }
+    if (a.rech != null && b.rech != null && b.rech - a.rech > 0.3) items.push({peso: (b.rech - a.rech) * 4, txt: `<b>${escHtml(n)}</b>: los rechazos subieron ${fmt(b.rech - a.rech, 1)} pts sobre la venta (${fmt(a.rech,1)}% → ${fmt(b.rech,1)}%)`});
+    if (a.inv != null && b.inv != null && b.inv - a.inv > 0.3) items.push({peso: (b.inv - a.inv) * 4, txt: `<b>${escHtml(n)}</b>: el invendible subió ${fmt(b.inv - a.inv, 1)} pts sobre la venta (${fmt(a.inv,1)}% → ${fmt(b.inv,1)}%)`});
+  });
+  marcas.filter(x => x.obj - x.a > 5).slice(0, 3).forEach(x => items.push({peso: x.obj - x.a, txt: `Cobertura de <b>${x.m}</b>: ${fmt(x.a,1)}% y el objetivo es ${fmt(x.obj,1)}% (faltan ${fmt(x.obj - x.a,1)} pts)`}));
+  items.sort((x, y) => y.peso - x.peso);
+  const lista = items.length ? `<ul class="cmp-lista">${items.slice(0, 10).map(i => `<li>${i.txt}</li>`).join('')}</ul>`
+                             : '<p class="section-note">No hay indicadores comparables que hayan empeorado: todo igual o mejor que el mes anterior.</p>';
+
+  cont.innerHTML = `
+    <h2 class="section-title">Comparación con el mes anterior</h2>
+    <p class="section-note">${nA} (va por el día ${fmt(A.dt,1)} de ${fmt(A.dh,1)} hábiles) contra el cierre de ${nP}. Verde = mejora, rojo = empeora.
+    Venta por día, avance, rechazos e invendible son comparables directamente. La cobertura, el CCC y Tienda Perfecta se van sumando durante el mes:
+    contra el cierre del mes anterior sirven para ver cuánto falta. Desde el 7/10 la cobertura se cuenta por fecha de entrega (septiembre quedó por fecha de pedido).
+    Ojo con el invendible: septiembre se guardó desde la base y octubre desde el detalle de Gescom, así que conviene confirmar que se midieron igual antes de sacar conclusiones.</p>
+    ${resumen}
+    <h3 class="subsection-title">En qué mejorar</h3>${lista}
+    <h3 class="subsection-title">Por vendedor</h3>
+    <p class="section-note">Cada celda: ${nP} → <b>${nA}</b> y la diferencia.</p>${porVendedor}
+    <h3 class="subsection-title">Cobertura por marca</h3>
+    <p class="section-note">Ordenado por lo que falta para llegar al objetivo del mes.</p>${tablaMarcas}`;
+}
+
+const btnComparacion = document.querySelector('[data-tab-btn="comparacion"]');
+if (btnComparacion) btnComparacion.addEventListener('click', () => { renderComparacion().catch(err => { console.error('comparacion:', err); comparacionHecha = false; }); });
 
 function initSelectorVendedor(){
   const vs = document.getElementById('vendedor-selector');
