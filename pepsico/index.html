@@ -1840,15 +1840,83 @@ function cmpDelta(a, b, tipo, masEsMejor){
   const txt = (dif > 0 ? '+' : '') + fmt(dif, 1) + (tipo === 'pct' ? '%' : ' pts');
   return `<span class="${Math.abs(dif) < 0.05 ? 'cmp-na' : mejora ? 'cmp-up' : 'cmp-down'}">${txt}</span>`;
 }
+let cmpCache = null;           // [mes actual, mes anterior] ya descargados
+let cmpVend = '';              // '' = Todos
+// Analisis de UN vendedor contra el mes anterior: en que mejoro y en que tiene que mejorar
+function comparacionVendedor(dA, dP, A, P, v, nP, nA){
+  const a = P.por[v] || {}, b = A.por[v];
+  if (!b) return '<p class="section-note">No hay datos de este vendedor.</p>';
+  const mejoro = [], mejorar = [];
+  const dpct = (x, y) => x ? (y - x) / x * 100 : 0;
+  // indicadores comparables directamente
+  if (a.prom) { const d = dpct(a.prom, b.prom); const t = `Venta por día: ${fmt(a.prom,1)} → ${fmt(b.prom,1)} kg/día (${d >= 0 ? '+' : ''}${fmt(d,1)}%)`;
+    if (d >= 3) mejoro.push({p: d, t}); else if (d <= -3) mejorar.push({p: -d, t}); }
+  { const d = b.avance - a.avance; const t = `Avance contra el objetivo: ${fmt(a.avance,1)}% → ${fmt(b.avance,1)}% (${d >= 0 ? '+' : ''}${fmt(d,1)} pts)`;
+    if (d >= 3) mejoro.push({p: d, t}); else if (d <= -3) mejorar.push({p: -d, t}); }
+  if (a.rech != null && b.rech != null) { const d = b.rech - a.rech; const t = `Rechazos sobre la venta: ${fmt(a.rech,1)}% → ${fmt(b.rech,1)}%`;
+    if (d <= -0.3) mejoro.push({p: -d * 4, t}); else if (d >= 0.3) mejorar.push({p: d * 4, t}); }
+  if (a.inv != null && b.inv != null) { const d = b.inv - a.inv; const t = `Invendible (canjes) sobre la venta: ${fmt(a.inv,1)}% → ${fmt(b.inv,1)}%`;
+    if (d <= -0.3) mejoro.push({p: -d * 4, t}); else if (d >= 0.3) mejorar.push({p: d * 4, t}); }
+  const vA = dA.venta ? dA.venta[v] : null, vP = dP.venta ? dP.venta[v] : null;
+  if (vA != null && vP != null && A.dt && P.dt) { const d = dpct(vP / P.dt, vA / A.dt); const t = `Venta $ por día: $ ${fmt(vP / P.dt)} → $ ${fmt(vA / A.dt)} (${d >= 0 ? '+' : ''}${fmt(d,1)}%)`;
+    if (d >= 3) mejoro.push({p: d, t}); else if (d <= -3) mejorar.push({p: -d, t}); }
+  // cobertura por marca: contra el objetivo del mes y contra el cierre del mes anterior
+  const cA = dA.cob ? (dA.cob.vendedores || []).find(x => x.n === v) : null, cP = dP.cob ? (dP.cob.vendedores || []).find(x => x.n === v) : null;
+  const objM = Object.fromEntries(marcaObjRows.map(o => [o.marca, o.obj]));
+  const filasMarca = [];
+  if (cA) MARCA_COLS.forEach(m => {
+    const val = cA[m] || 0, prev = cP ? (cP[m] || 0) : null, obj = objM[m];
+    filasMarca.push({m, val, prev, obj, falta: obj - val});
+    if (val >= obj) mejoro.push({p: 1, t: `Cobertura de ${m}: ${fmt(val,1)}% (objetivo ${fmt(obj,1)}%): objetivo cumplido`});
+    else if (obj - val > 5) mejorar.push({p: obj - val, t: `Cobertura de ${m}: ${fmt(val,1)}% y el objetivo es ${fmt(obj,1)}% (faltan ${fmt(obj - val,1)} pts)`});
+  });
+  // CCC y Tienda Perfecta por segmento
+  const segs = (datos, nombre) => {
+    const f = datos ? (datos.vendedores || []).find(x => x.n === v) : null; if (!f) return [];
+    return [['A','ao','ac'],['B','bo','bc'],['C','co','cc'],['D','do_','dc']].map(([s, o, c]) => ({nombre, s, ob: f[o] || 0, ac: f[c] || 0}));
+  };
+  const sCCC = segs(dA.ccc, 'CCC'), sTP = segs(dA.tp, 'Tienda Perfecta'), sCCCp = segs(dP.ccc, 'CCC'), sTPp = segs(dP.tp, 'Tienda Perfecta');
+  [...sCCC, ...sTP].forEach(x => { if (!x.ob) return; const pc = x.ac / x.ob * 100;
+    if (pc >= 100) mejoro.push({p: 1, t: `${x.nombre} segmento ${x.s}: ${x.ac} de ${x.ob} (${fmt(pc,0)}%): objetivo cumplido`});
+    else if (pc < 55) mejorar.push({p: 100 - pc, t: `${x.nombre} segmento ${x.s}: ${x.ac} de ${x.ob} clientes (${fmt(pc,0)}% del objetivo)`}); });
+  mejoro.sort((x, y) => y.p - x.p); mejorar.sort((x, y) => y.p - x.p);
+  const lis = (arr, vacio) => arr.length ? `<ul class="cmp-lista">${arr.slice(0, 10).map(i => `<li>${escHtml(i.t)}</li>`).join('')}</ul>` : `<p class="section-note">${vacio}</p>`;
+  const f1 = (x, d = 1) => x == null ? '—' : fmt(x, d);
+  const filaInd = (nom, x, y, fx, tipo, mas) => `<tr><td class="name">${nom}</td><td>${x == null ? '—' : fx(x)}</td><td><b>${y == null ? '—' : fx(y)}</b></td><td>${cmpDelta(x, y, tipo, mas)}</td></tr>`;
+  const tablaInd = `<div class="table-scroll"><table><thead><tr class="cols"><th class="name-col">Indicador</th><th>${nP}</th><th>${nA}</th><th>Diferencia</th></tr></thead><tbody>
+    ${filaInd('Venta promedio por día (kg)', a.prom, b.prom, x => fmt(x, 1), 'pct', true)}
+    ${filaInd('Avance a la fecha', a.avance, b.avance, x => fmt(x, 1) + '%', 'pts', true)}
+    ${filaInd('Venta $ por día (sin IVA)', vP != null && P.dt ? vP / P.dt : null, vA != null && A.dt ? vA / A.dt : null, x => '$ ' + fmt(x), 'pct', true)}
+    ${filaInd('Rechazos sobre la venta', a.rech, b.rech, x => fmt(x, 1) + '%', 'pts', false)}
+    ${filaInd('Invendible sobre la venta', a.inv, b.inv, x => fmt(x, 1) + '%', 'pts', false)}
+    ${filaInd('Cobertura (promedio de marcas)', a.cob, b.cob, x => fmt(x, 1) + '%', 'pts', true)}
+    ${filaInd('CCC contra el objetivo', a.ccc, b.ccc, x => fmt(x, 1) + '%', 'pts', true)}
+  </tbody></table></div>`;
+  const tablaMarca = `<div class="table-scroll"><table><thead><tr class="cols"><th class="name-col">Marca</th><th>${nP} (cierre)</th><th>${nA} (hoy)</th><th>Objetivo</th><th>Falta para el objetivo</th></tr></thead><tbody>` +
+    filasMarca.sort((x, y) => y.falta - x.falta).map(x => `<tr><td class="name">${x.m}</td><td>${f1(x.prev)}${x.prev == null ? '' : '%'}</td><td><b>${fmt(x.val,1)}%</b></td><td>${fmt(x.obj,1)}%</td>
+      <td>${x.falta > 0 ? `<span class="cmp-down">${fmt(x.falta,1)} pts</span>` : '<span class="cmp-up">cumplido</span>'}</td></tr>`).join('') + '</tbody></table></div>';
+  const tablaSeg = (act, prev, nombre) => `<div class="table-scroll"><table><thead><tr class="cols"><th class="name-col">${nombre}</th><th>${nP} (cierre)</th><th>${nA} (hoy)</th><th>Objetivo</th><th>Falta</th></tr></thead><tbody>` +
+    act.map((x, i) => { const p = prev[i]; return `<tr><td class="name">Segmento ${x.s}</td><td>${p && p.ob ? `${p.ac} de ${p.ob}` : '—'}</td><td><b>${x.ac}</b></td><td>${x.ob}</td>
+      <td>${x.ob - x.ac > 0 ? `<span class="cmp-down">${x.ob - x.ac}</span>` : '<span class="cmp-up">cumplido</span>'}</td></tr>`; }).join('') + '</tbody></table></div>';
+  return `
+    <h3 class="subsection-title">${escHtml(v)}: en qué mejoró</h3>${lis(mejoro, 'Todavía no hay indicadores que hayan mejorado frente al mes anterior.')}
+    <h3 class="subsection-title">${escHtml(v)}: en qué tiene que mejorar</h3>${lis(mejorar, 'No hay indicadores que hayan empeorado ni objetivos lejanos: todo en orden.')}
+    <h3 class="subsection-title">Indicadores contra ${nP}</h3>${tablaInd}
+    <h3 class="subsection-title">Cobertura por marca</h3><p class="section-note">Ordenado por lo que falta para llegar al objetivo del mes.</p>${tablaMarca}
+    ${sCCC.length ? `<h3 class="subsection-title">CCC por segmento</h3>${tablaSeg(sCCC, sCCCp, 'CCC')}` : ''}
+    ${sTP.length ? `<h3 class="subsection-title">Tienda Perfecta por segmento</h3>${tablaSeg(sTP, sTPp, 'Tienda Perfecta')}` : ''}`;
+}
 async function renderComparacion(){
   const cont = document.getElementById('comparacion-contenido');
-  if (!cont || comparacionHecha) return;
-  comparacionHecha = true;
-  cont.innerHTML = '<p class="section-note">Cargando la comparación…</p>';
+  if (!cont) return;
   const mesAct = MES_SEL || hoyISO().slice(0, 7), mesPrev = mesAnteriorDe(mesAct);
-  const [dA, dP] = await Promise.all([cargarMesComparacion(mesAct, !MES_SEL), cargarMesComparacion(mesPrev, false)]);
+  if (!cmpCache) {
+    cont.innerHTML = '<p class="section-note">Cargando la comparación…</p>';
+    cmpCache = await Promise.all([cargarMesComparacion(mesAct, !MES_SEL), cargarMesComparacion(mesPrev, false)]);
+  }
+  const [dA, dP] = cmpCache;
   const A = resumenMes(dA), P = resumenMes(dP);
-  if (!A || !P) { cont.innerHTML = `<p class="section-note">No hay datos guardados de ${mesPrev} para comparar.</p>`; comparacionHecha = false; return; }
+  if (!A || !P) { cont.innerHTML = `<p class="section-note">No hay datos guardados de ${mesPrev} para comparar.</p>`; cmpCache = null; return; }
   const nombreMes = m => `${NOMBRES_MES[parseInt(m.slice(5), 10)] || m} ${m.slice(0, 4)}`;
   const nP = nombreMes(P.mes), nA = nombreMes(A.mes);
   const tarjeta = (titulo, a, b, fmtv, tipo, masMejor) =>
@@ -1907,8 +1975,22 @@ async function renderComparacion(){
   const lista = items.length ? `<ul class="cmp-lista">${items.slice(0, 10).map(i => `<li>${i.txt}</li>`).join('')}</ul>`
                              : '<p class="section-note">No hay indicadores comparables que hayan empeorado: todo igual o mejor que el mes anterior.</p>';
 
+  const nombresSel = Object.keys(A.por).sort((x, y) => x.localeCompare(y, 'es'));
+  const selectorCmp = `<div class="vend-filter"><label for="cmp-vendedor">Ver vendedor:</label>
+    <select id="cmp-vendedor"><option value="">Todos</option>${nombresSel.map(n => `<option value="${escHtml(n)}"${n === cmpVend ? ' selected' : ''}>${escHtml(n)}</option>`).join('')}</select></div>`;
+  if (cmpVend && A.por[cmpVend]) {
+    cont.innerHTML = `
+      <h2 class="section-title">Comparación con el mes anterior</h2>
+      <p class="section-note">${nA} (va por el día ${fmt(A.dt,1)} de ${fmt(A.dh,1)} hábiles) contra el cierre de ${nP}. Verde = mejora, rojo = empeora.
+      La cobertura, el CCC y Tienda Perfecta se van sumando durante el mes: se miden contra el objetivo, no contra el cierre del mes anterior.</p>
+      ${selectorCmp}${comparacionVendedor(dA, dP, A, P, cmpVend, nP, nA)}`;
+    document.getElementById('cmp-vendedor').addEventListener('change', e => { cmpVend = e.target.value; renderComparacion(); });
+    return;
+  }
+  cmpVend = '';
   cont.innerHTML = `
     <h2 class="section-title">Comparación con el mes anterior</h2>
+    ${selectorCmp}
     <p class="section-note">${nA} (va por el día ${fmt(A.dt,1)} de ${fmt(A.dh,1)} hábiles) contra el cierre de ${nP}. Verde = mejora, rojo = empeora.
     Venta por día, avance, rechazos e invendible son comparables directamente. La cobertura, el CCC y Tienda Perfecta se van sumando durante el mes:
     contra el cierre del mes anterior sirven para ver cuánto falta. Desde el 7/10 la cobertura se cuenta por fecha de entrega (septiembre quedó por fecha de pedido).
@@ -1919,10 +2001,11 @@ async function renderComparacion(){
     <p class="section-note">Cada celda: ${nP} → <b>${nA}</b> y la diferencia.</p>${porVendedor}
     <h3 class="subsection-title">Cobertura por marca</h3>
     <p class="section-note">Ordenado por lo que falta para llegar al objetivo del mes.</p>${tablaMarcas}`;
+  document.getElementById('cmp-vendedor').addEventListener('change', e => { cmpVend = e.target.value; renderComparacion(); });
 }
 
 const btnComparacion = document.querySelector('[data-tab-btn="comparacion"]');
-if (btnComparacion) btnComparacion.addEventListener('click', () => { renderComparacion().catch(err => { console.error('comparacion:', err); comparacionHecha = false; }); });
+if (btnComparacion) btnComparacion.addEventListener('click', () => { renderComparacion().catch(err => { console.error('comparacion:', err); cmpCache = null; }); });
 
 function initSelectorVendedor(){
   const vs = document.getElementById('vendedor-selector');
