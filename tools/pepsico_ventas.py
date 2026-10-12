@@ -424,23 +424,16 @@ def objetivos_kg(anio, mes):
     return {n: (num(v.get("p1o")), num(v.get("p2o"))) for n, v in todos[clave].items()}, clave
 
 
-# Dias habiles totales del mes tal como los carga el usuario en el reporte de Gescom (feriados ya descontados).
-DIAS_HABILES_MES = {(2026, 10): 25.0}
-
-
 def dias_habiles_mes(anio, mes, hasta=None):
-    """Cuenta dias habiles del mes como en el cuadro del usuario y en el reporte de Gescom: de lunes a sabado cada
-    dia vale 1 y el domingo no cuenta. Si `hasta` se pasa, cuenta solo hasta esa fecha inclusive (dias trabajados,
-    con el dia en curso incluido). Los meses con total cargado en DIAS_HABILES_MES usan ese total."""
+    """Cuenta dias habiles del mes: lunes a viernes valen 1, el sabado 0,5 y el domingo no cuenta. Si `hasta` se
+    pasa, cuenta solo hasta esa fecha inclusive (dias trabajados, con el dia en curso incluido)."""
     d = dt.date(anio, mes, 1)
     total = 0.0
     while d.month == mes:
         if d.weekday() != 6:
             if hasta is None or d <= hasta:
-                total += 1.0
+                total += 0.5 if d.weekday() == 5 else 1.0
         d += dt.timedelta(days=1)
-    if hasta is None and (anio, mes) in DIAS_HABILES_MES:
-        return DIAS_HABILES_MES[(anio, mes)]
     return total
 
 
