@@ -362,7 +362,7 @@ td.ip-base.clickable{cursor:pointer}
   <div id="banner-archivo" style="display:none; background:var(--accent-soft); color:var(--accent); font-weight:600; padding:8px 14px; border-radius:8px; margin-bottom:16px; font-size:13.5px"></div>
   <p class="sub">
     Medida en <b>kilogramos</b>. Acumulado del <b id="sub-periodo-inicio">01/09</b> hasta hoy, actualizado automáticamente por API dos
-    veces por día (días hábiles = lunes a sábado, el domingo no cuenta; el día en curso cuenta como trabajado). El <b>Avance</b> es
+    veces por día (días hábiles = lunes a viernes, el sábado cuenta medio día y el domingo no cuenta; el día en curso cuenta como trabajado). El <b>Avance</b> es
     contra el objetivo prorrateado a la fecha, no contra el objetivo total del mes.
     Columna <b>Real</b> = kg de los <b>pedidos tomados hoy</b> (fecha de pedido, como el reporte de Gescom); el
     <b>Acumulado</b> cuenta las entregas del mes. <b>Platino+Gold</b> y <b>Silver&amp;Bronze</b> se arman por
@@ -1497,13 +1497,13 @@ async function cargarHistorialProy(){
   } catch (err) { console.error('historial de proyecciones:', err); }
 }
 
-// dias habiles del mes hasta la fecha (inclusive): lunes a viernes = 1, sabado = 0,5
+// dias habiles del mes hasta la fecha (inclusive): lunes a viernes = 1, sabado = 0,5, domingo no cuenta
 function diasHabilesHasta(fechaISO){
   const [y, m, d] = fechaISO.split('-').map(Number);
   let tot = 0;
   for (let i = 1; i <= d; i++) {
     const wd = new Date(y, m - 1, i).getDay();
-    if (wd !== 0) tot += 1;       // lunes a sabado valen 1, el domingo no cuenta
+    if (wd !== 0) tot += wd === 6 ? 0.5 : 1;       // sabado 0,5, el domingo no cuenta
   }
   return tot;
 }
@@ -1796,7 +1796,7 @@ function resumenMes(d){
   // Los meses cerrados antes de octubre se guardaron con el sabado a medio dia: se vuelven a contar lunes a sabado
   // enteros (mes completo) para comparar con el mes en curso, que ya cuenta asi.
   const cerrado = d.mes < '2026-10';
-  const diasMesCal = m => { const [y, mm] = m.split('-').map(Number); let t = 0; for (let i = 1, n = new Date(y, mm, 0).getDate(); i <= n; i++) if (new Date(y, mm - 1, i).getDay() !== 0) t++; return t; };
+  const diasMesCal = m => { const [y, mm] = m.split('-').map(Number); let t = 0; for (let i = 1, n = new Date(y, mm, 0).getDate(); i <= n; i++) { const w = new Date(y, mm - 1, i).getDay(); if (w !== 0) t += w === 6 ? 0.5 : 1; } return t; };
   const dt = cerrado ? diasMesCal(d.mes) : (d.av.diasTrabajados || 0), dh = cerrado ? diasMesCal(d.mes) : (d.av.diasHabiles || 0);
   const sum = k => vend.reduce((s, r) => s + (r[k] || 0), 0);
   const ventaTot = d.venta ? Object.values(d.venta).reduce((s, x) => s + x, 0) : 0;
