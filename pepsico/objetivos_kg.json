@@ -1,5 +1,5 @@
 {
-  "_nota": "Objetivos de kg por vendedor (Platino+Gold = p1o, Silver&Bronze = p2o). Salian del reporte de Gescom (403 desde el 30/9/2026). Cargar cada mes con la clave AAAA-MM; si falta el mes, se usan los del ultimo cargado.",
+  "_nota": "Objetivos de kg por vendedor (Platino+Gold = p1o, Silver&Bronze = p2o). Salian del reporte de Gescom (403 desde el 30/9/2026). Cargar cada mes con la clave AAAA-MM; si falta el mes, se usan los del ultimo cargado. Octubre 2026 bajado a 28.000 kg (prorrateado desde 30.000 en proporcion a cada vendedor y segmento; los originales quedan en _original_2026_10).",
   "2026-01": {
     "Agustin Pogorzelski": {
       "p1o": 700.0,
@@ -452,52 +452,114 @@
   },
   "2026-10": {
     "Maria Noelia Madia": {
+      "p1o": 1450.67,
+      "p2o": 548.69
+    },
+    "Julian Nuñez": {
+      "p1o": 1909.05,
+      "p2o": 1031.09
+    },
+    "Ezequiel Hack": {
+      "p1o": 1488.78,
+      "p2o": 686.96
+    },
+    "Lucas Giayetto": {
+      "p1o": 1900.38,
+      "p2o": 690.7
+    },
+    "Nicolas Martinez": {
+      "p1o": 1716.68,
+      "p2o": 673.84
+    },
+    "Camila Martinez": {
+      "p1o": 1399.87,
+      "p2o": 593.16
+    },
+    "Ramiro Rando": {
+      "p1o": 1799.45,
+      "p2o": 614.21
+    },
+    "Martinica Rodriguez": {
+      "p1o": 1533.44,
+      "p2o": 726.43
+    },
+    "Ludmila Aylen Martinez": {
+      "p1o": 1984.58,
+      "p2o": 1276.36
+    },
+    "Matias Parada": {
+      "p1o": 1368.21,
+      "p2o": 525.75
+    },
+    "Melanie Larrama": {
+      "p1o": 1410.29,
+      "p2o": 710.52
+    },
+    "Agustin Pogorzelski": {
+      "p1o": 1423.22,
+      "p2o": 537.67
+    }
+  },
+  "_original_2026_10": [
+    {
+      "n": "Maria Noelia Madia",
       "p1o": 1554.29,
       "p2o": 587.88
     },
-    "Julian Nuñez": {
+    {
+      "n": "Julian Nuñez",
       "p1o": 2045.41,
       "p2o": 1104.74
     },
-    "Ezequiel Hack": {
+    {
+      "n": "Ezequiel Hack",
       "p1o": 1595.12,
       "p2o": 736.03
     },
-    "Lucas Giayetto": {
+    {
+      "n": "Lucas Giayetto",
       "p1o": 2036.12,
       "p2o": 740.04
     },
-    "Nicolas Martinez": {
+    {
+      "n": "Nicolas Martinez",
       "p1o": 1839.3,
       "p2o": 721.97
     },
-    "Camila Martinez": {
+    {
+      "n": "Camila Martinez",
       "p1o": 1499.86,
       "p2o": 635.53
     },
-    "Ramiro Rando": {
+    {
+      "n": "Ramiro Rando",
       "p1o": 1927.98,
       "p2o": 658.08
     },
-    "Martinica Rodriguez": {
+    {
+      "n": "Martinica Rodriguez",
       "p1o": 1642.97,
       "p2o": 778.32
     },
-    "Ludmila Aylen Martinez": {
+    {
+      "n": "Ludmila Aylen Martinez",
       "p1o": 2126.33,
       "p2o": 1367.53
     },
-    "Matias Parada": {
+    {
+      "n": "Matias Parada",
       "p1o": 1465.94,
       "p2o": 563.3
     },
-    "Melanie Larrama": {
+    {
+      "n": "Melanie Larrama",
       "p1o": 1511.03,
       "p2o": 761.27
     },
-    "Agustin Pogorzelski": {
+    {
+      "n": "Agustin Pogorzelski",
       "p1o": 1524.88,
       "p2o": 576.08
     }
-  }
+  ]
 }
