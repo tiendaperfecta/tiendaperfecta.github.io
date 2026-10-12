@@ -21,12 +21,31 @@
  },
  "date": "2026-10-11",
  "diaSemana": "domingo",
- "jornadaCerrada": false,
+ "jornadaCerrada": true,
  "umbrales": {
   "llegada": "09:00",
   "salida": "14:00"
  },
  "rows": [
+  {
+   "fecha": "2026-10-11",
+   "sellerId": "1",
+   "vendedor": "Maria Noelia Madia",
+   "clientId": "1493",
+   "nombre": "MILKI MDQ SA",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Kiosco/Maxikiosco_A",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 595000.31,
+   "fechaVenta": "2026-10-11",
+   "horaVenta": "17:28",
+   "estado": "vendio_sin_pasar"
+  },
   {
    "fecha": "2026-10-11",
    "sellerId": "2",
@@ -45,12 +64,70 @@
    "fechaVenta": "2026-10-11",
    "horaVenta": "12:59",
    "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-10-11",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "976",
+   "nombre": "Fiore María Cecilia",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 80428.59,
+   "fechaVenta": "2026-10-11",
+   "horaVenta": "13:53",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-10-11",
+   "sellerId": "9",
+   "vendedor": "Ludmila Aylen Martinez",
+   "clientId": "375",
+   "nombre": "MATIAS LEONARDO HERRERA",
+   "localidad": "MIRAMAR",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 358071.59,
+   "fechaVenta": "2026-10-11",
+   "horaVenta": "17:44",
+   "estado": "vendio_sin_pasar"
   }
  ],
  "resumen": {
-  "vendio_sin_pasar": 1
+  "vendio_sin_pasar": 4
  },
  "bySeller": [
+  {
+   "sellerId": "1",
+   "vendedor": "Maria Noelia Madia",
+   "inicioJornada": null,
+   "finJornada": null,
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": null,
+   "ultima": null,
+   "visitas": 0,
+   "minutosTotal": 0.0,
+   "minutosPromedio": 0,
+   "pedidos": 1,
+   "monto": 595000.31,
+   "pasoSinVender": 0,
+   "km": 0.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
   {
    "sellerId": "2",
    "vendedor": "Julian Nuñez",
@@ -70,10 +147,59 @@
    "km": 0.0,
    "llegoTarde": false,
    "salioTemprano": false
+  },
+  {
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "inicioJornada": null,
+   "finJornada": null,
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": null,
+   "ultima": null,
+   "visitas": 0,
+   "minutosTotal": 0.0,
+   "minutosPromedio": 0,
+   "pedidos": 1,
+   "monto": 80428.59,
+   "pasoSinVender": 0,
+   "km": 0.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
+   "sellerId": "9",
+   "vendedor": "Ludmila Aylen Martinez",
+   "inicioJornada": null,
+   "finJornada": null,
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": null,
+   "ultima": null,
+   "visitas": 0,
+   "minutosTotal": 0.0,
+   "minutosPromedio": 0,
+   "pedidos": 1,
+   "monto": 358071.59,
+   "pasoSinVender": 0,
+   "km": 0.0,
+   "llegoTarde": false,
+   "salioTemprano": false
   }
  ],
  "timeline": {},
  "cobertura": [
+  {
+   "sellerId": "1",
+   "vendedor": "Maria Noelia Madia",
+   "ruta": 0,
+   "visitadosDeRuta": 0,
+   "pendientes": 0,
+   "fueraDeRuta": 0,
+   "pct": null
+  },
   {
    "sellerId": "2",
    "vendedor": "Julian Nuñez",
@@ -82,15 +208,36 @@
    "pendientes": 0,
    "fueraDeRuta": 0,
    "pct": null
+  },
+  {
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "ruta": 0,
+   "visitadosDeRuta": 0,
+   "pendientes": 0,
+   "fueraDeRuta": 0,
+   "pct": null
+  },
+  {
+   "sellerId": "9",
+   "vendedor": "Ludmila Aylen Martinez",
+   "ruta": 0,
+   "visitadosDeRuta": 0,
+   "pendientes": 0,
+   "fueraDeRuta": 0,
+   "pct": null
   }
  ],
  "pendientes": {
-  "2": []
+  "1": [],
+  "2": [],
+  "4": [],
+  "9": []
  },
  "totales": {
   "visitas": 0,
   "minutos": 0.0,
-  "pedidos": 1,
-  "monto": 153500.12
+  "pedidos": 4,
+  "monto": 1187000.61
  }
 }

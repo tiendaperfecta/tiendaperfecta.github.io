@@ -3,6 +3,25 @@
  "rows": [
   {
    "fecha": "2026-10-11",
+   "sellerId": "1",
+   "vendedor": "Maria Noelia Madia",
+   "clientId": "1493",
+   "nombre": "MILKI MDQ SA",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Kiosco/Maxikiosco_A",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 595000.31,
+   "fechaVenta": "2026-10-11",
+   "horaVenta": "17:28",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-10-11",
    "sellerId": "2",
    "vendedor": "Julian Nuñez",
    "clientId": "3097",
@@ -19,9 +38,47 @@
    "fechaVenta": "2026-10-11",
    "horaVenta": "12:59",
    "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-10-11",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "976",
+   "nombre": "Fiore María Cecilia",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 80428.59,
+   "fechaVenta": "2026-10-11",
+   "horaVenta": "13:53",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-10-11",
+   "sellerId": "9",
+   "vendedor": "Ludmila Aylen Martinez",
+   "clientId": "375",
+   "nombre": "MATIAS LEONARDO HERRERA",
+   "localidad": "MIRAMAR",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 358071.59,
+   "fechaVenta": "2026-10-11",
+   "horaVenta": "17:44",
+   "estado": "vendio_sin_pasar"
   }
  ],
  "resumen": {
-  "vendio_sin_pasar": 1
+  "vendio_sin_pasar": 4
  }
 }

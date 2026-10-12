@@ -1,17 +1,27 @@
 {
- "generatedAt": "2026-10-11T17:38:37-03:00",
+ "generatedAt": "2026-10-11T21:02:21-03:00",
  "date": "2026-10-11",
- "errors": [
-  "gps: list index out of range"
- ],
+ "errors": [],
  "pedidos": {
-  "traidos": 3,
-  "totalSegunApi": 3
+  "traidos": 4,
+  "totalSegunApi": 4
+ },
+ "formatoGps": {
+  "posicion": "'-38.0923843,-57.5640599,12,5:44 PM,nnn,,'",
+  "visitados": null,
+  "km": null,
+  "visitadosTotal": 0,
+  "kmError": null
  },
  "gescom": {
   "clientes": 2841,
   "zonas": 91
  },
+ "detalle": {
+  "filas": 4,
+  "vendedores": 4,
+  "diasEnHistoria": 50
+ },
  "ordersOk": true,
- "gpsOk": false
+ "gpsOk": true
 }
