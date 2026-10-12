@@ -450,8 +450,13 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
     # El acumulado cuenta TODAS las entregas del mes (incluidas las ya programadas para los proximos dias),
     # igual que el reporte "Avance de Ventas Pepsico" de Gescom, cuya fecha final por defecto es el fin de mes.
     fin_mes = hoy.replace(day=calendar.monthrange(hoy.year, hoy.month)[1])
+    # Igual que ese reporte, el acumulado es NETO: ventas + debitos - rechazos - canjes (verificado el 12/10/2026 con el
+    # detallado de Gescom: ventas 10.973 kg, canjes -381, rechazos -193, debitos +4 = 10.404 kg, el numero del reporte).
+    # El acumulado de Mi Negocio cuenta solo las ventas del canal MiNegocio.
+    SIGNO_ACUM = {"VEN": 1, "DEB": 1, "DEV-RE": -1, "DEV-CA": -1}
     for l in lineas_pepsico(hoy.replace(day=1), fin_mes, "entrega"):
-        if l.get("tipo") != "VEN":
+        signo = SIGNO_ACUM.get(l.get("tipo"))
+        if signo is None:
             continue
         codven = cod(l.get("ven"))
         if codven not in VENDEDORES_PEPSICO:
@@ -463,10 +468,10 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
         g = "p1" if "*P01" in tags else "p2" if "*P02" in tags else None
         if not g:
             continue
-        kg = num(l.get("cant")) * num(a.get("factorPeso")) / 1000
+        kg = abs(num(l.get("cant"))) * num(a.get("factorPeso")) / 1000
         x = acc.setdefault(codven, {"p1a": 0.0, "p2a": 0.0, "mn": 0.0, "dias": {}})
-        x[g + "a"] += kg
-        if l.get("canal") == "MiNegocio":
+        x[g + "a"] += signo * kg
+        if l.get("canal") == "MiNegocio" and l.get("tipo") == "VEN":
             x["mn"] += kg
     # Ultima / penultima visita / real: kg (*P01 + *P02) del mismo dia de la semana hace 7 y 14
     # dias, y hoy, por fecha de ENTREGA. Verificado el 3/10/2026 contra el reporte de Gescom:
