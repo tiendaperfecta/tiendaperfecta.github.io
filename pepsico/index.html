@@ -1510,25 +1510,30 @@ function diasHabilesHasta(fechaISO){
 
 // Acumulado de un dia pasado = lo que ya habia al cierre de ese dia: el acumulado de hoy menos lo que se pidio
 // despues (el historial diario trae los kg pedidos por dia y por grupo *P01 / *P02).
-function kpisDelDia(fecha){
+// Si se pasa un vendedor (fila de "rows"), se hace la misma cuenta con sus propios kg: el historial guarda por dia el
+// *P01 / *P02 de cada vendedor (campo "vg").
+function kpisDelDia(fecha, vend){
   if (!kpiBase || MES_SEL) return null;
   const mes = fecha.slice(0, 7);
   const delMes = historialDiarioData.filter(f => f.fecha.slice(0, 7) === mes);
-  if (!delMes.length || !delMes.some(f => typeof f.p1 === 'number')) return null;
-  const suma = (k, hasta) => delMes.filter(f => f.fecha <= hasta).reduce((s, f) => s + (Number(f[k]) || 0), 0);
+  const base = vend ? {totTo: vend.to, totPG: vend.p1o, totSB: vend.p2o, acumPG: vend.p1a, acumSB: vend.p2a, diasHabiles: kpiBase.diasHabiles} : kpiBase;
+  const val = (f, g) => vend ? ((f.vg && f.vg[vend.n]) ? (Number(f.vg[vend.n][g === 'p1' ? 0 : 1]) || 0) : 0) : (Number(f[g]) || 0);
+  const hayDatos = vend ? delMes.some(f => f.vg && f.vg[vend.n]) : delMes.some(f => typeof f.p1 === 'number');
+  if (!delMes.length || !hayDatos) return null;
+  const suma = (g, hasta) => delMes.filter(f => f.fecha <= hasta).reduce((s, f) => s + val(f, g), 0);
   const hoy = hoyISO();
-  const p1 = kpiBase.acumPG - (suma('p1', hoy) - suma('p1', fecha));
-  const p2 = kpiBase.acumSB - (suma('p2', hoy) - suma('p2', fecha));
-  const dt = diasHabilesHasta(fecha), dh = kpiBase.diasHabiles;
+  const p1 = base.acumPG - (suma('p1', hoy) - suma('p1', fecha));
+  const p2 = base.acumSB - (suma('p2', hoy) - suma('p2', fecha));
+  const dt = diasHabilesHasta(fecha), dh = base.diasHabiles;
   if (!dt || !dh) return null;
   const acum = p1 + p2, ratio = dt / dh;
   return {
     acum, p1, p2, dt, dh,
-    avance: kpiBase.totTo && ratio ? acum / (kpiBase.totTo * ratio) * 100 : 0,
-    pctPG: kpiBase.totPG && ratio ? p1 / (kpiBase.totPG * ratio) * 100 : 0,
-    pctSB: kpiBase.totSB && ratio ? p2 / (kpiBase.totSB * ratio) * 100 : 0,
+    avance: base.totTo && ratio ? acum / (base.totTo * ratio) * 100 : 0,
+    pctPG: base.totPG && ratio ? p1 / (base.totPG * ratio) * 100 : 0,
+    pctSB: base.totSB && ratio ? p2 / (base.totSB * ratio) * 100 : 0,
     tendencia: acum / dt * dh,
-    medianec: dh > dt ? (kpiBase.totTo - acum) / (dh - dt) : 0,
+    medianec: dh > dt ? (base.totTo - acum) / (dh - dt) : 0,
   };
 }
 
@@ -1583,9 +1588,29 @@ function repintarKpis(){
   if (vendedorSel && filaVendedor()) {
     restaurarKpisHoy();
     pintarKpisVendedor();
+    let textoDia = '';
+    if (esDiaPasado() && !MES_SEL) {
+      // acumulado, avance, tendencia y media necesaria del vendedor al cierre del dia elegido
+      const r = filaVendedor(), k = kpisDelDia(diaSeleccionado, r);
+      const [anio, mes, dia] = diaSeleccionado.split('-');
+      if (k) {
+        const set = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+        set('kpi-acumulado', `${fmt(k.acum)}<span class="unit">kg</span>`);
+        set('kpi-avance-fecha', `${fmt(k.avance,1)}<span class="unit">%</span>`);
+        set('kpi-tendencia', `${fmt(k.tendencia)}<span class="unit">kg</span>`);
+        set('kpi-media-necesaria', `${fmt(k.medianec,1)}<span class="unit">kg/día</span>`);
+        set('seg-pg-pct', fmt(k.pctPG,1) + '%'); set('seg-pg-acum', `Acumulado ${fmt(k.p1)} kg`);
+        set('seg-sb-pct', fmt(k.pctSB,1) + '%'); set('seg-sb-acum', `Acumulado ${fmt(k.p2)} kg`);
+        const bPg = document.getElementById('seg-pg-bar'); if (bPg) bPg.style.width = Math.min(k.pctPG, 100) + '%';
+        const bSb = document.getElementById('seg-sb-bar'); if (bSb) bSb.style.width = Math.min(k.pctSB, 100) + '%';
+        textoDia = ` Al cierre del ${dia}/${mes} (${fmt(k.dt,1)} de ${fmt(k.dh,1)} días hábiles).`;
+      } else {
+        textoDia = ` No hay detalle de ${dia}/${mes} guardado para este vendedor: se ven los valores actuales.`;
+      }
+    }
     if (nota) {
       nota.style.display = 'block';
-      nota.textContent = `Vista de ${vendedorSel}: sus indicadores del mes.` + (esDiaPasado() && !MES_SEL ? ' El acumulado y el avance por día solo están disponibles para Todos; acá se ven los valores actuales.' : '');
+      nota.textContent = `Vista de ${vendedorSel}: sus indicadores del mes.` + textoDia;
     }
   } else if (esDiaPasado() && !MES_SEL) {
     pintarKpisDia(diaSeleccionado);
