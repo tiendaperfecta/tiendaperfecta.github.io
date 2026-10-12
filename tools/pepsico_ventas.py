@@ -487,6 +487,7 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
     # 28/9 da 81 kg, contra 1.533 y 79 kg de Penultima y Ultima en el reporte. El acumulado sigue siendo por entrega.
     dias_pedido = {}
     dias_pedido_grupo = {}     # fecha de pedido -> [kg *P01, kg *P02] (para reconstruir el acumulado de un dia pasado)
+    dias_pedido_vg = {}        # codven -> fecha de pedido -> [kg *P01, kg *P02] (lo mismo, por vendedor)
     for l in lineas_pepsico(hoy - dt.timedelta(days=45), hoy, "pedido"):
         if l.get("tipo") != "VEN" or cod(l.get("ven")) not in VENDEDORES_PEPSICO:
             continue
@@ -500,6 +501,8 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
         dp[fpd] = dp.get(fpd, 0.0) + kg_l
         gx = dias_pedido_grupo.setdefault(fpd, [0.0, 0.0])
         gx[0 if "*P01" in tags else 1] += kg_l
+        gv = dias_pedido_vg.setdefault(cod(l.get("ven")), {}).setdefault(fpd, [0.0, 0.0])
+        gv[0 if "*P01" in tags else 1] += kg_l
     hoy_iso = hoy.isoformat()
     hace7, hace14 = (hoy - dt.timedelta(days=7)).isoformat(), (hoy - dt.timedelta(days=14)).isoformat()
     kg_vendedores = []
@@ -534,7 +537,8 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
             historial_por_dia[fecha] = historial_por_dia.get(fecha, 0.0) + kg
     historial_out = [{"fecha": f, "kg": round(k, 2), "p1": round(dias_pedido_grupo.get(f, [0.0, 0.0])[0], 2),
                       "p2": round(dias_pedido_grupo.get(f, [0.0, 0.0])[1], 2),
-                      "v": {vend.get(cv, cv): round(dp[f], 2) for cv, dp in dias_pedido.items() if abs(dp.get(f, 0.0)) > 0.005}}
+                      "v": {vend.get(cv, cv): round(dp[f], 2) for cv, dp in dias_pedido.items() if abs(dp.get(f, 0.0)) > 0.005},
+                      "vg": {vend.get(cv, cv): [round(g[f][0], 2), round(g[f][1], 2)] for cv, g in dias_pedido_vg.items() if f in g}}
                      for f, k in sorted(historial_por_dia.items()) if abs(k) > 0.005]
     escribir("historial_diario.json", historial_out)
     print("Historial diario: %d dias (por fecha de pedido)" % len(historial_out))
@@ -575,7 +579,8 @@ def leer_historial_previo():
     """{fecha: kg} del historial_diario.json de la corrida anterior (antes de que esta corrida lo reescriba)."""
     try:
         return {x["fecha"]: {"kg": float(x.get("kg") or 0), "p1": float(x.get("p1") or 0), "p2": float(x.get("p2") or 0),
-                             "v": {k: float(v) for k, v in (x.get("v") or {}).items()}}
+                             "v": {k: float(v) for k, v in (x.get("v") or {}).items()},
+                             "vg": {k: [float(g[0]), float(g[1])] for k, g in (x.get("vg") or {}).items()}}
                 for x in json.loads((DIR / "historial_diario.json").read_text(encoding="utf-8"))}
     except Exception:
         return {}
@@ -586,17 +591,20 @@ def corregir_historial_diario(filas, previo, hoy):
     el historial de esa fecha quedaba mas bajo que lo real. Se queda con el MAYOR entre lo que trae la base, lo que
     traia la corrida anterior y, si se esta usando el detalle de Gescom, lo que da ese detalle por fecha de pedido."""
     def vacio():
-        return {"kg": 0.0, "p1": 0.0, "p2": 0.0, "v": {}}
+        return {"kg": 0.0, "p1": 0.0, "p2": 0.0, "v": {}, "vg": {}}
 
     def maximo(a, b):
         r = {k: max(a.get(k, 0.0), b.get(k, 0.0)) for k in ("kg", "p1", "p2")}
         va, vb = a.get("v") or {}, b.get("v") or {}
         r["v"] = {n: max(va.get(n, 0.0), vb.get(n, 0.0)) for n in set(va) | set(vb)}
+        ga, gb = a.get("vg") or {}, b.get("vg") or {}
+        r["vg"] = {n: [max((ga.get(n) or [0.0, 0.0])[i], (gb.get(n) or [0.0, 0.0])[i]) for i in (0, 1)] for n in set(ga) | set(gb)}
         return r
 
     try:
         actual = {x["fecha"]: {"kg": float(x.get("kg") or 0), "p1": float(x.get("p1") or 0), "p2": float(x.get("p2") or 0),
-                               "v": {k: float(v) for k, v in (x.get("v") or {}).items()}}
+                               "v": {k: float(v) for k, v in (x.get("v") or {}).items()},
+                               "vg": {k: [float(g[0]), float(g[1])] for k, g in (x.get("vg") or {}).items()}}
                   for x in json.loads((DIR / "historial_diario.json").read_text(encoding="utf-8"))}
     except Exception:
         actual = {}
@@ -623,12 +631,15 @@ def corregir_historial_diario(filas, previo, hoy):
                 nom_v = (f.get("Vendedor") or "").strip()
                 if nom_v:
                     d_["v"][nom_v] = d_["v"].get(nom_v, 0.0) + kg_f
+                    gg = d_["vg"].setdefault(nom_v, [0.0, 0.0])
+                    gg[0 if "*P01" in tags else 1] += kg_f
         for fecha, d_ in det.items():
             actual[fecha] = maximo(actual.get(fecha, vacio()), d_)
     for fecha, d_ in previo.items():
         actual[fecha] = maximo(actual.get(fecha, vacio()), d_)
     salida = [{"fecha": f, "kg": round(v["kg"], 2), "p1": round(v["p1"], 2), "p2": round(v["p2"], 2),
-               "v": {n: round(x, 2) for n, x in sorted(v.get("v", {}).items()) if abs(x) > 0.005}}
+               "v": {n: round(x, 2) for n, x in sorted(v.get("v", {}).items()) if abs(x) > 0.005},
+               "vg": {n: [round(g[0], 2), round(g[1], 2)] for n, g in sorted(v.get("vg", {}).items())}}
               for f, v in sorted(actual.items()) if abs(v["kg"]) > 0.005]
     escribir("historial_diario.json", salida)
     print("Historial diario corregido: %d dias (nunca baja respecto de la corrida anterior)" % len(salida))
