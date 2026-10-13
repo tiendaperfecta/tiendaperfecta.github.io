@@ -1736,8 +1736,10 @@ async function renderFichaVendedor(){
       fichaLinea('Registrados', fmt(mn.registrado) + (objMnProrr ? ` <small>/ obj. ${fmt(objMnProrr.registrados[v])}</small>` : '')) +
       fichaLinea('Activos', fmt(mn.activos) + (objMnProrr ? ` <small>/ obj. ${fmt(objMnProrr.activos[v])}</small>` : '')) +
       fichaLinea('Fully Digital', fmt(mn.fullyDigital) + (objMnProrr ? ` <small>/ obj. ${fmt(objMnProrr.fullyDigital[v])}</small>` : '')) +
-      (objMnProrr ? fichaLinea('Clientes autónomos', `<small>obj. ${fmt(objMnProrr.autonomos[v])} · sin dato</small>`) : '') +
-      '<small>Registrados, activos y Fully Digital: cierre de septiembre.</small>'));
+      (objMnProrr ? fichaLinea('Clientes autónomos', AUTON
+        ? fmt(AUTON.vendedores[v] || 0) + ` <small>/ obj. ${fmt(objMnProrr.autonomos[v])}</small>`
+        : `<small>obj. ${fmt(objMnProrr.autonomos[v])} · sin dato</small>`) : '') +
+      '<small>Registrados, activos y Fully Digital: cierre de septiembre.' + (AUTON ? ` Autónomos: octubre hasta el ${fechaCorta(AUTON.hasta)}.` : '') + '</small>'));
   }
 
   // Clientes sin compra
@@ -2413,6 +2415,12 @@ const OBJ_MN = {
   '2026-10': {registrados:2191, activos:1740, fullyDigital:1496, sellout:81, autonomos:288},
 };
 const MES_OBJ = MES_SEL || hoyISO().slice(0, 7);
+// Clientes autonomos del mes (Power BI "AR Cliente Autonomo"): clientes con al menos un pedido autonomo en el mes.
+let AUTON = null, ultimoMn = null;
+const fechaCorta = iso => iso ? iso.slice(8, 10) + '/' + iso.slice(5, 7) : '';
+fetch(BASE + 'autonomos.json' + CACHE_BUST).then(r => r.ok ? r.json() : null).then(a => {
+  if (a && a.mes === MES_OBJ) { AUTON = a; if (ultimoMn) pintarTablaMn(ultimoMn.filas, ultimoMn.tot); }
+}).catch(() => {});
 function objDelMes(tabla){
   const claves = Object.keys(tabla).sort();
   const k = claves.filter(c => c <= MES_OBJ).pop();
@@ -3010,6 +3018,7 @@ tbodyMn.innerHTML = mnRows.map(r => `
 // Pinta la tabla "Mi Negocio+ por vendedor". Los kg (Acum. MN / Acumulado / %) salen de los mismos datos que el
 // % de arriba; universo/registrado/activos/fully digital son del Power BI y se pasan en tot.
 function pintarTablaMn(filas, tot) {
+  ultimoMn = {filas, tot};
   const ord = filas.slice().sort((a,b) => a.share - b.share);
   const op = objMnProrr;     // objetivos del mes prorrateados por vendedor (null si el mes no tiene carga)
   const conObj = (valor, objVend) => valor + (op ? ` <small class="mn-obj">/ ${fmt(objVend)}</small>` : '');
@@ -3027,7 +3036,7 @@ function pintarTablaMn(filas, tot) {
         </div>
       </td>
       <td>${conObj(fmt(r.fullyDigital), op && op.fullyDigital[r.n])}</td>
-      <td>${op ? `<small class="mn-obj">obj. ${fmt(op.autonomos[r.n])}</small>` : '—'}</td>
+      <td>${conObj(AUTON ? fmt(AUTON.vendedores[r.n] || 0) : '—', op && op.autonomos[r.n])}</td>
     </tr>
   `).join('');
   const mn = filas.reduce((s,r) => s + r.mn, 0), ac = filas.reduce((s,r) => s + r.acum, 0);
@@ -3039,7 +3048,7 @@ function pintarTablaMn(filas, tot) {
       <td class="name">Total PepsiCo</td>
       <td>${fmt(tot.universo)}</td><td>${tc(tot.registrado == null ? '—' : fmt(tot.registrado), to && to.registrados)}</td><td>${tc(fmt(tot.activos), to && to.activos)}</td>
       <td>${fmt(mn)}</td><td>${fmt(ac)}</td><td>${fmt(shareTot,1)}%</td><td>${tc(fmt(tot.fullyDigital), to && to.fullyDigital)}</td>
-      <td>${to ? `<small class="mn-obj">obj. ${fmt(to.autonomos)}</small>` : '—'}</td>
+      <td>${tc(AUTON ? fmt(AUTON.total) : '—', to && to.autonomos)}</td>
     </tr>`;
   pintarObjetivosMn(tot, shareTot);
 }
@@ -3068,9 +3077,11 @@ function pintarObjetivosMn(tot, shareTot) {
         <div class="mn-obj-valor">${fmt(shareTot,1)}% <small>de ${to.sellout}%</small></div>
         <div class="bar-track" style="margin:8px 0 4px"><div class="bar-fill" style="width:${Math.min(shareTot / to.sellout * 100,100)}%"></div></div>
         <small>${shareTot >= to.sellout ? 'superado por' : 'faltan'} ${fmt(Math.abs(to.sellout - shareTot),1)} pts</small></div>
-      <div class="ficha-card"><h4>Clientes autónomos</h4>
+      ${AUTON
+        ? tarjeta('Clientes autónomos', AUTON.total, to.autonomos, `<small>Clientes con al menos un pedido autónomo en el mes (Power BI), hasta el ${fechaCorta(AUTON.hasta)}.</small>`)
+        : `<div class="ficha-card"><h4>Clientes autónomos</h4>
         <div class="mn-obj-valor">— <small>de ${fmt(to.autonomos)}</small></div>
-        <small>Todavía no tenemos el dato de autónomos: pasame el reporte y lo cargo.</small></div>
+        <small>Todavía no tenemos el dato de autónomos de este mes.</small></div>`}
     </div>`;
 }
 
