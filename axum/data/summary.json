@@ -1,14 +1,20 @@
 {
  "date": "2026-10-13",
- "totalNet": 37533501.74,
- "totalGross": 45336069.74,
- "orders": 394,
+ "totalNet": 39942771.18,
+ "totalGross": 48251285.74,
+ "orders": 404,
  "bySeller": [
   {
    "sellerId": "2",
    "name": "Julian Nuñez",
-   "orders": 41,
-   "total": 6135377.1
+   "orders": 43,
+   "total": 6865163.3
+  },
+  {
+   "sellerId": "4",
+   "name": "Lucas Giayetto",
+   "orders": 31,
+   "total": 5381734.61
   },
   {
    "sellerId": "7",
@@ -23,10 +29,16 @@
    "total": 4669643.81
   },
   {
-   "sellerId": "4",
-   "name": "Lucas Giayetto",
-   "orders": 28,
-   "total": 4572234.47
+   "sellerId": "9",
+   "name": "Ludmila Aylen Martinez",
+   "orders": 27,
+   "total": 4569516.01
+  },
+  {
+   "sellerId": "10",
+   "name": "Matias Parada",
+   "orders": 41,
+   "total": 4327308.79
   },
   {
    "sellerId": "11",
@@ -39,18 +51,6 @@
    "name": "Martinica Rodriguez",
    "orders": 37,
    "total": 3868444.6
-  },
-  {
-   "sellerId": "10",
-   "name": "Matias Parada",
-   "orders": 38,
-   "total": 3821951.45
-  },
-  {
-   "sellerId": "9",
-   "name": "Ludmila Aylen Martinez",
-   "orders": 26,
-   "total": 3754515.13
   },
   {
    "sellerId": "3",
@@ -73,8 +73,8 @@
   {
    "sellerId": "12",
    "name": "Agustin Pogorzelski",
-   "orders": 25,
-   "total": 1672594.46
+   "orders": 26,
+   "total": 1728165.91
   },
   {
    "sellerId": "20",
@@ -86,8 +86,8 @@
  "byChannel": [
   {
    "channel": "TRADITIONAL TRADE_A",
-   "orders": 87,
-   "total": 18923483.58
+   "orders": 92,
+   "total": 21531128.06
   },
   {
    "channel": "TRADITIONAL TRADE_C",
@@ -101,8 +101,8 @@
   },
   {
    "channel": "TRADITIONAL TRADE_D",
-   "orders": 77,
-   "total": 4360655.15
+   "orders": 79,
+   "total": 4534369.51
   },
   {
    "channel": "PROXIMITY_A",
@@ -111,13 +111,13 @@
   },
   {
    "channel": "Mayorista_B",
-   "orders": 1,
-   "total": 423857.28
+   "orders": 2,
+   "total": 479428.73
   },
   {
    "channel": "AWAY FROM HOME_B",
-   "orders": 4,
-   "total": 328791.68
+   "orders": 5,
+   "total": 379863.13
   },
   {
    "channel": "AWAY FROM HOME_D",
@@ -150,6 +150,11 @@
    "total": 125785.68
   },
   {
+   "channel": "PROXIMITY_C",
+   "orders": 2,
+   "total": 122643.0
+  },
+  {
    "channel": "AWAY FROM HOME_C",
    "orders": 3,
    "total": 106386.36
@@ -158,11 +163,6 @@
    "channel": "AWAY FROM HOME_A",
    "orders": 2,
    "total": 103571.5
-  },
-  {
-   "channel": "PROXIMITY_C",
-   "orders": 1,
-   "total": 95428.74
   },
   {
    "channel": "Large Format_B",
@@ -231,6 +231,12 @@
    "total": 845644.34
   },
   {
+   "clientId": "4019",
+   "name": "BRIAN MAXIMILIANO PISANI (Kiosco/Maxikiosco_A)",
+   "orders": 1,
+   "total": 815000.88
+  },
+  {
    "clientId": "1360",
    "name": "ODACREMERCADO S.R.L EN FORMACION (Autoservicio Tradicional_A)",
    "orders": 2,
@@ -261,10 +267,22 @@
    "total": 643000.25
   },
   {
+   "clientId": "2495",
+   "name": "SUPER NI BENJAMIN S.A. EN FORMACION (Autoservicio Tradicional_A)",
+   "orders": 1,
+   "total": 637214.44
+  },
+  {
    "clientId": "2163",
    "name": "NI ZHENGWANG (Autoservicio Tradicional_B)",
    "orders": 1,
    "total": 606839.38
+  },
+  {
+   "clientId": "843",
+   "name": "JUROMINAN Y ASOCIADOS S.A (Kiosco/Maxikiosco_A)",
+   "orders": 1,
+   "total": 596071.81
   },
   {
    "clientId": "2609",
@@ -277,24 +295,6 @@
    "name": "XU HONGHONG (Autoservicio Tradicional_B)",
    "orders": 2,
    "total": 556281.85
-  },
-  {
-   "clientId": "1520",
-   "name": "SUPER CONSTITUCION S.A EN FORMACION (Autoservicio Tradicional_A)",
-   "orders": 1,
-   "total": 554428.81
-  },
-  {
-   "clientId": "596",
-   "name": "HE LIQUIN (Autoservicio Tradicional_B)",
-   "orders": 2,
-   "total": 528033.18
-  },
-  {
-   "clientId": "214",
-   "name": "SULLIVAN SERGIO AGUSTIN Y SULLIVAN MARIA SOLEDAD S (Autoservicio Tradicional_A)",
-   "orders": 2,
-   "total": 524583.97
   }
  ]
 }
