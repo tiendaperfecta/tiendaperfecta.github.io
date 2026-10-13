@@ -957,7 +957,8 @@ def traer_tienda_perfecta(api, nombre_por_codven, clientes):
     except Exception:
         previo = None
     if previo:
-        for campo, nuevo in (("universoTotal", universo_total), ("validarTotal", validar_total)):
+        # Solo el universo: "a validar" cambia mucho de un dia al otro segun cuanto validen los supervisores.
+        for campo, nuevo in (("universoTotal", universo_total),):
             ant = previo.get(campo) or 0
             if ant and abs(nuevo - ant) / ant > TP_MAX_DESVIO and abs(nuevo - ant) > 20:
                 raise RuntimeError("censo TP no publicado: %s da %d y el anterior %d (desvio > %d%%)"
