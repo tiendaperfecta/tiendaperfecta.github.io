@@ -127,7 +127,7 @@ table.flujo{border-collapse:separate;border-spacing:0;font-variant-numeric:tabul
   <div class="grupo"><label class="aviso" for="modoRec" style="margin:0">Recaudación:</label>
     <select id="modoRec" title="Qué recaudación usar para el saldo">
       <option value="mixto">Real si hay datos, si no estimada</option>
-      <option value="real">Solo real (caja + bancos)</option>
+      <option value="real">Solo real (caja + transferencias)</option>
       <option value="est">Solo estimada</option>
     </select></div>
   <div class="esp"></div>
@@ -218,6 +218,14 @@ let ENV = null;
 // Los datos se vuelven a bajar en cada intento: si se probó mientras GitHub publicaba una versión
 // nueva, no queda pegado el archivo viejo (cifrado con otra clave) hasta recargar la página.
 let entrando = false;
+// Recaudación en vivo (caja + Control de Transferencias). Si todavía no existe o no abre, el
+// panel sigue con lo que trae data.enc.json.
+async function cargarVivo(k){
+  try {
+    const r = await fetch('vivo.enc.json?t=' + Date.now(), {cache:'no-store'});
+    VIVO = r.ok ? await descifrar(await r.json(), k) : null;
+  } catch(e){ VIVO = null; }
+}
 async function entrar(clave){
   if (entrando) return; entrando = true;
   const err = document.getElementById('pwErr'), btn = document.querySelector('#fPuerta button');
@@ -230,6 +238,7 @@ async function entrar(clave){
     try { SEED = await descifrar(ENV, k); }
     catch(e){ err.textContent = 'Clave incorrecta.'; try{sessionStorage.removeItem('flujo-k');}catch(_){} return; }
     try { sessionStorage.setItem('flujo-k', k); } catch(_){}
+    await cargarVivo(k);
     document.getElementById('puerta').remove();
     iniciar();
   } finally {
@@ -274,22 +283,52 @@ function colsVisibles(){ return E.columnas.filter(c=>!c.oculta); }
 let reExcl;
 function recExcl(){ try { reExcl = new RegExp(E.excluir,'i'); } catch(e){ reExcl = /$^/; } }
 function grupoExcluido(f,g){ const k=f+'|'+g[0]+'|'+g[1]; if (k in E.exclGrupo) return E.exclGrupo[k]; return reExcl.test(g[1]); }
+/* RECAUDACIÓN REAL = Caja Tesorería + Control de Transferencias.
+   - Caja: ingresos de la planilla Finanzas_Diarias. En vivo (vivo.enc.json, robot flujo-vivo de
+     GitHub) cuando el Apps Script de la caja tiene la acción resumenMes; si no, las planillas de
+     W:\Tesoreria (data.enc.json) o lo importado a mano.
+   - Transferencias: las que declaró cada fletero en la rendición de su reparto (tipo TRANS), las
+     mismas que muestra Control de Transferencias. Las trae el mismo robot desde la base propia.
+     Para los días que el Control no tiene (antes del 29/9/2026, cuando la base empezó a guardar
+     rendiciones) se usan los créditos de los extractos bancarios, y queda marcado. */
+let VIVO = null;
+function cajaDe(f){ const v=VIVO&&VIVO.caja&&VIVO.caja[f]; return { items: v || E.caja[f] || [], vivo: !!v }; }
 function recaudacion(f){
-  const caja = (E.caja[f]||[]).reduce((a,x)=>a+x[2],0);
+  const cj = cajaDe(f);
+  const caja = cj.items.reduce((a,x)=>a+x[2],0);
+  const tItems = (VIVO&&VIVO.transferencias&&VIVO.transferencias[f]) || [];
+  const transfControl = tItems.reduce((a,x)=>a+x[2],0);
+  const conControl = !!(VIVO&&VIVO.valoresPorTipo&&VIVO.valoresPorTipo[f]);
+  // la base guarda rendiciones desde el 29/9/2026: antes de eso no se avisa que "faltan"
+  const inicioControl = VIVO&&VIVO.valoresPorTipo ? (recaudacion.ini || (recaudacion.ini=Object.keys(VIVO.valoresPorTipo).sort()[0])) : null;
+  const sinRend = (inicioControl && f>=inicioControl && VIVO.sinRendicion && VIVO.sinRendicion[f]) || 0;
   let banco=0, bancoExcl=0;
   for (const g of (E.bancos[f]||[])) { if (grupoExcluido(f,g)) bancoExcl+=g[2]; else banco+=g[2]; }
+  const usaBanco = !conControl && banco>0;
+  const transf = conControl ? transfControl : (usaBanco ? banco : 0);
   const aj = (E.ajustes[f]||[]).reduce((a,x)=>a+x.monto,0);
   const est = E.estimado[f]||0;
-  const hayCaja = !!(E.caja[f]&&E.caja[f].length), hayBanco = !!(E.bancos[f]&&E.bancos[f].length);
-  const real = caja+banco;
+  const hayCaja = cj.items.length>0, hayTransf = conControl || usaBanco;
+  const real = caja+transf;
   let usada, fuente;
   const modo = E.modoRec;
   if (modo==='est') { usada=est; fuente='e'; }
   else if (modo==='real') { usada=real; fuente='r'; }
-  else if (hayCaja||hayBanco) { usada=real; fuente='r'; }
+  // mixto: con caja Y transferencias va lo real; si falta una de las dos, se sigue usando la
+  // estimada (si hay) para no hundir el saldo con un real a medias, y se marca con "!"
+  else if (hayCaja&&hayTransf) { usada=real; fuente='r'; }
+  else if ((hayCaja||hayTransf) && !est) { usada=real; fuente='r'; }
   else { usada=est; fuente= est?'e':''; }
   usada += aj;
-  return {caja,banco,bancoExcl,aj,est,real,usada,fuente,hayCaja,hayBanco};
+  const avisos=[];
+  if (modo!=='est' && (hayCaja||hayTransf||sinRend)){
+    if (fuente==='e') avisos.push(`Real parcial: caja $${f0(caja)||0} + transferencias $${f0(transf)||0}. Se usa la estimada hasta tener las dos`);
+    if (!hayCaja) avisos.push('Falta la caja de ese día');
+    if (sinRend) avisos.push(`Control de Transferencias: ${sinRend===1?'falta 1 rendición':'faltan '+sinRend+' rendiciones'}`);
+    if (usaBanco) avisos.push('Transferencias tomadas de los extractos (el Control no tiene ese día)');
+    else if (!hayTransf) avisos.push('Sin transferencias de ese día');
+  }
+  return {caja,cajaVivo:cj.vivo,cajaItems:cj.items,transf,transfControl,tItems,conControl,sinRend,usaBanco,banco,bancoExcl,aj,est,real,usada,fuente,hayCaja,hayTransf,avisos};
 }
 function totalVencido(k){ const v=E.vencido[k]; if(!v) return {gasto:0,cheque:0,total:0};
   let g=0,c=0; for (const [col,m] of Object.entries(v.montos||{})) { const t=(E.columnas.find(x=>x.key===col)||{}).tipo; if (t==='cheque') c+=m; else g+=m; }
@@ -303,7 +342,7 @@ function calcularMes(y,m){
   else saldo = E.saldoInicial[k]||0;
   const saldoIni = saldo;
   const venc = totalVencido(k); saldo -= venc.total;
-  const tot = {pagos:0,cheques:0,rec:0,recReal:0,recEst:0,caja:0,banco:0,pagado:0,impago:0,pendiente:0,porCol:{}};
+  const tot = {pagos:0,cheques:0,rec:0,recReal:0,recEst:0,caja:0,transf:0,pagado:0,impago:0,pendiente:0,porCol:{}};
   for (let d=1; d<=n; d++){
     const f=ymd(y,m,d), p=E.pagos[f]||{};
     let pagos=0, cheques=0;
@@ -313,7 +352,7 @@ function calcularMes(y,m){
       const st=E.estados[f+'|'+c.key]; if (st==='ok') tot.pagado+=v; else if (st==='no') tot.impago+=v; else tot.pendiente+=v; }
     const r = recaudacion(f);
     saldo += r.usada - pagos - cheques;
-    tot.pagos+=pagos; tot.cheques+=cheques; tot.rec+=r.usada; tot.recReal+=r.real; tot.recEst+=r.est; tot.caja+=r.caja; tot.banco+=r.banco;
+    tot.pagos+=pagos; tot.cheques+=cheques; tot.rec+=r.usada; tot.recReal+=r.real; tot.recEst+=r.est; tot.caja+=r.caja; tot.transf+=r.transf;
     filas.push({f,d,pagos,cheques,r,saldo});
   }
   for (const [col,mm] of Object.entries((E.vencido[k]||{}).montos||{})) tot.porColVenc = tot.porColVenc||{}, tot.porColVenc[col]=mm;
@@ -335,14 +374,14 @@ function renderMes(){
     <div class="tarjeta"><div class="t">Total pagos a realizar</div><div class="v">$ ${f0(T.pagos)||0}</div><div class="s">+ vencido $ ${f0(C.venc.gasto)||0}</div></div>
     <div class="tarjeta"><div class="t">Total cheques (e-cheqs)</div><div class="v">$ ${f0(T.cheques)||0}</div><div class="s">+ vencido $ ${f0(C.venc.cheque)||0}</div></div>
     <div class="tarjeta"><div class="t">Recaudación usada</div><div class="v">$ ${f0(T.rec)||0}</div><div class="s">Real $ ${f0(T.recReal)||0} · Est. $ ${f0(T.recEst)||0}</div></div>
-    <div class="tarjeta"><div class="t">Recaudado real</div><div class="v">$ ${f0(T.recReal)||0}</div><div class="s">Caja $ ${f0(T.caja)||0} · Bancos $ ${f0(T.banco)||0}</div></div>
+    <div class="tarjeta"><div class="t">Recaudado real</div><div class="v">$ ${f0(T.recReal)||0}</div><div class="s">Caja $ ${f0(T.caja)||0} · Transferencias $ ${f0(T.transf)||0}</div></div>
     <div class="tarjeta"><div class="t">Estado de pagos</div><div class="v" style="font-size:14px"><span style="color:var(--verdeb)">✔ $ ${f0(T.pagado)||0}</span></div><div class="s"><span style="color:var(--rojob)">✖ $ ${f0(T.impago)||0}</span> · pendiente $ ${f0(T.pendiente)||0}</div></div>
     <div class="tarjeta"><div class="t">Saldo de caja al cierre</div><div class="v ${C.saldoFinal<0?'neg':''}">$ ${fmt0.format(C.saldoFinal)}</div><div class="s">Inicial $ ${fmt0.format(C.saldoIni)} <a href="#" id="editSaldoIni">editar</a></div></div>
   </div>
   <div class="leyenda"><span><i style="background:var(--verde)"></i>1 clic: pagado</span><span><i style="background:var(--rojo)"></i>2 clics: no pagado / vencido</span>
    <span><i style="background:var(--finde)"></i>Fin de semana</span><span><i style="background:var(--feriado)"></i>Feriado</span>
-   <span>Clic derecho (o clic en celda vacía): editar monto</span><span><span class="badge b-r">R</span> real · <span class="badge b-e">E</span> estimada · <span class="badge b-w">!</span> falta caja o banco</span></div>
-  <div class="tablawrap"><table class="flujo"><thead>`;
+   <span>Clic derecho (o clic en celda vacía): editar monto</span><span><span class="badge b-r">R</span> real · <span class="badge b-e">E</span> estimada · <span class="badge b-w">!</span> falta caja o rendiciones</span></div>
+  <div class="tablawrap" data-k="${k}"><table class="flujo"><thead>`;
   const nG=cols.filter(c=>c.tipo==='gasto').length, nC=cols.filter(c=>c.tipo==='cheque').length, nP=cols.filter(c=>c.tipo==='proveedor').length;
   // encabezado agrupado respetando el orden de columnas
   h += `<tr class="grupoc"><th class="fecha"></th>`;
@@ -362,36 +401,49 @@ function renderMes(){
     for (const c of cols){ const v=p[c.key], key=r.f+'|'+c.key, st=E.estados[key];
       h+=`<td class="m tipo-${c.tipo} ${st&&v?st:''} ${E.notas[key]?'nota':''}" data-f="${r.f}" data-c="${c.key}" ${E.notas[key]?`title="${esc(E.notas[key])}"`:''}>${f0(v)}</td>`; }
     const R=r.r; let badge='';
-    if (R.fuente==='r') badge=`<span class="badge b-r">R</span>${(!R.hayCaja||!R.hayBanco)&&E.modoRec!=='est'?'<span class="badge b-w" title="'+(!R.hayCaja?'Falta caja':'Falta banco')+'">!</span>':''}`;
-    else if (R.fuente==='e') badge='<span class="badge b-e">E</span>';
-    h += `<td class="calc">${f0(r.pagos)}</td><td class="calc rec" data-rec="${r.f}" title="Caja $${f0(R.caja)||0} · Bancos $${f0(R.banco)||0} · Estimada $${f0(R.est)||0}${R.aj?' · Ajuste $'+f0(R.aj):''}">${f0(R.usada)}${badge}</td><td class="calc">${f0(r.cheques)}</td><td class="calc ${r.saldo<0?'neg':''}">${fmt0.format(r.saldo)}</td></tr>`;
+    if (R.fuente==='r') badge=`<span class="badge b-r">R</span>${R.avisos.length?'<span class="badge b-w" title="'+esc(R.avisos.join(' · '))+'">!</span>':''}`;
+    else if (R.fuente==='e') badge=`<span class="badge b-e">E</span>${R.avisos.length?'<span class="badge b-w" title="'+esc(R.avisos.join(' · '))+'">!</span>':''}`;
+    h += `<td class="calc">${f0(r.pagos)}</td><td class="calc rec" data-rec="${r.f}" title="Caja $${f0(R.caja)||0} · Transferencias $${f0(R.transf)||0} · Estimada $${f0(R.est)||0}${R.aj?' · Ajuste $'+f0(R.aj):''}">${f0(R.usada)}${badge}</td><td class="calc">${f0(r.cheques)}</td><td class="calc ${r.saldo<0?'neg':''}">${fmt0.format(r.saldo)}</td></tr>`;
   }
   h += `</tbody><tfoot><tr><td class="fecha">TOTAL</td>`;
   for (const c of cols) h+=`<td>${f0((T.porCol[c.key]||0)+(vm[c.key]||0))}</td>`;
   h += `<td>${f0(T.pagos+C.venc.gasto)}</td><td>${f0(T.rec)}</td><td>${f0(T.cheques+C.venc.cheque)}</td><td class="${C.saldoFinal<0?'neg':''}">${fmt0.format(C.saldoFinal)}</td></tr></tfoot></table></div>`;
+  // se conserva el desplazamiento al redibujar el mismo mes (marcar, editar, agregar):
+  // sin esto la tabla volvía arriba a la izquierda y la celda tocada desaparecía de la vista
+  const w0=document.querySelector('.tablawrap'), pos=(w0&&w0.dataset.k===k)?[w0.scrollTop,w0.scrollLeft]:null;
   $('main').innerHTML = h;
+  if (pos){ const w1=document.querySelector('.tablawrap'); w1.scrollTop=pos[0]; w1.scrollLeft=pos[1]; }
   $('editSaldoIni').onclick = (e)=>{ e.preventDefault(); editarSaldoIni(); };
 }
 
 /* clic = pagado (verde) · doble clic = no pagado (rojo) · clic derecho = editar */
-let timerClic=null;
+/* 1 clic = verde al instante; el doble clic parte del estado que había ANTES del primer clic,
+   así no depende de la velocidad del mouse (Windows da 500 ms para el doble clic). */
+let ultClic=null;
 $('main').addEventListener('click', e=>{
   const td=e.target.closest('td.m'); if (td){
+    if (e.detail>=2) return;                       // el 2° clic de un doble clic lo maneja dblclick
     if (td.dataset.venc){ editarVencido(td.dataset.c); return; }
     const f=td.dataset.f, c=td.dataset.c, v=(E.pagos[f]||{})[c];
     if (!v){ editarCelda(f,c); return; }
-    clearTimeout(timerClic);
-    timerClic=setTimeout(()=>{ const k=f+'|'+c; if (E.estados[k]==='ok') delete E.estados[k]; else E.estados[k]='ok'; guardar(); render(); }, 240);
+    const k=f+'|'+c;
+    ultClic={k, prev:E.estados[k], t:Date.now()};
+    if (E.estados[k]==='ok') delete E.estados[k]; else E.estados[k]='ok';
+    guardar(); render();
     return; }
   const rc=e.target.closest('[data-rec]'); if (rc) { detalleRec(rc.dataset.rec); return; }
   const tr=e.target.closest('tr[data-mes]'); if (tr){ mes=+tr.dataset.mes; vista='mes'; render(); return; }
   const cal=e.target.closest('.cal'); if (cal){ mes=+cal.dataset.mes; vista='mes'; render(); }
 });
 $('main').addEventListener('dblclick', e=>{
-  const td=e.target.closest('td.m'); if (!td||td.dataset.venc) return;
-  const f=td.dataset.f, c=td.dataset.c; if (!(E.pagos[f]||{})[c]) return;
-  clearTimeout(timerClic); const k=f+'|'+c;
-  if (E.estados[k]==='no') delete E.estados[k]; else E.estados[k]='no'; guardar(); render();
+  const reciente = ultClic && Date.now()-ultClic.t < 1500 ? ultClic : null; ultClic=null;
+  const td=e.target.closest('td.m');
+  const k = reciente ? reciente.k : (td&&!td.dataset.venc ? td.dataset.f+'|'+td.dataset.c : null);
+  if (!k) return;
+  const [f,c]=k.split('|'); if (!(E.pagos[f]||{})[c]) return;
+  const prev = reciente ? reciente.prev : E.estados[k];
+  if (prev==='no') delete E.estados[k]; else E.estados[k]='no';
+  guardar(); render();
 });
 $('main').addEventListener('contextmenu', e=>{
   const td=e.target.closest('td.m'); if (!td) return; e.preventDefault();
@@ -399,9 +451,9 @@ $('main').addEventListener('contextmenu', e=>{
 });
 
 /* ================== modales ================== */
-function abrirModal(html){ $('modal').innerHTML=html; $('fondo').classList.add('on'); const i=$('modal').querySelector('input'); if(i) i.focus(); }
+function abrirModal(html){ abrirModal.t=Date.now(); $('modal').innerHTML=html; $('fondo').classList.add('on'); const i=$('modal').querySelector('input'); if(i) i.focus(); }
 function cerrarModal(){ $('fondo').classList.remove('on'); }
-$('fondo').addEventListener('click', e=>{ if (e.target.id==='fondo') cerrarModal(); });
+$('fondo').addEventListener('click', e=>{ if (e.target.id==='fondo' && e.detail<2 && Date.now()-(abrirModal.t||0)>400) cerrarModal(); });
 document.addEventListener('keydown', e=>{ if (e.key==='Escape'){ cerrarModal(); $('cajon').classList.remove('abierto'); } });
 function nombreCol(k){ return (E.columnas.find(c=>c.key===k)||{nombre:k}).nombre; }
 function fechaTxt(f){ const [y,m,d]=f.split('-'); return `${DIAS[new Date(f+'T12:00:00').getDay()]} ${d}/${m}/${y}`; }
@@ -428,19 +480,22 @@ function editarCelda(f,c){
   if ($('mBorrar')) $('mBorrar').onclick=()=>{ setPago(f,c,0,'','Quitado'); cerrarModal(); render(); };
   const ok=()=>{ const n=numero($('mMonto').value)||0, nf=$('mFecha').value||f, nota=$('mNota').value.trim(), st=$('mEst').value;
     if (nf!==f){ setPago(f,c,0,'','Movido'); const ya=(E.pagos[nf]||{})[c]||0; setPago(nf,c,ya+n,nota,'Movido desde '+fechaTxt(f)); if(st) E.estados[nf+'|'+c]=st; }
-    else { setPago(f,c,n,nota); if (st&&n) E.estados[k]=st; else delete E.estados[k]; }
+    else {
+      if (Math.round(n*100)/100 !== (v||0)) setPago(f,c,n,nota);
+      else if (nota) E.notas[k]=nota; else delete E.notas[k];
+      if (st&&n) E.estados[k]=st; else delete E.estados[k]; }
     guardar(); cerrarModal(); render(); };
   $('mOk').onclick=ok; $('modal').querySelectorAll('input').forEach(i=>i.addEventListener('keydown',e=>{ if(e.key==='Enter') ok(); }));
 }
 function editarVencido(c){
-  const k=ym(anio,mes); E.vencido[k]=E.vencido[k]||{texto:'VENCIDO AL 1/'+mes,montos:{}};
-  const V=E.vencido[k];
+  const k=ym(anio,mes);
+  const V=E.vencido[k]?{...E.vencido[k],montos:{...E.vencido[k].montos}}:{texto:'VENCIDO AL 1/'+mes,montos:{}};
   abrirModal(`<h3>Vencido al inicio de ${MESES[mes-1]} ${anio}</h3>
    <div class="fila"><label>Texto</label><input id="vTxt" type="text" value="${esc(V.texto)}"></div>
    ${c?`<div class="fila"><label>${esc(nombreCol(c))}</label><input id="vMonto" type="text" value="${V.montos[c]?f2(V.montos[c]):''}"></div>`:''}
    <div class="fila" style="justify-content:flex-end;margin-top:10px"><button id="mCanc">Cancelar</button><button class="pri" id="mOk">Guardar</button></div>`);
   $('mCanc').onclick=cerrarModal;
-  $('mOk').onclick=()=>{ V.texto=$('vTxt').value; if (c){ const n=numero($('vMonto').value)||0; if(n) V.montos[c]=n; else delete V.montos[c];
+  $('mOk').onclick=()=>{ E.vencido[k]=V; V.texto=$('vTxt').value; if (c){ const n=numero($('vMonto').value)||0; if(n) V.montos[c]=n; else delete V.montos[c];
       registrar(`Vencido ${k} · ${nombreCol(c)}: $${f2(n)}`); } guardar(); cerrarModal(); render(); };
 }
 function editarSaldoIni(){
@@ -454,15 +509,21 @@ function editarSaldoIni(){
   $('mOk').onclick=()=>{ E.saldoInicial[k]=numero($('sIni').value)||0; E.arrastrar=$('sArr').checked; registrar(`Saldo inicial ${k}: $${f2(E.saldoInicial[k])}`); guardar(); cerrarModal(); render(); };
 }
 function detalleRec(f){
-  const R=recaudacion(f), caja=E.caja[f]||[], bancos=E.bancos[f]||[], aj=E.ajustes[f]||[];
+  const R=recaudacion(f), caja=R.cajaItems, bancos=E.bancos[f]||[], aj=E.ajustes[f]||[];
   let h=`<h3>Recaudación · ${fechaTxt(f)}</h3>
-   <table><tr><td>💵 Caja tesorería (ingresos)</td><td class="n">$ ${f2(R.caja)}</td></tr>
-   <tr><td>🏦 Bancos (créditos incluidos)</td><td class="n">$ ${f2(R.banco)}</td></tr>
-   <tr><td><b>Recaudado real</b></td><td class="n"><b>$ ${f2(R.real)}</b></td></tr>
+   <table><tr><td>💵 Caja Tesorería <span class="aviso">(${R.hayCaja?(R.cajaVivo?'planilla de caja, en vivo':'planilla de caja'):'sin datos de caja'})</span></td><td class="n">$ ${f2(R.caja)}</td></tr>
+   <tr><td>🔁 Transferencias <span class="aviso">(${R.conControl?'Control de Transferencias':R.usaBanco?'extractos bancarios':'sin datos'})</span></td><td class="n">$ ${f2(R.transf)}</td></tr>
+   <tr><td><b>Recaudado real</b> = caja + transferencias</td><td class="n"><b>$ ${f2(R.real)}</b></td></tr>
    <tr><td>➕ Ajustes manuales</td><td class="n">$ ${f2(R.aj)}</td></tr>
    <tr><td>📈 Estimada</td><td class="n"><input id="rEst" type="text" value="${R.est?f2(R.est):''}" style="width:150px;text-align:right"></td></tr>
    <tr><td><b>Usada en el saldo</b></td><td class="n"><b>$ ${f2(R.usada)}</b></td></tr></table>`;
-  if (bancos.length){ h+=`<h4 style="margin:12px 0 4px">Bancos — tildá lo que es recaudación</h4><table><tr><th></th><th>Cuenta</th><th>Concepto</th><th class="n">Mov.</th><th class="n">Importe</th></tr>`;
+  if (R.avisos.length) h+=`<div class="aviso" style="color:#b4590f">⚠️ ${R.avisos.map(esc).join('<br>⚠️ ')}</div>`;
+  if (R.tItems.length){ h+=`<h4 style="margin:12px 0 4px">Control de Transferencias — por reparto</h4><table><tr><th>Ruta</th><th>Fletero</th><th class="n">Transf.</th><th class="n">Importe</th></tr>`;
+    R.tItems.forEach(t=>{ h+=`<tr><td>${esc(t[0])}</td><td>${esc(t[1])}</td><td class="n">${t[3]}</td><td class="n">${f2(t[2])}</td></tr>`; });
+    h+='</table>'; }
+  if (bancos.length && !R.usaBanco){ h+=`<details><summary style="cursor:pointer;margin-top:10px">Extractos bancarios de ese día (referencia: no se suman, las transferencias salen del Control)</summary><table>`;
+    bancos.forEach(g=>{ h+=`<tr><td>${esc(g[0])}</td><td>${esc(g[1])}</td><td class="n">${g[3]}</td><td class="n">${f2(g[2])}</td></tr>`; }); h+='</table></details>'; }
+  if (bancos.length && R.usaBanco){ h+=`<h4 style="margin:12px 0 4px">Extractos bancarios (reemplazan al Control ese día) — tildá lo que es recaudación</h4><table><tr><th></th><th>Cuenta</th><th>Concepto</th><th class="n">Mov.</th><th class="n">Importe</th></tr>`;
     bancos.forEach((g,i)=>{ h+=`<tr><td><input type="checkbox" data-g="${i}" ${grupoExcluido(f,g)?'':'checked'}></td><td>${esc(g[0])}</td><td>${esc(g[1])}</td><td class="n">${g[3]}</td><td class="n">${f2(g[2])}</td></tr>`; });
     h+=`</table><div class="aviso">Los depósitos en efectivo vienen destildados: esa plata ya se contó al entrar a la caja (y sale de la caja como "DEPOSITO BANCARIO").</div>`; }
   if (caja.length){ h+=`<details><summary style="cursor:pointer;margin-top:10px">Detalle caja (${caja.length} ingresos)</summary><table>`;
@@ -481,12 +542,12 @@ function detalleRec(f){
 
 /* ================== vista anual ================== */
 function renderAnio(){
-  let filas='', tot={venc:0,pagos:0,cheques:0,real:0,est:0,rec:0,caja:0,banco:0,pagado:0}; const cals=[];
+  let filas='', tot={venc:0,pagos:0,cheques:0,real:0,est:0,rec:0,caja:0,transf:0,pagado:0}; const cals=[];
   for (let m=1;m<=12;m++){
     const C=calcularMes(anio,m), T=C.tot, hay=tieneDatos(anio,m)||T.recReal;
-    tot.venc+=C.venc.total; tot.pagos+=T.pagos; tot.cheques+=T.cheques; tot.real+=T.recReal; tot.est+=T.recEst; tot.rec+=T.rec; tot.caja+=T.caja; tot.banco+=T.banco; tot.pagado+=T.pagado;
+    tot.venc+=C.venc.total; tot.pagos+=T.pagos; tot.cheques+=T.cheques; tot.real+=T.recReal; tot.est+=T.recEst; tot.rec+=T.rec; tot.caja+=T.caja; tot.transf+=T.transf; tot.pagado+=T.pagado;
     const nF=C.filas.filter(r=>tipoDia(r.f)==='feriado').length, nW=C.filas.filter(r=>tipoDia(r.f)==='finde').length, nH=C.filas.length-nF-nW;
-    filas+=`<tr class="click" data-mes="${m}"><td>${MESES[m-1]}</td><td>${nH} / ${nW} / ${nF}</td><td>${f0(C.venc.total)}</td><td>${f0(T.pagos)}</td><td>${f0(T.cheques)}</td><td>${f0(T.caja)}</td><td>${f0(T.banco)}</td><td>${f0(T.recReal)}</td><td>${f0(T.recEst)}</td><td>${f0(T.rec)}</td><td>${T.pagos+T.cheques?Math.round(T.pagado/(T.pagos+T.cheques)*100)+'%':''}</td><td class="${C.saldoFinal<0?'neg':''}">${hay?fmt0.format(C.saldoFinal):''}</td></tr>`;
+    filas+=`<tr class="click" data-mes="${m}"><td>${MESES[m-1]}</td><td>${nH} / ${nW} / ${nF}</td><td>${f0(C.venc.total)}</td><td>${f0(T.pagos)}</td><td>${f0(T.cheques)}</td><td>${f0(T.caja)}</td><td>${f0(T.transf)}</td><td>${f0(T.recReal)}</td><td>${f0(T.recEst)}</td><td>${f0(T.rec)}</td><td>${T.pagos+T.cheques?Math.round(T.pagado/(T.pagos+T.cheques)*100)+'%':''}</td><td class="${C.saldoFinal<0?'neg':''}">${hay?fmt0.format(C.saldoFinal):''}</td></tr>`;
     // calendario
     const ini=(new Date(anio,m-1,1).getDay()+6)%7; let g='<div class="dn">L</div><div class="dn">M</div><div class="dn">M</div><div class="dn">J</div><div class="dn">V</div><div class="dn">S</div><div class="dn">D</div>';
     for(let i=0;i<ini;i++) g+='<div></div>';
@@ -497,26 +558,27 @@ function renderAnio(){
   $('main').innerHTML = `<div class="tarjetas">
     <div class="tarjeta"><div class="t">Pagos del año</div><div class="v">$ ${f0(tot.pagos)||0}</div></div>
     <div class="tarjeta"><div class="t">Cheques del año</div><div class="v">$ ${f0(tot.cheques)||0}</div></div>
-    <div class="tarjeta"><div class="t">Recaudado real</div><div class="v">$ ${f0(tot.real)||0}</div><div class="s">Caja $ ${f0(tot.caja)||0} · Bancos $ ${f0(tot.banco)||0}</div></div>
+    <div class="tarjeta"><div class="t">Recaudado real</div><div class="v">$ ${f0(tot.real)||0}</div><div class="s">Caja $ ${f0(tot.caja)||0} · Transferencias $ ${f0(tot.transf)||0}</div></div>
     <div class="tarjeta"><div class="t">Recaudación estimada</div><div class="v">$ ${f0(tot.est)||0}</div></div>
     <div class="tarjeta"><div class="t">Marcado como pagado</div><div class="v" style="color:var(--verdeb)">$ ${f0(tot.pagado)||0}</div></div></div>
-   <div class="anual"><table><tr><th>Mes</th><th title="hábiles / fin de semana / feriados">Días háb./finde/fer.</th><th>Vencido inicial</th><th>Pagos</th><th>Cheques</th><th>Caja</th><th>Bancos</th><th>Recaudado real</th><th>Estimado</th><th>Recaudación usada</th><th>% pagado</th><th>Saldo cierre</th></tr>${filas}
-   <tr><td><b>Total ${anio}</b></td><td></td><td><b>${f0(tot.venc)}</b></td><td><b>${f0(tot.pagos)}</b></td><td><b>${f0(tot.cheques)}</b></td><td><b>${f0(tot.caja)}</b></td><td><b>${f0(tot.banco)}</b></td><td><b>${f0(tot.real)}</b></td><td><b>${f0(tot.est)}</b></td><td><b>${f0(tot.rec)}</b></td><td></td><td></td></tr></table></div>
+   <div class="anual"><table><tr><th>Mes</th><th title="hábiles / fin de semana / feriados">Días háb./finde/fer.</th><th>Vencido inicial</th><th>Pagos</th><th>Cheques</th><th>Caja tesorería</th><th>Transferencias</th><th>Recaudado real</th><th>Estimado</th><th>Recaudación usada</th><th>% pagado</th><th>Saldo cierre</th></tr>${filas}
+   <tr><td><b>Total ${anio}</b></td><td></td><td><b>${f0(tot.venc)}</b></td><td><b>${f0(tot.pagos)}</b></td><td><b>${f0(tot.cheques)}</b></td><td><b>${f0(tot.caja)}</b></td><td><b>${f0(tot.transf)}</b></td><td><b>${f0(tot.real)}</b></td><td><b>${f0(tot.est)}</b></td><td><b>${f0(tot.rec)}</b></td><td></td><td></td></tr></table></div>
    <div class="leyenda" style="margin-top:12px"><span><i style="background:var(--finde)"></i>Fin de semana</span><span><i style="background:var(--feriado)"></i>Feriado</span><span><i style="box-shadow:inset 0 -3px 0 #43a047"></i>Día con neto positivo</span><span><i style="box-shadow:inset 0 -3px 0 #e53935"></i>Día con neto negativo</span><span>Clic en un mes para abrirlo</span></div>
    <div class="calendarios">${cals.join('')}</div>`;
 }
 
 /* ================== cajón: agregar / quitar ================== */
 function opcionesCols(sel){ return E.columnas.map(c=>`<option value="${c.key}" ${c.key===sel?'selected':''}>${esc(c.nombre)}${c.oculta?' (oculta)':''}</option>`).join(''); }
+let formCajon=null;   // lo último que se usó en el cajón: no se pierde al redibujar
 function abrirCajon(){
   const k=ym(anio,mes);
-  const def = (HOY.startsWith(k)?HOY:ymd(anio,mes,1));
+  const def = (formCajon&&formCajon.f) || (HOY.startsWith(k)?HOY:ymd(anio,mes,1));
   const cambios = E.log.slice(0,80);
   $('cajonTitulo').textContent='Agregar / Quitar';
   $('cajonCuerpo').innerHTML = `
   <h3>Pago o cheque</h3>
   <div class="fila"><label>Fecha</label><input type="date" id="aF" value="${def}"></div>
-  <div class="fila"><label>Concepto</label><select id="aC">${opcionesCols()}</select></div>
+  <div class="fila"><label>Concepto</label><select id="aC">${opcionesCols(formCajon&&formCajon.c)}</select></div>
   <div class="fila"><label>Monto</label><input type="text" id="aM" inputmode="decimal" placeholder="0,00"></div>
   <div class="fila"><label>Nota</label><input type="text" id="aN" placeholder="opcional"></div>
   <div class="fila"><label>Repetir</label><select id="aR"><option value="0">Una vez</option><option value="7">Cada semana</option><option value="m">Cada mes</option></select><input type="number" id="aRn" value="1" min="1" max="52" style="max-width:70px" title="cantidad de veces"></div>
@@ -537,12 +599,25 @@ function abrirCajon(){
   <h3>Últimos cambios</h3>
   <div class="lista">${cambios.map(l=>`<div><span style="color:var(--sub)">${new Date(l.ts).toLocaleString('es-AR',{dateStyle:'short',timeStyle:'short'})}</span><span>${esc(l.txt)}</span></div>`).join('')||'<div>Todavía no hay cambios.</div>'}</div>`;
   $('cajon').classList.add('abierto');
-  const fechas=()=>{ const out=[], f0d=$('aF').value, rep=$('aR').value, n=rep==='0'?1:Math.max(1,+$('aRn').value||1); let d=new Date(f0d+'T12:00:00');
-    for(let i=0;i<n;i++){ out.push(iso(d)); if(rep==='7') d.setDate(d.getDate()+7); else if(rep==='m') d.setMonth(d.getMonth()+1); } return out; };
+  // "cada mes" desde un 29, 30 o 31 cae en el último día de los meses más cortos (no se saltea meses)
+  const fechas=()=>{ const out=[], f0d=$('aF').value, rep=$('aR').value, n=rep==='0'?1:Math.min(60,Math.max(1,+$('aRn').value||1));
+    const [y,m,d]=f0d.split('-').map(Number);
+    for(let i=0;i<n;i++){
+      if (rep==='m'){ const ult=new Date(y,m+i,0).getDate(); out.push(iso(new Date(y,m-1+i,Math.min(d,ult)))); }
+      else out.push(iso(new Date(y,m-1,d+(rep==='7'?7*i:0)))); }
+    return out; };
   const aplicar=(modo)=>{ const c=$('aC').value, n=numero($('aM').value), nota=$('aN').value.trim();
     if (!$('aF').value) return toast('Falta la fecha');
     if (modo!=='quitar' && !(n>0)) return toast('Poné un monto mayor a cero');
-    for (const f of fechas()){ const ya=(E.pagos[f]||{})[c]||0;
+    if (modo==='quitar' && n<0) return toast('El monto a quitar tiene que ser positivo');
+    const fs=fechas();
+    if (modo==='quitar' && !(n>0)){
+      const con=fs.filter(f=>(E.pagos[f]||{})[c]);
+      if (!con.length) return toast('No hay monto para quitar en esa fecha y columna');
+      if (!confirm(`¿Borrar ${nombreCol(c)} del ${con.map(fechaTxt).join(', ')}? (Con un monto, se resta solo ese importe)`)) return;
+    }
+    formCajon={f:$('aF').value, c};
+    for (const f of fs){ const ya=(E.pagos[f]||{})[c]||0;
       if (modo==='sumar') setPago(f,c,ya+n,nota||undefined,'Agregado');
       else if (modo==='reemp') setPago(f,c,n,nota||undefined,'Reemplazado');
       else setPago(f,c, n>0?Math.max(0,ya-n):0, undefined, 'Quitado'); }
@@ -578,10 +653,12 @@ function abrirImport(){
    <div id="impRes" class="aviso"></div>
    <h3>Qué hay cargado</h3>
    <div class="lista">
-    <div><span>💵 Caja tesorería</span><span class="x">hasta ${ultCaja}</span></div>
+    <div><span>🔁 Control de Transferencias</span><span class="x">${VIVO&&VIVO.transferencias?'desde 29/9 · actualizado '+esc(String(VIVO.generado||'').slice(0,16).replace('T',' ')):'sin datos'}</span></div>
+    <div><span>💵 Caja tesorería en vivo</span><span class="x">${VIVO&&VIVO.caja?'hasta '+(Object.keys(VIVO.caja).sort().pop()||'—'):'todavía no conectada'}</span></div>
+    <div><span>💵 Caja tesorería (planillas)</span><span class="x">hasta ${ultCaja}</span></div>
     ${Object.entries(cuentas).map(([c,f])=>`<div><span>🏦 ${esc(c)}</span><span class="x">hasta ${f}</span></div>`).join('')}
    </div>
-   <div class="aviso">La caja de octubre en adelante vive en Google Drive (planilla Finanzas_Diarias del mes): bajala como Excel (Archivo → Descargar → .xlsx) y soltala acá. Los extractos se bajan del homebanking, igual que para el Control de Transferencias. Si volvés a cargar un extracto, reemplaza los días y la cuenta que trae: no se duplica.</div>
+   <div class="aviso">Las transferencias del Control se actualizan solas cada 2 horas (lunes a sábado). Mientras la caja en vivo no esté conectada, la caja de octubre en adelante vive en Google Drive (planilla Finanzas_Diarias del mes): bajala como Excel (Archivo → Descargar → .xlsx) y soltala acá. Los extractos se bajan del homebanking, igual que para el Control de Transferencias. Si volvés a cargar un extracto, reemplaza los días y la cuenta que trae: no se duplica.</div>
    <h3>Créditos bancarios que NO cuentan como recaudación</h3>
    <div class="fila"><input type="text" id="exRe" value="${esc(E.excluir)}"><button id="exOk">Aplicar</button></div>
    <div class="aviso">Palabras separadas por | . Por defecto se excluyen depósitos en efectivo (ya están en la caja), transferencias entre cuentas propias, préstamos, descuento de documentos, rescates FIMA y rechazos.</div>
@@ -715,11 +792,11 @@ $('btnMas').onclick=()=>{
 };
 function exportarExcel(){
   const C=calcularMes(anio,mes), cols=colsVisibles(), k=ym(anio,mes), vm=(E.vencido[k]||{}).montos||{};
-  const aoa=[[`FLUJO DE CAJA TP-RL — ${MESES[mes-1].toUpperCase()} ${anio}`],['VENCIMIENTO',...cols.map(c=>c.nombre),'TOTAL PAGOS A REALIZAR','RECAUDACION REAL Y ESTIMADA','TOTAL $ CHEQUES','SALDO DE CAJA','RECAUDADO CAJA','RECAUDADO BANCOS','RECAUDACION ESTIMADA','FERIADO']];
+  const aoa=[[`FLUJO DE CAJA TP-RL — ${MESES[mes-1].toUpperCase()} ${anio}`],['VENCIMIENTO',...cols.map(c=>c.nombre),'TOTAL PAGOS A REALIZAR','RECAUDACION REAL Y ESTIMADA','TOTAL $ CHEQUES','SALDO DE CAJA','RECAUDADO CAJA','TRANSFERENCIAS','RECAUDACION ESTIMADA','FERIADO']];
   aoa.push([(E.vencido[k]||{}).texto||'VENCIDO',...cols.map(c=>vm[c.key]||null),C.venc.gasto||null,null,C.venc.cheque||null,C.saldoIni-C.venc.total]);
   for (const r of C.filas){ const p=E.pagos[r.f]||{}; const [y,m,d]=r.f.split('-');
-    aoa.push([`${d}/${m}/${y}`,...cols.map(c=>p[c.key]||null),r.pagos||0,r.r.usada||null,r.cheques||null,r.saldo,r.r.caja||null,r.r.banco||null,r.r.est||null,E.feriados[r.f]||(tipoDia(r.f)==='finde'?'fin de semana':'')]); }
-  aoa.push(['TOTAL',...cols.map(c=>(C.tot.porCol[c.key]||0)+(vm[c.key]||0)),C.tot.pagos+C.venc.gasto,C.tot.rec,C.tot.cheques+C.venc.cheque,C.saldoFinal,C.tot.caja,C.tot.banco,C.tot.recEst]);
+    aoa.push([`${d}/${m}/${y}`,...cols.map(c=>p[c.key]||null),r.pagos||0,r.r.usada||null,r.cheques||null,r.saldo,r.r.caja||null,r.r.transf||null,r.r.est||null,E.feriados[r.f]||(tipoDia(r.f)==='finde'?'fin de semana':'')]); }
+  aoa.push(['TOTAL',...cols.map(c=>(C.tot.porCol[c.key]||0)+(vm[c.key]||0)),C.tot.pagos+C.venc.gasto,C.tot.rec,C.tot.cheques+C.venc.cheque,C.saldoFinal,C.tot.caja,C.tot.transf,C.tot.recEst]);
   const ws=XLSX.utils.aoa_to_sheet(aoa); ws['!cols']=[{wch:14},...cols.map(()=>({wch:14})),{wch:16},{wch:16},{wch:16},{wch:16}];
   const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'FLUJO DE CAJA TP-RL');
   XLSX.writeFile(wb,`Flujo Caja vs Pagos futuros - TP-RL - ${MESES[mes-1].toUpperCase()} ${anio}.xlsx`);

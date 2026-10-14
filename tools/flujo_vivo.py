@@ -122,7 +122,11 @@ def caja(s, desde, hasta):
     if not url or not secreto:
         print("caja: sin CAJA_URL/CAJA_SECRETO, se saltea")
         return None
+    # solo el mes en curso y el anterior: los meses viejos ya vienen de las planillas de
+    # W:\Tesoreria (data.enc.json) y cada mes le cuesta al Apps Script abrir una planilla
     out, meses = {}, []
+    previo = (hasta.replace(day=1) - dt.timedelta(days=1)).replace(day=1)
+    desde = max(desde, previo)
     y, m = desde.year, desde.month
     while (y, m) <= (hasta.year, hasta.month):
         meses.append((y, m))
