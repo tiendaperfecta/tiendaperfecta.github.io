@@ -1,0 +1,61 @@
+name: Flujo de caja (recaudacion en vivo)
+
+# Recaudacion real del panel Flujo de Caja = Caja de Tesoreria + Control de Transferencias.
+# Lee de la base propia las transferencias que declaro cada fletero en la rendicion (las mismas
+# que muestra Control de Transferencias) y, si esta configurada, la caja del Apps Script.
+# Commitea flujo/vivo.enc.json (cifrado con FLUJO_CLAVE). Lo demas del panel (planillas de
+# pagos, extractos) lo sube tools/flujo-semanal.ps1 desde la PC de la oficina.
+on:
+  schedule:
+    # la base trae rendiciones cada 30 min de 07:00 a 17:00: 08:50 a 18:50 hora argentina
+    - cron: "50 11,13,15,17,19,21 * * 1-6"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: flujo-vivo
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install requests cryptography
+
+      - name: Leer caja y transferencias
+        env:
+          BASE_CLAVE: ${{ secrets.BASE_CLAVE }}
+          FLUJO_CLAVE: ${{ secrets.FLUJO_CLAVE }}
+          CAJA_URL: ${{ secrets.CAJA_URL }}
+          CAJA_SECRETO: ${{ secrets.CAJA_SECRETO }}
+        run: python tools/flujo_vivo.py
+
+      - name: Commit si cambio
+        run: |
+          git config user.name  "flujo-bot"
+          git config user.email "flujo-bot@users.noreply.github.com"
+          git add flujo/vivo.enc.json
+          if git diff --cached --quiet; then
+            echo "Sin cambios."
+            exit 0
+          fi
+          git commit -m "chore(flujo): recaudacion en vivo $(date -u +%FT%TZ)"
+          for i in 1 2 3; do
+            if git push; then
+              exit 0
+            fi
+            echo "Push rechazado, reintento $i tras rebase..."
+            git pull --rebase origin "${GITHUB_REF_NAME}" || exit 1
+            sleep 5
+          done
+          echo "::error title=Flujo::No se pudo pushear tras 3 intentos."
+          exit 1
