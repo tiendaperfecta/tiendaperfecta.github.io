@@ -1,18 +1,16 @@
 {
- "generatedAt": "2026-10-14T11:44:16-03:00",
+ "generatedAt": "2026-10-14T12:33:26-03:00",
  "date": "2026-10-14",
- "errors": [
-  "detalle: repartos 2026-10-14: 500 Server Error: Internal Server Error for url: https://base.tienda-perfecta.workers.dev/gescom/data/cmd/distribucion/api/v1/get-repartos?fechadesde=2026-10-14&fechahasta=2026-10-15"
- ],
+ "errors": [],
  "pedidos": {
-  "traidos": 261,
-  "totalSegunApi": 261
+  "traidos": 311,
+  "totalSegunApi": 311
  },
  "formatoGps": {
-  "posicion": "'-38.0328336,-57.5575586,3,11:42 AM,138,,'",
+  "posicion": "'-38.0353209,-57.5582171,3,12:30 PM,213,,'",
   "visitados": "{'sellerID': '1', 'visitedClient': '1050'}",
   "km": null,
-  "visitadosTotal": 244,
+  "visitadosTotal": 288,
   "kmError": null
  },
  "gescom": {
@@ -21,7 +19,7 @@
  },
  "alerta": "hay 4 llegadas tarde, sin casilla configurada",
  "detalle": {
-  "filas": 352,
+  "filas": 406,
   "vendedores": 17,
   "diasEnHistoria": 53
  },
