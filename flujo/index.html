@@ -232,7 +232,7 @@ const NO_PALABRAS = new Set(['DEPO','DEPOSITO','SEMANAL','SEMANALES','EXTRAS','H
 function colAuto(nombre){
   const n = norm(nombre);
   for (const tipos of [['proveedor'],['gasto']]) for (const c of E.columnas) {
-    if (!tipos.includes(c.tipo) || c.key==='resto') continue;
+    if (!tipos.includes(c.tipo) || c.key==='resto' || c.auto) continue;
     const toks = norm(c.nombre).split(/[^A-Z0-9]+/).filter(t=>t.length>=(c.tipo==='proveedor'?3:4) && !NO_PALABRAS.has(t));
     if (toks.some(t=>n.includes(t))) return c.key;
   }
@@ -243,23 +243,60 @@ function colDeProveedor(nombre, codigo){
   if (elegida==='no') return null;
   if (elegida && E.columnas.some(c=>c.key===elegida)) return elegida;
   const auto = colAuto(nombre); if (auto) return auto;
-  return E.columnas.some(c=>c.key==='resto') ? 'resto' : ((E.columnas.find(c=>c.tipo==='proveedor')||{}).key || E.columnas[0].key);
+  return 'gp_'+codigo;
+}
+// "PRIMEROS PRODUCTOS PEHUENIAS S.A." → "PRIMEROS PRODUCTOS PEHUENIAS"
+function nombreCorto(n){
+  const w=String(n||'').toUpperCase().trim().split(/\s+/);
+  while (w.length>1 && /^(S|A|I|C|F|Y|SA|SRL|SAS|SACI|SAIC|SAICA|SACIFYA)$/.test(w[w.length-1].replace(/\./g,''))) w.pop();
+  return w.join(' ').slice(0,30);
+}
+/* PROVEEDORES ORGANIZADOS: cada proveedor con facturas impagas que no tiene columna propia recibe
+   una columna automática (auto:true); la que se queda sin facturas y sin montos cargados a mano
+   se borra sola. En cada mes se muestran solo los proveedores que tienen algo ese mes. */
+function ordenarColumnasProveedor(){
+  const tot={};
+  for (const x of (VIVO&&VIVO.facturas)||[]) tot['gp_'+x[0]]=(tot['gp_'+x[0]]||0)+x[8];
+  const autos=E.columnas.filter(c=>c.auto).sort((a,b)=>(tot[b.key]||0)-(tot[a.key]||0));
+  const resto=E.columnas.filter(c=>!c.auto);
+  const i=resto.findIndex(c=>c.key==='resto');
+  E.columnas = i>=0 ? [...resto.slice(0,i), ...autos, ...resto.slice(i)] : [...resto, ...autos];
 }
 function indexarFacturas(){
   FACT = { dia:{}, venc:{}, n:0, total:0, otraMoneda:0 };
   if (!VIVO || !VIVO.facturas || E.sumarFacturas===false) return;
   const ini = HOY.slice(0,8)+'01';
+  const usadas = new Set(); let cambio = false;
   for (const x of VIVO.facturas){
     const [prov,nombre,tipo,nro,cuota,emp,fecha,vence,saldo,moneda]=x;
     if (moneda && moneda!=='ARS') { FACT.otraMoneda++; continue; }
     const col = colDeProveedor(nombre, prov);
     if (!col) continue;
+    if (col.startsWith('gp_') && !E.columnas.some(c=>c.key===col)) {
+      E.columnas.push({ key:col, nombre:nombreCorto(nombre), tipo:'proveedor', auto:true });
+      cambio = true;
+    }
+    usadas.add(col);
     const it = { prov, nombre, comp: tipo+' '+nro+(cuota>1?' (cuota '+cuota+')':''), emp, fecha, vence, saldo };
     const dest = vence < ini ? FACT.venc : (FACT.dia[vence] = FACT.dia[vence] || {});
     const cel = dest[col] = dest[col] || { total:0, items:[] };
     cel.total = Math.round((cel.total + saldo)*100)/100; cel.items.push(it);
     FACT.n++; FACT.total += saldo;
   }
+  // se borran las columnas automáticas que ya no tienen facturas ni nada cargado a mano
+  const conMontos = new Set();
+  for (const p of Object.values(E.pagos)) for (const c in p) conMontos.add(c);
+  for (const v of Object.values(E.vencido)) for (const c in (v.montos||{})) conMontos.add(c);
+  const antes = E.columnas.length;
+  E.columnas = E.columnas.filter(c => !c.auto || usadas.has(c.key) || conMontos.has(c.key));
+  if (cambio || E.columnas.length!==antes) { ordenarColumnasProveedor(); guardar(); }
+}
+// columnas del mes: los proveedores solo si tienen algo ese mes (facturas, montos o vencido)
+function colsDelMes(y,m){
+  const k=ym(y,m), con=new Set();
+  for (const [c,v] of Object.entries(vencidoMontos(k))) if (v) con.add(c);
+  for (let d=1; d<=diasDelMes(y,m); d++) for (const [c,v] of Object.entries(pagosDe(ymd(y,m,d)))) if (v) con.add(c);
+  return colsVisibles().filter(c=>c.tipo!=='proveedor' || con.has(c.key));
 }
 function facturasDe(f,c){ return ((FACT.dia[f]||{})[c]) || null; }
 // pagos del día = lo cargado a mano / planillas + facturas de Pago proveedores
@@ -279,7 +316,7 @@ function tablaProveedoresHtml(){
   const por={};
   for (const x of VIVO.facturas){ const [prov,nombre,,,,,,,saldo]=x; const q=por[prov]=por[prov]||{prov,nombre,n:0,total:0}; q.n++; q.total+=saldo; }
   const lista=Object.values(por).sort((a,b)=>b.total-a.total);
-  const opc=(prov,nombre)=>{ const el=(E.mapaProv||{})[prov]||''; const auto=colAuto(nombre)||(E.columnas.some(c=>c.key==='resto')?'resto':'');
+  const opc=(prov,nombre)=>{ const el=(E.mapaProv||{})[prov]||''; const auto=colAuto(nombre)||('gp_'+prov);
     return `<option value="" ${!el?'selected':''}>Automática (${esc(nombreCol(auto))})</option><option value="no" ${el==='no'?'selected':''}>— No sumar —</option>`+
       E.columnas.filter(c=>c.tipo!=='cheque').map(c=>`<option value="${c.key}" ${el===c.key?'selected':''}>${esc(c.nombre)}</option>`).join(''); };
   return `<h4 style="margin:12px 0 4px">En qué columna va cada proveedor</h4>
@@ -442,7 +479,7 @@ function render(){
   if (vista==='mes') renderMes(); else renderAnio();
 }
 function renderMes(){
-  const k=ym(anio,mes), C=calcularMes(anio,mes), cols=colsVisibles(), T=C.tot;
+  const k=ym(anio,mes), C=calcularMes(anio,mes), cols=colsDelMes(anio,mes), T=C.tot;
   const venc = E.vencido[k];
   let h = `<div class="tarjetas">
     <div class="tarjeta"><div class="t">Total pagos a realizar</div><div class="v">$ ${f0(T.pagos)||0}</div><div class="s">+ vencido $ ${f0(C.venc.gasto)||0}</div></div>
@@ -671,9 +708,9 @@ function abrirCajon(){
   <div class="fila"><button id="jAdd">Agregar ajuste</button><button id="jEst">Fijar como estimada</button></div>
 
   <h3>Columnas</h3>
-  <div class="lista" id="colLista">${E.columnas.map((c,i)=>`<div><input type="checkbox" data-vis="${i}" ${c.oculta?'':'checked'} title="mostrar"><span>${esc(c.nombre)}</span><span class="x" style="color:var(--sub)">${c.tipo}</span><button data-up="${i}" title="subir">↑</button><button data-ren="${i}" title="renombrar">✎</button><button data-delc="${i}" title="eliminar">✕</button></div>`).join('')}</div>
+  <div class="lista" id="colLista">${E.columnas.map((c,i)=>`<div><input type="checkbox" data-vis="${i}" ${c.oculta?'':'checked'} title="mostrar"><span>${esc(c.nombre)}</span><span class="x" style="color:var(--sub)">${c.auto?'automática':c.tipo}</span><button data-up="${i}" title="subir">↑</button><button data-ren="${i}" title="renombrar">✎</button><button data-delc="${i}" title="eliminar">✕</button></div>`).join('')}</div>
   <div class="fila" style="margin-top:6px"><input type="text" id="nCol" placeholder="Nueva columna (ej. ADECCO)"><select id="nTipo" style="max-width:120px"><option value="proveedor">Proveedor</option><option value="gasto">Gasto fijo</option><option value="cheque">Cheque</option></select><button id="nAdd">Agregar</button></div>
-  <div class="aviso">Las columnas tipo "Cheque" se suman en TOTAL $ CHEQUES y no en TOTAL PAGOS, igual que en la planilla.</div>
+  <div class="aviso">Las columnas tipo "Cheque" se suman en TOTAL $ CHEQUES y no en TOTAL PAGOS, igual que en la planilla. Las "automáticas" son proveedores con facturas en Pago proveedores: se crean y se borran solas. En cada mes solo se ven los proveedores que tienen algo ese mes.</div>
 
   <h3>Últimos cambios</h3>
   <div class="lista">${cambios.map(l=>`<div><span style="color:var(--sub)">${new Date(l.ts).toLocaleString('es-AR',{dateStyle:'short',timeStyle:'short'})}</span><span>${esc(l.txt)}</span></div>`).join('')||'<div>Todavía no hay cambios.</div>'}</div>`;
@@ -875,7 +912,7 @@ $('btnMas').onclick=()=>{
   $('oReset').onclick=()=>{ if(!confirm('Se pierden TODOS los cambios, marcas e importaciones hechas acá. ¿Exportaste un respaldo? ¿Seguir?')) return; E=nuevoEstado(); E.seedVer=SEED.generado; recExcl(); guardar(); render(); cerrarModal(); };
 };
 function exportarExcel(){
-  const C=calcularMes(anio,mes), cols=colsVisibles(), k=ym(anio,mes), vm=vencidoMontos(k);
+  const C=calcularMes(anio,mes), cols=colsDelMes(anio,mes), k=ym(anio,mes), vm=vencidoMontos(k);
   const aoa=[[`FLUJO DE CAJA TP-RL — ${MESES[mes-1].toUpperCase()} ${anio}`],['VENCIMIENTO',...cols.map(c=>c.nombre),'TOTAL PAGOS A REALIZAR','RECAUDACION REAL Y ESTIMADA','TOTAL $ CHEQUES','SALDO DE CAJA','RECAUDADO CAJA','TRANSFERENCIAS','RECAUDACION ESTIMADA','FERIADO']];
   aoa.push([(E.vencido[k]||{}).texto||'VENCIDO',...cols.map(c=>vm[c.key]||null),C.venc.gasto||null,null,C.venc.cheque||null,C.saldoIni-C.venc.total]);
   for (const r of C.filas){ const p=pagosDe(r.f); const [y,m,d]=r.f.split('-');

@@ -1,4 +1,5 @@
-# Actualizacion semanal del panel Flujo de Caja (tarea programada de Windows "Flujo de Caja TP-RL").
+# Actualizacion DIARIA del panel Flujo de Caja (tarea programada de Windows "Flujo de Caja TP-RL",
+# todos los dias a las 9:00; hasta el 14/10/2026 era semanal, de ahi el nombre del archivo).
 # Corre en la PC de la oficina porque necesita W:\ y la carpeta Descargas.
 # Sube SOLO flujo/data.enc.json y flujo/fecha.txt (cifrados). Deja registro en tools/flujo-semanal.log.
 $ErrorActionPreference = 'Stop'

@@ -1,6 +1,7 @@
 name: Flujo de caja (recaudacion en vivo)
 
-# Recaudacion real del panel Flujo de Caja = Caja de Tesoreria + Control de Transferencias.
+# Recaudacion real del panel Flujo de Caja = Caja de Tesoreria + Control de Transferencias,
+# mas las facturas impagas de Pago proveedores (se suman por vencimiento).
 # Lee de la base propia las transferencias que declaro cada fletero en la rendicion (las mismas
 # que muestra Control de Transferencias) y, si esta configurada, la caja del Apps Script.
 # Commitea flujo/vivo.enc.json (cifrado con FLUJO_CLAVE). Lo demas del panel (planillas de
@@ -9,6 +10,8 @@ on:
   schedule:
     # la base trae rendiciones cada 30 min de 07:00 a 17:00: 08:50 a 18:50 hora argentina
     - cron: "50 11,13,15,17,19,21 * * 1-6"
+    # domingo, una vez (la base no baja los domingos, pero así el panel queda al día todos los días)
+    - cron: "50 12 * * 0"
   workflow_dispatch: {}
 
 permissions:
