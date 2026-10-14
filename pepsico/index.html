@@ -282,6 +282,8 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
 .compromiso-input:focus{outline:2px solid var(--accent); outline-offset:1px}
 .compromiso-input:disabled{opacity:.5}
 .compromiso-total{font-weight:700}
+.comp-estado{display:block; min-height:0; margin-top:3px; font:600 10.5px/1.3 "IBM Plex Mono",monospace; text-align:right; white-space:normal; max-width:170px; margin-left:auto}
+.comp-estado.ok{color:var(--good)} .comp-estado.err{color:var(--bad)} .comp-estado.pend{color:var(--muted)}
 
 .ip-input{
   width:90px; padding:5px 8px; border:1px solid var(--border); border-radius:6px; background:var(--panel-2);
@@ -344,6 +346,7 @@ td.ip-base.clickable{cursor:pointer}
 </style>
 
 <div class="wrap">
+  <div id="aviso-version" style="display:none; margin:0 0 12px; padding:10px 14px; border:1px solid var(--accent); background:var(--accent-soft); border-radius:10px; font-size:13.5px; cursor:pointer" onclick="location.reload()">Hay una versión nueva del tablero. <b>Tocá acá para actualizar</b> (si estás escribiendo, primero terminá de cargar).</div>
   <img src="../assets/img/logo-tiendaperfecta.jpeg" alt="Tienda Perfecta" class="tp-logo-hero">
   <p class="eyebrow" id="eyebrow-label">PepsiCo · Tienda Perfecta · Objetivo TN Septiembre 2026</p>
   <h1>Avance de venta diario</h1>
@@ -1328,6 +1331,7 @@ td.ip-base.clickable{cursor:pointer}
   </div>
 
   </div>
+  <p class="foot-note" id="build-tag" style="text-align:center; opacity:.7"></p>
 </div>
 
 <div class="modal-overlay" id="drillModal" onclick="if(event.target===this) closeDrill()">
@@ -1373,6 +1377,27 @@ td.ip-base.clickable{cursor:pointer}
     if (guardado && panels.some(p => p.dataset.tabPanel === guardado)) inicial = guardado;
   } catch (e) {}
   activar(inicial);
+})();
+
+// Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
+const BUILD = '2026-10-14-a';
+(function chequearVersion(){
+  const tag = document.getElementById('build-tag');
+  if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
+  async function revisar(){
+    if (document.hidden) return;
+    try {
+      const r = await fetch(location.pathname + '?v=' + Date.now(), {cache: 'no-store'});
+      if (!r.ok) return;
+      const m = (await r.text()).match(/const BUILD = '([^']+)'/);
+      if (m && m[1] !== BUILD) {
+        const b = document.getElementById('aviso-version');
+        if (b) b.style.display = 'block';
+      }
+    } catch (e) {}
+  }
+  setTimeout(revisar, 20000);
+  setInterval(revisar, 300000);
 })();
 
 const MES_SEL = new URLSearchParams(location.search).get('mes') || '';
@@ -3362,7 +3387,7 @@ tbody.innerHTML = rows.map(r => `
     <td>$ ${fmt(r.venta)}</td>
     <td></td>
     <td><input class="compromiso-input" data-vendedor="${r.n}" data-grupo="pg" type="number" step="1" placeholder="kg" /></td>
-    <td><input class="compromiso-input" data-vendedor="${r.n}" data-grupo="sb" type="number" step="1" placeholder="kg" /></td>
+    <td><input class="compromiso-input" data-vendedor="${r.n}" data-grupo="sb" type="number" step="1" placeholder="kg" /><small class="comp-estado" aria-live="polite"></small></td>
     <td class="compromiso-total" data-vendedor-total="${r.n}">—</td>
   </tr>
 `).join('');
@@ -3383,7 +3408,7 @@ const compromisoRefs = [];
     inputPg.addEventListener('input', updateTotal);
     inputSb.addEventListener('input', updateTotal);
     updateTotal();
-    compromisoRefs.push({ vendedor, inputPg, inputSb, totalCell, updateTotal });
+    compromisoRefs.push({ vendedor, inputPg, inputSb, totalCell, updateTotal, estadoEl: row.querySelector('.comp-estado') });
   } catch (err) {
     console.error('compromiso row setup failed:', err);
   }
@@ -3446,7 +3471,55 @@ if (MES_SEL) {
       pg: pg === null ? '' : pg,
       sb: sb === null ? '' : sb,
     });
-    return fetch(COMPROMISO_API + '?' + params.toString()).then((r) => r.json());
+    return fetch(COMPROMISO_API + '?' + params.toString()).then(async (r) => {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const t = await r.text();
+      try { return JSON.parse(t); } catch (e) { throw new Error('respuesta no válida del servidor'); }
+    });
+  }
+
+  // Guardado de kilos: en cola por vendedor (siempre manda lo ultimo escrito), con aviso en pantalla, reintentos
+  // y sin que el refresco automatico le pise lo que escribio mientras no se guarde.
+  const sinGuardar = new Set();      // vendedores con un guardado en curso o fallido
+  const colaGuardado = {};           // vendedor -> promesa en curso
+  const enCurso = {};                // vendedor -> cuantos guardados siguen en cola
+  const colaGuardadoActiva = (v) => (enCurso[v] || 0) > 0;
+  const esperar = (ms) => new Promise((res) => setTimeout(res, ms));
+  const setEstado = (el, txt, cls) => { if (el) { el.textContent = txt; el.className = 'comp-estado' + (cls ? ' ' + cls : ''); } };
+  function encolarGuardado(ref) {
+    const { vendedor, inputPg, inputSb, estadoEl } = ref;
+    sinGuardar.add(vendedor);
+    setEstado(estadoEl, 'Guardando…', 'pend');
+    const previa = colaGuardado[vendedor] || Promise.resolve();
+    const actual = previa.then(async () => {
+      const pg = inputPg.value === '' ? null : Number(inputPg.value);
+      const sb = inputSb.value === '' ? null : Number(inputSb.value);
+      let motivo = '';
+      for (let i = 0; i < 4; i++) {
+        try {
+          const res = await guardarVendedor(vendedor, pg, sb);
+          if (res && res.ok) {
+            if (colaGuardado[vendedor] === actual) sinGuardar.delete(vendedor);
+            setEstado(estadoEl, 'Guardado ✓', 'ok');
+            setTimeout(() => { if (estadoEl && estadoEl.textContent === 'Guardado ✓') setEstado(estadoEl, '', ''); }, 4000);
+            return { ok: true, pg, sb };
+          }
+          if (res && res.error) { sinGuardar.delete(vendedor); setEstado(estadoEl, '', ''); return { ok: false, error: res.error }; }
+          motivo = 'respuesta inesperada';
+        } catch (err) {
+          motivo = (err && err.message) ? err.message : 'sin conexión';
+        }
+        console.error('compromiso: guardado fallido', vendedor, motivo, 'intento', i + 1);
+        if (i < 3) { setEstado(estadoEl, 'Reintentando (' + (i + 1) + '/3)…', 'pend'); await esperar(1500 * (i + 1)); }
+      }
+      setEstado(estadoEl, 'NO se guardó (' + motivo + '). Se reintenta solo; si sigue, avisá.', 'err');
+      return { ok: false, perdido: true };
+    });
+    colaGuardado[vendedor] = actual;
+    enCurso[vendedor] = (enCurso[vendedor] || 0) + 1;
+    const liberar = () => { enCurso[vendedor]--; };
+    actual.then(liberar, liberar);
+    return actual;
   }
 
   function guardarSupervisor(valor) {
@@ -3489,7 +3562,8 @@ if (MES_SEL) {
     const histC = pasado ? (((historialProy || {}).compromiso || {})[fechaProy()] || {}) : null;
     compromisoRefs.forEach(({ vendedor, inputPg, inputSb, updateTotal }) => {
       const saved = pasado ? (histC[vendedor] || {}) : (data.compromisos[vendedor] || {});
-      const enfocado = !pasado && (document.activeElement === inputPg || document.activeElement === inputSb);
+      // lo escrito que todavia no se guardo (o fallo) no se pisa con lo que trae el servidor
+      const enfocado = !pasado && (document.activeElement === inputPg || document.activeElement === inputSb || sinGuardar.has(vendedor));
       if (!enfocado) {
         inputPg.value = typeof saved.pg === 'number' ? saved.pg : '';
         inputSb.value = typeof saved.sb === 'number' ? saved.sb : '';
@@ -3521,28 +3595,27 @@ if (MES_SEL) {
 
   aplicarCompromisos(data);
 
-  compromisoRefs.forEach(({ vendedor, inputPg, inputSb, updateTotal }) => {
+  compromisoRefs.forEach((ref) => {
+    const { vendedor, inputPg, inputSb, updateTotal, estadoEl } = ref;
     function attach(input) {
       input.addEventListener('change', async () => {
         const pg = inputPg.value === '' ? null : Number(inputPg.value);
         const sb = inputSb.value === '' ? null : Number(inputSb.value);
-        if ((pg !== null && Number.isNaN(pg)) || (sb !== null && Number.isNaN(sb))) return;
-        const res = await guardarVendedor(vendedor, pg, sb).catch((err) => {
-          console.error('compromiso write failed:', err);
-          return { ok: false };
-        });
-        if (!res.ok) {
-          if (res.error) {
-            alert(res.error);
-            bloquear(inputPg);
-            bloquear(inputSb);
-          }
+        if ((pg !== null && Number.isNaN(pg)) || (sb !== null && Number.isNaN(sb))) {
+          setEstado(estadoEl, 'Número no válido: usá solo dígitos y punto', 'err');
           return;
         }
+        // lo escrito se refleja ya en los totales; el guardado va en cola y con reintentos
         updateTotal();
         recomputeTotal();
         const mnBase = (pg !== null || sb !== null) ? (pg||0) + (sb||0) : null;
         ipSetMnBase(vendedor, mnBase);
+        const res = await encolarGuardado(ref);
+        if (!res.ok && res.error) {
+          alert(res.error);
+          bloquear(inputPg);
+          bloquear(inputSb);
+        }
       });
     }
     attach(inputPg);
@@ -3556,6 +3629,10 @@ if (MES_SEL) {
   });
 
   setInterval(async () => {
+    // si hay kilos que no llegaron a guardarse, se vuelve a intentar antes de refrescar
+    for (const ref of compromisoRefs) {
+      if (sinGuardar.has(ref.vendedor) && !colaGuardadoActiva(ref.vendedor)) encolarGuardado(ref);
+    }
     try {
       const r2 = await fetchIpApiConReintentos(COMPROMISO_API);
       const data2 = await r2.json();
