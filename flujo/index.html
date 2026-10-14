@@ -182,7 +182,7 @@ const FERIADOS_DEF = {
 function nuevoEstado(){
   const s = JSON.parse(JSON.stringify(SEED));
   return { v:1, columnas:s.columnas, pagos:s.pagos, estimado:s.estimado, vencido:s.vencido, saldoInicial:s.saldoInicial,
-    caja:s.caja, bancos:s.bancos, ajustes:{}, notas:{}, estados:{}, exclGrupo:{}, excluir:EXCLUIR_DEF,
+    caja:s.caja, bancos:s.bancos, ajustes:{}, notas:{...(s.notas||{})}, estados:{}, exclGrupo:{}, excluir:EXCLUIR_DEF,
     feriados:{...FERIADOS_DEF}, arrastrar:false, modoRec:'mixto', log:[], fuentes:s.fuentes, archivosBanco:s.archivosBanco };
 }
 let E = null;
@@ -196,6 +196,10 @@ function fusionarSeed(){
   Object.assign(E.caja, SEED.caja); Object.assign(E.bancos, SEED.bancos);
   for (const [f,v] of Object.entries(SEED.estimado)) if (!E.tocados[f]) E.estimado[f]=v;
   for (const [f,p] of Object.entries(SEED.pagos)) if (!E.tocados[f]) E.pagos[f]=p;
+  // días que ya no están en las planillas (por ejemplo, los fletes que pasaron al jueves) y que
+  // nadie tocó a mano: se sacan, si no quedaban montos viejos repetidos
+  for (const f of Object.keys(E.pagos)) if (!(f in SEED.pagos) && !E.tocados[f] && f.startsWith('2026')) delete E.pagos[f];
+  for (const [k,v] of Object.entries(SEED.notas||{})) if (!(k in E.notas)) E.notas[k]=v;
   for (const [k,v] of Object.entries(SEED.vencido)) if (!E.vencido[k]) E.vencido[k]=v;
   for (const [k,v] of Object.entries(SEED.saldoInicial)) if (!(k in E.saldoInicial)) E.saldoInicial[k]=v;
   E.fuentes = SEED.fuentes; E.archivosBanco = SEED.archivosBanco; E.seedVer = SEED.generado;
@@ -249,7 +253,10 @@ function colPorDefecto(nombre, codigo){
   for (const [re,col] of MAPA_FIJO) if (re.test(n) && E.columnas.some(c=>c.key===col)) return col;
   return colAuto(nombre) || ('gp_'+codigo);
 }
+// Facturas entre empresas del grupo: no son pagos a proveedores, no se muestran
+const ES_DEL_GRUPO = /RAMBLA DE LOS LOBOS|TIENDA PERFECTA/;
 function colDeProveedor(nombre, codigo){
+  if (ES_DEL_GRUPO.test(norm(nombre))) return null;
   const elegida = E.mapaProv && E.mapaProv[codigo];
   if (elegida==='no') return null;
   if (elegida && E.columnas.some(c=>c.key===elegida)) return elegida;
@@ -324,7 +331,7 @@ function vencidoMontos(k){
 }
 function tablaProveedoresHtml(){
   const por={};
-  for (const x of VIVO.facturas){ const [prov,nombre,,,,,,,saldo]=x; const q=por[prov]=por[prov]||{prov,nombre,n:0,total:0}; q.n++; q.total+=saldo; }
+  for (const x of VIVO.facturas){ const [prov,nombre,,,,,,,saldo]=x; if (ES_DEL_GRUPO.test(norm(nombre))) continue; const q=por[prov]=por[prov]||{prov,nombre,n:0,total:0}; q.n++; q.total+=saldo; }
   const lista=Object.values(por).sort((a,b)=>b.total-a.total);
   const opc=(prov,nombre)=>{ const el=(E.mapaProv||{})[prov]||''; const auto=colPorDefecto(nombre,prov);
     return `<option value="" ${!el?'selected':''}>Automática (${esc(nombreCol(auto))})</option><option value="no" ${el==='no'?'selected':''}>— No sumar —</option>`+

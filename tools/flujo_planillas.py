@@ -90,6 +90,55 @@ for f in sorted(glob.glob('W:/FLUJO DE CAJA/*2026*.xls')):
                 row['resto']=round(s.cell_value(r,tot),2)
             if row: data['vencido'][ym]={'texto':str(a.value).strip(),'montos':row}
     data['fuentes'].append(os.path.basename(f))
+# --- FLETES: se pagan los JUEVES (pedido de Franco, 14/10/2026). Desde octubre 2026 las planillas
+# traen un PROMEDIO ($9 M) copiado en los dias 7, 14, 21 y 28 de cada mes, que caen cualquier dia
+# de la semana. Cada monto pasa al jueves de su semana (lunes a domingo; si el jueves es feriado,
+# al miercoles) y las semanas sin monto se completan con el promedio anotado en ese mes. Antes de
+# octubre se dejan como estan: son los pagos reales.
+FLETES_DESDE = dt.date(2026, 10, 1)
+FERIADOS_JUEVES = {'2026-01-01', '2026-04-02', '2027-03-25', '2027-04-01'}
+def dia_de_pago_fletes(d):
+    jue = d + dt.timedelta(days=3 - d.weekday())
+    while jue.isoformat() in FERIADOS_JUEVES:
+        jue -= dt.timedelta(days=1)
+    return jue
+def corregir_fletes(pagos):
+    montos = {}
+    for f in sorted(pagos):
+        d = dt.date.fromisoformat(f)
+        if d >= FLETES_DESDE and pagos[f].get('fletes'):
+            montos[f] = pagos[f].pop('fletes')
+            if not pagos[f]:
+                del pagos[f]
+    if not montos:
+        return {}
+    promedio = {}
+    for f, m in montos.items():
+        promedio.setdefault(f[:7], []).append(m)
+    promedio = {k: round(sum(v) / len(v), 2) for k, v in promedio.items()}
+    por_jueves = {}
+    for f, m in montos.items():
+        j = dia_de_pago_fletes(dt.date.fromisoformat(f))
+        por_jueves[j] = por_jueves.get(j, 0) + m
+    notas = {}
+    ultimo = max(dt.date.fromisoformat(f) for f in montos)
+    fin = dt.date(ultimo.year + (ultimo.month == 12), ultimo.month % 12 + 1, 1) - dt.timedelta(days=1)
+    lunes = FLETES_DESDE - dt.timedelta(days=FLETES_DESDE.weekday())
+    while lunes <= fin:
+        j = dia_de_pago_fletes(lunes)
+        if j >= FLETES_DESDE and j <= fin:
+            mes = j.isoformat()[:7]
+            previos = [k for k in promedio if k <= mes]
+            prom = promedio.get(mes) or (promedio[max(previos)] if previos else None)
+            if j not in por_jueves and prom:
+                por_jueves[j] = prom
+            if j in por_jueves:
+                pagos.setdefault(j.isoformat(), {})['fletes'] = round(por_jueves[j], 2)
+                notas[j.isoformat() + '|fletes'] = 'Fletes: se pagan los jueves. Monto PROMEDIO estimado (de la planilla), no el real.'
+        lunes += dt.timedelta(days=7)
+    print('fletes: %d montos de la planilla pasados a %d jueves' % (len(montos), len(notas)))
+    return notas
+data['notas'] = corregir_fletes(data['pagos'])
 # --- caja tesoreria
 def caja_file(mes):
     c=[p for p in glob.glob('W:/Tesoreria/Finanzas_Diarias_*.xlsx') if MESES[mes-1][:4] in norm(os.path.basename(p))]

@@ -25,6 +25,7 @@ import base64
 import datetime as dt
 import json
 import os
+import re
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -145,7 +146,11 @@ def facturas(s, clave):
             sin_fecha += 1
             continue
         prov = str(d.get("compra_proveedor_codigo") or "")
-        out.append([prov, nombres.get(prov, "Proveedor " + prov),
+        nombre = nombres.get(prov, "Proveedor " + prov)
+        # facturas entre empresas del grupo: no son pagos a proveedores
+        if re.search(r"RAMBLA DE LOS LOBOS|TIENDA PERFECTA", nombre.upper()):
+            continue
+        out.append([prov, nombre,
                     str(d.get("compra_tipoComprobante_codigo") or ""), str(d.get("compra_numeroComprobante") or ""),
                     int(d.get("numeroCuota") or 1), str(d.get("compra_empresa_codigo") or ""),
                     str(d.get("compra_fechaComprobante") or "")[:10], vence, saldo, str(d.get("moneda_codigo") or "")])
