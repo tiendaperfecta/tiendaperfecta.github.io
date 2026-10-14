@@ -238,12 +238,22 @@ function colAuto(nombre){
   }
   return null;
 }
+// Proveedores que en las planillas van en una columna de gastos (salvo que en Opciones se elija otra)
+const MAPA_FIJO = [
+  [/\bDYD\b|D ?Y ?D CONSULTORES/, 'estudio'],                          // estudio contable
+  [/COMPUTACION IDEA|GESCOM|AXUM|DIGIP/, 'sistemas'],                    // sistemas
+  [/\bCLARO\b|TELECOM|MOVISTAR|FIBERTEL/, 'sistemas'],                  // internet
+];
+function colPorDefecto(nombre, codigo){
+  const n = norm(nombre);
+  for (const [re,col] of MAPA_FIJO) if (re.test(n) && E.columnas.some(c=>c.key===col)) return col;
+  return colAuto(nombre) || ('gp_'+codigo);
+}
 function colDeProveedor(nombre, codigo){
   const elegida = E.mapaProv && E.mapaProv[codigo];
   if (elegida==='no') return null;
   if (elegida && E.columnas.some(c=>c.key===elegida)) return elegida;
-  const auto = colAuto(nombre); if (auto) return auto;
-  return 'gp_'+codigo;
+  return colPorDefecto(nombre, codigo);
 }
 // "PRIMEROS PRODUCTOS PEHUENIAS S.A." → "PRIMEROS PRODUCTOS PEHUENIAS"
 function nombreCorto(n){
@@ -316,7 +326,7 @@ function tablaProveedoresHtml(){
   const por={};
   for (const x of VIVO.facturas){ const [prov,nombre,,,,,,,saldo]=x; const q=por[prov]=por[prov]||{prov,nombre,n:0,total:0}; q.n++; q.total+=saldo; }
   const lista=Object.values(por).sort((a,b)=>b.total-a.total);
-  const opc=(prov,nombre)=>{ const el=(E.mapaProv||{})[prov]||''; const auto=colAuto(nombre)||('gp_'+prov);
+  const opc=(prov,nombre)=>{ const el=(E.mapaProv||{})[prov]||''; const auto=colPorDefecto(nombre,prov);
     return `<option value="" ${!el?'selected':''}>Automática (${esc(nombreCol(auto))})</option><option value="no" ${el==='no'?'selected':''}>— No sumar —</option>`+
       E.columnas.filter(c=>c.tipo!=='cheque').map(c=>`<option value="${c.key}" ${el===c.key?'selected':''}>${esc(c.nombre)}</option>`).join(''); };
   return `<h4 style="margin:12px 0 4px">En qué columna va cada proveedor</h4>
