@@ -7678,6 +7678,25 @@
   },
   {
    "fecha": "2026-10-14",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "2559",
+   "nombre": "chen hui",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 340642.94,
+   "fechaVenta": "2026-10-14",
+   "horaVenta": "17:26",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-10-14",
    "sellerId": "5",
    "vendedor": "Nicolas Martinez",
    "clientId": "3566",
@@ -10262,6 +10281,25 @@
   },
   {
    "fecha": "2026-10-14",
+   "sellerId": "7",
+   "vendedor": "Ramiro Rando",
+   "clientId": "1989",
+   "nombre": "CANO SOFIA ELIZABETH",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Vinoteca_B",
+   "canal": "AWAY FROM HOME",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 108857.21,
+   "fechaVenta": "2026-10-14",
+   "horaVenta": "17:26",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-10-14",
    "sellerId": "8",
    "vendedor": "Martinica Rodriguez",
    "clientId": "4036",
@@ -11424,7 +11462,7 @@
   "vendio": 180,
   "paso_sin_vender": 218,
   "sin_visita": 17,
-  "vendio_sin_pasar": 158
+  "vendio_sin_pasar": 160
  },
  "bySeller": [
   {
@@ -11443,7 +11481,7 @@
    "pedidos": 24,
    "monto": 2036879.56,
    "pasoSinVender": 60,
-   "km": 49.0,
+   "km": 52.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -11463,7 +11501,7 @@
    "pedidos": 40,
    "monto": 1549868.86,
    "pasoSinVender": 23,
-   "km": 55.0,
+   "km": 56.0,
    "llegoTarde": true,
    "salioTemprano": false
   },
@@ -11520,8 +11558,8 @@
    "visitas": 38,
    "minutosTotal": 247.9,
    "minutosPromedio": 6.5,
-   "pedidos": 35,
-   "monto": 2884621.03,
+   "pedidos": 36,
+   "monto": 2993478.25,
    "pasoSinVender": 14,
    "km": 35.0,
    "llegoTarde": true,
@@ -11560,8 +11598,8 @@
    "visitas": 37,
    "minutosTotal": 231.9,
    "minutosPromedio": 6.3,
-   "pedidos": 36,
-   "monto": 6552909.29,
+   "pedidos": 37,
+   "monto": 6893552.23,
    "pasoSinVender": 17,
    "km": 23.0,
    "llegoTarde": true,
@@ -11583,7 +11621,7 @@
    "pedidos": 40,
    "monto": 1892869.36,
    "pasoSinVender": 23,
-   "km": 22.0,
+   "km": null,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -15500,7 +15538,7 @@
  "totales": {
   "visitas": 398,
   "minutos": 2195.2,
-  "pedidos": 467,
-  "monto": 46910936.96
+  "pedidos": 469,
+  "monto": 47360437.12
  }
 }
