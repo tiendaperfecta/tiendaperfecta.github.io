@@ -8,6 +8,9 @@ La "recaudacion real" del panel es la suma de:
     en la rendicion de su reparto. Se leen de la BASE PROPIA (/api/rendicion-valores), que es de
     donde las lee el panel de Control de Transferencias. No se le pregunta nada a Gescom.
 
+Ademas trae las facturas de proveedores impagas (las de la pestana Pago proveedores del panel de
+ventas, tabla deudas_compra de la base) para sumarlas al flujo el dia que vencen.
+
 El repo es publico: sale cifrado con FLUJO_CLAVE (en minusculas, igual que tools/flujo.py).
 En el registro de la Action solo se imprimen cantidades, nunca importes ni nombres.
 
@@ -115,6 +118,41 @@ def transferencias(s, clave, desde, hasta):
             dict(sin))
 
 
+def facturas(s, clave):
+    """Facturas de proveedores impagas: las mismas que la pestana Pago proveedores del panel de
+    ventas (tabla deudas_compra de la base). Saldo = importe - pagos, igual que la base.
+    Cada una: [cod_prov, proveedor, tipo, numero, cuota, empresa, emision, vencimiento, saldo, moneda]."""
+    deudas = base_get(s, "/api/deudas", clave)
+    nombres = {}
+    for p in base_get(s, "/api/catalogo/proveedores", clave):
+        nom = str(p.get("nombre") or p.get("razonSocial") or "").strip()
+        if nom:
+            nombres[str(p.get("codigo"))] = nom
+    out, sin_fecha = [], 0
+    for d in deudas:
+        imp = float(d.get("importe") or 0)
+        pagado = 0.0
+        for x in d.get("pagos") or []:
+            try:
+                pagado += float(x or 0)
+            except (TypeError, ValueError):
+                pass
+        saldo = round(imp - pagado, 2)
+        if saldo <= 0:
+            continue
+        vence = str(d.get("fechaVencimiento") or "")[:10]
+        if len(vence) != 10:
+            sin_fecha += 1
+            continue
+        prov = str(d.get("compra_proveedor_codigo") or "")
+        out.append([prov, nombres.get(prov, "Proveedor " + prov),
+                    str(d.get("compra_tipoComprobante_codigo") or ""), str(d.get("compra_numeroComprobante") or ""),
+                    int(d.get("numeroCuota") or 1), str(d.get("compra_empresa_codigo") or ""),
+                    str(d.get("compra_fechaComprobante") or "")[:10], vence, saldo, str(d.get("moneda_codigo") or "")])
+    print("facturas impagas: %d (sin fecha de vencimiento: %d)" % (len(out), sin_fecha))
+    return out
+
+
 def caja(s, desde, hasta):
     """Ingresos de la caja por dia, del Apps Script (accion resumenMes). Si la accion todavia
     no esta publicada devuelve None y el panel sigue con lo que trae data.enc.json."""
@@ -170,6 +208,10 @@ def main():
         "valoresPorTipo": tipos,
         "sinRendicion": sin,
     }
+    try:
+        datos["facturas"] = facturas(s, clave_base)
+    except Exception as e:  # noqa: BLE001  (sin facturas el resto del panel sigue igual)
+        print("facturas: no se pudieron leer (%s)" % type(e).__name__)
     cj = caja(s, desde, hoy)
     if cj is not None:
         datos["caja"] = cj
