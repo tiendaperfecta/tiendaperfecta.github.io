@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Flujo de Caja TP-RL</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{
+  --bg:#f4f5f7; --panel:#fff; --txt:#1d2430; --sub:#5d6675; --linea:#dfe3e8; --cab:#1f3a5f; --cabtxt:#fff;
+  --finde:#eceef2; --feriado:#fde8d7; --hoy:#fff6c2; --verde:#cdeccf; --verdeb:#2e7d32; --rojo:#f8d0cf; --rojob:#c62828;
+  --cheque:#eef3fb; --prov:#f7f4ec; --total:#e6ebf2; --acento:#1f6feb; --neg:#c62828;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#14171c; --panel:#1c2027; --txt:#e6e9ee; --sub:#9aa3b2; --linea:#2d333d; --cab:#22344f; --cabtxt:#e6e9ee;
+  --finde:#232831; --feriado:#3a2a1e; --hoy:#3a3618; --verde:#1f4524; --verdeb:#7fd58a; --rojo:#4a1f1f; --rojob:#ff8a80;
+  --cheque:#1d2635; --prov:#26241d; --total:#262d38; --acento:#5aa2ff; --neg:#ff8a80;
+}}
+:root[data-theme="dark"]{
+  --bg:#14171c; --panel:#1c2027; --txt:#e6e9ee; --sub:#9aa3b2; --linea:#2d333d; --cab:#22344f; --cabtxt:#e6e9ee;
+  --finde:#232831; --feriado:#3a2a1e; --hoy:#3a3618; --verde:#1f4524; --verdeb:#7fd58a; --rojo:#4a1f1f; --rojob:#ff8a80;
+  --cheque:#1d2635; --prov:#26241d; --total:#262d38; --acento:#5aa2ff; --neg:#ff8a80;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:13px/1.35 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+button,select,input{font:inherit;color:inherit}
+button{background:var(--panel);border:1px solid var(--linea);border-radius:6px;padding:6px 10px;cursor:pointer}
+button:hover{border-color:var(--acento)}
+button.pri{background:var(--acento);border-color:var(--acento);color:#fff}
+select,input[type=text],input[type=number],input[type=date]{background:var(--panel);border:1px solid var(--linea);border-radius:6px;padding:6px 8px}
+header{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px 16px;background:var(--panel);border-bottom:1px solid var(--linea);position:sticky;top:0;z-index:20}
+header h1{font-size:16px;margin:0 12px 0 0}
+.grupo{display:flex;gap:4px;align-items:center}
+.seg button{border-radius:0;margin-left:-1px}.seg button:first-child{border-radius:6px 0 0 6px}.seg button:last-child{border-radius:0 6px 6px 0}
+.seg button.on{background:var(--cab);color:var(--cabtxt);border-color:var(--cab)}
+.esp{flex:1}
+main{padding:12px 16px 40px}
+.tarjetas{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:12px}
+.tarjeta{background:var(--panel);border:1px solid var(--linea);border-radius:8px;padding:10px 12px}
+.tarjeta .t{color:var(--sub);font-size:12px}.tarjeta .v{font-size:18px;font-weight:600;font-variant-numeric:tabular-nums;margin-top:2px}
+.tarjeta .s{color:var(--sub);font-size:11px;margin-top:2px}
+.neg{color:var(--neg)}
+.leyenda{display:flex;flex-wrap:wrap;gap:12px;color:var(--sub);font-size:12px;margin:0 0 8px}
+.leyenda i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:4px;border:1px solid var(--linea)}
+.tablawrap{overflow:auto;background:var(--panel);border:1px solid var(--linea);border-radius:8px;max-height:calc(100vh - 230px)}
+table.flujo{border-collapse:separate;border-spacing:0;font-variant-numeric:tabular-nums;white-space:nowrap}
+.flujo th,.flujo td{border-right:1px solid var(--linea);border-bottom:1px solid var(--linea);padding:4px 7px;text-align:right}
+.flujo thead th{position:sticky;top:0;background:var(--cab);color:var(--cabtxt);font-weight:600;font-size:11px;white-space:normal;min-width:92px;max-width:120px;vertical-align:bottom;z-index:3;text-align:center}
+.flujo thead tr.grupoc th{top:0;font-size:11px;letter-spacing:.04em}
+.flujo thead tr.grupoc th{height:22px;padding:2px 6px}
+.flujo thead tr.cols th{top:22px}
+.flujo th.fecha,.flujo td.fecha{position:sticky;left:0;z-index:2;text-align:left;min-width:118px;background:var(--panel)}
+.flujo thead th.fecha{z-index:4;background:var(--cab)}
+.flujo th.tipo-cheque{background:#2f5a8c}.flujo th.tipo-proveedor{background:#5a4a24}
+.flujo th.calc{background:#11263f}
+.flujo td.tipo-cheque{background:var(--cheque)}.flujo td.tipo-proveedor{background:var(--prov)}
+.flujo tr.finde td{background:var(--finde)}
+.flujo tr.feriado td{background:var(--feriado)}
+.flujo tr.hoy td{box-shadow:inset 0 2px 0 var(--acento),inset 0 -2px 0 var(--acento)}
+.flujo tr.finde td.fecha,.flujo tr.feriado td.fecha{color:var(--sub)}
+.flujo td.m{cursor:pointer;user-select:none}
+.flujo td.m:hover{outline:2px solid var(--acento);outline-offset:-2px}
+.flujo td.ok{background:var(--verde)!important;color:var(--verdeb);font-weight:600}
+.flujo td.no{background:var(--rojo)!important;color:var(--rojob);font-weight:600}
+.flujo td.calc{background:var(--total);font-weight:600}
+.flujo td.nota::after{content:"•";color:var(--acento);margin-left:3px}
+.flujo tr.venc td{background:var(--rojo);font-weight:600}
+.flujo tfoot td{position:sticky;bottom:0;background:var(--total);font-weight:700;z-index:1}
+.flujo tfoot td.fecha{z-index:3;background:var(--total)}
+.diasem{display:inline-block;width:28px;color:var(--sub);font-size:11px}
+.fer{display:block;font-size:10px;color:#b4590f;white-space:normal;max-width:110px}
+.badge{font-size:9px;border-radius:3px;padding:0 3px;margin-left:4px;vertical-align:1px;border:1px solid currentColor}
+.b-r{color:var(--verdeb)}.b-e{color:var(--sub)}.b-w{color:#b4590f}
+.rec{cursor:pointer}
+/* anual */
+.anual{overflow:auto}
+.anual table{border-collapse:collapse;width:100%;background:var(--panel);font-variant-numeric:tabular-nums}
+.anual th,.anual td{border:1px solid var(--linea);padding:6px 8px;text-align:right}
+.anual th{background:var(--cab);color:var(--cabtxt)}
+.anual td:first-child,.anual th:first-child{text-align:left}
+.anual tr.click{cursor:pointer}.anual tr.click:hover td{background:var(--hoy)}
+.calendarios{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-top:14px}
+.cal{background:var(--panel);border:1px solid var(--linea);border-radius:8px;padding:8px;cursor:pointer}
+.cal h4{margin:0 0 6px;font-size:13px;display:flex;justify-content:space-between}
+.cal .g{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal .g div{font-size:10px;text-align:center;padding:4px 0;border-radius:3px}
+.cal .g .dn{color:var(--sub);font-weight:600}
+.cal .g .fd{background:var(--finde);color:var(--sub)}
+.cal .g .fe{background:var(--feriado);color:#b4590f;font-weight:700}
+.cal .g .hy{outline:2px solid var(--acento)}
+.cal .g .pos{box-shadow:inset 0 -3px 0 #43a047}.cal .g .ng{box-shadow:inset 0 -3px 0 #e53935}
+/* panel lateral y modal */
+.cajon{position:fixed;top:0;right:0;height:100vh;width:min(440px,100vw);background:var(--panel);border-left:1px solid var(--linea);z-index:40;transform:translateX(100%);transition:transform .2s;overflow:auto;padding:14px 16px}
+.cajon.abierto{transform:none;box-shadow:-8px 0 24px rgba(0,0,0,.18)}
+.cajon h3{margin:16px 0 8px;font-size:14px}.cajon h3:first-of-type{margin-top:4px}
+.fila{display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap;align-items:center}
+.fila label{min-width:80px;color:var(--sub)}
+.fila input,.fila select{flex:1;min-width:120px}
+.lista{font-size:12px;border:1px solid var(--linea);border-radius:6px;max-height:260px;overflow:auto}
+.lista div{display:flex;gap:6px;padding:4px 6px;border-bottom:1px solid var(--linea);align-items:center}
+.lista div span.x{margin-left:auto}
+.zona{border:2px dashed var(--linea);border-radius:8px;padding:14px;text-align:center;color:var(--sub);cursor:pointer}
+.zona.sobre{border-color:var(--acento);color:var(--txt)}
+.fondo{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:50;display:none;align-items:center;justify-content:center;padding:16px}
+.fondo.on{display:flex}
+.modal{background:var(--panel);border-radius:10px;padding:16px;width:min(560px,100%);max-height:90vh;overflow:auto;border:1px solid var(--linea)}
+.modal h3{margin:0 0 10px}
+.modal table{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}
+.modal td,.modal th{border-bottom:1px solid var(--linea);padding:3px 4px;text-align:left}
+.modal td.n{text-align:right}
+.aviso{font-size:12px;color:var(--sub);margin:6px 0}
+#puerta{position:fixed;inset:0;background:var(--bg);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px}
+#puerta .modal{max-width:380px;text-align:center}
+#puerta input{width:100%;margin:10px 0;padding:10px}
+#puerta .err{color:var(--neg);min-height:1.2em;font-size:12px}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--cab);color:var(--cabtxt);padding:8px 14px;border-radius:6px;z-index:60;display:none}
+@media (max-width:700px){ header h1{width:100%} main{padding:10px} .tablawrap{max-height:none} }
+@media print{ header,.cajon,.leyenda,.noprint{display:none!important} .tablawrap{max-height:none;overflow:visible;border:0} body{background:#fff} }
+</style>
+</head>
+<body>
+<header>
+  <h1>💵 Flujo de Caja vs Pagos Futuros — TP-RL</h1>
+  <div class="grupo seg" id="vistaSeg"><button data-v="mes" class="on">Mes</button><button data-v="anio">Año</button></div>
+  <div class="grupo"><button id="ant" title="Anterior">◀</button><select id="selMes"></select><select id="selAnio"></select><button id="sig" title="Siguiente">▶</button><button id="btnHoy">Hoy</button></div>
+  <div class="grupo"><label class="aviso" for="modoRec" style="margin:0">Recaudación:</label>
+    <select id="modoRec" title="Qué recaudación usar para el saldo">
+      <option value="mixto">Real si hay datos, si no estimada</option>
+      <option value="real">Solo real (caja + bancos)</option>
+      <option value="est">Solo estimada</option>
+    </select></div>
+  <div class="esp"></div>
+  <button id="btnCajon" class="pri">➕➖ Agregar / Quitar</button>
+  <button id="btnImport">📥 Importar</button>
+  <button id="btnMas">⚙️</button>
+</header>
+<main id="main"></main>
+<div id="puerta"><form class="modal" id="fPuerta">
+  <h3>💵 Flujo de Caja TP-RL</h3>
+  <p class="aviso">Los datos están cifrados. Ingresá la clave del panel.</p>
+  <input type="password" id="pw" placeholder="Clave" autocomplete="current-password" autofocus>
+  <div class="err" id="pwErr"></div>
+  <button class="pri" style="width:100%">Entrar</button>
+  <p class="aviso" id="pwFecha"></p>
+</form></div>
+
+<aside class="cajon" id="cajon">
+  <div class="fila" style="justify-content:space-between"><b id="cajonTitulo">Agregar / Quitar</b><button data-cerrar>✕</button></div>
+  <div id="cajonCuerpo"></div>
+</aside>
+<div class="fondo" id="fondo"><div class="modal" id="modal"></div></div>
+<div class="toast" id="toast"></div>
+<input type="file" id="archivo" multiple accept=".xls,.xlsx,.csv,.json" style="display:none">
+
+<script>
+let SEED = null;
+const CLAVE = 'flujoCajaTP.v1';
+const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const DIAS = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const EXCLUIR_DEF = 'deposito en efectivo|dep\\.? ?efvo|cuenta propia|rescate|prestamo|descuento documento|rechazad|anulacion|devolucion';
+const FERIADOS_DEF = {
+ '2025-01-01':'Año Nuevo','2025-03-03':'Carnaval','2025-03-04':'Carnaval','2025-03-24':'Día de la Memoria','2025-04-02':'Malvinas',
+ '2025-04-17':'Jueves Santo (no laborable)','2025-04-18':'Viernes Santo','2025-05-01':'Día del Trabajador','2025-05-02':'Puente turístico',
+ '2025-05-25':'Revolución de Mayo','2025-06-16':'Güemes','2025-06-20':'Belgrano','2025-07-09':'Independencia','2025-08-15':'Puente turístico',
+ '2025-08-17':'San Martín','2025-10-12':'Diversidad Cultural','2025-11-21':'Puente turístico','2025-11-24':'Soberanía Nacional',
+ '2025-12-08':'Inmaculada Concepción','2025-12-25':'Navidad',
+ '2026-01-01':'Año Nuevo','2026-02-16':'Carnaval','2026-02-17':'Carnaval','2026-03-23':'Puente turístico','2026-03-24':'Día de la Memoria',
+ '2026-04-02':'Malvinas / Jueves Santo','2026-04-03':'Viernes Santo','2026-05-01':'Día del Trabajador','2026-05-25':'Revolución de Mayo',
+ '2026-06-15':'Güemes','2026-06-20':'Belgrano','2026-07-09':'Independencia','2026-07-10':'Puente turístico','2026-08-17':'San Martín',
+ '2026-10-12':'Diversidad Cultural','2026-11-23':'Soberanía Nacional','2026-12-07':'Puente turístico','2026-12-08':'Inmaculada Concepción',
+ '2026-12-25':'Navidad',
+ '2027-01-01':'Año Nuevo','2027-02-08':'Carnaval','2027-02-09':'Carnaval','2027-03-24':'Día de la Memoria','2027-03-25':'Jueves Santo (no laborable)',
+ '2027-03-26':'Viernes Santo','2027-04-02':'Malvinas','2027-05-01':'Día del Trabajador','2027-05-25':'Revolución de Mayo','2027-06-20':'Belgrano',
+ '2027-06-21':'Güemes','2027-07-09':'Independencia','2027-08-16':'San Martín','2027-10-11':'Diversidad Cultural','2027-11-20':'Soberanía Nacional',
+ '2027-12-08':'Inmaculada Concepción','2027-12-25':'Navidad'
+};
+
+/* ================== estado ================== */
+function nuevoEstado(){
+  const s = JSON.parse(JSON.stringify(SEED));
+  return { v:1, columnas:s.columnas, pagos:s.pagos, estimado:s.estimado, vencido:s.vencido, saldoInicial:s.saldoInicial,
+    caja:s.caja, bancos:s.bancos, ajustes:{}, notas:{}, estados:{}, exclGrupo:{}, excluir:EXCLUIR_DEF,
+    feriados:{...FERIADOS_DEF}, arrastrar:false, modoRec:'mixto', log:[], fuentes:s.fuentes, archivosBanco:s.archivosBanco };
+}
+let E = null;
+/* Cuando se publica un data.enc.json nuevo, se suma a lo que ya hay en este navegador:
+   caja, bancos y estimados se actualizan; los pagos se actualizan sólo en los días
+   que nadie tocó a mano desde acá (E.tocados). Marcas verdes/rojas y ajustes se conservan. */
+function fusionarSeed(){
+  if (E.seedVer === SEED.generado) return;
+  E.tocados = E.tocados || {};
+  for (const c of SEED.columnas) if (!E.columnas.find(x=>x.key===c.key)) E.columnas.push(c);
+  Object.assign(E.caja, SEED.caja); Object.assign(E.bancos, SEED.bancos);
+  for (const [f,v] of Object.entries(SEED.estimado)) if (!E.tocados[f]) E.estimado[f]=v;
+  for (const [f,p] of Object.entries(SEED.pagos)) if (!E.tocados[f]) E.pagos[f]=p;
+  for (const [k,v] of Object.entries(SEED.vencido)) if (!E.vencido[k]) E.vencido[k]=v;
+  for (const [k,v] of Object.entries(SEED.saldoInicial)) if (!(k in E.saldoInicial)) E.saldoInicial[k]=v;
+  E.fuentes = SEED.fuentes; E.archivosBanco = SEED.archivosBanco; E.seedVer = SEED.generado;
+  guardar();
+}
+function iniciar(){
+  try { E = JSON.parse(localStorage.getItem(CLAVE)); } catch(e) { E = null; }
+  if (!E || !E.columnas) { E = nuevoEstado(); E.seedVer = SEED.generado; guardar(); }
+  else fusionarSeed();
+  recExcl(); render(); setTimeout(irAHoy,50);
+}
+const b64 = t => Uint8Array.from(atob(t), c => c.charCodeAt(0));
+async function descifrar(env, clave){
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(clave), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey({name:'PBKDF2', salt:b64(env.salt), iterations:env.iter, hash:'SHA-256'}, base, {name:'AES-GCM', length:256}, false, ['decrypt']);
+  const pt = await crypto.subtle.decrypt({name:'AES-GCM', iv:b64(env.iv)}, key, b64(env.ct));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+let ENV = null;
+async function entrar(clave){
+  try { ENV = ENV || await (await fetch('data.enc.json', {cache:'no-store'})).json(); }
+  catch(e){ document.getElementById('pwErr').textContent='No se pudieron bajar los datos.'; return; }
+  try { SEED = await descifrar(ENV, clave); }
+  catch(e){ document.getElementById('pwErr').textContent='Clave incorrecta.'; try{sessionStorage.removeItem('flujo-k');}catch(_){} return; }
+  try { sessionStorage.setItem('flujo-k', clave); } catch(_){}
+  document.getElementById('puerta').remove();
+  iniciar();
+}
+document.getElementById('fPuerta').addEventListener('submit', e=>{ e.preventDefault(); entrar(document.getElementById('pw').value); });
+fetch('fecha.txt',{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{ const el=document.getElementById('pwFecha'); if(el) el.textContent=t.trim(); }).catch(()=>{});
+function guardar(){ if (!E) return; try { localStorage.setItem(CLAVE, JSON.stringify(E)); } catch(e) { toast('⚠️ No se pudo guardar en este navegador: exportá un respaldo.'); } }
+function registrar(txt){ E.log.unshift({ts:new Date().toISOString(), txt}); if (E.log.length>500) E.log.length=500; }
+
+const hoy = new Date(); const HOY = iso(hoy);
+let vista = 'mes', anio = hoy.getFullYear(), mes = hoy.getMonth()+1;
+
+/* ================== utilidades ================== */
+function iso(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function ymd(y,m,d){ return y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0'); }
+function ym(y,m){ return y+'-'+String(m).padStart(2,'0'); }
+function diasDelMes(y,m){ return new Date(y,m,0).getDate(); }
+const fmt0 = new Intl.NumberFormat('es-AR',{maximumFractionDigits:0});
+const fmt2 = new Intl.NumberFormat('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2});
+function f0(n){ return n ? fmt0.format(n) : ''; }
+function f2(n){ return fmt2.format(n||0); }
+function $(id){ return document.getElementById(id); }
+function esc(t){ return String(t??'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function toast(t){ const el=$('toast'); el.textContent=t; el.style.display='block'; clearTimeout(toast.t); toast.t=setTimeout(()=>el.style.display='none',3200); }
+function numero(t){
+  if (typeof t==='number') return t;
+  let s=String(t||'').trim().replace(/[^0-9.,-]/g,''); if(!s) return NaN;
+  const neg=s.startsWith('-'); s=s.replace(/-/g,'');
+  if (s.includes('.')&&s.includes(',')) s = s.lastIndexOf(',')>s.lastIndexOf('.') ? s.replace(/\./g,'').replace(',','.') : s.replace(/,/g,'');
+  else if (s.includes(',')) s=s.replace(',','.');
+  else if (s.includes('.')) { const p=s.split('.'); if (p.length>2 || (p.length===2&&p[1].length===3)) s=p.join(''); }
+  const n=parseFloat(s); return neg?-n:n;
+}
+function tipoDia(f){ const d=new Date(f+'T12:00:00').getDay(); if (E.feriados[f]) return 'feriado'; if (d===0||d===6) return 'finde'; return ''; }
+function colsVisibles(){ return E.columnas.filter(c=>!c.oculta); }
+
+/* ================== cálculos ================== */
+let reExcl;
+function recExcl(){ try { reExcl = new RegExp(E.excluir,'i'); } catch(e){ reExcl = /$^/; } }
+function grupoExcluido(f,g){ const k=f+'|'+g[0]+'|'+g[1]; if (k in E.exclGrupo) return E.exclGrupo[k]; return reExcl.test(g[1]); }
+function recaudacion(f){
+  const caja = (E.caja[f]||[]).reduce((a,x)=>a+x[2],0);
+  let banco=0, bancoExcl=0;
+  for (const g of (E.bancos[f]||[])) { if (grupoExcluido(f,g)) bancoExcl+=g[2]; else banco+=g[2]; }
+  const aj = (E.ajustes[f]||[]).reduce((a,x)=>a+x.monto,0);
+  const est = E.estimado[f]||0;
+  const hayCaja = !!(E.caja[f]&&E.caja[f].length), hayBanco = !!(E.bancos[f]&&E.bancos[f].length);
+  const real = caja+banco;
+  let usada, fuente;
+  const modo = E.modoRec;
+  if (modo==='est') { usada=est; fuente='e'; }
+  else if (modo==='real') { usada=real; fuente='r'; }
+  else if (hayCaja||hayBanco) { usada=real; fuente='r'; }
+  else { usada=est; fuente= est?'e':''; }
+  usada += aj;
+  return {caja,banco,bancoExcl,aj,est,real,usada,fuente,hayCaja,hayBanco};
+}
+function totalVencido(k){ const v=E.vencido[k]; if(!v) return {gasto:0,cheque:0,total:0};
+  let g=0,c=0; for (const [col,m] of Object.entries(v.montos||{})) { const t=(E.columnas.find(x=>x.key===col)||{}).tipo; if (t==='cheque') c+=m; else g+=m; }
+  return {gasto:g,cheque:c,total:g+c}; }
+const cacheMes = {};
+function calcularMes(y,m){
+  const k=ym(y,m), n=diasDelMes(y,m), filas=[];
+  let saldo;
+  if (E.arrastrar) { const p = m===1 ? [y-1,12] : [y,m-1]; const pk=ym(...p);
+    saldo = (pk in E.saldoInicial || tieneDatos(...p)) && (p[0]>=2025) ? calcularMes(...p).saldoFinal : (E.saldoInicial[k]||0); }
+  else saldo = E.saldoInicial[k]||0;
+  const saldoIni = saldo;
+  const venc = totalVencido(k); saldo -= venc.total;
+  const tot = {pagos:0,cheques:0,rec:0,recReal:0,recEst:0,caja:0,banco:0,pagado:0,impago:0,pendiente:0,porCol:{}};
+  for (let d=1; d<=n; d++){
+    const f=ymd(y,m,d), p=E.pagos[f]||{};
+    let pagos=0, cheques=0;
+    for (const c of E.columnas){ const v=p[c.key]; if(!v) continue;
+      if (c.tipo==='cheque') cheques+=v; else pagos+=v;
+      tot.porCol[c.key]=(tot.porCol[c.key]||0)+v;
+      const st=E.estados[f+'|'+c.key]; if (st==='ok') tot.pagado+=v; else if (st==='no') tot.impago+=v; else tot.pendiente+=v; }
+    const r = recaudacion(f);
+    saldo += r.usada - pagos - cheques;
+    tot.pagos+=pagos; tot.cheques+=cheques; tot.rec+=r.usada; tot.recReal+=r.real; tot.recEst+=r.est; tot.caja+=r.caja; tot.banco+=r.banco;
+    filas.push({f,d,pagos,cheques,r,saldo});
+  }
+  for (const [col,mm] of Object.entries((E.vencido[k]||{}).montos||{})) tot.porColVenc = tot.porColVenc||{}, tot.porColVenc[col]=mm;
+  return {filas,tot,saldoIni,venc,saldoFinal:saldo};
+}
+function tieneDatos(y,m){ const k=ym(y,m); return Object.keys(E.pagos).some(f=>f.startsWith(k)) || Object.keys(E.estimado).some(f=>f.startsWith(k)); }
+
+/* ================== vista mensual ================== */
+function render(){
+  $('selMes').value=mes; $('selAnio').value=anio; $('modoRec').value=E.modoRec;
+  document.querySelectorAll('#vistaSeg button').forEach(b=>b.classList.toggle('on',b.dataset.v===vista));
+  $('selMes').style.display = vista==='mes'?'':'none';
+  if (vista==='mes') renderMes(); else renderAnio();
+}
+function renderMes(){
+  const k=ym(anio,mes), C=calcularMes(anio,mes), cols=colsVisibles(), T=C.tot;
+  const venc = E.vencido[k];
+  let h = `<div class="tarjetas">
+    <div class="tarjeta"><div class="t">Total pagos a realizar</div><div class="v">$ ${f0(T.pagos)||0}</div><div class="s">+ vencido $ ${f0(C.venc.gasto)||0}</div></div>
+    <div class="tarjeta"><div class="t">Total cheques (e-cheqs)</div><div class="v">$ ${f0(T.cheques)||0}</div><div class="s">+ vencido $ ${f0(C.venc.cheque)||0}</div></div>
+    <div class="tarjeta"><div class="t">Recaudación usada</div><div class="v">$ ${f0(T.rec)||0}</div><div class="s">Real $ ${f0(T.recReal)||0} · Est. $ ${f0(T.recEst)||0}</div></div>
+    <div class="tarjeta"><div class="t">Recaudado real</div><div class="v">$ ${f0(T.recReal)||0}</div><div class="s">Caja $ ${f0(T.caja)||0} · Bancos $ ${f0(T.banco)||0}</div></div>
+    <div class="tarjeta"><div class="t">Estado de pagos</div><div class="v" style="font-size:14px"><span style="color:var(--verdeb)">✔ $ ${f0(T.pagado)||0}</span></div><div class="s"><span style="color:var(--rojob)">✖ $ ${f0(T.impago)||0}</span> · pendiente $ ${f0(T.pendiente)||0}</div></div>
+    <div class="tarjeta"><div class="t">Saldo de caja al cierre</div><div class="v ${C.saldoFinal<0?'neg':''}">$ ${fmt0.format(C.saldoFinal)}</div><div class="s">Inicial $ ${fmt0.format(C.saldoIni)} <a href="#" id="editSaldoIni">editar</a></div></div>
+  </div>
+  <div class="leyenda"><span><i style="background:var(--verde)"></i>1 clic: pagado</span><span><i style="background:var(--rojo)"></i>2 clics: no pagado / vencido</span>
+   <span><i style="background:var(--finde)"></i>Fin de semana</span><span><i style="background:var(--feriado)"></i>Feriado</span>
+   <span>Clic derecho (o clic en celda vacía): editar monto</span><span><span class="badge b-r">R</span> real · <span class="badge b-e">E</span> estimada · <span class="badge b-w">!</span> falta caja o banco</span></div>
+  <div class="tablawrap"><table class="flujo"><thead>`;
+  const nG=cols.filter(c=>c.tipo==='gasto').length, nC=cols.filter(c=>c.tipo==='cheque').length, nP=cols.filter(c=>c.tipo==='proveedor').length;
+  // encabezado agrupado respetando el orden de columnas
+  h += `<tr class="grupoc"><th class="fecha"></th>`;
+  let i=0; while (i<cols.length){ const t=cols[i].tipo; let j=i; while(j<cols.length&&cols[j].tipo===t) j++;
+    h+=`<th colspan="${j-i}" class="tipo-${t}">${t==='proveedor'?'PROVEEDORES':t==='cheque'?'CHEQUES':'GASTOS'}</th>`; i=j; }
+  h += `<th colspan="4" class="calc"></th></tr><tr class="cols"><th class="fecha">VENCIMIENTO</th>`;
+  for (const c of cols) h+=`<th class="tipo-${c.tipo}" title="${esc(c.nombre)}">${esc(c.nombre)}</th>`;
+  h += `<th class="calc">TOTAL PAGOS A REALIZAR</th><th class="calc">RECAUDACIÓN REAL Y ESTIMADA</th><th class="calc">TOTAL $ CHEQUES</th><th class="calc">SALDO DE CAJA</th></tr></thead><tbody>`;
+  // fila vencido
+  const vm=(venc&&venc.montos)||{};
+  h += `<tr class="venc"><td class="fecha m" data-venc="1">${esc(venc?venc.texto:'VENCIDO AL 1/'+mes)}</td>`;
+  for (const c of cols) h+=`<td class="m tipo-${c.tipo}" data-venc="1" data-c="${c.key}">${f0(vm[c.key])}</td>`;
+  h += `<td class="calc">${f0(C.venc.gasto)}</td><td class="calc"></td><td class="calc">${f0(C.venc.cheque)}</td><td class="calc ${C.saldoIni-C.venc.total<0?'neg':''}">${fmt0.format(C.saldoIni-C.venc.total)}</td></tr>`;
+  for (const r of C.filas){
+    const t=tipoDia(r.f), dw=new Date(r.f+'T12:00:00').getDay(), p=E.pagos[r.f]||{};
+    h += `<tr class="${t} ${r.f===HOY?'hoy':''}"><td class="fecha"><span class="diasem">${DIAS[dw]}</span>${String(r.d).padStart(2,'0')}/${String(mes).padStart(2,'0')}/${anio}${E.feriados[r.f]?`<span class="fer">🎌 ${esc(E.feriados[r.f])}</span>`:''}</td>`;
+    for (const c of cols){ const v=p[c.key], key=r.f+'|'+c.key, st=E.estados[key];
+      h+=`<td class="m tipo-${c.tipo} ${st&&v?st:''} ${E.notas[key]?'nota':''}" data-f="${r.f}" data-c="${c.key}" ${E.notas[key]?`title="${esc(E.notas[key])}"`:''}>${f0(v)}</td>`; }
+    const R=r.r; let badge='';
+    if (R.fuente==='r') badge=`<span class="badge b-r">R</span>${(!R.hayCaja||!R.hayBanco)&&E.modoRec!=='est'?'<span class="badge b-w" title="'+(!R.hayCaja?'Falta caja':'Falta banco')+'">!</span>':''}`;
+    else if (R.fuente==='e') badge='<span class="badge b-e">E</span>';
+    h += `<td class="calc">${f0(r.pagos)}</td><td class="calc rec" data-rec="${r.f}" title="Caja $${f0(R.caja)||0} · Bancos $${f0(R.banco)||0} · Estimada $${f0(R.est)||0}${R.aj?' · Ajuste $'+f0(R.aj):''}">${f0(R.usada)}${badge}</td><td class="calc">${f0(r.cheques)}</td><td class="calc ${r.saldo<0?'neg':''}">${fmt0.format(r.saldo)}</td></tr>`;
+  }
+  h += `</tbody><tfoot><tr><td class="fecha">TOTAL</td>`;
+  for (const c of cols) h+=`<td>${f0((T.porCol[c.key]||0)+(vm[c.key]||0))}</td>`;
+  h += `<td>${f0(T.pagos+C.venc.gasto)}</td><td>${f0(T.rec)}</td><td>${f0(T.cheques+C.venc.cheque)}</td><td class="${C.saldoFinal<0?'neg':''}">${fmt0.format(C.saldoFinal)}</td></tr></tfoot></table></div>`;
+  $('main').innerHTML = h;
+  $('editSaldoIni').onclick = (e)=>{ e.preventDefault(); editarSaldoIni(); };
+}
+
+/* clic = pagado (verde) · doble clic = no pagado (rojo) · clic derecho = editar */
+let timerClic=null;
+$('main').addEventListener('click', e=>{
+  const td=e.target.closest('td.m'); if (td){
+    if (td.dataset.venc){ editarVencido(td.dataset.c); return; }
+    const f=td.dataset.f, c=td.dataset.c, v=(E.pagos[f]||{})[c];
+    if (!v){ editarCelda(f,c); return; }
+    clearTimeout(timerClic);
+    timerClic=setTimeout(()=>{ const k=f+'|'+c; if (E.estados[k]==='ok') delete E.estados[k]; else E.estados[k]='ok'; guardar(); render(); }, 240);
+    return; }
+  const rc=e.target.closest('[data-rec]'); if (rc) { detalleRec(rc.dataset.rec); return; }
+  const tr=e.target.closest('tr[data-mes]'); if (tr){ mes=+tr.dataset.mes; vista='mes'; render(); return; }
+  const cal=e.target.closest('.cal'); if (cal){ mes=+cal.dataset.mes; vista='mes'; render(); }
+});
+$('main').addEventListener('dblclick', e=>{
+  const td=e.target.closest('td.m'); if (!td||td.dataset.venc) return;
+  const f=td.dataset.f, c=td.dataset.c; if (!(E.pagos[f]||{})[c]) return;
+  clearTimeout(timerClic); const k=f+'|'+c;
+  if (E.estados[k]==='no') delete E.estados[k]; else E.estados[k]='no'; guardar(); render();
+});
+$('main').addEventListener('contextmenu', e=>{
+  const td=e.target.closest('td.m'); if (!td) return; e.preventDefault();
+  if (td.dataset.venc) editarVencido(td.dataset.c); else editarCelda(td.dataset.f, td.dataset.c);
+});
+
+/* ================== modales ================== */
+function abrirModal(html){ $('modal').innerHTML=html; $('fondo').classList.add('on'); const i=$('modal').querySelector('input'); if(i) i.focus(); }
+function cerrarModal(){ $('fondo').classList.remove('on'); }
+$('fondo').addEventListener('click', e=>{ if (e.target.id==='fondo') cerrarModal(); });
+document.addEventListener('keydown', e=>{ if (e.key==='Escape'){ cerrarModal(); $('cajon').classList.remove('abierto'); } });
+function nombreCol(k){ return (E.columnas.find(c=>c.key===k)||{nombre:k}).nombre; }
+function fechaTxt(f){ const [y,m,d]=f.split('-'); return `${DIAS[new Date(f+'T12:00:00').getDay()]} ${d}/${m}/${y}`; }
+
+function setPago(f,c,monto,nota,origen){
+  const prev=(E.pagos[f]||{})[c]||0;
+  E.pagos[f]=E.pagos[f]||{};
+  E.tocados=E.tocados||{}; E.tocados[f]=1;
+  if (!monto) { delete E.pagos[f][c]; delete E.estados[f+'|'+c]; } else E.pagos[f][c]=Math.round(monto*100)/100;
+  if (!Object.keys(E.pagos[f]).length) delete E.pagos[f];
+  if (nota!==undefined){ if (nota) E.notas[f+'|'+c]=nota; else delete E.notas[f+'|'+c]; }
+  registrar(`${origen||'Edición'} · ${fechaTxt(f)} · ${nombreCol(c)}: $${f2(prev)} → $${f2(monto)}${nota?' · '+nota:''}`);
+  guardar();
+}
+function editarCelda(f,c){
+  const v=(E.pagos[f]||{})[c]||0, k=f+'|'+c;
+  abrirModal(`<h3>${esc(nombreCol(c))}</h3><div class="aviso">${fechaTxt(f)}${E.feriados[f]?' · 🎌 '+esc(E.feriados[f]):''}</div>
+   <div class="fila"><label>Monto</label><input id="mMonto" type="text" inputmode="decimal" value="${v?f2(v):''}"></div>
+   <div class="fila"><label>Nota</label><input id="mNota" type="text" value="${esc(E.notas[k]||'')}" placeholder="opcional (factura, n° de cheque…)"></div>
+   <div class="fila"><label>Estado</label><select id="mEst"><option value="">Pendiente</option><option value="ok" ${E.estados[k]==='ok'?'selected':''}>✔ Pagado (verde)</option><option value="no" ${E.estados[k]==='no'?'selected':''}>✖ No pagado (rojo)</option></select></div>
+   <div class="fila"><label>Mover a</label><input id="mFecha" type="date" value="${f}"></div>
+   <div class="fila" style="justify-content:flex-end;margin-top:10px">${v?'<button id="mBorrar">🗑 Quitar</button>':''}<button id="mCanc">Cancelar</button><button class="pri" id="mOk">Guardar</button></div>`);
+  $('mCanc').onclick=cerrarModal;
+  if ($('mBorrar')) $('mBorrar').onclick=()=>{ setPago(f,c,0,'','Quitado'); cerrarModal(); render(); };
+  const ok=()=>{ const n=numero($('mMonto').value)||0, nf=$('mFecha').value||f, nota=$('mNota').value.trim(), st=$('mEst').value;
+    if (nf!==f){ setPago(f,c,0,'','Movido'); const ya=(E.pagos[nf]||{})[c]||0; setPago(nf,c,ya+n,nota,'Movido desde '+fechaTxt(f)); if(st) E.estados[nf+'|'+c]=st; }
+    else { setPago(f,c,n,nota); if (st&&n) E.estados[k]=st; else delete E.estados[k]; }
+    guardar(); cerrarModal(); render(); };
+  $('mOk').onclick=ok; $('modal').querySelectorAll('input').forEach(i=>i.addEventListener('keydown',e=>{ if(e.key==='Enter') ok(); }));
+}
+function editarVencido(c){
+  const k=ym(anio,mes); E.vencido[k]=E.vencido[k]||{texto:'VENCIDO AL 1/'+mes,montos:{}};
+  const V=E.vencido[k];
+  abrirModal(`<h3>Vencido al inicio de ${MESES[mes-1]} ${anio}</h3>
+   <div class="fila"><label>Texto</label><input id="vTxt" type="text" value="${esc(V.texto)}"></div>
+   ${c?`<div class="fila"><label>${esc(nombreCol(c))}</label><input id="vMonto" type="text" value="${V.montos[c]?f2(V.montos[c]):''}"></div>`:''}
+   <div class="fila" style="justify-content:flex-end;margin-top:10px"><button id="mCanc">Cancelar</button><button class="pri" id="mOk">Guardar</button></div>`);
+  $('mCanc').onclick=cerrarModal;
+  $('mOk').onclick=()=>{ V.texto=$('vTxt').value; if (c){ const n=numero($('vMonto').value)||0; if(n) V.montos[c]=n; else delete V.montos[c];
+      registrar(`Vencido ${k} · ${nombreCol(c)}: $${f2(n)}`); } guardar(); cerrarModal(); render(); };
+}
+function editarSaldoIni(){
+  const k=ym(anio,mes);
+  abrirModal(`<h3>Saldo inicial de ${MESES[mes-1]} ${anio}</h3>
+   <div class="fila"><label>Saldo</label><input id="sIni" type="text" value="${f2(E.saldoInicial[k]||0)}"></div>
+   <div class="fila"><label><input type="checkbox" id="sArr" ${E.arrastrar?'checked':''}> Arrastrar el saldo del cierre del mes anterior (todos los meses)</label></div>
+   <div class="aviso">Con "arrastrar" activado se ignora el saldo inicial cargado a mano y cada mes arranca con el cierre del anterior.</div>
+   <div class="fila" style="justify-content:flex-end"><button id="mCanc">Cancelar</button><button class="pri" id="mOk">Guardar</button></div>`);
+  $('mCanc').onclick=cerrarModal;
+  $('mOk').onclick=()=>{ E.saldoInicial[k]=numero($('sIni').value)||0; E.arrastrar=$('sArr').checked; registrar(`Saldo inicial ${k}: $${f2(E.saldoInicial[k])}`); guardar(); cerrarModal(); render(); };
+}
+function detalleRec(f){
+  const R=recaudacion(f), caja=E.caja[f]||[], bancos=E.bancos[f]||[], aj=E.ajustes[f]||[];
+  let h=`<h3>Recaudación · ${fechaTxt(f)}</h3>
+   <table><tr><td>💵 Caja tesorería (ingresos)</td><td class="n">$ ${f2(R.caja)}</td></tr>
+   <tr><td>🏦 Bancos (créditos incluidos)</td><td class="n">$ ${f2(R.banco)}</td></tr>
+   <tr><td><b>Recaudado real</b></td><td class="n"><b>$ ${f2(R.real)}</b></td></tr>
+   <tr><td>➕ Ajustes manuales</td><td class="n">$ ${f2(R.aj)}</td></tr>
+   <tr><td>📈 Estimada</td><td class="n"><input id="rEst" type="text" value="${R.est?f2(R.est):''}" style="width:150px;text-align:right"></td></tr>
+   <tr><td><b>Usada en el saldo</b></td><td class="n"><b>$ ${f2(R.usada)}</b></td></tr></table>`;
+  if (bancos.length){ h+=`<h4 style="margin:12px 0 4px">Bancos — tildá lo que es recaudación</h4><table><tr><th></th><th>Cuenta</th><th>Concepto</th><th class="n">Mov.</th><th class="n">Importe</th></tr>`;
+    bancos.forEach((g,i)=>{ h+=`<tr><td><input type="checkbox" data-g="${i}" ${grupoExcluido(f,g)?'':'checked'}></td><td>${esc(g[0])}</td><td>${esc(g[1])}</td><td class="n">${g[3]}</td><td class="n">${f2(g[2])}</td></tr>`; });
+    h+=`</table><div class="aviso">Los depósitos en efectivo vienen destildados: esa plata ya se contó al entrar a la caja (y sale de la caja como "DEPOSITO BANCARIO").</div>`; }
+  if (caja.length){ h+=`<details><summary style="cursor:pointer;margin-top:10px">Detalle caja (${caja.length} ingresos)</summary><table>`;
+    caja.forEach(x=>{ h+=`<tr><td>${esc(x[0])}</td><td>${esc(x[1])}</td><td class="n">${f2(x[2])}</td></tr>`; }); h+='</table></details>'; }
+  h+=`<h4 style="margin:12px 0 4px">Ajustes</h4><div class="lista" id="rAjs">${aj.map(a=>`<div><span>${esc(a.nota||'Ajuste')}</span><span class="x">$ ${f2(a.monto)}</span><button data-del="${a.id}">✕</button></div>`).join('')||'<div>Sin ajustes</div>'}</div>
+   <div class="fila" style="margin-top:6px"><input id="rAjM" type="text" placeholder="Monto (+ suma / − resta)" style="max-width:170px"><input id="rAjN" type="text" placeholder="Motivo"><button id="rAjAdd">Agregar</button></div>
+   <div class="fila" style="justify-content:flex-end;margin-top:10px"><button id="mCanc">Cerrar</button><button class="pri" id="mOk">Guardar</button></div>`;
+  abrirModal(h);
+  $('mCanc').onclick=cerrarModal;
+  $('modal').querySelectorAll('[data-g]').forEach(cb=>cb.onchange=()=>{ const g=bancos[+cb.dataset.g]; E.exclGrupo[f+'|'+g[0]+'|'+g[1]]=!cb.checked; guardar(); render(); });
+  $('modal').querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{ E.ajustes[f]=(E.ajustes[f]||[]).filter(a=>a.id!==b.dataset.del); if(!E.ajustes[f].length) delete E.ajustes[f]; registrar(`Ajuste recaudación quitado · ${fechaTxt(f)}`); guardar(); render(); detalleRec(f); });
+  $('rAjAdd').onclick=()=>{ const n=numero($('rAjM').value); if(!n) return; (E.ajustes[f]=E.ajustes[f]||[]).push({id:Date.now().toString(36),monto:n,nota:$('rAjN').value.trim()});
+    registrar(`Ajuste recaudación · ${fechaTxt(f)}: $${f2(n)} ${$('rAjN').value.trim()}`); guardar(); render(); detalleRec(f); };
+  $('mOk').onclick=()=>{ const n=numero($('rEst').value)||0; if(n) E.estimado[f]=n; else delete E.estimado[f]; guardar(); cerrarModal(); render(); };
+}
+
+/* ================== vista anual ================== */
+function renderAnio(){
+  let filas='', tot={venc:0,pagos:0,cheques:0,real:0,est:0,rec:0,caja:0,banco:0,pagado:0}; const cals=[];
+  for (let m=1;m<=12;m++){
+    const C=calcularMes(anio,m), T=C.tot, hay=tieneDatos(anio,m)||T.recReal;
+    tot.venc+=C.venc.total; tot.pagos+=T.pagos; tot.cheques+=T.cheques; tot.real+=T.recReal; tot.est+=T.recEst; tot.rec+=T.rec; tot.caja+=T.caja; tot.banco+=T.banco; tot.pagado+=T.pagado;
+    const nF=C.filas.filter(r=>tipoDia(r.f)==='feriado').length, nW=C.filas.filter(r=>tipoDia(r.f)==='finde').length, nH=C.filas.length-nF-nW;
+    filas+=`<tr class="click" data-mes="${m}"><td>${MESES[m-1]}</td><td>${nH} / ${nW} / ${nF}</td><td>${f0(C.venc.total)}</td><td>${f0(T.pagos)}</td><td>${f0(T.cheques)}</td><td>${f0(T.caja)}</td><td>${f0(T.banco)}</td><td>${f0(T.recReal)}</td><td>${f0(T.recEst)}</td><td>${f0(T.rec)}</td><td>${T.pagos+T.cheques?Math.round(T.pagado/(T.pagos+T.cheques)*100)+'%':''}</td><td class="${C.saldoFinal<0?'neg':''}">${hay?fmt0.format(C.saldoFinal):''}</td></tr>`;
+    // calendario
+    const ini=(new Date(anio,m-1,1).getDay()+6)%7; let g='<div class="dn">L</div><div class="dn">M</div><div class="dn">M</div><div class="dn">J</div><div class="dn">V</div><div class="dn">S</div><div class="dn">D</div>';
+    for(let i=0;i<ini;i++) g+='<div></div>';
+    for (const r of C.filas){ const t=tipoDia(r.f), neto=r.r.usada-r.pagos-r.cheques;
+      g+=`<div class="${t==='feriado'?'fe':t==='finde'?'fd':''} ${r.f===HOY?'hy':''} ${(r.pagos||r.cheques||r.r.usada)?(neto>=0?'pos':'ng'):''}" title="${fechaTxt(r.f)}${E.feriados[r.f]?' · '+esc(E.feriados[r.f]):''}\nPagos $${f0(r.pagos)||0} · Cheques $${f0(r.cheques)||0}\nRecaudación $${f0(r.r.usada)||0}\nSaldo $${fmt0.format(r.saldo)}">${r.d}</div>`; }
+    cals.push(`<div class="cal" data-mes="${m}"><h4><span>${MESES[m-1]}</span><span class="${C.saldoFinal<0?'neg':''}" style="font-weight:400;font-size:11px">${hay?'$ '+fmt0.format(C.saldoFinal):''}</span></h4><div class="g">${g}</div></div>`);
+  }
+  $('main').innerHTML = `<div class="tarjetas">
+    <div class="tarjeta"><div class="t">Pagos del año</div><div class="v">$ ${f0(tot.pagos)||0}</div></div>
+    <div class="tarjeta"><div class="t">Cheques del año</div><div class="v">$ ${f0(tot.cheques)||0}</div></div>
+    <div class="tarjeta"><div class="t">Recaudado real</div><div class="v">$ ${f0(tot.real)||0}</div><div class="s">Caja $ ${f0(tot.caja)||0} · Bancos $ ${f0(tot.banco)||0}</div></div>
+    <div class="tarjeta"><div class="t">Recaudación estimada</div><div class="v">$ ${f0(tot.est)||0}</div></div>
+    <div class="tarjeta"><div class="t">Marcado como pagado</div><div class="v" style="color:var(--verdeb)">$ ${f0(tot.pagado)||0}</div></div></div>
+   <div class="anual"><table><tr><th>Mes</th><th title="hábiles / fin de semana / feriados">Días háb./finde/fer.</th><th>Vencido inicial</th><th>Pagos</th><th>Cheques</th><th>Caja</th><th>Bancos</th><th>Recaudado real</th><th>Estimado</th><th>Recaudación usada</th><th>% pagado</th><th>Saldo cierre</th></tr>${filas}
+   <tr><td><b>Total ${anio}</b></td><td></td><td><b>${f0(tot.venc)}</b></td><td><b>${f0(tot.pagos)}</b></td><td><b>${f0(tot.cheques)}</b></td><td><b>${f0(tot.caja)}</b></td><td><b>${f0(tot.banco)}</b></td><td><b>${f0(tot.real)}</b></td><td><b>${f0(tot.est)}</b></td><td><b>${f0(tot.rec)}</b></td><td></td><td></td></tr></table></div>
+   <div class="leyenda" style="margin-top:12px"><span><i style="background:var(--finde)"></i>Fin de semana</span><span><i style="background:var(--feriado)"></i>Feriado</span><span><i style="box-shadow:inset 0 -3px 0 #43a047"></i>Día con neto positivo</span><span><i style="box-shadow:inset 0 -3px 0 #e53935"></i>Día con neto negativo</span><span>Clic en un mes para abrirlo</span></div>
+   <div class="calendarios">${cals.join('')}</div>`;
+}
+
+/* ================== cajón: agregar / quitar ================== */
+function opcionesCols(sel){ return E.columnas.map(c=>`<option value="${c.key}" ${c.key===sel?'selected':''}>${esc(c.nombre)}${c.oculta?' (oculta)':''}</option>`).join(''); }
+function abrirCajon(){
+  const k=ym(anio,mes);
+  const def = (HOY.startsWith(k)?HOY:ymd(anio,mes,1));
+  const cambios = E.log.slice(0,80);
+  $('cajonTitulo').textContent='Agregar / Quitar';
+  $('cajonCuerpo').innerHTML = `
+  <h3>Pago o cheque</h3>
+  <div class="fila"><label>Fecha</label><input type="date" id="aF" value="${def}"></div>
+  <div class="fila"><label>Concepto</label><select id="aC">${opcionesCols()}</select></div>
+  <div class="fila"><label>Monto</label><input type="text" id="aM" inputmode="decimal" placeholder="0,00"></div>
+  <div class="fila"><label>Nota</label><input type="text" id="aN" placeholder="opcional"></div>
+  <div class="fila"><label>Repetir</label><select id="aR"><option value="0">Una vez</option><option value="7">Cada semana</option><option value="m">Cada mes</option></select><input type="number" id="aRn" value="1" min="1" max="52" style="max-width:70px" title="cantidad de veces"></div>
+  <div class="fila"><button class="pri" id="aSumar">➕ Agregar (suma)</button><button id="aReemp">✎ Reemplazar</button><button id="aQuitar">➖ Quitar</button></div>
+  <div class="aviso">"Quitar" con monto resta ese importe; sin monto borra la celda entera.</div>
+
+  <h3>Recaudación (ajuste manual)</h3>
+  <div class="fila"><label>Fecha</label><input type="date" id="jF" value="${def}"></div>
+  <div class="fila"><label>Monto</label><input type="text" id="jM" placeholder="+ suma / − resta"></div>
+  <div class="fila"><label>Motivo</label><input type="text" id="jN"></div>
+  <div class="fila"><button id="jAdd">Agregar ajuste</button><button id="jEst">Fijar como estimada</button></div>
+
+  <h3>Columnas</h3>
+  <div class="lista" id="colLista">${E.columnas.map((c,i)=>`<div><input type="checkbox" data-vis="${i}" ${c.oculta?'':'checked'} title="mostrar"><span>${esc(c.nombre)}</span><span class="x" style="color:var(--sub)">${c.tipo}</span><button data-up="${i}" title="subir">↑</button><button data-ren="${i}" title="renombrar">✎</button><button data-delc="${i}" title="eliminar">✕</button></div>`).join('')}</div>
+  <div class="fila" style="margin-top:6px"><input type="text" id="nCol" placeholder="Nueva columna (ej. ADECCO)"><select id="nTipo" style="max-width:120px"><option value="proveedor">Proveedor</option><option value="gasto">Gasto fijo</option><option value="cheque">Cheque</option></select><button id="nAdd">Agregar</button></div>
+  <div class="aviso">Las columnas tipo "Cheque" se suman en TOTAL $ CHEQUES y no en TOTAL PAGOS, igual que en la planilla.</div>
+
+  <h3>Últimos cambios</h3>
+  <div class="lista">${cambios.map(l=>`<div><span style="color:var(--sub)">${new Date(l.ts).toLocaleString('es-AR',{dateStyle:'short',timeStyle:'short'})}</span><span>${esc(l.txt)}</span></div>`).join('')||'<div>Todavía no hay cambios.</div>'}</div>`;
+  $('cajon').classList.add('abierto');
+  const fechas=()=>{ const out=[], f0d=$('aF').value, rep=$('aR').value, n=rep==='0'?1:Math.max(1,+$('aRn').value||1); let d=new Date(f0d+'T12:00:00');
+    for(let i=0;i<n;i++){ out.push(iso(d)); if(rep==='7') d.setDate(d.getDate()+7); else if(rep==='m') d.setMonth(d.getMonth()+1); } return out; };
+  const aplicar=(modo)=>{ const c=$('aC').value, n=numero($('aM').value), nota=$('aN').value.trim();
+    if (!$('aF').value) return toast('Falta la fecha');
+    if (modo!=='quitar' && !(n>0)) return toast('Poné un monto mayor a cero');
+    for (const f of fechas()){ const ya=(E.pagos[f]||{})[c]||0;
+      if (modo==='sumar') setPago(f,c,ya+n,nota||undefined,'Agregado');
+      else if (modo==='reemp') setPago(f,c,n,nota||undefined,'Reemplazado');
+      else setPago(f,c, n>0?Math.max(0,ya-n):0, undefined, 'Quitado'); }
+    $('aM').value=''; toast('Listo'); render(); abrirCajon(); };
+  $('aSumar').onclick=()=>aplicar('sumar'); $('aReemp').onclick=()=>aplicar('reemp'); $('aQuitar').onclick=()=>aplicar('quitar');
+  $('jAdd').onclick=()=>{ const f=$('jF').value, n=numero($('jM').value); if(!f||!n) return toast('Fecha y monto');
+    (E.ajustes[f]=E.ajustes[f]||[]).push({id:Date.now().toString(36),monto:n,nota:$('jN').value.trim()}); registrar(`Ajuste recaudación · ${fechaTxt(f)}: $${f2(n)} ${$('jN').value.trim()}`); guardar(); render(); abrirCajon(); };
+  $('jEst').onclick=()=>{ const f=$('jF').value, n=numero($('jM').value); if(!f) return; if(n) E.estimado[f]=n; else delete E.estimado[f]; registrar(`Recaudación estimada · ${fechaTxt(f)}: $${f2(n||0)}`); guardar(); render(); abrirCajon(); };
+  const L=$('colLista');
+  L.querySelectorAll('[data-vis]').forEach(cb=>cb.onchange=()=>{ E.columnas[+cb.dataset.vis].oculta=!cb.checked; guardar(); render(); });
+  L.querySelectorAll('[data-up]').forEach(b=>b.onclick=()=>{ const i=+b.dataset.up; if(!i) return; const a=E.columnas; [a[i-1],a[i]]=[a[i],a[i-1]]; guardar(); render(); abrirCajon(); });
+  L.querySelectorAll('[data-ren]').forEach(b=>b.onclick=()=>{ const c=E.columnas[+b.dataset.ren]; const n=prompt('Nuevo nombre de la columna', c.nombre); if(n){ c.nombre=n.trim(); guardar(); render(); abrirCajon(); } });
+  L.querySelectorAll('[data-delc]').forEach(b=>b.onclick=()=>{ const c=E.columnas[+b.dataset.delc];
+    const usos=Object.values(E.pagos).filter(p=>p[c.key]).length;
+    if (usos && !confirm(`"${c.nombre}" tiene montos en ${usos} día(s). Si la eliminás se borran esos montos. ¿Seguro? (Si sólo querés esconderla, destildala)`)) return;
+    if (!usos && !confirm(`¿Eliminar la columna "${c.nombre}"?`)) return;
+    for (const f in E.pagos){ delete E.pagos[f][c.key]; if(!Object.keys(E.pagos[f]).length) delete E.pagos[f]; }
+    E.columnas.splice(+b.dataset.delc,1); registrar(`Columna eliminada: ${c.nombre}`); guardar(); render(); abrirCajon(); });
+  $('nAdd').onclick=()=>{ const n=$('nCol').value.trim(); if(!n) return; const key='c_'+Date.now().toString(36);
+    const t=$('nTipo').value; let pos=E.columnas.length; if (t!=='proveedor'){ const i=E.columnas.findIndex(c=>c.tipo==='proveedor'); if(i>=0) pos=i; }
+    E.columnas.splice(pos,0,{key,nombre:n.toUpperCase(),tipo:t}); registrar(`Columna nueva: ${n}`); guardar(); render(); abrirCajon(); };
+}
+$('btnCajon').onclick=abrirCajon;
+document.querySelector('[data-cerrar]').onclick=()=>$('cajon').classList.remove('abierto');
+
+/* ================== importar ================== */
+function abrirImport(){
+  $('cajonTitulo').textContent='Importar datos';
+  const ultCaja=Object.keys(E.caja).sort().pop()||'—', ultBanco=Object.keys(E.bancos).sort().pop()||'—';
+  const cuentas={}; for (const f in E.bancos) for (const g of E.bancos[f]) cuentas[g[0]]=f>(cuentas[g[0]]||'')?f:cuentas[g[0]];
+  $('cajonCuerpo').innerHTML=`
+   <div class="zona" id="zona">📄 Arrastrá acá los archivos, o hacé clic para elegirlos<br><small>Extractos de banco (.xls/.xlsx/.csv), planilla Finanzas_Diarias (.xlsx), planillas "Flujo Caja vs Pagos futuros" (.xls) o un respaldo (.json)</small></div>
+   <div id="impRes" class="aviso"></div>
+   <h3>Qué hay cargado</h3>
+   <div class="lista">
+    <div><span>💵 Caja tesorería</span><span class="x">hasta ${ultCaja}</span></div>
+    ${Object.entries(cuentas).map(([c,f])=>`<div><span>🏦 ${esc(c)}</span><span class="x">hasta ${f}</span></div>`).join('')}
+   </div>
+   <div class="aviso">La caja de octubre en adelante vive en Google Drive (planilla Finanzas_Diarias del mes): bajala como Excel (Archivo → Descargar → .xlsx) y soltala acá. Los extractos se bajan del homebanking, igual que para el Control de Transferencias. Si volvés a cargar un extracto, reemplaza los días y la cuenta que trae: no se duplica.</div>
+   <h3>Créditos bancarios que NO cuentan como recaudación</h3>
+   <div class="fila"><input type="text" id="exRe" value="${esc(E.excluir)}"><button id="exOk">Aplicar</button></div>
+   <div class="aviso">Palabras separadas por | . Por defecto se excluyen depósitos en efectivo (ya están en la caja), transferencias entre cuentas propias, préstamos, descuento de documentos, rescates FIMA y rechazos.</div>
+   <h3>Fuentes originales</h3><div class="lista">${(E.fuentes||[]).map(f=>`<div>${esc(f)}</div>`).join('')}<div>${(E.archivosBanco||[]).length} archivos de extractos en Descargas</div></div>`;
+  $('cajon').classList.add('abierto');
+  const z=$('zona'); z.onclick=()=>$('archivo').click();
+  z.ondragover=e=>{e.preventDefault(); z.classList.add('sobre');}; z.ondragleave=()=>z.classList.remove('sobre');
+  z.ondrop=e=>{e.preventDefault(); z.classList.remove('sobre'); importar(e.dataTransfer.files);};
+  $('exOk').onclick=()=>{ E.excluir=$('exRe').value; recExcl(); guardar(); render(); toast('Filtro aplicado'); };
+}
+$('btnImport').onclick=abrirImport;
+$('archivo').onchange=e=>{ importar(e.target.files); e.target.value=''; };
+
+async function leerFilas(file){
+  const buf=await file.arrayBuffer();
+  if (/\.csv$/i.test(file.name)) { const wb=XLSX.read(new TextDecoder().decode(buf),{type:'string'}); return {wb, filas:XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,raw:true,defval:''})}; }
+  const wb=XLSX.read(new Uint8Array(buf),{type:'array',cellDates:true});
+  return {wb, filas:XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,raw:true,defval:''})};
+}
+function norm(t){ return String(t??'').normalize('NFD').replace(/\p{M}/gu,'').toUpperCase().trim().replace(/\s+/g,' '); }
+function fechaCelda(v){
+  if (v instanceof Date) return iso(new Date(v.getTime()+12*3600e3));
+  const t=String(v||'').trim(); let m;
+  if (/^\d{5}(\.\d+)?$/.test(t)) return new Date((parseFloat(t)-25569)*864e5+12*3600e3).toISOString().slice(0,10);
+  if ((m=t.match(/^(\d{4})-(\d{2})-(\d{2})/))) return m[0];
+  if ((m=t.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})/))) return `${m[3].length===2?'20'+m[3]:m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
+  return null;
+}
+function conceptoBanco(det){
+  let c=String(det||'').split(' · ')[0].replace(/[\d:/#-]+/g,' ').replace(/\s+/g,' ').trim().slice(0,40)||'Credito';
+  if (/^cr transferencia recibida/i.test(c)) c='CR Transferencia Recibida';
+  else if (/^g\.? ?de echeq/i.test(c)) c='Gestion de Echeq';
+  else if (/^dep\.?efvo/i.test(c)) c='Deposito En Efectivo';
+  else if (/^(ING )?TRANSF /i.test(c)) c='Transferencia Recibida';
+  return c;
+}
+function importarBanco(filas, nombre){
+  let hr=-1; for (let i=0;i<Math.min(40,filas.length);i++){ const n=(filas[i]||[]).map(norm);
+    if (n.some(x=>x.startsWith('FECHA')) && n.some(x=>/^(CREDITO|MONTO|IMPORTE)/.test(x))) { hr=i; break; } }
+  if (hr<0) return null;
+  const H=filas[hr].map(norm), idx=re=>H.findIndex(x=>re.test(x));
+  const cf=idx(/^FECHA/), cc=idx(/^CREDITO/), cm=idx(/^(MONTO|IMPORTE)/), cd=idx(/^(DESCRIPCION|CONCEPTO|DETALLE)/);
+  const cab=filas.slice(0,8).concat(filas.slice(-8)).map(f=>norm((f||[]).join(' '))).join(' ');
+  const hall=H.join(' ');
+  let banco = /LEYENDAS ADICIONALES/.test(hall)?'Galicia': /CAUSAL/.test(hall)?'Provincia': /NACION|BNA/.test(cab)?'Nación': (/GALICIA/.test(cab)?'Galicia':/PROVINCIA/.test(cab)?'Provincia':'Banco');
+  const cta=(nombre.match(/_(CC\d+)/)||[])[1]; const emp=(cab.match(/EMPRESA:\s*\d*\s*-?\s*([A-Z .]{4,40}?)(?:\s+OPERADOR|\s{2}|$)/)||[])[1];
+  const cuenta=banco+(cta?' '+cta:'')+(emp?' - '+emp.trim():'');
+  const agg={};
+  for (const r of filas.slice(hr+1)){ const f=fechaCelda(r[cf]); if(!f) continue;
+    let imp = cc>=0 ? numero(r[cc]) : NaN; if (!(imp>0) && cm>=0) imp=numero(r[cm]);
+    if (!(imp>0)) continue;
+    const con=conceptoBanco(cd>=0?r[cd]:''); const k=f+'\u0001'+con; const a=agg[k]||(agg[k]=[0,0]); a[0]+=imp; a[1]++; }
+  const dias=new Set(Object.keys(agg).map(k=>k.split('\u0001')[0]));
+  for (const f of dias) E.bancos[f]=(E.bancos[f]||[]).filter(g=>g[0]!==cuenta);
+  let total=0;
+  for (const [k,[imp,n]] of Object.entries(agg)){ const [f,con]=k.split('\u0001'); (E.bancos[f]=E.bancos[f]||[]).push([cuenta,con,Math.round(imp*100)/100,n]); total+=imp; }
+  const ds=[...dias].sort();
+  return `🏦 ${cuenta}: ${ds.length} días (${ds[0]||''} a ${ds[ds.length-1]||''}), créditos $ ${f0(total)}`;
+}
+function importarCaja(wb){
+  const ws=wb.Sheets['Movimientos']; if(!ws) return null;
+  const filas=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:''});
+  const nuevo={}; let n=0;
+  for (const r of filas.slice(1)){ const f=fechaCelda(r[0]); if(!f) continue; if (norm(r[1])!=='INGRESO') continue;
+    const imp=numero(r[10]); if(!imp) continue; (nuevo[f]=nuevo[f]||[]).push([String(r[4]||'').trim(),String(r[2]||'').trim(),imp]); n++; }
+  for (const f in nuevo) E.caja[f]=nuevo[f];
+  const ds=Object.keys(nuevo).sort();
+  return `💵 Caja: ${n} ingresos en ${ds.length} días (${ds[0]||''} a ${ds[ds.length-1]||''})`;
+}
+const MAPEO=[['sueldos',/^SUELDOS/],['premios',/^PREMIOS/],['horas',/^HORAS EXTRAS/],['aportes',/APORTES/],['viaticos',/^VIATICOS/],['alquiler',/^ALQUILER/],['fletes',/^FLETES/],['garrafas',/^GARRAFAS/],['contenedores',/^CONTENEDORES/],['sistemas',/^DIGIP/],['comafi',/^PRESTAMO COMAFI/],['echeqcomafi',/^ECHEQ COMAFI/],['estudio',/^ESTUDIO/],['chq_tp',/^E-CHEQS (PEPSICO|TP|TIENDA)$/],['chq_rl',/^E-CHEQS (RAMBLA|RL)$/],['despidos',/^DESPIDOS/],['prestamos',/^PRESTAMOS$/],['moratorias',/^MORATORIAS/],['impuestos',/^IMPUESTOS/],['softys',/^SOFTYS/],['pepsico',/^PEPSICO$/],['georgalos',/^GEORGALOS/],['chacabuco',/^CHACABUCO/],['bimbo',/^BIMBO/],['ecovita',/^ECOVITA/],['entrenuts',/^ENTRENUTS/],['pilaga',/^PILAGA/],['resto',/^RESTO/]];
+function importarFlujo(filas){
+  const hr=filas.findIndex(r=>norm(r[0]).startsWith('VENCIMIENTO')); if (hr<0) return null;
+  const H=filas[hr].map(norm), cols={}; let rec=-1; const nuevas=[];
+  H.forEach((h,i)=>{ if(!i||!h) return; if (h.startsWith('RECAUDACION')) { rec=i; return; }
+    if (/^(TOTAL|SALDO|CHEQUES A PAGAR|ECHEQS|%)/.test(h)) return;
+    let k=(MAPEO.find(([,re])=>re.test(h))||[])[0];
+    if (!k){ let c=E.columnas.find(c=>norm(c.nombre)===h); if(!c){ c={key:'c_'+Math.random().toString(36).slice(2,8),nombre:h,tipo:/CHEQ/.test(h)?'cheque':'proveedor'}; E.columnas.push(c); nuevas.push(h);} k=c.key; }
+    else if (!E.columnas.find(c=>c.key===k)) E.columnas.push({key:k,nombre:h,tipo:/^chq/.test(k)?'cheque':'proveedor'});
+    cols[i]=k; });
+  let mesK=null, dias=0;
+  for (const r of filas.slice(hr+1)){
+    const f=fechaCelda(r[0]);
+    if (f){ mesK=mesK||f.slice(0,7); const p={};
+      for (const [i,k] of Object.entries(cols)){ const v=numero(r[i]); if (v) p[k]=(p[k]||0)+v; }
+      if (Object.keys(p).length) E.pagos[f]=p; else delete E.pagos[f];
+      E.tocados=E.tocados||{}; E.tocados[f]=1;
+      const v=rec>=0?numero(r[rec]):0; if (v) E.estimado[f]=v; else delete E.estimado[f]; dias++; }
+    else if (norm(r[0]).startsWith('VENCIDO')){ const m={}; for (const [i,k] of Object.entries(cols)){ const v=numero(r[i]); if(v) m[k]=v; }
+      const fr=filas.slice(hr+1).map(x=>fechaCelda(x[0])).find(Boolean); if (fr) E.vencido[fr.slice(0,7)]={texto:String(r[0]).trim(),montos:m}; }
+  }
+  return `📊 Flujo ${mesK}: ${dias} días cargados${nuevas.length?' · columnas nuevas: '+nuevas.join(', '):''}`;
+}
+async function importar(files){
+  const res=[];
+  for (const file of files){
+    try{
+      if (/\.json$/i.test(file.name)){ const d=JSON.parse(await file.text()); if(!d.columnas) throw new Error('no es un respaldo de esta planilla');
+        if (!confirm('Esto reemplaza TODO lo cargado por el respaldo "'+file.name+'". ¿Seguir?')) continue; E=d; recExcl(); res.push('✅ Respaldo restaurado'); continue; }
+      const {wb,filas}=await leerFilas(file);
+      let r = wb.Sheets['Movimientos'] ? importarCaja(wb) : null;
+      if (!r && filas.some(x=>norm(x[0]).startsWith('VENCIMIENTO'))) r=importarFlujo(filas);
+      if (!r) r=importarBanco(filas, file.name);
+      res.push(r ? r+' — '+file.name : '⚠️ No reconocí '+file.name);
+      if (r) registrar('Importado: '+file.name);
+    } catch(e){ res.push('⚠️ '+file.name+': '+e.message); }
+  }
+  guardar(); render();
+  if ($('impRes')) $('impRes').innerHTML=res.map(esc).join('<br>'); else toast(res.join(' · '));
+}
+
+/* ================== más opciones ================== */
+$('btnMas').onclick=()=>{
+  const fy=Object.entries(E.feriados).filter(([f])=>f.startsWith(anio)).sort();
+  abrirModal(`<h3>Opciones</h3>
+   <div class="fila"><button id="oResp">💾 Exportar respaldo (.json)</button><button id="oXls">📊 Exportar mes a Excel</button><button id="oPrint">🖨 Imprimir</button></div>
+   <div class="aviso">Las marcas, cambios e importaciones se guardan en este navegador, en esta PC (no se comparten con otras PCs). Exportá un respaldo de vez en cuando; para pasarlo a otra PC, importá el .json desde 📥 Importar.</div>
+   <h4 style="margin:12px 0 4px">Feriados ${anio}</h4>
+   <div class="lista" style="max-height:200px">${fy.map(([f,n])=>`<div><span>${fechaTxt(f)}</span><span>${esc(n)}</span><button class="x" data-fdel="${f}">✕</button></div>`).join('')||'<div>Sin feriados cargados</div>'}</div>
+   <div class="fila" style="margin-top:6px"><input type="date" id="fF"><input type="text" id="fN" placeholder="Nombre del feriado"><button id="fAdd">Agregar</button></div>
+   ${anio>=2027?'<div class="aviso">Los feriados de 2027 son los que fija la ley; verificá los puentes turísticos cuando salga el decreto.</div>':''}
+   <h4 style="margin:12px 0 4px">Zona de cuidado</h4>
+   <div class="fila"><button id="oMarcas">Borrar marcas verdes/rojas del mes</button><button id="oReset">Volver a los datos originales</button></div>
+   <div class="fila" style="justify-content:flex-end"><button id="mCanc">Cerrar</button></div>`);
+  $('mCanc').onclick=cerrarModal;
+  $('oResp').onclick=()=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(E)],{type:'application/json'})); a.download=`flujo-caja-respaldo-${HOY}.json`; a.click(); };
+  $('oXls').onclick=exportarExcel; $('oPrint').onclick=()=>{ cerrarModal(); setTimeout(()=>print(),100); };
+  $('modal').querySelectorAll('[data-fdel]').forEach(b=>b.onclick=()=>{ delete E.feriados[b.dataset.fdel]; guardar(); render(); $('btnMas').onclick(); });
+  $('fAdd').onclick=()=>{ const f=$('fF').value; if(!f) return; E.feriados[f]=$('fN').value.trim()||'Feriado'; guardar(); render(); $('btnMas').onclick(); };
+  $('oMarcas').onclick=()=>{ if(!confirm(`¿Borrar las marcas de pagado/no pagado de ${MESES[mes-1]} ${anio}?`)) return; const k=ym(anio,mes); for (const x in E.estados) if (x.startsWith(k)) delete E.estados[x]; guardar(); render(); cerrarModal(); };
+  $('oReset').onclick=()=>{ if(!confirm('Se pierden TODOS los cambios, marcas e importaciones hechas acá. ¿Exportaste un respaldo? ¿Seguir?')) return; E=nuevoEstado(); E.seedVer=SEED.generado; recExcl(); guardar(); render(); cerrarModal(); };
+};
+function exportarExcel(){
+  const C=calcularMes(anio,mes), cols=colsVisibles(), k=ym(anio,mes), vm=(E.vencido[k]||{}).montos||{};
+  const aoa=[[`FLUJO DE CAJA TP-RL — ${MESES[mes-1].toUpperCase()} ${anio}`],['VENCIMIENTO',...cols.map(c=>c.nombre),'TOTAL PAGOS A REALIZAR','RECAUDACION REAL Y ESTIMADA','TOTAL $ CHEQUES','SALDO DE CAJA','RECAUDADO CAJA','RECAUDADO BANCOS','RECAUDACION ESTIMADA','FERIADO']];
+  aoa.push([(E.vencido[k]||{}).texto||'VENCIDO',...cols.map(c=>vm[c.key]||null),C.venc.gasto||null,null,C.venc.cheque||null,C.saldoIni-C.venc.total]);
+  for (const r of C.filas){ const p=E.pagos[r.f]||{}; const [y,m,d]=r.f.split('-');
+    aoa.push([`${d}/${m}/${y}`,...cols.map(c=>p[c.key]||null),r.pagos||0,r.r.usada||null,r.cheques||null,r.saldo,r.r.caja||null,r.r.banco||null,r.r.est||null,E.feriados[r.f]||(tipoDia(r.f)==='finde'?'fin de semana':'')]); }
+  aoa.push(['TOTAL',...cols.map(c=>(C.tot.porCol[c.key]||0)+(vm[c.key]||0)),C.tot.pagos+C.venc.gasto,C.tot.rec,C.tot.cheques+C.venc.cheque,C.saldoFinal,C.tot.caja,C.tot.banco,C.tot.recEst]);
+  const ws=XLSX.utils.aoa_to_sheet(aoa); ws['!cols']=[{wch:14},...cols.map(()=>({wch:14})),{wch:16},{wch:16},{wch:16},{wch:16}];
+  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'FLUJO DE CAJA TP-RL');
+  XLSX.writeFile(wb,`Flujo Caja vs Pagos futuros - TP-RL - ${MESES[mes-1].toUpperCase()} ${anio}.xlsx`);
+}
+
+/* ================== navegación ================== */
+$('selMes').innerHTML=MESES.map((m,i)=>`<option value="${i+1}">${m}</option>`).join('');
+$('selAnio').innerHTML=[2025,2026,2027,2028].map(y=>`<option>${y}</option>`).join('');
+$('selMes').onchange=e=>{ mes=+e.target.value; render(); };
+$('selAnio').onchange=e=>{ anio=+e.target.value; render(); };
+$('modoRec').onchange=e=>{ E.modoRec=e.target.value; guardar(); render(); };
+document.querySelectorAll('#vistaSeg button').forEach(b=>b.onclick=()=>{ vista=b.dataset.v; render(); });
+$('ant').onclick=()=>{ if (vista==='anio') anio--; else if (--mes<1){ mes=12; anio--; } render(); };
+$('sig').onclick=()=>{ if (vista==='anio') anio++; else if (++mes>12){ mes=1; anio++; } render(); };
+$('btnHoy').onclick=()=>{ anio=hoy.getFullYear(); mes=hoy.getMonth()+1; render(); setTimeout(()=>{ irAHoy(); },50); };
+function irAHoy(){ const tr=document.querySelector('tr.hoy'), w=document.querySelector('.tablawrap'); if(tr&&w) w.scrollTop=Math.max(0,tr.offsetTop-w.clientHeight/2); }
+{ let k=null; try { k=sessionStorage.getItem('flujo-k'); } catch(_){} if (k) entrar(k); }
+</script>
+</body>
+</html>
