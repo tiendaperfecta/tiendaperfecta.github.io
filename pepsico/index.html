@@ -435,8 +435,6 @@ td.ip-base.clickable{cursor:pointer}
     </div>
   </div>
 
-  <div id="ficha-vendedor" style="display:none"></div>
-
   <div class="tabs-bar" id="tabs-bar">
     <button type="button" class="tab-btn active" data-tab-btn="por-vendedor">Por vendedor</button>
     <button type="button" class="tab-btn" data-tab-btn="comparacion">Comparación</button>
@@ -582,6 +580,9 @@ td.ip-base.clickable{cursor:pointer}
     (export del 24/09) con el listado de clientes. Mi Negocio Sell Out toma en vivo el Compromiso en kg
     (Platino+Gold + Silver&amp;Bronze) que cada vendedor cargó en la tabla "Por vendedor" de más arriba.
   </p>
+
+  <!-- con un vendedor elegido: arriba su avance y sus IPs, y los demas indicadores aca abajo -->
+  <div id="ficha-vendedor" style="display:none"></div>
 
   </div>
 
@@ -1386,7 +1387,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-14-b';
+const BUILD = '2026-10-14-c';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -1806,7 +1807,7 @@ async function renderFichaVendedor(){
   }
 
   cont.innerHTML = `<h2 class="section-title">Todos los indicadores de ${escHtml(v)}</h2>
-    <p class="section-note">Las proyecciones que cargó hoy están en la tabla de abajo.</p><div class="ficha-grid">${cards.join('')}</div>`;
+    <p class="section-note">Las proyecciones que cargó hoy están en las tablas de arriba.</p><div class="ficha-grid">${cards.join('')}</div>`;
 }
 
 // ---- Solapa "Comparación": el mes que se mira contra el mes anterior (para ver en que mejorar) ----
