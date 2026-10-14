@@ -1279,6 +1279,8 @@ def main():
         avance_kg, total_gescom = aplicar_override_gescom(avance_kg, hoy, dias_habiles, dias_trabajados)
         if total_gescom:
             print("AVISO: la base trae menos kg que Gescom; se usa el acumulado de Gescom (%.1f kg)" % total_gescom)
+        # dia al que corresponde la columna "real" (pedidos de ese dia): la pagina la muestra como "hoy" solo si es hoy
+        avance_kg["fecha"] = hoy.isoformat()
         escribir("avance_kg_vendedor.json", avance_kg)
         corregir_historial_diario(filas_detalle, hist_previo, hoy)
         try:
