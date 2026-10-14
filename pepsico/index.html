@@ -1387,7 +1387,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-14-d';
+const BUILD = '2026-10-14-e';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -1618,7 +1618,7 @@ function pintarRealTile(){
   } else {
     if (labelEl) labelEl.textContent = 'Venta real hoy';
     if (valorEl) valorEl.innerHTML = `${fmt(r ? r.real : realHoyActual)}<span class="unit">kg</span>`;
-    if (notaEl) notaEl.textContent = 'Pedidos tomados hoy (fecha de pedido)';
+    if (notaEl) notaEl.textContent = realHoyViejo ? 'Todavía no hay pedidos cargados hoy: se actualiza en la próxima corrida' : 'Pedidos tomados hoy (fecha de pedido)';
   }
 }
 // Pinta los KPI segun lo elegido: un vendedor, un dia pasado o todo (hoy)
@@ -2419,12 +2419,17 @@ function drillFrescura(codigo) {
 
 let rows = [];
 let kgAvanceMeta = null;
+let realHoyViejo = false;     // el "real" del archivo es de un dia anterior: hoy todavia no tiene pedidos cargados
 const rowsReadyPromise = Promise.all([
   fetch(BASE + 'avance_kg_vendedor.json' + CACHE_BUST).then(r => r.json()),
   ventaVendedorPromise,
 ]).then(([data, venta]) => {
   kgAvanceMeta = data;
-  rows = data.vendedores.map(v => ({...v, venta: venta[v.n] || 0}));
+  // "Real hoy" = pedidos del dia en que se armo el archivo. Si ese dia no es hoy (todavia no corrio la
+  // actualizacion de hoy), hoy va en 0 en vez de repetir lo de ayer.
+  const fechaReal = data.fecha || ((String(data.fuente || '').match(/extraido (\d{4}-\d{2}-\d{2})/) || [])[1]) || '';
+  realHoyViejo = !MES_SEL && !!fechaReal && fechaReal < hoyISO();
+  rows = data.vendedores.map(v => ({...v, real: realHoyViejo ? 0 : v.real, venta: venta[v.n] || 0}));
   rows.sort((a,b) => a.tp - b.tp);
   renderMainTable();
 }).catch(() => {});
@@ -3318,6 +3323,8 @@ if (kgAvanceMeta) {
   const realTotal = rows.reduce((s,r)=>s+r.real,0);
   realHoyActual = realTotal;
   if (!diaSeleccionado) document.getElementById('kpi-real-hoy').innerHTML = `${fmt(realTotal)}<span class="unit">kg</span>`;
+  const notaRealEl = document.getElementById('kpi-real-nota');
+  if (notaRealEl && !diaSeleccionado && !vendedorSel) notaRealEl.textContent = realHoyViejo ? 'Todavía no hay pedidos cargados hoy: se actualiza en la próxima corrida' : 'Pedidos tomados hoy (fecha de pedido)';
   const medianecTotal = rows.reduce((s,r)=>s+r.medianec,0);
   document.getElementById('kpi-media-necesaria').innerHTML = `${fmt(medianecTotal,1)}<span class="unit">kg/día</span>`;
   document.getElementById('seg-pg-pct').textContent = fmt(pctPG,1) + '%';
