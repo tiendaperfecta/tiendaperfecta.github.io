@@ -791,7 +791,7 @@ td.ip-base.clickable{cursor:pointer}
     del mes (fila Total de la tabla) se prorratea por vendedor según su
     participación de clientes en cada segmento y redondeado a números enteros (el redondeo por vendedor puede
     no cerrar exacto contra el objetivo oficial; el total de la tabla usa siempre el oficial). Cumple = cliente
-    con compra de Pepsico y más de 3 unidades entre el <b id="ccc-periodo">01/09 y hoy</b>, actualizado automáticamente por API dos
+    con compra de Pepsico de 3 o más unidades entre el <b id="ccc-periodo">01/09 y hoy</b>, actualizado automáticamente por API dos
     veces por día. Ordenado de menor a mayor avance total. Click en el % de Avance de cada segmento para ver el
     detalle de los clientes que todavía no compraron.
   </p>
@@ -883,7 +883,7 @@ td.ip-base.clickable{cursor:pointer}
   <p class="foot-note">
     El universo por día sale de la ruta de preventa asignada en <code>Clientes Claude.xlsx</code> (el nombre de la
     ruta empieza con el día, ej. "Viernes V4"). Un cliente sin ruta cargada no entra en esta tabla; el objetivo CCC
-    (2.310) es un prorrateo oficial y no tiene por qué coincidir con el universo real con ruta asignada (2.546).
+    es un prorrateo oficial y no tiene por qué coincidir con el universo real con ruta asignada (el total de la fila de arriba).
   </p>
 
   </div>
@@ -1001,15 +1001,15 @@ td.ip-base.clickable{cursor:pointer}
   </div>
 
   <p class="foot-note">
-    Fuente: <code>Ventas / Reportes / Rumbo Pepsico / LATAM (Desde 04-2024) 6.1 Censo Tienda perfecta</code> (2.260
-    clientes de subcanal TP con segmento asignado). El objetivo global del mes (el de la fila Total) es el que confirmaste; el
+    Fuente: <code>Ventas / Reportes / Rumbo Pepsico / LATAM (Desde 04-2024) 6.1 Censo Tienda perfecta</code> (clientes
+    de subcanal TP con segmento asignado, el universo de la tabla de arriba). El objetivo global del mes (el de la fila Total) es el que confirmaste; el
     reparto por vendedor es una estimación proporcional según la composición de clientes de cada segmento, no un
     objetivo oficial cargado en Gescom.
   </p>
 
   <h2 class="section-title">Portafolio</h2>
   <p class="section-note">
-    Cobertura de portafolio sobre el universo de Tienda Perfecta (2.260 clientes). Oportunidad de Portafolio =
+    Cobertura de portafolio sobre el universo de Tienda Perfecta (el mismo de la tarjeta "Universo TP"). Oportunidad de Portafolio =
     clientes con cobertura entre 60% y 79% (ya tienen buena parte del portafolio pero no llegan al 80% que define
     Tienda Perfecta). Click en cualquier celda para ver el listado de clientes.
   </p>
@@ -1387,7 +1387,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-14-c';
+const BUILD = '2026-10-14-d';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -1495,6 +1495,15 @@ function hoyISO(){
   return `${h.getFullYear()}-${String(h.getMonth()+1).padStart(2,'0')}-${String(h.getDate()).padStart(2,'0')}`;
 }
 function esDiaPasado(){ return !!diaSeleccionado && diaSeleccionado < hoyISO(); }
+// Periodo que cubren los datos: del 01 al dia de hoy (mes actual) o al ultimo dia del mes (mes archivado).
+function periodoMesTxt(){
+  if (MES_SEL) {
+    const [y, m] = MES_SEL.split('-');
+    return `01/${m} al ${String(new Date(Number(y), Number(m), 0).getDate()).padStart(2, '0')}/${m}`;
+  }
+  const h = hoyISO();
+  return `01/${h.slice(5, 7)} al ${h.slice(8, 10)}/${h.slice(5, 7)}`;
+}
 // Proyecciones (kg e IP) que se muestran cuando no es "hoy": las del dia elegido o, si se eligio un mes anterior,
 // las del ultimo dia de ese mes que tenga datos cargados.
 function proyHistorica(){ return !!MES_SEL || esDiaPasado(); }
@@ -2209,7 +2218,7 @@ function drillInvendible(vendedor) {
       </tbody>
     </table>
   `;
-  openDrillCustom(vendedor, `Productos retirados por canje · período 01/09-22/09 (FechaCarga)`, html);
+  openDrillCustom(vendedor, `Productos retirados por canje · período ${periodoMesTxt()} (FechaCarga)`, html);
 }
 
 function drillRechazo(vendedor) {
@@ -2224,7 +2233,7 @@ function drillRechazo(vendedor) {
       </tbody>
     </table>
   `;
-  openDrillCustom(vendedor, 'Motivos de devolucion por rechazo - periodo 01/09-22/09 (FechaCarga)', html);
+  openDrillCustom(vendedor, `Motivos de devolución por rechazo · período ${periodoMesTxt()} (FechaCarga)`, html);
 }
 
 function openDrillCustom(title, subtitle, html) {
@@ -2267,7 +2276,7 @@ async function drillSegmento(grupo){
 
 function drillBySegmento(vendedor, seg) {
   const list = noCompradoresDetalle.filter(c => c.vendedor === vendedor && c.seg === seg);
-  openDrill(vendedor, `Segmento ${seg} — no llegaron al CCC (Pepsico > 3 unidades, 01/09-22/09)`, list);
+  openDrill(vendedor, `Segmento ${seg} — no llegaron al CCC (menos de 3 unidades de Pepsico, ${periodoMesTxt()})`, list);
 }
 let pehuamarSubRows = [];
 let laysSubRows = [];
@@ -2341,7 +2350,7 @@ function drillByDia(vendedor, dia) {
   const list = dia === 'Total'
     ? noCompradoresDetalle.filter(c => c.vendedor === vendedor)
     : noCompradoresDetalle.filter(c => c.vendedor === vendedor && c.dia === dia);
-  const sub = dia === 'Total' ? 'Todos los días — no llegaron al CCC' : `Ruta de ${dia} — no llegaron al CCC (Pepsico > 3 unidades, 01/09-22/09)`;
+  const sub = dia === 'Total' ? 'Todos los días — no llegaron al CCC' : `Ruta de ${dia} — no llegaron al CCC (menos de 3 unidades de Pepsico, ${periodoMesTxt()})`;
   openDrill(vendedor, sub, list);
 }
 
