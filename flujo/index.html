@@ -65,6 +65,7 @@ table.flujo{border-collapse:separate;border-spacing:0;font-variant-numeric:tabul
 .flujo td.no{background:var(--rojo)!important;color:var(--rojob);font-weight:600}
 .flujo td.calc{background:var(--total);font-weight:600}
 .flujo td.nota::after{content:"•";color:var(--acento);margin-left:3px}
+.flujo td.fac{box-shadow:inset 3px 0 0 #8b5cf6}
 .flujo tr.venc td{background:var(--rojo);font-weight:600}
 .flujo tfoot td{position:sticky;bottom:0;background:var(--total);font-weight:700;z-index:1}
 .flujo tfoot td.fecha{z-index:3;background:var(--total)}
@@ -204,7 +205,7 @@ function iniciar(){
   try { E = JSON.parse(localStorage.getItem(CLAVE)); } catch(e) { E = null; }
   if (!E || !E.columnas) { E = nuevoEstado(); E.seedVer = SEED.generado; guardar(); }
   else fusionarSeed();
-  recExcl(); render(); setTimeout(irAHoy,50);
+  recExcl(); indexarFacturas(); render(); setTimeout(irAHoy,50);
 }
 const b64 = t => Uint8Array.from(atob(t), c => c.charCodeAt(0));
 async function descifrar(env, clave){
@@ -220,10 +221,82 @@ let ENV = null;
 let entrando = false;
 // Recaudación en vivo (caja + Control de Transferencias). Si todavía no existe o no abre, el
 // panel sigue con lo que trae data.enc.json.
+/* FACTURAS A PAGAR: las impagas de la pestaña "Pago proveedores" del panel de ventas (misma
+   tabla de la base), que trae el robot flujo-vivo. Cada una se suma en la columna de su
+   proveedor el día que vence; las vencidas antes del 1° del mes en curso, a la fila VENCIDO de
+   este mes. Cuando se pagan en Gescom desaparecen solas. Se pueden apagar en ⚙️ Opciones. */
+let FACT = { dia:{}, venc:{}, n:0, total:0, otraMoneda:0 };
+// columna de un proveedor: la elegida a mano en ⚙️ Opciones ('no' = no sumar), si no la columna de
+// proveedor cuyo nombre aparece en la razón social, si no una de gastos (DIGIP, GESCOM…), si no RESTO
+const NO_PALABRAS = new Set(['DEPO','DEPOSITO','SEMANAL','SEMANALES','EXTRAS','HORAS','TASA','MUNI','IMP','RESTO','PROVEEDORES']);
+function colAuto(nombre){
+  const n = norm(nombre);
+  for (const tipos of [['proveedor'],['gasto']]) for (const c of E.columnas) {
+    if (!tipos.includes(c.tipo) || c.key==='resto') continue;
+    const toks = norm(c.nombre).split(/[^A-Z0-9]+/).filter(t=>t.length>=(c.tipo==='proveedor'?3:4) && !NO_PALABRAS.has(t));
+    if (toks.some(t=>n.includes(t))) return c.key;
+  }
+  return null;
+}
+function colDeProveedor(nombre, codigo){
+  const elegida = E.mapaProv && E.mapaProv[codigo];
+  if (elegida==='no') return null;
+  if (elegida && E.columnas.some(c=>c.key===elegida)) return elegida;
+  const auto = colAuto(nombre); if (auto) return auto;
+  return E.columnas.some(c=>c.key==='resto') ? 'resto' : ((E.columnas.find(c=>c.tipo==='proveedor')||{}).key || E.columnas[0].key);
+}
+function indexarFacturas(){
+  FACT = { dia:{}, venc:{}, n:0, total:0, otraMoneda:0 };
+  if (!VIVO || !VIVO.facturas || E.sumarFacturas===false) return;
+  const ini = HOY.slice(0,8)+'01';
+  for (const x of VIVO.facturas){
+    const [prov,nombre,tipo,nro,cuota,emp,fecha,vence,saldo,moneda]=x;
+    if (moneda && moneda!=='ARS') { FACT.otraMoneda++; continue; }
+    const col = colDeProveedor(nombre, prov);
+    if (!col) continue;
+    const it = { prov, nombre, comp: tipo+' '+nro+(cuota>1?' (cuota '+cuota+')':''), emp, fecha, vence, saldo };
+    const dest = vence < ini ? FACT.venc : (FACT.dia[vence] = FACT.dia[vence] || {});
+    const cel = dest[col] = dest[col] || { total:0, items:[] };
+    cel.total = Math.round((cel.total + saldo)*100)/100; cel.items.push(it);
+    FACT.n++; FACT.total += saldo;
+  }
+}
+function facturasDe(f,c){ return ((FACT.dia[f]||{})[c]) || null; }
+// pagos del día = lo cargado a mano / planillas + facturas de Pago proveedores
+function pagosDe(f){
+  const p = E.pagos[f]||{}, fx = FACT.dia[f];
+  if (!fx) return p;
+  const o = {...p};
+  for (const [c,v] of Object.entries(fx)) o[c] = Math.round(((o[c]||0) + v.total)*100)/100;
+  return o;
+}
+function vencidoMontos(k){
+  const m = {...((E.vencido[k]||{}).montos||{})};
+  if (k===HOY.slice(0,7)) for (const [c,v] of Object.entries(FACT.venc)) m[c] = Math.round(((m[c]||0) + v.total)*100)/100;
+  return m;
+}
+function tablaProveedoresHtml(){
+  const por={};
+  for (const x of VIVO.facturas){ const [prov,nombre,,,,,,,saldo]=x; const q=por[prov]=por[prov]||{prov,nombre,n:0,total:0}; q.n++; q.total+=saldo; }
+  const lista=Object.values(por).sort((a,b)=>b.total-a.total);
+  const opc=(prov,nombre)=>{ const el=(E.mapaProv||{})[prov]||''; const auto=colAuto(nombre)||(E.columnas.some(c=>c.key==='resto')?'resto':'');
+    return `<option value="" ${!el?'selected':''}>Automática (${esc(nombreCol(auto))})</option><option value="no" ${el==='no'?'selected':''}>— No sumar —</option>`+
+      E.columnas.filter(c=>c.tipo!=='cheque').map(c=>`<option value="${c.key}" ${el===c.key?'selected':''}>${esc(c.nombre)}</option>`).join(''); };
+  return `<h4 style="margin:12px 0 4px">En qué columna va cada proveedor</h4>
+   <div class="lista" style="max-height:260px">${lista.map(q=>`<div><span style="flex:1">${esc(q.nombre)} <span style="color:var(--sub)">· ${q.n} fact. · $ ${f0(q.total)}</span></span><select data-mprov="${esc(q.prov)}" style="max-width:190px">${opc(q.prov,q.nombre)}</select></div>`).join('')}</div>
+   <div class="aviso">Si a un proveedor ya lo estás pagando con los E-CHEQS de la columna de cheques (por ejemplo Pepsico), poné "No sumar" para no contarlo dos veces.</div>`;
+}
+function listaFacturasHtml(cel){
+  if (!cel) return '';
+  return `<h4 style="margin:12px 0 4px">Facturas de Pago proveedores (${cel.items.length}) · $ ${f2(cel.total)}</h4>
+   <div class="lista" style="max-height:220px">${cel.items.map(i=>`<div><span>${esc(i.nombre)}</span><span style="color:var(--sub)">${esc(i.comp)} · vence ${i.vence.split('-').reverse().join('/')}</span><span class="x">$ ${f2(i.saldo)}</span></div>`).join('')}</div>
+   <div class="aviso">Salen de Gescom (deudas de proveedores): no se editan acá y desaparecen solas cuando se pagan. El monto de arriba es solo lo cargado a mano.</div>`;
+}
 async function cargarVivo(k){
   try {
     const r = await fetch('vivo.enc.json?t=' + Date.now(), {cache:'no-store'});
     VIVO = r.ok ? await descifrar(await r.json(), k) : null;
+    recaudacion.ini = null;
   } catch(e){ VIVO = null; }
 }
 async function entrar(clave){
@@ -330,8 +403,8 @@ function recaudacion(f){
   }
   return {caja,cajaVivo:cj.vivo,cajaItems:cj.items,transf,transfControl,tItems,conControl,sinRend,usaBanco,banco,bancoExcl,aj,est,real,usada,fuente,hayCaja,hayTransf,avisos};
 }
-function totalVencido(k){ const v=E.vencido[k]; if(!v) return {gasto:0,cheque:0,total:0};
-  let g=0,c=0; for (const [col,m] of Object.entries(v.montos||{})) { const t=(E.columnas.find(x=>x.key===col)||{}).tipo; if (t==='cheque') c+=m; else g+=m; }
+function totalVencido(k){
+  let g=0,c=0; for (const [col,m] of Object.entries(vencidoMontos(k))) { const t=(E.columnas.find(x=>x.key===col)||{}).tipo; if (t==='cheque') c+=m; else g+=m; }
   return {gasto:g,cheque:c,total:g+c}; }
 const cacheMes = {};
 function calcularMes(y,m){
@@ -342,14 +415,15 @@ function calcularMes(y,m){
   else saldo = E.saldoInicial[k]||0;
   const saldoIni = saldo;
   const venc = totalVencido(k); saldo -= venc.total;
-  const tot = {pagos:0,cheques:0,rec:0,recReal:0,recEst:0,caja:0,transf:0,pagado:0,impago:0,pendiente:0,porCol:{}};
+  const tot = {pagos:0,cheques:0,rec:0,recReal:0,recEst:0,caja:0,transf:0,pagado:0,impago:0,pendiente:0,porCol:{},facturas:0,factVenc:Object.values(FACT.venc).reduce((a,v)=>a+v.total,0)};
   for (let d=1; d<=n; d++){
-    const f=ymd(y,m,d), p=E.pagos[f]||{};
+    const f=ymd(y,m,d), p=pagosDe(f);
     let pagos=0, cheques=0;
     for (const c of E.columnas){ const v=p[c.key]; if(!v) continue;
       if (c.tipo==='cheque') cheques+=v; else pagos+=v;
       tot.porCol[c.key]=(tot.porCol[c.key]||0)+v;
       const st=E.estados[f+'|'+c.key]; if (st==='ok') tot.pagado+=v; else if (st==='no') tot.impago+=v; else tot.pendiente+=v; }
+    for (const v of Object.values(FACT.dia[f]||{})) tot.facturas += v.total;
     const r = recaudacion(f);
     saldo += r.usada - pagos - cheques;
     tot.pagos+=pagos; tot.cheques+=cheques; tot.rec+=r.usada; tot.recReal+=r.real; tot.recEst+=r.est; tot.caja+=r.caja; tot.transf+=r.transf;
@@ -375,10 +449,11 @@ function renderMes(){
     <div class="tarjeta"><div class="t">Total cheques (e-cheqs)</div><div class="v">$ ${f0(T.cheques)||0}</div><div class="s">+ vencido $ ${f0(C.venc.cheque)||0}</div></div>
     <div class="tarjeta"><div class="t">Recaudación usada</div><div class="v">$ ${f0(T.rec)||0}</div><div class="s">Real $ ${f0(T.recReal)||0} · Est. $ ${f0(T.recEst)||0}</div></div>
     <div class="tarjeta"><div class="t">Recaudado real</div><div class="v">$ ${f0(T.recReal)||0}</div><div class="s">Caja $ ${f0(T.caja)||0} · Transferencias $ ${f0(T.transf)||0}</div></div>
+    ${VIVO&&VIVO.facturas&&E.sumarFacturas!==false?`<div class="tarjeta"><div class="t">Facturas a pagar (Pago proveedores)</div><div class="v">$ ${f0(T.facturas+(k===HOY.slice(0,7)?T.factVenc:0))||0}</div><div class="s">${k===HOY.slice(0,7)?'vencidas $ '+(f0(T.factVenc)||0)+' · ':''}este mes $ ${f0(T.facturas)||0}</div></div>`:''}
     <div class="tarjeta"><div class="t">Estado de pagos</div><div class="v" style="font-size:14px"><span style="color:var(--verdeb)">✔ $ ${f0(T.pagado)||0}</span></div><div class="s"><span style="color:var(--rojob)">✖ $ ${f0(T.impago)||0}</span> · pendiente $ ${f0(T.pendiente)||0}</div></div>
     <div class="tarjeta"><div class="t">Saldo de caja al cierre</div><div class="v ${C.saldoFinal<0?'neg':''}">$ ${fmt0.format(C.saldoFinal)}</div><div class="s">Inicial $ ${fmt0.format(C.saldoIni)} <a href="#" id="editSaldoIni">editar</a></div></div>
   </div>
-  <div class="leyenda"><span><i style="background:var(--verde)"></i>1 clic: pagado</span><span><i style="background:var(--rojo)"></i>2 clics: no pagado / vencido</span>
+  <div class="leyenda"><span><i style="background:var(--verde)"></i>1 clic: pagado</span><span><i style="background:var(--rojo)"></i>2 clics: no pagado / vencido</span><span><i style="box-shadow:inset 3px 0 0 #8b5cf6"></i>incluye facturas de Pago proveedores</span>
    <span><i style="background:var(--finde)"></i>Fin de semana</span><span><i style="background:var(--feriado)"></i>Feriado</span>
    <span>Clic derecho (o clic en celda vacía): editar monto</span><span><span class="badge b-r">R</span> real · <span class="badge b-e">E</span> estimada · <span class="badge b-w">!</span> falta caja o rendiciones</span></div>
   <div class="tablawrap" data-k="${k}"><table class="flujo"><thead>`;
@@ -391,15 +466,17 @@ function renderMes(){
   for (const c of cols) h+=`<th class="tipo-${c.tipo}" title="${esc(c.nombre)}">${esc(c.nombre)}</th>`;
   h += `<th class="calc">TOTAL PAGOS A REALIZAR</th><th class="calc">RECAUDACIÓN REAL Y ESTIMADA</th><th class="calc">TOTAL $ CHEQUES</th><th class="calc">SALDO DE CAJA</th></tr></thead><tbody>`;
   // fila vencido
-  const vm=(venc&&venc.montos)||{};
+  const vm=vencidoMontos(k), esMesActual=(k===HOY.slice(0,7));
   h += `<tr class="venc"><td class="fecha m" data-venc="1">${esc(venc?venc.texto:'VENCIDO AL 1/'+mes)}</td>`;
-  for (const c of cols) h+=`<td class="m tipo-${c.tipo}" data-venc="1" data-c="${c.key}">${f0(vm[c.key])}</td>`;
+  for (const c of cols){ const fv=esMesActual&&FACT.venc[c.key];
+    h+=`<td class="m tipo-${c.tipo} ${fv?'fac':''}" data-venc="1" data-c="${c.key}" ${fv?`title="${fv.items.length} factura(s) vencida(s) de Pago proveedores: $${f0(fv.total)}"`:''}>${f0(vm[c.key])}</td>`; }
   h += `<td class="calc">${f0(C.venc.gasto)}</td><td class="calc"></td><td class="calc">${f0(C.venc.cheque)}</td><td class="calc ${C.saldoIni-C.venc.total<0?'neg':''}">${fmt0.format(C.saldoIni-C.venc.total)}</td></tr>`;
   for (const r of C.filas){
-    const t=tipoDia(r.f), dw=new Date(r.f+'T12:00:00').getDay(), p=E.pagos[r.f]||{};
+    const t=tipoDia(r.f), dw=new Date(r.f+'T12:00:00').getDay(), p=pagosDe(r.f);
     h += `<tr class="${t} ${r.f===HOY?'hoy':''}"><td class="fecha"><span class="diasem">${DIAS[dw]}</span>${String(r.d).padStart(2,'0')}/${String(mes).padStart(2,'0')}/${anio}${E.feriados[r.f]?`<span class="fer">🎌 ${esc(E.feriados[r.f])}</span>`:''}</td>`;
-    for (const c of cols){ const v=p[c.key], key=r.f+'|'+c.key, st=E.estados[key];
-      h+=`<td class="m tipo-${c.tipo} ${st&&v?st:''} ${E.notas[key]?'nota':''}" data-f="${r.f}" data-c="${c.key}" ${E.notas[key]?`title="${esc(E.notas[key])}"`:''}>${f0(v)}</td>`; }
+    for (const c of cols){ const v=p[c.key], key=r.f+'|'+c.key, st=E.estados[key], fx=facturasDe(r.f,c.key);
+      const tit=[E.notas[key]||'', fx?`${fx.items.length} factura(s) de Pago proveedores: $${f0(fx.total)} (${fx.items.slice(0,6).map(i=>i.nombre).join(', ')}${fx.items.length>6?'…':''})`:''].filter(Boolean).join(' · ');
+      h+=`<td class="m tipo-${c.tipo} ${st&&v?st:''} ${E.notas[key]?'nota':''} ${fx?'fac':''}" data-f="${r.f}" data-c="${c.key}" ${tit?`title="${esc(tit)}"`:''}>${f0(v)}</td>`; }
     const R=r.r; let badge='';
     if (R.fuente==='r') badge=`<span class="badge b-r">R</span>${R.avisos.length?'<span class="badge b-w" title="'+esc(R.avisos.join(' · '))+'">!</span>':''}`;
     else if (R.fuente==='e') badge=`<span class="badge b-e">E</span>${R.avisos.length?'<span class="badge b-w" title="'+esc(R.avisos.join(' · '))+'">!</span>':''}`;
@@ -424,7 +501,7 @@ $('main').addEventListener('click', e=>{
   const td=e.target.closest('td.m'); if (td){
     if (e.detail>=2) return;                       // el 2° clic de un doble clic lo maneja dblclick
     if (td.dataset.venc){ editarVencido(td.dataset.c); return; }
-    const f=td.dataset.f, c=td.dataset.c, v=(E.pagos[f]||{})[c];
+    const f=td.dataset.f, c=td.dataset.c, v=pagosDe(f)[c];
     if (!v){ editarCelda(f,c); return; }
     const k=f+'|'+c;
     ultClic={k, prev:E.estados[k], t:Date.now()};
@@ -440,7 +517,7 @@ $('main').addEventListener('dblclick', e=>{
   const td=e.target.closest('td.m');
   const k = reciente ? reciente.k : (td&&!td.dataset.venc ? td.dataset.f+'|'+td.dataset.c : null);
   if (!k) return;
-  const [f,c]=k.split('|'); if (!(E.pagos[f]||{})[c]) return;
+  const [f,c]=k.split('|'); if (!pagosDe(f)[c]) return;
   const prev = reciente ? reciente.prev : E.estados[k];
   if (prev==='no') delete E.estados[k]; else E.estados[k]='no';
   guardar(); render();
@@ -475,6 +552,7 @@ function editarCelda(f,c){
    <div class="fila"><label>Nota</label><input id="mNota" type="text" value="${esc(E.notas[k]||'')}" placeholder="opcional (factura, n° de cheque…)"></div>
    <div class="fila"><label>Estado</label><select id="mEst"><option value="">Pendiente</option><option value="ok" ${E.estados[k]==='ok'?'selected':''}>✔ Pagado (verde)</option><option value="no" ${E.estados[k]==='no'?'selected':''}>✖ No pagado (rojo)</option></select></div>
    <div class="fila"><label>Mover a</label><input id="mFecha" type="date" value="${f}"></div>
+   ${listaFacturasHtml(facturasDe(f,c))}
    <div class="fila" style="justify-content:flex-end;margin-top:10px">${v?'<button id="mBorrar">🗑 Quitar</button>':''}<button id="mCanc">Cancelar</button><button class="pri" id="mOk">Guardar</button></div>`);
   $('mCanc').onclick=cerrarModal;
   if ($('mBorrar')) $('mBorrar').onclick=()=>{ setPago(f,c,0,'','Quitado'); cerrarModal(); render(); };
@@ -483,7 +561,7 @@ function editarCelda(f,c){
     else {
       if (Math.round(n*100)/100 !== (v||0)) setPago(f,c,n,nota);
       else if (nota) E.notas[k]=nota; else delete E.notas[k];
-      if (st&&n) E.estados[k]=st; else delete E.estados[k]; }
+      if (st&&(n||facturasDe(f,c))) E.estados[k]=st; else delete E.estados[k]; }
     guardar(); cerrarModal(); render(); };
   $('mOk').onclick=ok; $('modal').querySelectorAll('input').forEach(i=>i.addEventListener('keydown',e=>{ if(e.key==='Enter') ok(); }));
 }
@@ -493,6 +571,7 @@ function editarVencido(c){
   abrirModal(`<h3>Vencido al inicio de ${MESES[mes-1]} ${anio}</h3>
    <div class="fila"><label>Texto</label><input id="vTxt" type="text" value="${esc(V.texto)}"></div>
    ${c?`<div class="fila"><label>${esc(nombreCol(c))}</label><input id="vMonto" type="text" value="${V.montos[c]?f2(V.montos[c]):''}"></div>`:''}
+   ${c&&k===HOY.slice(0,7)?listaFacturasHtml(FACT.venc[c]):''}
    <div class="fila" style="justify-content:flex-end;margin-top:10px"><button id="mCanc">Cancelar</button><button class="pri" id="mOk">Guardar</button></div>`);
   $('mCanc').onclick=cerrarModal;
   $('mOk').onclick=()=>{ E.vencido[k]=V; V.texto=$('vTxt').value; if (c){ const n=numero($('vMonto').value)||0; if(n) V.montos[c]=n; else delete V.montos[c];
@@ -774,6 +853,9 @@ $('btnMas').onclick=()=>{
   const fy=Object.entries(E.feriados).filter(([f])=>f.startsWith(anio)).sort();
   abrirModal(`<h3>Opciones</h3>
    <div class="fila"><button id="oResp">💾 Exportar respaldo (.json)</button><button id="oXls">📊 Exportar mes a Excel</button><button id="oPrint">🖨 Imprimir</button></div>
+   <div class="fila"><label style="min-width:0"><input type="checkbox" id="oFact" ${E.sumarFacturas!==false?'checked':''}> Sumar las facturas impagas de <b>Pago proveedores</b> (Gescom) en la columna de cada proveedor, el día que vencen</label></div>
+   ${VIVO&&VIVO.facturas?tablaProveedoresHtml():''}
+   ${VIVO&&VIVO.facturas?`<div class="aviso">${FACT.n} facturas · $ ${f0(FACT.total)}${FACT.otraMoneda?` · ${FACT.otraMoneda} en otra moneda (no se suman)`:''} · actualizadas ${esc(String(VIVO.generado||'').slice(0,16).replace('T',' '))}</div>`:''}
    <div class="aviso">Las marcas, cambios e importaciones se guardan en este navegador, en esta PC (no se comparten con otras PCs). Exportá un respaldo de vez en cuando; para pasarlo a otra PC, importá el .json desde 📥 Importar.</div>
    <h4 style="margin:12px 0 4px">Feriados ${anio}</h4>
    <div class="lista" style="max-height:200px">${fy.map(([f,n])=>`<div><span>${fechaTxt(f)}</span><span>${esc(n)}</span><button class="x" data-fdel="${f}">✕</button></div>`).join('')||'<div>Sin feriados cargados</div>'}</div>
@@ -787,14 +869,16 @@ $('btnMas').onclick=()=>{
   $('oXls').onclick=exportarExcel; $('oPrint').onclick=()=>{ cerrarModal(); setTimeout(()=>print(),100); };
   $('modal').querySelectorAll('[data-fdel]').forEach(b=>b.onclick=()=>{ delete E.feriados[b.dataset.fdel]; guardar(); render(); $('btnMas').onclick(); });
   $('fAdd').onclick=()=>{ const f=$('fF').value; if(!f) return; E.feriados[f]=$('fN').value.trim()||'Feriado'; guardar(); render(); $('btnMas').onclick(); };
+  $('modal').querySelectorAll('[data-mprov]').forEach(sel=>sel.onchange=()=>{ E.mapaProv=E.mapaProv||{}; if (sel.value) E.mapaProv[sel.dataset.mprov]=sel.value; else delete E.mapaProv[sel.dataset.mprov]; guardar(); indexarFacturas(); render(); });
+  $('oFact').onchange=e=>{ E.sumarFacturas=e.target.checked; guardar(); indexarFacturas(); render(); };
   $('oMarcas').onclick=()=>{ if(!confirm(`¿Borrar las marcas de pagado/no pagado de ${MESES[mes-1]} ${anio}?`)) return; const k=ym(anio,mes); for (const x in E.estados) if (x.startsWith(k)) delete E.estados[x]; guardar(); render(); cerrarModal(); };
   $('oReset').onclick=()=>{ if(!confirm('Se pierden TODOS los cambios, marcas e importaciones hechas acá. ¿Exportaste un respaldo? ¿Seguir?')) return; E=nuevoEstado(); E.seedVer=SEED.generado; recExcl(); guardar(); render(); cerrarModal(); };
 };
 function exportarExcel(){
-  const C=calcularMes(anio,mes), cols=colsVisibles(), k=ym(anio,mes), vm=(E.vencido[k]||{}).montos||{};
+  const C=calcularMes(anio,mes), cols=colsVisibles(), k=ym(anio,mes), vm=vencidoMontos(k);
   const aoa=[[`FLUJO DE CAJA TP-RL — ${MESES[mes-1].toUpperCase()} ${anio}`],['VENCIMIENTO',...cols.map(c=>c.nombre),'TOTAL PAGOS A REALIZAR','RECAUDACION REAL Y ESTIMADA','TOTAL $ CHEQUES','SALDO DE CAJA','RECAUDADO CAJA','TRANSFERENCIAS','RECAUDACION ESTIMADA','FERIADO']];
   aoa.push([(E.vencido[k]||{}).texto||'VENCIDO',...cols.map(c=>vm[c.key]||null),C.venc.gasto||null,null,C.venc.cheque||null,C.saldoIni-C.venc.total]);
-  for (const r of C.filas){ const p=E.pagos[r.f]||{}; const [y,m,d]=r.f.split('-');
+  for (const r of C.filas){ const p=pagosDe(r.f); const [y,m,d]=r.f.split('-');
     aoa.push([`${d}/${m}/${y}`,...cols.map(c=>p[c.key]||null),r.pagos||0,r.r.usada||null,r.cheques||null,r.saldo,r.r.caja||null,r.r.transf||null,r.r.est||null,E.feriados[r.f]||(tipoDia(r.f)==='finde'?'fin de semana':'')]); }
   aoa.push(['TOTAL',...cols.map(c=>(C.tot.porCol[c.key]||0)+(vm[c.key]||0)),C.tot.pagos+C.venc.gasto,C.tot.rec,C.tot.cheques+C.venc.cheque,C.saldoFinal,C.tot.caja,C.tot.transf,C.tot.recEst]);
   const ws=XLSX.utils.aoa_to_sheet(aoa); ws['!cols']=[{wch:14},...cols.map(()=>({wch:14})),{wch:16},{wch:16},{wch:16},{wch:16}];
