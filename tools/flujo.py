@@ -7,6 +7,8 @@ Junta, en esta PC de la oficina (necesita la unidad W: y la carpeta Descargas):
 
 El repo es publico: el JSON sale cifrado con AES-256-GCM, clave derivada con
 PBKDF2-SHA256 (mismo esquema que ctacte). El panel la pide y descifra en el navegador.
+La clave no distingue mayusculas: se cifra con la clave en minusculas y el panel pasa lo
+que escribe el usuario a minusculas.
 
 La clave se toma de FLUJO_CLAVE o, si no esta, de tools/flujo.secret (no se sube: *.secret
 esta en .gitignore).
@@ -41,6 +43,8 @@ def main():
         clave = (AQUI / "flujo.secret").read_text(encoding="utf-8").strip()
     if not clave:
         sys.exit("Falta la clave: FLUJO_CLAVE o tools/flujo.secret.")
+    # el panel no distingue mayusculas ni espacios: se cifra con la clave en minusculas
+    clave = clave.strip().lower()
 
     tmp = Path(tempfile.gettempdir())
     subprocess.run([sys.executable, str(AQUI / "flujo_planillas.py"), str(tmp / "flujo_data.json")], check=True)

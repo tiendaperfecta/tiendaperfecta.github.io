@@ -140,6 +140,7 @@ table.flujo{border-collapse:separate;border-spacing:0;font-variant-numeric:tabul
   <h3>💵 Flujo de Caja TP-RL</h3>
   <p class="aviso">Los datos están cifrados. Ingresá la clave del panel.</p>
   <input type="password" id="pw" placeholder="Clave" autocomplete="current-password" autofocus>
+  <div class="aviso" id="pwMay" style="visibility:hidden;margin:0">⇪ Bloq Mayús activado</div>
   <div class="err" id="pwErr"></div>
   <button class="pri" style="width:100%">Entrar</button>
   <p class="aviso" id="pwFecha"></p>
@@ -213,15 +214,30 @@ async function descifrar(env, clave){
   return JSON.parse(new TextDecoder().decode(pt));
 }
 let ENV = null;
+// La clave no distingue mayúsculas ni espacios: tools/flujo.py cifra con la clave en minúsculas.
+// Los datos se vuelven a bajar en cada intento: si se probó mientras GitHub publicaba una versión
+// nueva, no queda pegado el archivo viejo (cifrado con otra clave) hasta recargar la página.
+let entrando = false;
 async function entrar(clave){
-  try { ENV = ENV || await (await fetch('data.enc.json', {cache:'no-store'})).json(); }
-  catch(e){ document.getElementById('pwErr').textContent='No se pudieron bajar los datos.'; return; }
-  try { SEED = await descifrar(ENV, clave); }
-  catch(e){ document.getElementById('pwErr').textContent='Clave incorrecta.'; try{sessionStorage.removeItem('flujo-k');}catch(_){} return; }
-  try { sessionStorage.setItem('flujo-k', clave); } catch(_){}
-  document.getElementById('puerta').remove();
-  iniciar();
+  if (entrando) return; entrando = true;
+  const err = document.getElementById('pwErr'), btn = document.querySelector('#fPuerta button');
+  err.textContent = ''; if (btn) { btn.disabled = true; btn.textContent = 'Abriendo…'; }
+  try {
+    const k = String(clave || '').trim().toLowerCase();
+    if (!k) { err.textContent = 'Escribí la clave.'; return; }
+    try { ENV = await (await fetch('data.enc.json?t=' + Date.now(), {cache:'no-store'})).json(); }
+    catch(e){ err.textContent = 'No se pudieron bajar los datos. Revisá la conexión y probá de nuevo.'; return; }
+    try { SEED = await descifrar(ENV, k); }
+    catch(e){ err.textContent = 'Clave incorrecta.'; try{sessionStorage.removeItem('flujo-k');}catch(_){} return; }
+    try { sessionStorage.setItem('flujo-k', k); } catch(_){}
+    document.getElementById('puerta').remove();
+    iniciar();
+  } finally {
+    entrando = false; if (btn && btn.isConnected) { btn.disabled = false; btn.textContent = 'Entrar'; }
+  }
 }
+// aviso de Bloq Mayús (la clave igual entra, pero así nadie se confunde)
+document.getElementById('pw').addEventListener('keyup', e=>{ const el=document.getElementById('pwMay'); if (el && e.getModifierState) el.style.visibility = e.getModifierState('CapsLock') ? 'visible' : 'hidden'; });
 document.getElementById('fPuerta').addEventListener('submit', e=>{ e.preventDefault(); entrar(document.getElementById('pw').value); });
 fetch('fecha.txt',{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{ const el=document.getElementById('pwFecha'); if(el) el.textContent=t.trim(); }).catch(()=>{});
 function guardar(){ if (!E) return; try { localStorage.setItem(CLAVE, JSON.stringify(E)); } catch(e) { toast('⚠️ No se pudo guardar en este navegador: exportá un respaldo.'); } }
