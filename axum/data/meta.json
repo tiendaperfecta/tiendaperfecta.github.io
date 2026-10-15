@@ -1,18 +1,18 @@
 {
- "generatedAt": "2026-10-15T12:21:22-03:00",
+ "generatedAt": "2026-10-15T16:29:13-03:00",
  "date": "2026-10-15",
  "errors": [
-  "orders360: se trajeron 235 de 233 pedidos que declara la API."
+  "detalle: zona 1: HTTPSConnectionPool(host='gps.axumvm.com.ar', port=443): Read timed out. (read timeout=60)"
  ],
  "pedidos": {
-  "traidos": 235,
-  "totalSegunApi": 233
+  "traidos": 375,
+  "totalSegunApi": 375
  },
  "formatoGps": {
-  "posicion": "'-38.0099192,-57.5397893,2,12:21 PM,19,,'",
-  "visitados": "{'sellerID': '1', 'visitedClient': '111'}",
+  "posicion": "'-38.0082557,-57.5340442,2,4:27 PM,106,,'",
+  "visitados": "{'sellerID': '1', 'visitedClient': '1021'}",
   "km": null,
-  "visitadosTotal": 310,
+  "visitadosTotal": 458,
   "kmError": null
  },
  "gescom": {
@@ -21,7 +21,7 @@
  },
  "alerta": "hay 3 llegadas tarde, sin casilla configurada",
  "detalle": {
-  "filas": 386,
+  "filas": 566,
   "vendedores": 16,
   "diasEnHistoria": 54
  },
