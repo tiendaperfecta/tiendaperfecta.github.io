@@ -16,7 +16,7 @@ body{
   font-family:"IBM Plex Sans", system-ui, sans-serif;
   padding:28px 20px 48px; display:flex; justify-content:center;
 }
-.wrap{width:100%; max-width:1120px; position:relative}
+.wrap{width:100%; max-width:1440px; position:relative}
 .tp-logo-hero{position:absolute; top:0; right:0; width:190px; height:190px; border-radius:50%}
 @media (max-width:640px){ .tp-logo-hero{width:110px; height:110px} }
 .eyebrow{
@@ -195,11 +195,11 @@ h1{
 table{border-collapse:collapse; width:100%; min-width:920px; font-size:13px}
 thead tr.grp th{
   font:600 11px/1 "IBM Plex Mono",monospace; letter-spacing:.05em; text-transform:uppercase;
-  color:var(--accent); text-align:center; padding:12px 10px 6px; border-bottom:none;
+  color:var(--accent); text-align:center; padding:12px 6px 6px; border-bottom:none;
 }
 thead tr.grp th.g-platino{color:var(--accent)}
 thead tr.cols th{
-  font:600 11.5px "IBM Plex Sans"; color:var(--muted); text-align:right; padding:0 10px 10px;
+  font:600 11.5px "IBM Plex Sans"; color:var(--muted); text-align:right; padding:0 6px 10px;
   border-bottom:1px solid var(--border); white-space:nowrap;
 }
 thead tr.cols th:first-child, thead tr.cols th.name-col{text-align:left}
@@ -209,7 +209,7 @@ thead tr.grp th:first-child, thead tr.cols th.name-col, tbody td.name, tfoot td.
 thead tr.grp th:first-child, thead tr.cols th.name-col{z-index:3}
 tbody tr:hover td.name{background:var(--panel-2)}
 tbody td{
-  padding:10px; text-align:right; border-bottom:1px solid var(--border);
+  padding:9px 6px; text-align:right; border-bottom:1px solid var(--border);
   font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; white-space:nowrap;
 }
 tbody td.name{
@@ -218,8 +218,8 @@ tbody td.name{
 tbody tr:last-child td{border-bottom:none}
 tbody tr:hover td{background:var(--panel-2)}
 col.sep{width:14px}
-.cell-avance{display:flex; align-items:center; gap:8px; justify-content:flex-end}
-.mini-bar{width:52px; height:6px; border-radius:99px; background:var(--panel-2); overflow:hidden; flex:none}
+.cell-avance{display:flex; align-items:center; gap:5px; justify-content:flex-end}
+.mini-bar{width:40px; height:6px; border-radius:99px; background:var(--panel-2); overflow:hidden; flex:none}
 .mini-bar span{display:block; height:100%; border-radius:99px}
 .pill{
   display:inline-block; padding:2px 8px; border-radius:99px; font:600 11px "IBM Plex Mono",monospace;
@@ -281,7 +281,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
 .clickable:hover{color:var(--accent)}
 
 .compromiso-input{
-  width:80px; padding:5px 8px; border:1px solid var(--border); border-radius:6px; background:var(--panel-2);
+  width:62px; padding:5px 8px; border:1px solid var(--border); border-radius:6px; background:var(--panel-2);
   color:var(--text); font-family:"IBM Plex Mono",monospace; font-size:12.5px; text-align:right;
   font-variant-numeric:tabular-nums;
 }
@@ -292,7 +292,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
 .comp-estado.ok{color:var(--good)} .comp-estado.err{color:var(--bad)} .comp-estado.pend{color:var(--muted)}
 
 .ip-input{
-  width:90px; padding:5px 8px; border:1px solid var(--border); border-radius:6px; background:var(--panel-2);
+  width:64px; padding:5px 8px; border:1px solid var(--border); border-radius:6px; background:var(--panel-2);
   color:var(--text); font-family:"IBM Plex Mono",monospace; font-size:12.5px; text-align:right;
   font-variant-numeric:tabular-nums;
 }
@@ -1406,18 +1406,44 @@ td.ip-base.clickable{cursor:pointer}
         it = {flot, tb}; flotantes.set(ts, it);
       }
       // copia del encabezado con el ancho exacto de cada columna
+      const z = parseFloat(ts.dataset.esc || '1') || 1;           // escala con la que se achico la tabla (1 = sin achicar)
       const copia = thead.cloneNode(true);
       const orig = thead.querySelectorAll('th'), cl = copia.querySelectorAll('th');
-      orig.forEach((th, i) => { const w = th.getBoundingClientRect().width + 'px'; if (cl[i]) { cl[i].style.width = w; cl[i].style.minWidth = w; cl[i].style.maxWidth = w; cl[i].style.boxSizing = 'border-box'; } });
+      orig.forEach((th, i) => { const w = th.offsetWidth + 'px'; if (cl[i]) { cl[i].style.width = w; cl[i].style.minWidth = w; cl[i].style.maxWidth = w; cl[i].style.boxSizing = 'border-box'; } });
       it.tb.replaceChildren(copia);
-      it.tb.style.width = table.getBoundingClientRect().width + 'px';
-      it.tb.style.transform = 'translateX(' + (-ts.scrollLeft) + 'px)';
+      it.tb.style.width = table.offsetWidth + 'px';
+      it.tb.style.transformOrigin = 'top left';
+      it.tb.style.transform = z !== 1 ? 'scale(' + z + ')' : 'translateX(' + (-ts.scrollLeft) + 'px)';
+      it.flot.style.height = Math.ceil(thead.offsetHeight * z) + 'px';
       it.flot.style.left = r.left + 'px';
       it.flot.style.width = ts.clientWidth + 'px';
       it.flot.style.display = 'block';
     });
   }
   function pedir(){ if (!pendiente) { pendiente = true; requestAnimationFrame(actualizar); } }
+  // Cada tabla se achica sola (con la escala justa) para entrar completa en el ancho de la pantalla, sin desplazar hacia los
+  // costados. En un celular (si habria que achicarla de mas) se deja como estaba, con desplazamiento.
+  const ESCALA_MIN = 0.6;
+  function ajustar(){
+    let cambio = false;
+    document.querySelectorAll('.table-scroll').forEach(ts => {
+      const table = ts.querySelector(':scope > table');
+      if (!table || ts.offsetParent === null) return;
+      const nat = table.offsetWidth, natH = table.offsetHeight, disp = ts.clientWidth;
+      let z = nat > disp + 1 ? disp / nat : 1;
+      if (z < ESCALA_MIN) z = 1;
+      z = Math.round(z * 1000) / 1000;
+      if (String(z) === (ts.dataset.esc || '1') && (z === 1 || ts.dataset.alto === String(natH))) return;
+      ts.dataset.esc = String(z); ts.dataset.alto = String(natH);
+      if (z === 1) { table.style.transform = ''; table.style.transformOrigin = ''; ts.style.height = ''; ts.style.overflowX = ''; }
+      else { table.style.transformOrigin = 'top left'; table.style.transform = 'scale(' + z + ')'; ts.style.height = Math.ceil(natH * z + 2) + 'px'; ts.style.overflowX = 'hidden'; }
+      cambio = true;
+    });
+    if (cambio) pedir();
+  }
+  setInterval(ajustar, 700);
+  window.addEventListener('resize', ajustar);
+  window.addEventListener('load', ajustar);
   window.addEventListener('scroll', pedir, {passive: true});
   window.addEventListener('resize', pedir);
   document.addEventListener('scroll', pedir, {passive: true, capture: true});   // el scroll horizontal de cada tabla
@@ -1425,7 +1451,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-15-a';
+const BUILD = '2026-10-15-b';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
