@@ -192,6 +192,16 @@ h1{
 .head-flotante table{table-layout:fixed; min-width:0; margin:0; width:auto}
 .head-flotante th{position:static !important; box-shadow:none !important; background:var(--panel)}
 .head-flotante thead tr.cols th{border-bottom:1px solid var(--border)}
+/* tabla "Por vendedor": en la vista de letra grande se ocultan las columnas secundarias */
+table.tabla-compacta .col-sec{display:none}
+table.tabla-compacta tbody td, table.tabla-compacta tfoot td{padding-left:4px; padding-right:4px}
+table.tabla-compacta thead tr.cols th, table.tabla-compacta thead tr.grp th{padding-left:4px; padding-right:4px}
+table.tabla-compacta col:first-child{width:165px !important}
+table.tabla-compacta .compromiso-input{width:54px}
+table.tabla-compacta .mini-bar{width:30px}
+.btn-col{margin-left:auto; padding:5px 12px; border:1px solid var(--border); border-radius:8px; background:var(--panel);
+  color:var(--text); font:600 12.5px "IBM Plex Sans",sans-serif; cursor:pointer}
+.btn-col:hover{border-color:var(--accent); color:var(--accent)}
 table{border-collapse:collapse; width:100%; min-width:920px; font-size:13px}
 thead tr.grp th{
   font:600 11px/1 "IBM Plex Mono",monospace; letter-spacing:.05em; text-transform:uppercase;
@@ -457,6 +467,7 @@ td.ip-base.clickable{cursor:pointer}
     <label for="vendedor-selector">Ver vendedor:</label>
     <select id="vendedor-selector"><option value="">Todos</option></select>
     <span class="vend-filter-nota" id="vendedor-nota"></span>
+    <button type="button" class="btn-col" id="btn-columnas" title="Cambia entre pocas columnas con letra más grande y todas las columnas">Mostrar todas las columnas</button>
   </div>
   <p id="proy-nota" class="section-note" style="display:none"></p>
   <h2 class="section-title">Por vendedor</h2>
@@ -483,21 +494,21 @@ td.ip-base.clickable{cursor:pointer}
       <thead>
         <tr class="grp">
           <th></th>
-          <th class="g-platino seg-click" colspan="4" onclick="drillSegmento('p1')" title="Ver qué productos entran en Platino + Gold">Platino + Gold ⓘ</th>
+          <th class="g-platino seg-click" colspan="4" data-cs="4" data-csc="3" onclick="drillSegmento('p1')" title="Ver qué productos entran en Platino + Gold">Platino + Gold ⓘ</th>
           <th></th>
-          <th class="seg-click" colspan="4" onclick="drillSegmento('p2')" title="Ver qué productos entran en Silver &amp; Bronze">Silver &amp; Bronze ⓘ</th>
+          <th class="seg-click" colspan="4" data-cs="4" data-csc="3" onclick="drillSegmento('p2')" title="Ver qué productos entran en Silver &amp; Bronze">Silver &amp; Bronze ⓘ</th>
           <th></th>
-          <th colspan="10">Total vendedor</th>
+          <th colspan="10" data-cs="10" data-csc="8">Total vendedor</th>
           <th></th>
           <th colspan="3">Compromiso</th>
         </tr>
         <tr class="cols">
           <th class="name-col">Vendedor</th>
-          <th>Objetivo</th><th>Acum.</th><th>Avance</th><th>Media Nec.</th>
+          <th>Objetivo</th><th>Acum.</th><th>Avance</th><th class="col-sec">Media Nec.</th>
           <th></th>
-          <th>Objetivo</th><th>Acum.</th><th>Avance</th><th>Media Nec.</th>
+          <th>Objetivo</th><th>Acum.</th><th>Avance</th><th class="col-sec">Media Nec.</th>
           <th></th>
-          <th>Objetivo</th><th>Acumulado</th><th>Avance</th><th>Promedio</th><th>Media Nec.</th><th>Tendencia cierre</th><th>Penúlt. Vis.</th><th>Últ. Vis.</th><th>Real hoy</th><th>Venta $</th>
+          <th>Objetivo</th><th>Acumulado</th><th>Avance</th><th>Promedio</th><th>Media Nec.</th><th>Tendencia cierre</th><th class="col-sec">Penúlt. Vis.</th><th class="col-sec">Últ. Vis.</th><th>Real hoy</th><th>Venta $</th>
           <th></th>
           <th>Platino+Gold</th><th>Silver&amp;Bronze</th><th>Total</th>
         </tr>
@@ -1412,6 +1423,7 @@ td.ip-base.clickable{cursor:pointer}
       const orig = thead.querySelectorAll('th'), cl = copia.querySelectorAll('th');
       orig.forEach((th, i) => { const w = th.offsetWidth + 'px'; if (cl[i]) { cl[i].style.width = w; cl[i].style.minWidth = w; cl[i].style.maxWidth = w; cl[i].style.boxSizing = 'border-box'; } });
       it.tb.replaceChildren(copia);
+      it.tb.className = table.className;
       it.tb.style.width = table.offsetWidth + 'px';
       it.tb.style.transformOrigin = 'top left';
       it.tb.style.transform = z !== 1 ? 'scale(' + z + ')' : 'translateX(' + (-ts.scrollLeft) + 'px)';
@@ -1451,8 +1463,30 @@ td.ip-base.clickable{cursor:pointer}
   document.addEventListener('click', () => setTimeout(pedir, 50));              // cambio de solapa o de vendedor
 })();
 
+// Tabla "Por vendedor": por defecto se ven las columnas principales (la tabla se achica menos y la letra queda mas grande);
+// el boton muestra todas. La eleccion queda guardada en este navegador.
+(function columnasTabla(){
+  const btn = document.getElementById('btn-columnas');
+  const cuerpo = document.getElementById('tbody');
+  if (!btn || !cuerpo) return;
+  let compacta = true;
+  try { compacta = localStorage.getItem('pepsico-columnas') !== 'todas'; } catch (e) {}
+  function aplicar(){
+    const tabla = cuerpo.closest('table');
+    tabla.classList.toggle('tabla-compacta', compacta);
+    tabla.querySelectorAll('thead tr.grp th[data-cs]').forEach(th => { th.colSpan = Number(compacta ? th.dataset.csc : th.dataset.cs); });
+    btn.textContent = compacta ? 'Mostrar todas las columnas' : 'Letra más grande (menos columnas)';
+  }
+  btn.addEventListener('click', () => {
+    compacta = !compacta;
+    try { localStorage.setItem('pepsico-columnas', compacta ? 'compacta' : 'todas'); } catch (e) {}
+    aplicar();
+  });
+  aplicar();
+})();
+
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-15-c';
+const BUILD = '2026-10-15-d';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -3426,16 +3460,16 @@ if (kgAvanceMeta) {
   document.getElementById('tfoot-main').innerHTML = `
     <tr>
       <td class="name">Total PepsiCo</td>
-      <td>${fmt(totPG)}</td><td>${fmt(acumPG)}</td><td>${fmt(pctPG,1)}%</td><td>${fmt(diasRestantesGlobal>0 ? (totPG-acumPG)/diasRestantesGlobal : 0,1)}</td>
+      <td>${fmt(totPG)}</td><td>${fmt(acumPG)}</td><td>${fmt(pctPG,1)}%</td><td class="col-sec">${fmt(diasRestantesGlobal>0 ? (totPG-acumPG)/diasRestantesGlobal : 0,1)}</td>
       <td></td>
-      <td>${fmt(totSB)}</td><td>${fmt(acumSB)}</td><td>${fmt(pctSB,1)}%</td><td>${fmt(diasRestantesGlobal>0 ? (totSB-acumSB)/diasRestantesGlobal : 0,1)}</td>
+      <td>${fmt(totSB)}</td><td>${fmt(acumSB)}</td><td>${fmt(pctSB,1)}%</td><td class="col-sec">${fmt(diasRestantesGlobal>0 ? (totSB-acumSB)/diasRestantesGlobal : 0,1)}</td>
       <td></td>
       <td>${fmt(totTo)}</td><td>${fmt(totTa)}</td><td>${fmt(pctTo,1)}%</td>
       <td>${fmt(rows.reduce((s,r)=>s+r.promedio,0),1)}</td>
       <td>${fmt(medianecTotal,1)}</td>
       <td>${fmt(tendTotal)}</td>
-      <td>${fmt(rows.reduce((s,r)=>s+r.penult,0),1)}</td>
-      <td>${fmt(rows.reduce((s,r)=>s+r.ultima,0),1)}</td>
+      <td class="col-sec">${fmt(rows.reduce((s,r)=>s+r.penult,0),1)}</td>
+      <td class="col-sec">${fmt(rows.reduce((s,r)=>s+r.ultima,0),1)}</td>
       <td>${fmt(realTotal,1)}</td>
       <td>$ ${fmt(ventaTotal)}</td>
       <td></td>
@@ -3474,11 +3508,11 @@ tbody.innerHTML = rows.map(r => `
     <td class="name">${r.n}</td>
     <td>${fmt(r.p1o)}</td><td>${fmt(r.p1a)}</td>
     <td><span class="pill ${tier(r.p1p)}">${fmt(r.p1p,1)}%</span></td>
-    <td>${fmt(diasRestantesGlobal>0 ? (r.p1o-r.p1a)/diasRestantesGlobal : 0,1)}</td>
+    <td class="col-sec">${fmt(diasRestantesGlobal>0 ? (r.p1o-r.p1a)/diasRestantesGlobal : 0,1)}</td>
     <td></td>
     <td>${fmt(r.p2o)}</td><td>${fmt(r.p2a)}</td>
     <td><span class="pill ${tier(r.p2p)}">${fmt(r.p2p,1)}%</span></td>
-    <td>${fmt(diasRestantesGlobal>0 ? (r.p2o-r.p2a)/diasRestantesGlobal : 0,1)}</td>
+    <td class="col-sec">${fmt(diasRestantesGlobal>0 ? (r.p2o-r.p2a)/diasRestantesGlobal : 0,1)}</td>
     <td></td>
     <td>${fmt(r.to)}</td><td>${fmt(r.ta)}</td>
     <td>
@@ -3490,8 +3524,8 @@ tbody.innerHTML = rows.map(r => `
     <td>${fmt(r.promedio,1)}</td>
     <td>${fmt(r.medianec,1)}</td>
     <td>${fmt(r.tendencia)}</td>
-    <td>${fmt(r.penult,1)}</td>
-    <td>${fmt(r.ultima,1)}</td>
+    <td class="col-sec">${fmt(r.penult,1)}</td>
+    <td class="col-sec">${fmt(r.ultima,1)}</td>
     <td>${fmt(r.real,1)}</td>
     <td>$ ${fmt(r.venta)}</td>
     <td></td>
