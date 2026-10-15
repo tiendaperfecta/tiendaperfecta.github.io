@@ -1149,7 +1149,9 @@ def main():
             no_compradores.append({**{k: c[k] for k in
                                     ("codigo", "razon", "localidad", "seg", "dia")},
                                     "vendedor": nombre_vend_cli})
-        if c["dia"] == hoy_key and pehuamar_compra.get(codigo, 0) <= 0:
+        # de TODAS las rutas (con su "dia"): la pagina toma la de hoy segun su reloj, asi no queda la del dia anterior
+        # entre la medianoche y la primera actualizacion del dia
+        if pehuamar_compra.get(codigo, 0) <= 0:
             pehuamar_no_comprado.append({**{k: c[k] for k in
                                           ("codigo", "razon", "localidad", "seg", "dia")},
                                           "vendedor": nombre_vend_cli})
@@ -1199,6 +1201,8 @@ def main():
         if not bases_prev.get(clave_hoy) and DIA_CLAVE.get(hoy_key):
             peh_por_vend = {}
             for c in pehuamar_no_comprado:
+                if c["dia"] != hoy_key:
+                    continue
                 peh_por_vend[c["vendedor"]] = peh_por_vend.get(c["vendedor"], 0) + 1
             hoy_bases = {}
             for codven_b, dias_b in nc_dia_por_vend.items():
@@ -1212,7 +1216,8 @@ def main():
     except Exception as e:
         print("No se pudo guardar la foto diaria de las bases de IP:", e)
     escribir("subproductos_no_comprado.json", {f"{g}_{k}": v for (g, k), v in subproducto_no_comprado.items()})
-    print("No compradores:", len(no_compradores), "| Sin Pehuamar 90gr hoy:", len(pehuamar_no_comprado))
+    print("No compradores:", len(no_compradores), "| Sin Pehuamar 90gr (todas las rutas):", len(pehuamar_no_comprado),
+          "| ruta de hoy:", sum(1 for c in pehuamar_no_comprado if c["dia"] == hoy_key))
 
     no_compradores_dia_out = []
     for codven in sorted(nc_dia_por_vend, key=lambda x: int(x)):
