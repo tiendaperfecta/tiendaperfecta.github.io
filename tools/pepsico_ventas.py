@@ -321,7 +321,7 @@ def lineas_pepsico(desde, hasta, por):
     return filas
 
 
-def filas_desde_base(api, desde, hasta, por="pedido"):
+def filas_desde_base(api, desde, hasta, por="pedido", pedido_hasta=None):
     """Reemplaza al CSV "Detallado de ventas extendido": mismas claves que usaba el
     loop (Proveedor, TipoDeVenta, Cliente, Articulo, CantBase, CodVendedor, Vendedor,
     Marca, ImporteNetoItem, MotivoDevolucion, FechaComprobante). Las devoluciones
@@ -336,6 +336,9 @@ def filas_desde_base(api, desde, hasta, por="pedido"):
     for l in lineas_pepsico(desde, hasta, por):
         tipo = tipos.get(l.get("tipo"))
         if not tipo:
+            continue
+        # `pedido_hasta`: solo los pedidos tomados hasta esa fecha (para ver un mes "como estaba" un dia dado)
+        if pedido_hasta and (l.get("fp") or l.get("fcomp") or "")[:10] > pedido_hasta.isoformat():
             continue
         a = articulo_de(cod(l.get("item")), cod(l.get("emp")))
         if not a:
@@ -437,9 +440,11 @@ def dias_habiles_mes(anio, mes, hasta=None):
     return total
 
 
-def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
+def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados, pedido_hasta=None, escribir_historial=True):
     """Avance de kg calculado desde la base (el reporte de Gescom da 403 desde el 30/9).
-    Mismas formulas y mismo JSON de salida que armaba con el reporte."""
+    Mismas formulas y mismo JSON de salida que armaba con el reporte.
+    `pedido_hasta`: cuenta solo los pedidos tomados hasta esa fecha (el mes "como estaba" ese dia);
+    `escribir_historial=False`: no toca historial_diario.json."""
     if not hay_base():
         raise RuntimeError("falta el secreto BASE_CLAVE para leer la base")
     ratio = dias_trabajados / dias_habiles if dias_habiles else 0
@@ -456,6 +461,8 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
     for l in lineas_pepsico(hoy.replace(day=1), fin_mes, "entrega"):
         signo = SIGNO_ACUM.get(l.get("tipo"))
         if signo is None:
+            continue
+        if pedido_hasta and (l.get("fp") or l.get("fcomp") or "")[:10] > pedido_hasta.isoformat():
             continue
         codven = cod(l.get("ven"))
         if codven not in VENDEDORES_PEPSICO:
@@ -544,8 +551,9 @@ def traer_avance_kg(api, hoy, dias_habiles, dias_trabajados):
                       "v": {vend.get(cv, cv): round(dp[f], 2) for cv, dp in dias_pedido.items() if abs(dp.get(f, 0.0)) > 0.005},
                       "vg": {vend.get(cv, cv): [round(g[f][0], 2), round(g[f][1], 2)] for cv, g in dias_pedido_vg.items() if f in g}}
                      for f, k in sorted(historial_por_dia.items()) if abs(k) > 0.005]
-    escribir("historial_diario.json", historial_out)
-    print("Historial diario: %d dias (por fecha de pedido)" % len(historial_out))
+    if escribir_historial:
+        escribir("historial_diario.json", historial_out)
+        print("Historial diario: %d dias (por fecha de pedido)" % len(historial_out))
 
     return {
         "objetivoPG": round(sum(v["p1o"] for v in kg_vendedores), 2),
@@ -1327,7 +1335,138 @@ def main():
         }
         escribir("rechazos_ultima_fecha.json", rechazos_ultima_out)
         print("Rechazos ultima fecha (%s): %d filas" % (ultima_fecha, len(rechazos_ultima_out["filas"])))
+
+    # Mes anterior con el mismo corte de dia, para la solapa Comparacion (si falla, queda lo anterior)
+    try:
+        armar_comparacion(api, hoy, clientes, nombre_por_codven)
+    except Exception as e:
+        print("ERROR armando la comparacion con el mes anterior (se deja la anterior sin tocar):", e)
     return 0
+
+
+DIR_COMPARACION = DIR / "comparacion"
+
+
+def _escribir_comparacion(nombre, data):
+    DIR_COMPARACION.mkdir(parents=True, exist_ok=True)
+    (DIR_COMPARACION / nombre).write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def armar_comparacion(api, hoy, clientes, nombre_por_codven):
+    """El mes anterior CON EL MISMO CORTE que hoy (el 14/10 se compara contra el 14/9), para la solapa Comparacion.
+    Cuenta solo los pedidos tomados hasta ese dia del mes anterior; la cobertura va por fecha de entrega como la del
+    mes en curso. Se escribe en pepsico/comparacion/ (no toca ningun archivo en vivo ni el archivo de meses).
+    Tienda Perfecta no entra: el censo es una foto de hoy y no se puede ver a una fecha pasada."""
+    if not hay_base():
+        return
+    anio, mes = (hoy.year, hoy.month - 1) if hoy.month > 1 else (hoy.year - 1, 12)
+    ultimo = calendar.monthrange(anio, mes)[1]
+    corte = dt.date(anio, mes, min(hoy.day, ultimo))
+    inicio, fin = dt.date(anio, mes, 1), dt.date(anio, mes, ultimo)
+    mes_txt = "%04d-%02d" % (anio, mes)
+    print("Comparacion: %s hasta el %s (corte igual al de hoy, %s)" % (mes_txt, corte.isoformat(), hoy.isoformat()))
+
+    # kg: acumulado con los pedidos hasta el corte
+    dias_habiles = dias_habiles_mes(anio, mes)
+    dias_trabajados = dias_habiles_mes(anio, mes, hasta=corte)
+    avance = traer_avance_kg(api, corte, dias_habiles, dias_trabajados, pedido_hasta=corte, escribir_historial=False)
+
+    # Por fecha de pedido (hasta el corte): venta $, rechazos, invendible y CCC
+    filas = filas_desde_base(api, inicio, corte, "pedido")
+    compra_cliente, venta_importe, invendible, rechazos = {}, {}, {}, {}
+    for f in filas:
+        if "PEPSICO" not in (f.get("Proveedor") or "").upper():
+            continue
+        tipo, cli, art = f.get("TipoDeVenta") or "", cod(f.get("Cliente")), (f.get("Articulo") or "").strip()
+        q, importe = num_ar(f.get("CantBase")), num_ar(f.get("ImporteNetoItem"))
+        codven = cod(f.get("CodVendedor"))
+        nombre = (f.get("Vendedor") or "").strip() or nombre_por_codven.get(codven, codven)
+        if tipo == TIPO_VENTA:
+            compra_cliente[cli] = compra_cliente.get(cli, 0) + q
+            venta_importe[nombre] = venta_importe.get(nombre, 0.0) + importe
+        elif tipo == TIPO_CANJE:
+            acc = invendible.setdefault(nombre, {}).setdefault(art, [0.0, 0.0])
+            acc[0] += abs(q)
+            acc[1] += importe
+        elif tipo == TIPO_RECHAZO:
+            motivo = (f.get("MotivoDevolucion") or "").strip() or "SIN MOTIVO"
+            acc = rechazos.setdefault(nombre, {}).setdefault(motivo, [0.0, 0.0])
+            acc[0] += abs(q)
+            acc[1] += importe
+
+    # Cobertura por marca: por fecha de entrega del mes, con los pedidos hasta el corte y cantidades con signo
+    filas_e = filas_desde_base(api, inicio, fin, "entrega", pedido_hasta=corte)
+    compra_marca = {}
+    for f in filas_e:
+        if "PEPSICO" not in (f.get("Proveedor") or "").upper():
+            continue
+        if (f.get("TipoDeVenta") or "") not in (TIPO_VENTA, TIPO_CANJE, TIPO_RECHAZO):
+            continue
+        marca = MARCA_LABEL.get((f.get("Marca") or "").strip().upper())
+        if marca:
+            porcli = compra_marca.setdefault(cod(f.get("Cliente")), {})
+            porcli[marca] = porcli.get(marca, 0) + num_ar(f.get("CantBase"))
+
+    universo, cumple_marca, seg_por_vend = {}, {}, {}
+    for codigo, c in clientes.items():
+        if not c["dia"] or c["codven"] not in VENDEDORES_PEPSICO:
+            continue
+        cv = c["codven"]
+        universo[cv] = universo.get(cv, 0) + 1
+        cm = cumple_marca.setdefault(cv, {})
+        for marca, cant in compra_marca.get(codigo, {}).items():
+            if cant >= 3:
+                cm[marca] = cm.get(marca, 0) + 1
+        seg = c["seg"] if c["seg"] in SEGMENTOS else None
+        if seg:
+            sd = seg_por_vend.setdefault(cv, {s: {"universo": 0, "cumple": 0} for s in SEGMENTOS})
+            sd[seg]["universo"] += 1
+            if compra_cliente.get(codigo, 0) >= 3:
+                sd[seg]["cumple"] += 1
+
+    cobertura = []
+    for cv in sorted(universo, key=lambda x: int(x)):
+        fila = {"codven": cv, "n": nombre_por_codven.get(cv, cv), "universo": universo[cv]}
+        for label in MARCA_LABEL.values():
+            fila[label] = round(cumple_marca.get(cv, {}).get(label, 0) / universo[cv] * 100, 1) if universo[cv] else 0.0
+        cobertura.append(fila)
+
+    # CCC: el objetivo del mes anterior es el que quedo en su archivo (si no esta, el vigente)
+    objetivo = dict(CCC_OBJETIVO_SEG)
+    try:
+        previo = json.loads((DIR / "archive" / mes_txt / "ccc_segmento.json").read_text(encoding="utf-8"))
+        objetivo = {s: previo["objetivoOficial"][s] for s in SEGMENTOS}
+    except Exception:
+        pass
+    uni_seg = {s: sum(seg_por_vend.get(cv, {}).get(s, {}).get("universo", 0) for cv in universo) for s in SEGMENTOS}
+    keymap = {"A": ("ao", "ac"), "B": ("bo", "bc"), "C": ("co", "cc"), "D": ("do_", "dc")}
+    ccc = []
+    for cv in sorted(universo, key=lambda x: int(x)):
+        sd = seg_por_vend.get(cv, {s: {"universo": 0, "cumple": 0} for s in SEGMENTOS})
+        fila = {"n": nombre_por_codven.get(cv, cv)}
+        for s in SEGMENTOS:
+            ko, kc = keymap[s]
+            fila[ko] = round(objetivo[s] * sd[s]["universo"] / uni_seg[s]) if uni_seg[s] else 0
+            fila[kc] = sd[s]["cumple"]
+        ccc.append(fila)
+    objetivo_oficial = dict(objetivo)
+    objetivo_oficial["total"] = sum(objetivo.values())
+
+    _escribir_comparacion("avance_kg_vendedor.json", avance)
+    _escribir_comparacion("venta_vendedor.json", {n: round(v, 2) for n, v in venta_importe.items()})
+    _escribir_comparacion("cobertura_marca_vendedor.json", {"vendedores": cobertura})
+    _escribir_comparacion("ccc_segmento.json", {"vendedores": ccc, "objetivoOficial": objetivo_oficial})
+    _escribir_comparacion("invendible_detalle.json", {
+        v: [{"articulo": a, "cant": round(c, 1), "importe": round(i, 2)} for a, (c, i) in sorted(d.items(), key=lambda kv: kv[1][1])]
+        for v, d in invendible.items()})
+    _escribir_comparacion("rechazos_detalle.json", {
+        v: [{"motivo": m, "cant": round(c, 0), "importe": round(i, 2)} for m, (c, i) in sorted(d.items(), key=lambda kv: kv[1][1])]
+        for v, d in rechazos.items()})
+    _escribir_comparacion("meta.json", {"mes": mes_txt, "corte": corte.isoformat(), "hoy": hoy.isoformat(),
+                                        "generado": dt.datetime.now(TZ_AR).strftime("%Y-%m-%d %H:%M")})
+    print("Comparacion %s al %s: acumulado %.1f kg | venta $ %.0f | cobertura %d vendedores | CCC %d vendedores" %
+          (mes_txt, corte.isoformat(), sum(v["ta"] for v in avance["vendedores"]), sum(venta_importe.values()),
+           len(cobertura), len(ccc)))
 
 
 def cmd_backfill(anio, mes):
