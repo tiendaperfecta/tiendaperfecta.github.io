@@ -463,6 +463,7 @@ td.ip-base.clickable{cursor:pointer}
   <p class="section-note">
     Ordenado de menor a mayor avance — los que necesitan más empuje primero. <b>Promedio</b> = kg/día vendidos en
     lo que va del mes, <b>Media Nec.</b> = kg/día necesarios en los días que quedan para llegar al objetivo,
+    <b>Tendencia cierre</b> = kg con los que cierra el mes si sigue al ritmo de venta de hoy (Acumulado ÷ días trabajados × días hábiles),
     <b>Penúlt./Últ. Vis.</b> = kg de los pedidos tomados el mismo día de la semana hace 14 y 7 días (fecha de pedido), y
     <b>Real hoy</b> = pedidos tomados hoy — los tres del reporte
     <code>Avance de Ventas Pepsico</code>. <b>Compromiso</b> es editable por separado para Platino+Gold y para
@@ -476,7 +477,7 @@ td.ip-base.clickable{cursor:pointer}
         <col style="width:190px">
         <col><col><col><col>
         <col class="sep"><col><col><col><col>
-        <col class="sep"><col><col><col><col><col><col><col><col>
+        <col class="sep"><col><col><col><col><col><col><col><col><col>
         <col class="sep"><col style="width:110px"><col style="width:110px"><col style="width:110px">
       </colgroup>
       <thead>
@@ -486,7 +487,7 @@ td.ip-base.clickable{cursor:pointer}
           <th></th>
           <th class="seg-click" colspan="4" onclick="drillSegmento('p2')" title="Ver qué productos entran en Silver &amp; Bronze">Silver &amp; Bronze ⓘ</th>
           <th></th>
-          <th colspan="9">Total vendedor</th>
+          <th colspan="10">Total vendedor</th>
           <th></th>
           <th colspan="3">Compromiso</th>
         </tr>
@@ -496,7 +497,7 @@ td.ip-base.clickable{cursor:pointer}
           <th></th>
           <th>Objetivo</th><th>Acum.</th><th>Avance</th><th>Media Nec.</th>
           <th></th>
-          <th>Objetivo</th><th>Acumulado</th><th>Avance</th><th>Promedio</th><th>Media Nec.</th><th>Penúlt. Vis.</th><th>Últ. Vis.</th><th>Real hoy</th><th>Venta $</th>
+          <th>Objetivo</th><th>Acumulado</th><th>Avance</th><th>Promedio</th><th>Media Nec.</th><th>Tendencia cierre</th><th>Penúlt. Vis.</th><th>Últ. Vis.</th><th>Real hoy</th><th>Venta $</th>
           <th></th>
           <th>Platino+Gold</th><th>Silver&amp;Bronze</th><th>Total</th>
         </tr>
@@ -505,7 +506,7 @@ td.ip-base.clickable{cursor:pointer}
       <tfoot id="tfoot-main">
         <tr>
           <td class="name">Total PepsiCo</td>
-          <td colspan="18" style="text-align:center">—</td>
+          <td colspan="19" style="text-align:center">—</td>
           <td></td>
           <td id="tfoot-compromiso-pg"></td><td id="tfoot-compromiso-sb"></td><td id="tfoot-compromiso-total"></td>
         </tr>
@@ -1451,7 +1452,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-15-b';
+const BUILD = '2026-10-15-c';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -3432,6 +3433,7 @@ if (kgAvanceMeta) {
       <td>${fmt(totTo)}</td><td>${fmt(totTa)}</td><td>${fmt(pctTo,1)}%</td>
       <td>${fmt(rows.reduce((s,r)=>s+r.promedio,0),1)}</td>
       <td>${fmt(medianecTotal,1)}</td>
+      <td>${fmt(tendTotal)}</td>
       <td>${fmt(rows.reduce((s,r)=>s+r.penult,0),1)}</td>
       <td>${fmt(rows.reduce((s,r)=>s+r.ultima,0),1)}</td>
       <td>${fmt(realTotal,1)}</td>
@@ -3487,6 +3489,7 @@ tbody.innerHTML = rows.map(r => `
     </td>
     <td>${fmt(r.promedio,1)}</td>
     <td>${fmt(r.medianec,1)}</td>
+    <td>${fmt(r.tendencia)}</td>
     <td>${fmt(r.penult,1)}</td>
     <td>${fmt(r.ultima,1)}</td>
     <td>${fmt(r.real,1)}</td>
@@ -3769,8 +3772,8 @@ let ipBasesDiarias = {};
 const ipBasesPromise = fetch(BASE + 'ip_bases_diarias.json' + CACHE_BUST).then(r => r.ok ? r.json() : {}).then(d => { ipBasesDiarias = d || {}; }).catch(() => {});
 
 function drillPehuamar90(vendedor) {
-  const list = pehuamar90Detalle.filter(c => c.vendedor === vendedor);
-  openDrillPortafolio(vendedor, `Sin compra de Pehuamar 90gr Lisa o Acanalada en lo que va del mes`, list);
+  const list = pehuamar90Detalle.filter(c => c.vendedor === vendedor && (!c.dia || c.dia === hoyDiaIp));
+  openDrillPortafolio(vendedor, `Ruta de hoy (${hoyDiaIp}) — sin compra de Pehuamar 90gr Lisa o Acanalada en lo que va del mes`, list);
 }
 // Dia de ruta con el que se calculan las bases de la tabla de IP: el de hoy, o el del dia elegido en el calendario
 function diaIpActual(){
@@ -3813,7 +3816,8 @@ async function renderIpSection(){
   if (proyHistorica()) {
     pehuamarBaseByVendedor = pehuamarBaseDia(dIp.dia);
   } else {
-    pehuamar90Detalle.forEach(c => {
+    // el archivo trae la ruta de todos los dias: se toma la de hoy segun el reloj (no la del dia en que corrio la actualizacion)
+    pehuamar90Detalle.filter(c => !c.dia || c.dia === hoyDiaIp).forEach(c => {
       pehuamarBaseByVendedor[c.vendedor] = (pehuamarBaseByVendedor[c.vendedor] || 0) + 1;
     });
   }
