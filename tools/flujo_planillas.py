@@ -139,6 +139,32 @@ def corregir_fletes(pagos):
     print('fletes: %d montos de la planilla pasados a %d jueves' % (len(montos), len(notas)))
     return notas
 data['notas'] = corregir_fletes(data['pagos'])
+
+# --- RECAUDACION ESTIMADA: desde octubre 2026 las planillas la traen copiada de otro mes, sin
+# respetar los dias de la semana (en octubre caia los domingos y faltaba los viernes). Se toma el
+# valor diario anotado en cada mes y se pone en cada dia HABIL (lunes a viernes, sin feriados).
+# Antes de octubre no se toca (y los dias pasados usan la recaudacion real de todos modos).
+FERIADOS_2026 = {'2026-01-01','2026-02-16','2026-02-17','2026-03-23','2026-03-24','2026-04-02','2026-04-03',
+                 '2026-05-01','2026-05-25','2026-06-15','2026-06-20','2026-07-09','2026-07-10','2026-08-17',
+                 '2026-10-12','2026-11-23','2026-12-07','2026-12-08','2026-12-25'}
+def corregir_estimado(estimado):
+    por_mes = {}
+    for f, v in estimado.items():
+        if f >= FLETES_DESDE.isoformat() and v:
+            por_mes.setdefault(f[:7], []).append(v)
+    for mes, vals in por_mes.items():
+        diario = max(set(vals), key=vals.count)          # el valor que mas se repite en el mes
+        a, m = map(int, mes.split('-'))
+        d = dt.date(a, m, 1)
+        while d.month == m:
+            f = d.isoformat()
+            if d.weekday() < 5 and f not in FERIADOS_2026:
+                estimado[f] = diario
+            else:
+                estimado.pop(f, None)
+            d += dt.timedelta(days=1)
+        print('recaudacion estimada %s: %s por dia habil' % (mes, diario))
+corregir_estimado(data['estimado'])
 # --- caja tesoreria
 def caja_file(mes):
     c=[p for p in glob.glob('W:/Tesoreria/Finanzas_Diarias_*.xlsx') if MESES[mes-1][:4] in norm(os.path.basename(p))]

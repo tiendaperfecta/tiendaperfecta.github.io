@@ -350,7 +350,6 @@ async function cargarVivo(k){
   try {
     const r = await fetch('vivo.enc.json?t=' + Date.now(), {cache:'no-store'});
     VIVO = r.ok ? await descifrar(await r.json(), k) : null;
-    recaudacion.ini = null;
   } catch(e){ VIVO = null; }
 }
 async function entrar(clave){
@@ -420,40 +419,70 @@ function grupoExcluido(f,g){ const k=f+'|'+g[0]+'|'+g[1]; if (k in E.exclGrupo) 
      rendiciones) se usan los créditos de los extractos bancarios, y queda marcado. */
 let VIVO = null;
 function cajaDe(f){ const v=VIVO&&VIVO.caja&&VIVO.caja[f]; return { items: v || E.caja[f] || [], vivo: !!v }; }
+/* COBERTURA: qué período tiene cada fuente. Un día pasado con las DOS fuentes cubiertas usa la
+   recaudación REAL aunque dé 0 (un domingo o un feriado sin cobranza es $0, no la estimada).
+   - Caja: planillas de W:\Tesoreria (data.enc.json) o la caja en vivo (desde el 1° de su primer mes).
+   - Transferencias: Control de Transferencias desde su primer día con rendiciones; antes, los
+     extractos bancarios mientras haya extractos. */
+function cobertura(){
+  const clave = Object.keys(E.caja).length+'|'+Object.keys(E.bancos).length+'|'+(VIVO?VIVO.generado:'');
+  if (cobertura.k===clave) return cobertura.c;
+  const rango = (fs) => fs.length ? [fs[0], fs[fs.length-1]] : null;
+  const cw = rango(Object.keys(E.caja).filter(f=>(E.caja[f]||[]).length).sort());
+  const vc = VIVO&&VIVO.caja ? Object.keys(VIVO.caja).sort() : [];
+  const vt = VIVO&&VIVO.valoresPorTipo ? Object.keys(VIVO.valoresPorTipo).sort() : [];
+  const hasta = (VIVO&&VIVO.hasta) || HOY;
+  cobertura.c = {
+    // la caja de las planillas cubre los meses enteros que trae
+    cajaW: cw ? [cw[0].slice(0,8)+'01', ymd(+cw[1].slice(0,4), +cw[1].slice(5,7), diasDelMes(+cw[1].slice(0,4), +cw[1].slice(5,7)))] : null,
+    cajaV: vc.length ? [vc[0].slice(0,8)+'01', hasta] : null,
+    banco: rango(Object.keys(E.bancos).sort()),
+    control: vt.length ? [vt[0], hasta] : null,
+  };
+  cobertura.k = clave;
+  return cobertura.c;
+}
+const dentro = (r,f) => !!(r && f>=r[0] && f<=r[1]);
 function recaudacion(f){
+  const cob = cobertura();
   const cj = cajaDe(f);
   const caja = cj.items.reduce((a,x)=>a+x[2],0);
   const tItems = (VIVO&&VIVO.transferencias&&VIVO.transferencias[f]) || [];
   const transfControl = tItems.reduce((a,x)=>a+x[2],0);
-  const conControl = !!(VIVO&&VIVO.valoresPorTipo&&VIVO.valoresPorTipo[f]);
-  // la base guarda rendiciones desde el 29/9/2026: antes de eso no se avisa que "faltan"
-  const inicioControl = VIVO&&VIVO.valoresPorTipo ? (recaudacion.ini || (recaudacion.ini=Object.keys(VIVO.valoresPorTipo).sort()[0])) : null;
-  const sinRend = (inicioControl && f>=inicioControl && VIVO.sinRendicion && VIVO.sinRendicion[f]) || 0;
+  const enControl = dentro(cob.control, f);
+  const conControl = enControl;
+  const sinRend = (enControl && VIVO.sinRendicion && VIVO.sinRendicion[f]) || 0;
   let banco=0, bancoExcl=0;
   for (const g of (E.bancos[f]||[])) { if (grupoExcluido(f,g)) bancoExcl+=g[2]; else banco+=g[2]; }
-  const usaBanco = !conControl && banco>0;
-  const transf = conControl ? transfControl : (usaBanco ? banco : 0);
+  const usaBanco = !enControl && dentro(cob.banco, f);
+  const transf = enControl ? transfControl : (usaBanco ? banco : 0);
   const aj = (E.ajustes[f]||[]).reduce((a,x)=>a+x.monto,0);
   const est = E.estimado[f]||0;
-  const hayCaja = cj.items.length>0, hayTransf = conControl || usaBanco;
+  const cubreCaja = dentro(cob.cajaW, f) || dentro(cob.cajaV, f);
+  const cubreTransf = enControl || usaBanco;
+  const hayCaja = cj.items.length>0, hayTransf = transf>0;
   const real = caja+transf;
+  const pasado = f < HOY, hoy = f === HOY;
   let usada, fuente;
   const modo = E.modoRec;
   if (modo==='est') { usada=est; fuente='e'; }
   else if (modo==='real') { usada=real; fuente='r'; }
-  // mixto: con caja Y transferencias va lo real; si falta una de las dos, se sigue usando la
-  // estimada (si hay) para no hundir el saldo con un real a medias, y se marca con "!"
-  else if (hayCaja&&hayTransf) { usada=real; fuente='r'; }
-  else if ((hayCaja||hayTransf) && !est) { usada=real; fuente='r'; }
+  // mixto: los días que ya pasaron usan lo REAL si las dos fuentes cubren ese día (aunque dé 0).
+  // Si falta una fuente para ese período, la estimada (si hay) y "!". Hoy, la estimada hasta que
+  // lo real la supere. Los días que vienen, la estimada.
+  else if (pasado && cubreCaja && cubreTransf) { usada=real; fuente='r'; }
+  else if (pasado && (hayCaja||hayTransf) && !est) { usada=real; fuente='r'; }
+  else if (hoy && real>0 && real>=est) { usada=real; fuente='r'; }
   else { usada=est; fuente= est?'e':''; }
   usada += aj;
   const avisos=[];
-  if (modo!=='est' && (hayCaja||hayTransf||sinRend)){
-    if (fuente==='e') avisos.push(`Real parcial: caja $${f0(caja)||0} + transferencias $${f0(transf)||0}. Se usa la estimada hasta tener las dos`);
-    if (!hayCaja) avisos.push('Falta la caja de ese día');
+  if (modo!=='est' && (pasado || hoy)){
+    if (hoy && real>0) avisos.push(`Hoy van $${f0(real)} reales (caja $${f0(caja)||0} + transferencias $${f0(transf)||0})`);
+    else if (fuente==='e' && (hayCaja||hayTransf)) avisos.push(`Real parcial: caja $${f0(caja)||0} + transferencias $${f0(transf)||0}. Se usa la estimada hasta tener las dos fuentes de ese período`);
+    if (pasado && !cubreCaja) avisos.push('No hay datos de caja de ese período');
+    if (pasado && !cubreTransf) avisos.push(`No hay transferencias de ese período${cob.control?' (el Control de Transferencias arranca el '+cob.control[0].split('-').reverse().join('/')+')':''}`);
     if (sinRend) avisos.push(`Control de Transferencias: ${sinRend===1?'falta 1 rendición':'faltan '+sinRend+' rendiciones'}`);
-    if (usaBanco) avisos.push('Transferencias tomadas de los extractos (el Control no tiene ese día)');
-    else if (!hayTransf) avisos.push('Sin transferencias de ese día');
+    if (usaBanco && banco) avisos.push('Transferencias tomadas de los extractos (el Control no tiene ese día)');
   }
   return {caja,cajaVivo:cj.vivo,cajaItems:cj.items,transf,transfControl,tItems,conControl,sinRend,usaBanco,banco,bancoExcl,aj,est,real,usada,fuente,hayCaja,hayTransf,avisos};
 }
