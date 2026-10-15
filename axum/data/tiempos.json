@@ -8,12 +8,32 @@
  },
  "bySeller": [
   {
+   "sellerId": "10",
+   "vendedor": "Matias Parada",
+   "inicioJornada": "09:04",
+   "finJornada": "15:28",
+   "entradaZona": "09:14",
+   "salidaZona": "15:19",
+   "zonaConfiable": true,
+   "primera": "09:04",
+   "ultima": "15:28",
+   "visitas": 70,
+   "minutosTotal": 195.1,
+   "minutosPromedio": 2.8,
+   "pedidos": 26,
+   "monto": 3029873.54,
+   "pasoSinVender": 52,
+   "km": 71.0,
+   "llegoTarde": true,
+   "salioTemprano": false
+  },
+  {
    "sellerId": "2",
    "vendedor": "Julian Nuñez",
    "inicioJornada": "09:00",
-   "finJornada": "16:31",
+   "finJornada": "16:33",
    "entradaZona": "09:01",
-   "salidaZona": "16:31",
+   "salidaZona": "16:33",
    "zonaConfiable": true,
    "primera": "09:00",
    "ultima": "15:12",
@@ -45,26 +65,6 @@
    "pasoSinVender": 42,
    "km": 16.0,
    "llegoTarde": false,
-   "salioTemprano": false
-  },
-  {
-   "sellerId": "10",
-   "vendedor": "Matias Parada",
-   "inicioJornada": "09:04",
-   "finJornada": "15:01",
-   "entradaZona": "09:14",
-   "salidaZona": "15:01",
-   "zonaConfiable": true,
-   "primera": "09:04",
-   "ultima": "15:01",
-   "visitas": 58,
-   "minutosTotal": 193.2,
-   "minutosPromedio": 3.3,
-   "pedidos": 26,
-   "monto": 3029873.54,
-   "pasoSinVender": 41,
-   "km": 38.0,
-   "llegoTarde": true,
    "salioTemprano": false
   },
   {
@@ -100,7 +100,7 @@
    "visitas": 44,
    "minutosTotal": 241.9,
    "minutosPromedio": 5.5,
-   "pedidos": 26,
+   "pedidos": 29,
    "monto": 3672118.57,
    "pasoSinVender": 25,
    "km": 34.0,
@@ -184,6 +184,26 @@
    "monto": 2697440.21,
    "pasoSinVender": 11,
    "km": 41.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
+   "sellerId": "1020",
+   "vendedor": "Deposito",
+   "inicioJornada": null,
+   "finJornada": null,
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": null,
+   "ultima": null,
+   "visitas": 0,
+   "minutosTotal": 0.0,
+   "minutosPromedio": 0,
+   "pedidos": 2,
+   "monto": 0.0,
+   "pasoSinVender": 0,
+   "km": 0.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -792,11 +812,6 @@
     "nombre": "SANTOS CANDELA MARIA JOSE"
    },
    {
-    "hora": "09:04",
-    "clientId": "1871",
-    "nombre": "GONZALEZ VIRGINIA CAROLINA"
-   },
-   {
     "hora": "09:06",
     "clientId": "4443",
     "nombre": "WANG ZHENGWEN"
@@ -810,16 +825,6 @@
     "hora": "09:08",
     "clientId": "2661",
     "nombre": "BRANDO SOCIEDAD ANONIMA"
-   },
-   {
-    "hora": "09:10",
-    "clientId": "4256",
-    "nombre": "JOEL JULIAN PAGLIONE"
-   },
-   {
-    "hora": "09:14",
-    "clientId": "789",
-    "nombre": "CAROLINA MARCELA VERBAUVEDE"
    },
    {
     "hora": "09:14",
@@ -865,6 +870,11 @@
     "hora": "15:25",
     "clientId": "1609",
     "nombre": "URBANO ELSA AUDELINA"
+   },
+   {
+    "hora": "15:25",
+    "clientId": "2991",
+    "nombre": "Super Tejedor N 2631 S.r.l."
    },
    {
     "hora": "15:26",
@@ -1943,6 +1953,11 @@
   "10": [
    {
     "hora": "09:04",
+    "clientId": "1871",
+    "nombre": "GONZALEZ VIRGINIA CAROLINA"
+   },
+   {
+    "hora": "09:04",
     "clientId": "1016",
     "nombre": "TOLABA CHOQUE WILSON GABRIEL"
    },
@@ -2038,6 +2053,11 @@
    },
    {
     "hora": "09:10",
+    "clientId": "4256",
+    "nombre": "JOEL JULIAN PAGLIONE"
+   },
+   {
+    "hora": "09:10",
     "clientId": "94",
     "nombre": "MARTINEZ JUAN PABLO Y BARRIOS MARTIN SOCIEDAD LEY"
    },
@@ -2045,6 +2065,11 @@
     "hora": "09:10",
     "clientId": "2681",
     "nombre": "MARINE GONZALEZ URQUIZA"
+   },
+   {
+    "hora": "09:14",
+    "clientId": "789",
+    "nombre": "CAROLINA MARCELA VERBAUVEDE"
    },
    {
     "hora": "09:29",
@@ -2230,6 +2255,16 @@
     "hora": "14:25",
     "clientId": "680",
     "nombre": "D'URBANO MARIA CELESTE"
+   },
+   {
+    "hora": "15:12",
+    "clientId": "826",
+    "nombre": "ALEJANDRA PAOLA CARESSA"
+   },
+   {
+    "hora": "15:26",
+    "clientId": "3275",
+    "nombre": "PABLO DAMIAN PORRAS"
    }
   ],
   "6": [
