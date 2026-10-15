@@ -1387,7 +1387,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-14-e';
+const BUILD = '2026-10-14-f';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -1826,19 +1826,29 @@ function mesAnteriorDe(mes){
   const d = new Date(y, m - 2, 1);
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
 }
-async function cargarMesComparacion(mes, esActual){
-  const ruta = esActual ? '' : `archive/${mes}/`;
-  const get = f => fetch(ruta + f + CACHE_BUST).then(r => r.ok ? r.json() : null).catch(() => null);
-  const [av, venta, cob, ccc, tp, rech, inv] = await Promise.all(['avance_kg_vendedor.json', 'venta_vendedor.json', 'cobertura_marca_vendedor.json',
-    'ccc_segmento.json', 'tienda_perfecta.json', 'rechazos_detalle.json', 'invendible_detalle.json'].map(get));
+// `alCorte`: el mes anterior "como estaba" el mismo dia del mes que hoy (pepsico/comparacion/, lo arma la actualizacion
+// automatica). Si todavia no existe para ese mes, se usa el cierre archivado.
+async function cargarMesComparacion(mes, esActual, alCorte){
+  const get0 = ruta => f => fetch(ruta + f + CACHE_BUST).then(r => r.ok ? r.json() : null).catch(() => null);
+  const archivos = ['avance_kg_vendedor.json', 'venta_vendedor.json', 'cobertura_marca_vendedor.json',
+    'ccc_segmento.json', 'tienda_perfecta.json', 'rechazos_detalle.json', 'invendible_detalle.json'];
+  if (alCorte) {
+    const meta = await get0('comparacion/')('meta.json');
+    if (meta && meta.mes === mes) {
+      const [av, venta, cob, ccc, tp, rech, inv] = await Promise.all(archivos.map(get0('comparacion/')));
+      if (av) return {mes, av, venta, cob, ccc, tp, rech, inv, corte: meta.corte};
+    }
+  }
+  const [av, venta, cob, ccc, tp, rech, inv] = await Promise.all(archivos.map(get0(esActual ? '' : `archive/${mes}/`)));
   return {mes, av, venta, cob, ccc, tp, rech, inv};
 }
+const fechaDM = iso => iso ? `${iso.slice(8, 10)}/${iso.slice(5, 7)}` : '';
 function resumenMes(d){
   if (!d || !d.av) return null;
   const vend = d.av.vendedores || [];
   // Los meses cerrados antes de octubre se guardaron con el sabado a medio dia: se vuelven a contar lunes a sabado
   // enteros (mes completo) para comparar con el mes en curso, que ya cuenta asi.
-  const cerrado = d.mes < '2026-10';
+  const cerrado = d.mes < '2026-10' && !d.corte;     // con corte ya viene con sus propios dias (hasta ese dia)
   const diasMesCal = m => { const [y, mm] = m.split('-').map(Number); let t = 0; for (let i = 1, n = new Date(y, mm, 0).getDate(); i <= n; i++) { const w = new Date(y, mm - 1, i).getDay(); if (w !== 0) t += w === 6 ? 0.5 : 1; } return t; };
   const dt = cerrado ? diasMesCal(d.mes) : (d.av.diasTrabajados || 0), dh = cerrado ? diasMesCal(d.mes) : (d.av.diasHabiles || 0);
   const sum = k => vend.reduce((s, r) => s + (r[k] || 0), 0);
@@ -1888,6 +1898,7 @@ function cmpDelta(a, b, tipo, masEsMejor){
   return `<span class="${Math.abs(dif) < 0.05 ? 'cmp-na' : mejora ? 'cmp-up' : 'cmp-down'}">${txt}</span>`;
 }
 let cmpCache = null;           // [mes actual, mes anterior] ya descargados
+let cmpFinP = 'cierre', cmpFinA = 'hoy';   // como se llama el corte de cada mes en los encabezados ("al 14/09", "al 14/10")
 let cmpVend = '';              // '' = Todos
 // Analisis de UN vendedor contra el mes anterior: en que mejoro y en que tiene que mejorar
 function comparacionVendedor(dA, dP, A, P, v, nP, nA){
@@ -1939,10 +1950,10 @@ function comparacionVendedor(dA, dP, A, P, v, nP, nA){
     ${filaInd('Cobertura (promedio de marcas)', a.cob, b.cob, x => fmt(x, 1) + '%', 'pts', true)}
     ${filaInd('CCC contra el objetivo', a.ccc, b.ccc, x => fmt(x, 1) + '%', 'pts', true)}
   </tbody></table></div>`;
-  const tablaMarca = `<div class="table-scroll"><table><thead><tr class="cols"><th class="name-col">Marca</th><th>${nP} (cierre)</th><th>${nA} (hoy)</th><th>Objetivo</th><th>Falta para el objetivo</th></tr></thead><tbody>` +
+  const tablaMarca = `<div class="table-scroll"><table><thead><tr class="cols"><th class="name-col">Marca</th><th>${nP} (${cmpFinP})</th><th>${nA} (${cmpFinA})</th><th>Objetivo</th><th>Falta para el objetivo</th></tr></thead><tbody>` +
     filasMarca.sort((x, y) => y.falta - x.falta).map(x => `<tr><td class="name">${x.m}</td><td>${f1(x.prev)}${x.prev == null ? '' : '%'}</td><td><b>${fmt(x.val,1)}%</b></td><td>${fmt(x.obj,1)}%</td>
       <td>${x.falta > 0 ? `<span class="cmp-down">${fmt(x.falta,1)} pts</span>` : '<span class="cmp-up">cumplido</span>'}</td></tr>`).join('') + '</tbody></table></div>';
-  const tablaSeg = (act, prev, nombre) => `<div class="table-scroll"><table><thead><tr class="cols"><th class="name-col">${nombre}</th><th>${nP} (cierre)</th><th>${nA} (hoy)</th><th>Objetivo</th><th>Falta</th></tr></thead><tbody>` +
+  const tablaSeg = (act, prev, nombre) => `<div class="table-scroll"><table><thead><tr class="cols"><th class="name-col">${nombre}</th><th>${nP} (${cmpFinP})</th><th>${nA} (${cmpFinA})</th><th>Objetivo</th><th>Falta</th></tr></thead><tbody>` +
     act.map((x, i) => { const p = prev[i]; return `<tr><td class="name">Segmento ${x.s}</td><td>${p && p.ob ? `${p.ac} de ${p.ob}` : '—'}</td><td><b>${x.ac}</b></td><td>${x.ob}</td>
       <td>${x.ob - x.ac > 0 ? `<span class="cmp-down">${x.ob - x.ac}</span>` : '<span class="cmp-up">cumplido</span>'}</td></tr>`; }).join('') + '</tbody></table></div>';
   return `
@@ -1959,17 +1970,22 @@ async function renderComparacion(){
   const mesAct = MES_SEL || hoyISO().slice(0, 7), mesPrev = mesAnteriorDe(mesAct);
   if (!cmpCache) {
     cont.innerHTML = '<p class="section-note">Cargando la comparación…</p>';
-    cmpCache = await Promise.all([cargarMesComparacion(mesAct, !MES_SEL), cargarMesComparacion(mesPrev, false)]);
+    cmpCache = await Promise.all([cargarMesComparacion(mesAct, !MES_SEL), cargarMesComparacion(mesPrev, false, !MES_SEL)]);
   }
   const [dA, dP] = cmpCache;
   const A = resumenMes(dA), P = resumenMes(dP);
   if (!A || !P) { cont.innerHTML = `<p class="section-note">No hay datos guardados de ${mesPrev} para comparar.</p>`; cmpCache = null; return; }
   const nombreMes = m => `${NOMBRES_MES[parseInt(m.slice(5), 10)] || m} ${m.slice(0, 4)}`;
   const nP = nombreMes(P.mes), nA = nombreMes(A.mes);
+  // con corte: "septiembre al 14/09" contra "octubre al 14/10"; sin corte (mes cerrado) es el cierre del mes anterior
+  const corteP = dP && dP.corte ? fechaDM(dP.corte) : '';
+  const finP = corteP ? `al ${corteP}` : 'cierre';
+  const finA = MES_SEL ? 'cierre' : `al ${fechaDM(hoyISO())}`;
+  cmpFinP = finP; cmpFinA = finA;
   const tarjeta = (titulo, a, b, fmtv, tipo, masMejor) =>
     `<div class="ficha-card"><h4>${titulo}</h4>
-      <div class="cmp-fila"><span>${nP}</span><b>${a == null ? '—' : fmtv(a)}</b></div>
-      <div class="cmp-fila"><span>${nA}</span><b>${b == null ? '—' : fmtv(b)}</b></div>
+      <div class="cmp-fila"><span>${nP}${corteP ? ' ' + finP : ''}</span><b>${a == null ? '—' : fmtv(a)}</b></div>
+      <div class="cmp-fila"><span>${nA}${corteP ? ' ' + finA : ''}</span><b>${b == null ? '—' : fmtv(b)}</b></div>
       <div class="cmp-fila"><span>Diferencia</span><b>${cmpDelta(a, b, tipo, masMejor)}</b></div></div>`;
   const kg = x => fmt(x, 1) + ' kg/día', pct = x => fmt(x, 1) + '%', plata = x => '$ ' + fmt(x);
   const resumen = `<div class="ficha-grid">
@@ -1979,7 +1995,7 @@ async function renderComparacion(){
     ${tarjeta('Rechazos sobre la venta', P.rech, A.rech, pct, 'pts', false)}
     ${tarjeta('Invendible (canjes) sobre la venta', P.inv, A.inv, pct, 'pts', false)}
     ${tarjeta('CCC: clientes con compra vs objetivo', P.ccc, A.ccc, pct, 'pts', true)}
-    ${tarjeta('Tienda Perfecta vs objetivo', P.tp, A.tp, pct, 'pts', true)}
+    ${corteP ? '' : tarjeta('Tienda Perfecta vs objetivo', P.tp, A.tp, pct, 'pts', true)}
   </div>`;
 
   // por vendedor
@@ -2002,7 +2018,7 @@ async function renderComparacion(){
   // cobertura por marca
   const objM = Object.fromEntries(marcaObjRows.map(o => [o.marca, o.obj]));
   const marcas = MARCA_COLS.map(m => ({m, p: P.cobMarca[m], a: A.cobMarca[m], obj: objM[m]})).sort((x, y) => (y.obj - y.a) - (x.obj - x.a));
-  const tablaMarcas = `<div class="table-scroll"><table><thead><tr class="cols"><th class="name-col">Marca</th><th>${nP} (cierre)</th><th>${nA} (hoy)</th>
+  const tablaMarcas = `<div class="table-scroll"><table><thead><tr class="cols"><th class="name-col">Marca</th><th>${nP} (${finP})</th><th>${nA} (${finA})</th>
       <th>Objetivo del mes</th><th>Falta para el objetivo</th><th>Falta para igualar ${nP}</th></tr></thead><tbody>` +
     marcas.map(x => `<tr><td class="name">${x.m}</td><td>${fmt(x.p, 1)}%</td><td><b>${fmt(x.a, 1)}%</b></td><td>${fmt(x.obj, 1)}%</td>
       <td>${x.obj - x.a > 0 ? `<span class="cmp-down">${fmt(x.obj - x.a, 1)} pts</span>` : '<span class="cmp-up">cumplido</span>'}</td>
@@ -2028,8 +2044,8 @@ async function renderComparacion(){
   if (cmpVend && A.por[cmpVend]) {
     cont.innerHTML = `
       <h2 class="section-title">Comparación con el mes anterior</h2>
-      <p class="section-note">${nA} (va por el día ${fmt(A.dt,1)} de ${fmt(A.dh,1)} hábiles) contra el cierre de ${nP}. Verde = mejora, rojo = empeora.
-      La cobertura, el CCC y Tienda Perfecta se van sumando durante el mes: se miden contra el objetivo, no contra el cierre del mes anterior.</p>
+      <p class="section-note">${nA} ${finA} (${fmt(A.dt,1)} días hábiles) contra ${nP} ${corteP ? finP + ' (' + fmt(P.dt,1) + ' días hábiles)' : 'cierre'}. Verde = mejora, rojo = empeora.
+      ${corteP ? 'Todo se mide al mismo día del mes, y se actualiza solo con cada día de venta.' : 'La cobertura, el CCC y Tienda Perfecta se van sumando durante el mes: se miden contra el objetivo, no contra el cierre del mes anterior.'}</p>
       ${selectorCmp}${comparacionVendedor(dA, dP, A, P, cmpVend, nP, nA)}`;
     document.getElementById('cmp-vendedor').addEventListener('change', e => { cmpVend = e.target.value; renderComparacion(); });
     return;
@@ -2038,10 +2054,13 @@ async function renderComparacion(){
   cont.innerHTML = `
     <h2 class="section-title">Comparación con el mes anterior</h2>
     ${selectorCmp}
-    <p class="section-note">${nA} (va por el día ${fmt(A.dt,1)} de ${fmt(A.dh,1)} hábiles) contra el cierre de ${nP}. Verde = mejora, rojo = empeora.
+    ${corteP ? `<p class="section-note"><b>${nA} ${finA}</b> (${fmt(A.dt,1)} días hábiles) contra <b>${nP} ${finP}</b> (${fmt(P.dt,1)} días hábiles): el mismo día del mes, y se actualiza solo con cada día de venta.
+    Verde = mejora, rojo = empeora. Del mes anterior se cuentan solo los pedidos tomados hasta ese día. La cobertura va por fecha de entrega, igual que este mes.
+    Tienda Perfecta no se compara: el censo es una foto de hoy y no se puede ver a una fecha pasada.</p>`
+    : `<p class="section-note">${nA} (va por el día ${fmt(A.dt,1)} de ${fmt(A.dh,1)} hábiles) contra el cierre de ${nP}. Verde = mejora, rojo = empeora.
     Venta por día, avance, rechazos e invendible son comparables directamente. La cobertura, el CCC y Tienda Perfecta se van sumando durante el mes:
     contra el cierre del mes anterior sirven para ver cuánto falta. Desde el 7/10 la cobertura se cuenta por fecha de entrega (septiembre quedó por fecha de pedido).
-    Ojo con el invendible: septiembre se guardó desde la base y octubre desde el detalle de Gescom, así que conviene confirmar que se midieron igual antes de sacar conclusiones.</p>
+    Ojo con el invendible: septiembre se guardó desde la base y octubre desde el detalle de Gescom, así que conviene confirmar que se midieron igual antes de sacar conclusiones.</p>`}
     ${resumen}
     <h3 class="subsection-title">En qué mejorar</h3>${lista}
     <h3 class="subsection-title">Por vendedor</h3>
