@@ -183,15 +183,15 @@ h1{
 .section-note{color:var(--muted); font-size:13px; margin:0 0 14px}
 
 .table-scroll{
-  overflow:auto; max-height:78vh; border:1px solid var(--border); border-radius:12px; background:var(--panel);
+  overflow-x:auto; border:1px solid var(--border); border-radius:12px; background:var(--panel);
   box-shadow:var(--shadow); margin-bottom:28px;
 }
-/* encabezado fijo: las dos filas (grupo y titulos) quedan arriba al bajar por la tabla */
-thead tr.grp th, thead tr.cols th{position:sticky; top:0; z-index:2; background:var(--panel)}
-thead tr.grp th{height:30px; box-sizing:border-box}
-thead tr.grp + tr.cols th{top:30px}
-thead tr.cols th{box-shadow:0 1px 0 var(--border)}
-thead tr.cols th:first-child, thead tr.cols th.name-col{box-shadow:1px 0 0 var(--border), 0 1px 0 var(--border)}
+/* encabezado que queda fijo arriba de la pantalla al bajar por una tabla larga (lo arma el script headersFijos) */
+.head-flotante{position:fixed; top:0; z-index:60; overflow:hidden; background:var(--panel); border:1px solid var(--border);
+  border-radius:0 0 10px 10px; box-shadow:0 6px 14px -8px rgba(36,31,24,.35); pointer-events:none}
+.head-flotante table{table-layout:fixed; min-width:0; margin:0; width:auto}
+.head-flotante th{position:static !important; box-shadow:none !important; background:var(--panel)}
+.head-flotante thead tr.cols th{border-bottom:1px solid var(--border)}
 table{border-collapse:collapse; width:100%; min-width:920px; font-size:13px}
 thead tr.grp th{
   font:600 11px/1 "IBM Plex Mono",monospace; letter-spacing:.05em; text-transform:uppercase;
@@ -1386,8 +1386,46 @@ td.ip-base.clickable{cursor:pointer}
   activar(inicial);
 })();
 
+// Encabezado fijo: al bajar por una tabla larga, sus titulos quedan arriba de la pantalla (las tablas se ven completas,
+// sin scroll propio hacia abajo). Sigue el desplazamiento horizontal de la tabla.
+(function headersFijos(){
+  const flotantes = new WeakMap();
+  let pendiente = false;
+  function actualizar(){
+    pendiente = false;
+    document.querySelectorAll('.table-scroll').forEach(ts => {
+      const table = ts.querySelector(':scope > table'), thead = table && table.tHead;
+      let it = flotantes.get(ts);
+      const r = ts.getBoundingClientRect();
+      const hr = thead ? thead.getBoundingClientRect() : null;
+      const mostrar = !!thead && ts.offsetParent !== null && r.height > 220 && hr.top < 0 && r.bottom > hr.height + 50;
+      if (!mostrar) { if (it) it.flot.style.display = 'none'; return; }
+      if (!it) {
+        const flot = document.createElement('div'); flot.className = 'head-flotante';
+        const tb = document.createElement('table'); flot.appendChild(tb); document.body.appendChild(flot);
+        it = {flot, tb}; flotantes.set(ts, it);
+      }
+      // copia del encabezado con el ancho exacto de cada columna
+      const copia = thead.cloneNode(true);
+      const orig = thead.querySelectorAll('th'), cl = copia.querySelectorAll('th');
+      orig.forEach((th, i) => { const w = th.getBoundingClientRect().width + 'px'; if (cl[i]) { cl[i].style.width = w; cl[i].style.minWidth = w; cl[i].style.maxWidth = w; cl[i].style.boxSizing = 'border-box'; } });
+      it.tb.replaceChildren(copia);
+      it.tb.style.width = table.getBoundingClientRect().width + 'px';
+      it.tb.style.transform = 'translateX(' + (-ts.scrollLeft) + 'px)';
+      it.flot.style.left = r.left + 'px';
+      it.flot.style.width = ts.clientWidth + 'px';
+      it.flot.style.display = 'block';
+    });
+  }
+  function pedir(){ if (!pendiente) { pendiente = true; requestAnimationFrame(actualizar); } }
+  window.addEventListener('scroll', pedir, {passive: true});
+  window.addEventListener('resize', pedir);
+  document.addEventListener('scroll', pedir, {passive: true, capture: true});   // el scroll horizontal de cada tabla
+  document.addEventListener('click', () => setTimeout(pedir, 50));              // cambio de solapa o de vendedor
+})();
+
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-14-f';
+const BUILD = '2026-10-15-a';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
