@@ -6367,6 +6367,25 @@
   },
   {
    "fecha": "2026-10-15",
+   "sellerId": "2",
+   "vendedor": "Julian Nuñez",
+   "clientId": "1012",
+   "nombre": "SABELOTE S.A",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 0.0,
+   "fechaVenta": "2026-10-15",
+   "horaVenta": "23:05",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-10-15",
    "sellerId": "20",
    "vendedor": "Deposito",
    "clientId": "6",
@@ -7822,7 +7841,7 @@
    "minutos": 0.0,
    "visito": false,
    "hora": null,
-   "pedidos": 1,
+   "pedidos": 2,
    "monto": 238570.16,
    "fechaVenta": "2026-10-15",
    "horaVenta": "14:14",
@@ -11538,7 +11557,7 @@
   "vendio": 176,
   "paso_sin_vender": 271,
   "sin_visita": 24,
-  "vendio_sin_pasar": 108
+  "vendio_sin_pasar": 109
  },
  "bySeller": [
   {
@@ -11574,7 +11593,7 @@
    "visitas": 68,
    "minutosTotal": 265.4,
    "minutosPromedio": 3.9,
-   "pedidos": 38,
+   "pedidos": 39,
    "monto": 5534616.83,
    "pasoSinVender": 46,
    "km": 22.0,
@@ -11634,7 +11653,7 @@
    "visitas": 44,
    "minutosTotal": 241.9,
    "minutosPromedio": 5.5,
-   "pedidos": 29,
+   "pedidos": 30,
    "monto": 3672118.57,
    "pasoSinVender": 25,
    "km": 34.0,
@@ -15729,7 +15748,7 @@
  "totales": {
   "visitas": 447,
   "minutos": 1966.1,
-  "pedidos": 380,
+  "pedidos": 382,
   "monto": 40024077.24
  }
 }
