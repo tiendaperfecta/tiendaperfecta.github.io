@@ -1486,7 +1486,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-15-d';
+const BUILD = '2026-10-16-a';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -1509,6 +1509,19 @@ const BUILD = '2026-10-15-d';
 const MES_SEL = new URLSearchParams(location.search).get('mes') || '';
 const BASE = MES_SEL ? `archive/${MES_SEL}/` : '';
 const CACHE_BUST = '?t=' + Math.floor(Date.now() / 60000);
+// Las proyecciones (kilos e IPs) vienen del mismo servicio de Google, que tarda varios segundos en responder. Se piden
+// una sola vez, apenas abre la pagina, y las comparten la tabla de kilos y la de IPs.
+let _apiComp = null, _apiCompT = 0;
+function datosApiCompartidos(maxEdadMs = 25000){
+  if (!_apiComp || Date.now() - _apiCompT > maxEdadMs) {
+    _apiCompT = Date.now();
+    const p = fetchIpApiConReintentos('https://script.google.com/macros/s/AKfycby29cOLAt2nSOU-jbpaLxwRSiK1_eG-0eWhKrbitGks8U7eJzqdkPBsI7kwkxsT6-K0/exec').then(r => r.json());
+    p.catch(() => { if (_apiComp === p) _apiComp = null; });
+    _apiComp = p;
+  }
+  return _apiComp;
+}
+if (!MES_SEL) datosApiCompartidos();
 const NOMBRES_MES = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
 function setTextoSiExiste(id, texto) {
@@ -3529,8 +3542,8 @@ tbody.innerHTML = rows.map(r => `
     <td>${fmt(r.real,1)}</td>
     <td>$ ${fmt(r.venta)}</td>
     <td></td>
-    <td><input class="compromiso-input" data-vendedor="${r.n}" data-grupo="pg" type="number" step="1" placeholder="kg" /></td>
-    <td><input class="compromiso-input" data-vendedor="${r.n}" data-grupo="sb" type="number" step="1" placeholder="kg" /><small class="comp-estado" aria-live="polite"></small></td>
+    <td><input class="compromiso-input" data-vendedor="${r.n}" data-grupo="pg" type="number" step="1" placeholder="cargando…" disabled /></td>
+    <td><input class="compromiso-input" data-vendedor="${r.n}" data-grupo="sb" type="number" step="1" placeholder="cargando…" disabled /><small class="comp-estado" aria-live="polite"></small></td>
     <td class="compromiso-total" data-vendedor-total="${r.n}">—</td>
   </tr>
 `).join('');
@@ -3591,8 +3604,7 @@ if (MES_SEL) {
   const COMPROMISO_API = 'https://script.google.com/macros/s/AKfycby29cOLAt2nSOU-jbpaLxwRSiK1_eG-0eWhKrbitGks8U7eJzqdkPBsI7kwkxsT6-K0/exec';
   let data = null;
   try {
-    const r = await fetchIpApiConReintentos(COMPROMISO_API);
-    data = await r.json();
+    data = await datosApiCompartidos();
   } catch (err) {
     console.error('compromiso: fetch failed:', err);
   }
@@ -3718,6 +3730,7 @@ if (MES_SEL) {
           bloquear(inputSb);
         } else {
           inputPg.disabled = false; inputSb.disabled = false;
+          inputPg.placeholder = inputSb.placeholder = 'kg';
           inputPg.title = inputSb.title = '';
         }
       }
@@ -3863,8 +3876,7 @@ async function renderIpSection(){
   let data = null;
   if (!pasadoIp) {
     try {
-      const r = await fetchIpApiConReintentos(IP_API);
-      data = await r.json();
+      data = await datosApiCompartidos();
     } catch (err) {
       console.error('ip: fetch failed:', err);
     }
