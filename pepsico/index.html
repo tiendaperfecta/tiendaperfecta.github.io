@@ -1148,7 +1148,7 @@ td.ip-base.clickable{cursor:pointer}
       <thead>
         <tr class="cols">
           <th class="name-col">Motivo</th>
-          <th>Filas</th><th>Importe</th>
+          <th>Unidades</th><th>Importe</th>
         </tr>
       </thead>
       <tbody id="tbody-motivos"></tbody>
@@ -1168,7 +1168,7 @@ td.ip-base.clickable{cursor:pointer}
           <th class="name-col">Vendedor</th>
           <th class="name-col">Cliente</th>
           <th class="name-col">Motivo</th>
-          <th>Filas</th><th>Importe</th>
+          <th>Unidades</th><th>Importe</th>
         </tr>
       </thead>
       <tbody id="tbody-motivosUltimaFecha"></tbody>
@@ -1486,7 +1486,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-16-a';
+const BUILD = '2026-10-16-b';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -2358,7 +2358,7 @@ function drillRechazo(vendedor) {
   const html = `
     <p class="modal-count">${rows.length} motivos de devolucion. Total: $ ${fmt(Math.abs(tot))}</p>
     <table>
-      <thead><tr><th>Motivo</th><th style="text-align:right">Filas</th><th style="text-align:right">Importe</th></tr></thead>
+      <thead><tr><th>Motivo</th><th style="text-align:right">Unidades</th><th style="text-align:right">Importe</th></tr></thead>
       <tbody>
         ${rows.map(r => `<tr><td>${r.motivo}</td><td style="text-align:right">${fmt(r.cant)}</td><td style="text-align:right">-$ ${fmt(Math.abs(r.importe))}</td></tr>`).join('')}
       </tbody>
