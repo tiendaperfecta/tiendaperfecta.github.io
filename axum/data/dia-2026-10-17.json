@@ -21,7 +21,7 @@
  },
  "date": "2026-10-17",
  "diaSemana": "sabado",
- "jornadaCerrada": false,
+ "jornadaCerrada": true,
  "umbrales": {
   "llegada": "09:00",
   "salida": "14:00"
@@ -3639,6 +3639,44 @@
   },
   {
    "fecha": "2026-10-17",
+   "sellerId": "3",
+   "vendedor": "Ezequiel Hack",
+   "clientId": "1857",
+   "nombre": "Atkinson María Agustina",
+   "localidad": "Mar del Plata",
+   "taxonomia": "Bar/Restaurant_C",
+   "canal": "AWAY FROM HOME",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 49857.2,
+   "fechaVenta": "2026-10-17",
+   "horaVenta": "14:23",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-10-17",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "2058",
+   "nombre": "AGUIRRE MIGUEL",
+   "localidad": "Mar del Plata",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 161.1,
+   "visito": true,
+   "hora": "12:15",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "paso_sin_vender"
+  },
+  {
+   "fecha": "2026-10-17",
    "sellerId": "4",
    "vendedor": "Lucas Giayetto",
    "clientId": "1988",
@@ -4087,25 +4125,6 @@
    "minutos": 0.1,
    "visito": true,
    "hora": "09:35",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
-  },
-  {
-   "fecha": "2026-10-17",
-   "sellerId": "4",
-   "vendedor": "Lucas Giayetto",
-   "clientId": "2058",
-   "nombre": "AGUIRRE MIGUEL",
-   "localidad": "Mar del Plata",
-   "taxonomia": "Kiosco/Maxikiosco_D",
-   "canal": "TRADITIONAL TRADE",
-   "enRuta": false,
-   "minutos": 0.1,
-   "visito": true,
-   "hora": "12:15",
    "pedidos": 0,
    "monto": 0,
    "fechaVenta": null,
@@ -6928,7 +6947,7 @@
  "resumen": {
   "vendio": 73,
   "paso_sin_vender": 213,
-  "vendio_sin_pasar": 48,
+  "vendio_sin_pasar": 49,
   "sin_visita": 29
  },
  "bySeller": [
@@ -6950,7 +6969,7 @@
    "pasoSinVender": 38,
    "km": 38.0,
    "llegoTarde": false,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "7",
@@ -6968,9 +6987,9 @@
    "pedidos": 12,
    "monto": 1551901.65,
    "pasoSinVender": 33,
-   "km": 32.0,
+   "km": 33.0,
    "llegoTarde": true,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "1",
@@ -6988,9 +7007,9 @@
    "pedidos": 15,
    "monto": 1971652.84,
    "pasoSinVender": 29,
-   "km": 44.0,
+   "km": 68.0,
    "llegoTarde": true,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "6",
@@ -7008,9 +7027,9 @@
    "pedidos": 14,
    "monto": 1104185.87,
    "pasoSinVender": 28,
-   "km": 12.0,
+   "km": 19.0,
    "llegoTarde": false,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "11",
@@ -7030,7 +7049,7 @@
    "pasoSinVender": 23,
    "km": 15.0,
    "llegoTarde": false,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "10",
@@ -7050,7 +7069,7 @@
    "pasoSinVender": 21,
    "km": 24.0,
    "llegoTarde": true,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "4",
@@ -7063,14 +7082,14 @@
    "primera": "09:00",
    "ultima": "12:15",
    "visitas": 25,
-   "minutosTotal": 76.7,
-   "minutosPromedio": 3.1,
+   "minutosTotal": 237.7,
+   "minutosPromedio": 9.5,
    "pedidos": 12,
    "monto": 1715832.28,
    "pasoSinVender": 18,
-   "km": 21.0,
+   "km": 28.0,
    "llegoTarde": false,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "5",
@@ -7090,7 +7109,7 @@
    "pasoSinVender": 11,
    "km": 87.0,
    "llegoTarde": false,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "3",
@@ -7105,12 +7124,12 @@
    "visitas": 19,
    "minutosTotal": 112.5,
    "minutosPromedio": 5.9,
-   "pedidos": 14,
-   "monto": 3164596.3,
+   "pedidos": 15,
+   "monto": 3214453.5,
    "pasoSinVender": 12,
    "km": 24.0,
    "llegoTarde": true,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "2",
@@ -9696,8 +9715,8 @@
  },
  "totales": {
   "visitas": 286,
-  "minutos": 1036.3,
-  "pedidos": 146,
-  "monto": 16993736.04
+  "minutos": 1197.3,
+  "pedidos": 147,
+  "monto": 17043593.24
  }
 }
