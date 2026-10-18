@@ -1,9 +1,21 @@
 {
  "date": "2026-10-18",
- "totalNet": 29929.22,
- "totalGross": 36214.36,
- "orders": 1,
+ "totalNet": 192266.98,
+ "totalGross": 232643.05,
+ "orders": 3,
  "bySeller": [
+  {
+   "sellerId": "8",
+   "name": "Martinica Rodriguez",
+   "orders": 1,
+   "total": 105857.15
+  },
+  {
+   "sellerId": "2",
+   "name": "Julian Nuñez",
+   "orders": 1,
+   "total": 90571.54
+  },
   {
    "sellerId": "3",
    "name": "Ezequiel Hack",
@@ -13,12 +25,34 @@
  ],
  "byChannel": [
   {
+   "channel": "PROXIMITY_C",
+   "orders": 1,
+   "total": 105857.15
+  },
+  {
+   "channel": "TRADITIONAL TRADE_B",
+   "orders": 1,
+   "total": 90571.54
+  },
+  {
    "channel": "TRADITIONAL TRADE_A",
    "orders": 1,
    "total": 36214.36
   }
  ],
  "topClients": [
+  {
+   "clientId": "7607",
+   "name": "SAN ALBERTO BALCARCE S R L (Estacion de Servicio - NO OFICIALES_C)",
+   "orders": 1,
+   "total": 105857.15
+  },
+  {
+   "clientId": "3097",
+   "name": "CHOCOCHIA S. A. (Kiosco/Maxikiosco_B)",
+   "orders": 1,
+   "total": 90571.54
+  },
   {
    "clientId": "2457",
    "name": "NICADELO SA (Kiosco/Maxikiosco_A)",
