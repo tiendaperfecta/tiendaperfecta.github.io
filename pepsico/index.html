@@ -494,9 +494,9 @@ td.ip-base.clickable{cursor:pointer}
       <thead>
         <tr class="grp">
           <th></th>
-          <th class="g-platino seg-click" colspan="4" data-cs="4" data-csc="3" onclick="drillSegmento('p1')" title="Ver qué productos entran en Platino + Gold">Platino + Gold ⓘ</th>
+          <th class="g-platino seg-click" colspan="4" onclick="drillSegmento('p1')" title="Ver qué productos entran en Platino + Gold">Platino + Gold ⓘ</th>
           <th></th>
-          <th class="seg-click" colspan="4" data-cs="4" data-csc="3" onclick="drillSegmento('p2')" title="Ver qué productos entran en Silver &amp; Bronze">Silver &amp; Bronze ⓘ</th>
+          <th class="seg-click" colspan="4" onclick="drillSegmento('p2')" title="Ver qué productos entran en Silver &amp; Bronze">Silver &amp; Bronze ⓘ</th>
           <th></th>
           <th colspan="10" data-cs="10" data-csc="8">Total vendedor</th>
           <th></th>
@@ -504,9 +504,9 @@ td.ip-base.clickable{cursor:pointer}
         </tr>
         <tr class="cols">
           <th class="name-col">Vendedor</th>
-          <th>Objetivo</th><th>Acum.</th><th>Avance</th><th class="col-sec">Media Nec.</th>
+          <th>Objetivo</th><th>Acum.</th><th>Avance</th><th>Media Nec.</th>
           <th></th>
-          <th>Objetivo</th><th>Acum.</th><th>Avance</th><th class="col-sec">Media Nec.</th>
+          <th>Objetivo</th><th>Acum.</th><th>Avance</th><th>Media Nec.</th>
           <th></th>
           <th>Objetivo</th><th>Acumulado</th><th>Avance</th><th>Promedio</th><th>Media Nec.</th><th>Tendencia cierre</th><th class="col-sec">Penúlt. Vis.</th><th class="col-sec">Últ. Vis.</th><th>Real hoy</th><th>Venta $</th>
           <th></th>
@@ -1486,7 +1486,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-16-b';
+const BUILD = '2026-10-19-a';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -3473,9 +3473,9 @@ if (kgAvanceMeta) {
   document.getElementById('tfoot-main').innerHTML = `
     <tr>
       <td class="name">Total PepsiCo</td>
-      <td>${fmt(totPG)}</td><td>${fmt(acumPG)}</td><td>${fmt(pctPG,1)}%</td><td class="col-sec">${fmt(diasRestantesGlobal>0 ? (totPG-acumPG)/diasRestantesGlobal : 0,1)}</td>
+      <td>${fmt(totPG)}</td><td>${fmt(acumPG)}</td><td>${fmt(pctPG,1)}%</td><td>${fmt(diasRestantesGlobal>0 ? (totPG-acumPG)/diasRestantesGlobal : 0,1)}</td>
       <td></td>
-      <td>${fmt(totSB)}</td><td>${fmt(acumSB)}</td><td>${fmt(pctSB,1)}%</td><td class="col-sec">${fmt(diasRestantesGlobal>0 ? (totSB-acumSB)/diasRestantesGlobal : 0,1)}</td>
+      <td>${fmt(totSB)}</td><td>${fmt(acumSB)}</td><td>${fmt(pctSB,1)}%</td><td>${fmt(diasRestantesGlobal>0 ? (totSB-acumSB)/diasRestantesGlobal : 0,1)}</td>
       <td></td>
       <td>${fmt(totTo)}</td><td>${fmt(totTa)}</td><td>${fmt(pctTo,1)}%</td>
       <td>${fmt(rows.reduce((s,r)=>s+r.promedio,0),1)}</td>
@@ -3521,11 +3521,11 @@ tbody.innerHTML = rows.map(r => `
     <td class="name">${r.n}</td>
     <td>${fmt(r.p1o)}</td><td>${fmt(r.p1a)}</td>
     <td><span class="pill ${tier(r.p1p)}">${fmt(r.p1p,1)}%</span></td>
-    <td class="col-sec">${fmt(diasRestantesGlobal>0 ? (r.p1o-r.p1a)/diasRestantesGlobal : 0,1)}</td>
+    <td>${fmt(diasRestantesGlobal>0 ? (r.p1o-r.p1a)/diasRestantesGlobal : 0,1)}</td>
     <td></td>
     <td>${fmt(r.p2o)}</td><td>${fmt(r.p2a)}</td>
     <td><span class="pill ${tier(r.p2p)}">${fmt(r.p2p,1)}%</span></td>
-    <td class="col-sec">${fmt(diasRestantesGlobal>0 ? (r.p2o-r.p2a)/diasRestantesGlobal : 0,1)}</td>
+    <td>${fmt(diasRestantesGlobal>0 ? (r.p2o-r.p2a)/diasRestantesGlobal : 0,1)}</td>
     <td></td>
     <td>${fmt(r.to)}</td><td>${fmt(r.ta)}</td>
     <td>
