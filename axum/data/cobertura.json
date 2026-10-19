@@ -17,7 +17,7 @@
    "ruta": 40,
    "visitadosDeRuta": 35,
    "pendientes": 5,
-   "fueraDeRuta": 10,
+   "fueraDeRuta": 21,
    "pct": 87.5
   },
   {
@@ -26,17 +26,26 @@
    "ruta": 32,
    "visitadosDeRuta": 28,
    "pendientes": 4,
-   "fueraDeRuta": 10,
+   "fueraDeRuta": 21,
    "pct": 87.5
   },
   {
    "sellerId": "10",
    "vendedor": "Matias Parada",
    "ruta": 45,
-   "visitadosDeRuta": 35,
-   "pendientes": 10,
+   "visitadosDeRuta": 36,
+   "pendientes": 9,
    "fueraDeRuta": 4,
-   "pct": 77.8
+   "pct": 80.0
+  },
+  {
+   "sellerId": "6",
+   "vendedor": "Camila Martinez",
+   "ruta": 41,
+   "visitadosDeRuta": 31,
+   "pendientes": 10,
+   "fueraDeRuta": 14,
+   "pct": 75.6
   },
   {
    "sellerId": "11",
@@ -57,22 +66,13 @@
    "pct": 73.5
   },
   {
-   "sellerId": "6",
-   "vendedor": "Camila Martinez",
-   "ruta": 41,
-   "visitadosDeRuta": 27,
-   "pendientes": 14,
-   "fueraDeRuta": 12,
-   "pct": 65.9
-  },
-  {
    "sellerId": "5",
    "vendedor": "Nicolas Martinez",
    "ruta": 42,
-   "visitadosDeRuta": 26,
-   "pendientes": 16,
-   "fueraDeRuta": 0,
-   "pct": 61.9
+   "visitadosDeRuta": 27,
+   "pendientes": 15,
+   "fueraDeRuta": 2,
+   "pct": 64.3
   },
   {
    "sellerId": "3",
@@ -80,17 +80,17 @@
    "ruta": 42,
    "visitadosDeRuta": 24,
    "pendientes": 18,
-   "fueraDeRuta": 0,
+   "fueraDeRuta": 1,
    "pct": 57.1
   },
   {
    "sellerId": "4",
    "vendedor": "Lucas Giayetto",
    "ruta": 30,
-   "visitadosDeRuta": 9,
-   "pendientes": 21,
+   "visitadosDeRuta": 11,
+   "pendientes": 19,
    "fueraDeRuta": 2,
-   "pct": 30.0
+   "pct": 36.7
   },
   {
    "sellerId": "20",
@@ -231,12 +231,6 @@
     "nombre": "COTUCION S A",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Autoservicio Tradicional_C"
-   },
-   {
-    "clientId": "3541",
-    "nombre": "ByB",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_D"
    },
    {
     "clientId": "4233",
@@ -886,18 +880,6 @@
     "taxonomia": "Autoservicio Tradicional_B"
    },
    {
-    "clientId": "1910",
-    "nombre": "CLAUDIA PATRICIA VEGEZZI",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Almacen/Despensa_D"
-   },
-   {
-    "clientId": "1944",
-    "nombre": "ANDREA BEATRIZ CALO",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Almacen/Despensa_D"
-   },
-   {
     "clientId": "2058",
     "nombre": "AGUIRRE MIGUEL",
     "localidad": "Mar del Plata",
@@ -1026,12 +1008,6 @@
     "taxonomia": "Autoservicio Tradicional_D"
    },
    {
-    "clientId": "3684",
-    "nombre": "EL CRUCE S A",
-    "localidad": "LAS ARMAS",
-    "taxonomia": "Estacion de Servicio - NO OFICIALES_D"
-   },
-   {
     "clientId": "3687",
     "nombre": "GLORIA ANDREA D ANNUNZIO",
     "localidad": "LAS ARMAS",
@@ -1100,12 +1076,6 @@
   ],
   "6": [
    {
-    "clientId": "1156",
-    "nombre": "ARONI FARFAN MANUEL",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_C"
-   },
-   {
     "clientId": "1160",
     "nombre": "PAZ MATIAS GASTON",
     "localidad": "MAR DEL PLATA",
@@ -1136,12 +1106,6 @@
     "taxonomia": "Carniceria/Granja_B"
    },
    {
-    "clientId": "1746",
-    "nombre": "GRIMALDI JEREMIAS DAVID",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
     "clientId": "2007",
     "nombre": "VIANO GUADALUPE",
     "localidad": "MAR DEL PLATA",
@@ -1160,22 +1124,10 @@
     "taxonomia": "Almacen/Despensa_D"
    },
    {
-    "clientId": "2939",
-    "nombre": "ANGEL JOSE NAPOLITANO",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_C"
-   },
-   {
     "clientId": "331",
     "nombre": "CARLOS JAVIER CORIA",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Fiambreria_D"
-   },
-   {
-    "clientId": "3628",
-    "nombre": "PEDRO REGINO FASSA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_B"
    },
    {
     "clientId": "955",
