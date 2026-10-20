@@ -174,7 +174,9 @@ h1{
 .lays-side .lays-img-Caprese{ background-image:url('lays-rusticas-caprese.jpg'); background-size:342px auto; background-position:-21px -21px }
 .lays-side .lays-img-MN{ background-image:url('logo_mi_negocio.png'); background-size:contain; background-position:center top; height:150px }
 .lays-side .lays-img-Tostitos{ background-image:url('tostitos-hierbas-limon.jpg'); background-size:contain; background-position:center top; height:240px }
-.lays-side .lays-img-LisaAcanalada90{ background-image:url('pehuamar-lisa-acanalada.jpg'); background-size:contain; background-position:center top; flex-basis:330px; height:230px }
+.lays-side .lays-img-Matambrito{ background-image:url('pehuamar-matambrito.jpg'); background-size:contain; background-position:center top; height:275px }
+.lays-side .lays-img-Chimichurri{ background-image:url('pehuamar-chimichurri.jpg'); background-size:contain; background-position:center top; height:322px }
+.lays-side .lays-img-LisaAcanalada90{ background-image:url('pehuamar-lisa-acanalada-v.jpg'); background-size:contain; background-position:center top; flex-basis:200px; height:560px }
 /* si la pantalla es angosta la imagen no entra al costado: se oculta para no pisar la tabla */
 @media (max-width: 1280px){ .lays-side .lays-img{ display:none } }
 .subsection-title{
@@ -1487,7 +1489,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-19-b';
+const BUILD = '2026-10-19-c';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -2448,8 +2450,8 @@ function drillSubproductoHoy(vendedor, grupoClave, label) {
 function renderInnovaciones(){
   const laysHtml = Object.keys(LAYS_SUB_LABELS).map(k => `<div class="lays-side"><div class="lays-main">${productSubTable(laysSubRows, 'lays', k, LAYS_SUB_LABELS[k], LAYS_SUB_OBJ)}</div><div class="lays-img lays-img-${k}" role="img" aria-label="${LAYS_SUB_LABELS[k]}"></div></div>`).join('');
   const tostitosHtml = Object.keys(TOSTITOS_SUB_LABELS).map(k => `<div class="lays-side"><div class="lays-main">${productSubTable(tostitosSubRows, 'tostitos', k, TOSTITOS_SUB_LABELS[k], TOSTITOS_SUB_OBJ)}</div><div class="lays-img lays-img-Tostitos" role="img" aria-label="Tostitos Hierbas y Limón"></div></div>`).join('');
-  // productos de Pehuamar que ya tienen foto del paquete (Matambrito y Chimichurri todavia no)
-  const PEHUAMAR_CON_IMG = {LisaAcanalada90: 'Pehuamar Papas Fritas Lisas y Acanaladas'};
+  // foto del paquete al costado de la tabla de cada producto de Pehuamar
+  const PEHUAMAR_CON_IMG = {Matambrito: 'Pehuamar Matambrito a la Pizza', Chimichurri: 'Pehuamar Chimichurri', LisaAcanalada90: 'Pehuamar Papas Fritas Lisas (arriba) y Acanaladas (abajo)'};
   const pehuamarHtml = Object.keys(PEHUAMAR_SUB_LABELS).map(k => {
     const tabla = productSubTable(pehuamarSubRows, 'pehuamar', k, PEHUAMAR_SUB_LABELS[k], PEHUAMAR_SUB_OBJ);
     return PEHUAMAR_CON_IMG[k]
