@@ -1491,7 +1491,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-19-g';
+const BUILD = '2026-10-19-h';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -2466,6 +2466,9 @@ function renderInnovaciones(){
   if (cobEl) cobEl.innerHTML = pehuamarHtml;
 }
 
+// escala de 3 colores del cumplimiento de cobertura por producto: rojo lejos, amarillo acercandose, verde objetivo cumplido
+function tierCobertura(p){ return p>=100 ? 'good' : p>=60 ? 'warn' : 'bad'; }
+
 function productSubTable(rowsData, grupo, key, label, obj){
   const items = rowsData.map(r => {
     const cob = r.universo ? r[key] / r.universo * 100 : 0;
@@ -2482,9 +2485,9 @@ function productSubTable(rowsData, grupo, key, label, obj){
     <table>
       <thead><tr><th>Vendedor</th><th style="text-align:right">Base</th><th style="text-align:right">Clientes</th><th style="text-align:right">Objetivo</th><th style="text-align:right">Cobertura</th><th style="text-align:right">Cump. %</th></tr></thead>
       <tbody>
-        ${items.map(i => `<tr><td class="clickable" onclick="drillSubproducto('${i.n}','${grupoClave}','${label}')">${i.n}</td><td class="ip-base" style="text-align:right">${fmt(i.universo,0)}</td><td style="text-align:right">${fmt(i.count,0)}</td><td style="text-align:right">${fmt(obj,0)}%</td><td style="text-align:right">${fmt(i.cob,1)}%</td><td style="text-align:right"><span class="pill ${tier(i.cump)}">${fmt(i.cump,1)}%</span></td></tr>`).join('')}
+        ${items.map(i => `<tr><td class="clickable" onclick="drillSubproducto('${i.n}','${grupoClave}','${label}')">${i.n}</td><td class="ip-base" style="text-align:right">${fmt(i.universo,0)}</td><td style="text-align:right">${fmt(i.count,0)}</td><td style="text-align:right">${fmt(obj,0)}%</td><td style="text-align:right">${fmt(i.cob,1)}%</td><td style="text-align:right"><span class="pill ${tierCobertura(i.cump)}">${fmt(i.cump,1)}%</span></td></tr>`).join('')}
       </tbody>
-      <tfoot><tr style="font-weight:700"><td>Total PepsiCo</td><td class="ip-base" style="text-align:right">${fmt(totU,0)}</td><td style="text-align:right">${fmt(totC,0)}</td><td style="text-align:right">${fmt(obj,0)}%</td><td style="text-align:right">${fmt(totCob,1)}%</td><td style="text-align:right">${fmt(totCump,1)}%</td></tr></tfoot>
+      <tfoot><tr style="font-weight:700"><td>Total PepsiCo</td><td class="ip-base" style="text-align:right">${fmt(totU,0)}</td><td style="text-align:right">${fmt(totC,0)}</td><td style="text-align:right">${fmt(obj,0)}%</td><td style="text-align:right">${fmt(totCob,1)}%</td><td style="text-align:right"><span class="pill ${tierCobertura(totCump)}">${fmt(totCump,1)}%</span></td></tr></tfoot>
     </table>
   `;
 }
