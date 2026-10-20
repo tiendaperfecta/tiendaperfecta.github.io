@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Auditoría 2026</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 16px;
+    background: #1e293b; color: #e2e8f0;
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  #gate {
+    width: 100%; max-width: 360px; background: rgb(255 255 255 / .05); border-radius: 10px; padding: 24px;
+    box-shadow: 0 4px 6px -1px rgb(15 23 42 / .2), 0 2px 4px -2px rgb(15 23 42 / .2);
+  }
+  h1 { font-size: 20px; margin: 0 0 4px; font-weight: 600; }
+  p { margin: 0 0 16px; color: #cbd5e1; font-size: 14px; }
+  input {
+    width: 100%; font: inherit; padding: 9px 12px; border-radius: 8px; margin-bottom: 10px;
+    border: 1px solid #475569; background: #0f172a; color: #e2e8f0;
+  }
+  button {
+    width: 100%; font: inherit; font-weight: 600; padding: 9px 12px; border-radius: 8px; cursor: pointer;
+    border: 0; background: #3b82f6; color: #fff;
+  }
+  button:hover { background: #2563eb; }
+  .err { min-height: 20px; margin-top: 10px; font-size: 13.5px; color: #fda4af; }
+</style>
+</head>
+<body>
+<div id="gate">
+  <h1>Auditoría 2026</h1>
+  <p>Guía Rumbo PepsiCo · el contenido está cifrado. Ingresá la clave.</p>
+  <form id="fGate">
+    <input type="password" id="pw" placeholder="Clave" autocomplete="current-password" autofocus>
+    <button>Entrar</button>
+  </form>
+  <div class="err" id="gErr" role="status"></div>
+</div>
+<script>
+(() => {
+  'use strict';
+  const $ = s => document.querySelector(s);
+  const KEY = 'auditoria2026-k';
+  const store = {
+    get: () => { try { return sessionStorage.getItem(KEY); } catch { return null; } },
+    set: v => { try { sessionStorage.setItem(KEY, v); } catch {} },
+    del: () => { try { sessionStorage.removeItem(KEY); } catch {} },
+  };
+  const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  async function descifrar(env, clave) {
+    const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(clave), 'PBKDF2', false, ['deriveKey']);
+    const key = await crypto.subtle.deriveKey({name: 'PBKDF2', salt: b64(env.salt), iterations: env.iter, hash: 'SHA-256'},
+      base, {name: 'AES-GCM', length: 256}, false, ['decrypt']);
+    const pt = await crypto.subtle.decrypt({name: 'AES-GCM', iv: b64(env.iv)}, key, b64(env.ct));
+    return new TextDecoder().decode(pt);
+  }
+  let ENV;
+  async function entrar(clave) {
+    $('#gErr').textContent = 'Descifrando…';
+    try {
+      ENV = ENV || await (await fetch('data.enc.json', {cache: 'no-store'})).json();
+    } catch { $('#gErr').textContent = 'No se pudo bajar el panel.'; return; }
+    let html;
+    try { html = await descifrar(ENV, clave); }
+    catch { $('#gErr').textContent = 'Clave incorrecta.'; store.del(); return; }
+    store.set(clave);
+    document.open(); document.write(html); document.close();
+  }
+  $('#fGate').onsubmit = e => { e.preventDefault(); entrar($('#pw').value); };
+  const k0 = store.get(); if (k0) entrar(k0);
+})();
+</script>
+</body>
+</html>
