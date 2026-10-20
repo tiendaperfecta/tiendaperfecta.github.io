@@ -174,8 +174,8 @@ h1{
 .lays-side .lays-img-Caprese{ background-image:url('lays-rusticas-caprese.jpg'); background-size:342px auto; background-position:-21px -21px }
 .lays-side .lays-img-MN{ background-image:url('logo_mi_negocio.png'); background-size:contain; background-position:center top; height:150px }
 .lays-side .lays-img-Tostitos{ background-image:url('tostitos-hierbas-limon.jpg'); background-size:contain; background-position:center top; height:240px }
-.lays-side .lays-img-Matambrito{ background-image:url('pehuamar-matambrito.jpg'); background-size:contain; background-position:center top; height:275px }
-.lays-side .lays-img-Chimichurri{ background-image:url('pehuamar-chimichurri.jpg'); background-size:contain; background-position:center top; height:322px }
+/* Matambrito y Chimichurri: la foto completa de los dos nuevos sabores, al mismo ancho que la de Lisa y Acanalada */
+.lays-side .lays-img-Matambrito, .lays-side .lays-img-Chimichurri{ background-image:url('pehuamar-nuevos-sabores.jpg'); background-size:contain; background-position:center top; flex-basis:200px; height:134px }
 .lays-side .lays-img-LisaAcanalada90{ background-image:url('pehuamar-lisa-acanalada-v.jpg'); background-size:contain; background-position:center top; flex-basis:200px; height:560px }
 /* si la pantalla es angosta la imagen no entra al costado: se oculta para no pisar la tabla */
 @media (max-width: 1280px){ .lays-side .lays-img{ display:none } }
@@ -1489,7 +1489,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-19-c';
+const BUILD = '2026-10-19-d';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
