@@ -242,6 +242,10 @@ col.sep{width:14px}
 .pill.good{background:var(--good-soft); color:var(--good)}
 .pill.warn{background:var(--warn-soft); color:var(--warn)}
 .pill.bad{background:var(--bad-soft); color:var(--bad)}
+/* escala fuerte (colores llenos) para el cumplimiento de cobertura por producto */
+.pill.cob-rojo{background:#d93a2b; color:#fff; font-weight:700}
+.pill.cob-amarillo{background:#f5c400; color:#3a2d00; font-weight:700}
+.pill.cob-verde{background:#2f9e4f; color:#fff; font-weight:700}
 tfoot td{
   padding:12px 10px; font-weight:700; border-top:2px solid var(--border);
   font-family:"IBM Plex Mono",monospace; text-align:right;
@@ -1491,7 +1495,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-19-h';
+const BUILD = '2026-10-19-i';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -2467,7 +2471,7 @@ function renderInnovaciones(){
 }
 
 // escala de 3 colores del cumplimiento de cobertura por producto: rojo lejos, amarillo acercandose, verde objetivo cumplido
-function tierCobertura(p){ return p>=100 ? 'good' : p>=60 ? 'warn' : 'bad'; }
+function tierCobertura(p){ return p>=100 ? 'cob-verde' : p>=60 ? 'cob-amarillo' : 'cob-rojo'; }
 
 function productSubTable(rowsData, grupo, key, label, obj){
   const items = rowsData.map(r => {
