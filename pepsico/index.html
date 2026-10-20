@@ -175,8 +175,10 @@ h1{
 .lays-side .lays-img-MN{ background-image:url('logo_mi_negocio.png'); background-size:contain; background-position:center top; height:150px }
 .lays-side .lays-img-Tostitos{ background-image:url('tostitos-hierbas-limon.jpg'); background-size:contain; background-position:center top; height:240px }
 /* Matambrito y Chimichurri: la foto completa de los dos nuevos sabores, al mismo ancho que la de Lisa y Acanalada */
-.lays-side .lays-img-Matambrito, .lays-side .lays-img-Chimichurri{ background-image:url('pehuamar-nuevos-sabores.jpg'); background-size:contain; background-position:center top; flex-basis:200px; height:134px }
-.lays-side .lays-img-LisaAcanalada90{ background-image:url('pehuamar-lisa-acanalada-v.jpg'); background-size:contain; background-position:center top; flex-basis:140px; height:392px }
+.lays-side .lays-img-Matambrito, .lays-side .lays-img-Chimichurri{ background-image:url('pehuamar-nuevos-sabores.jpg'); background-size:contain; background-position:center top; flex-basis:140px; height:94px }
+.lays-side .lays-img-LisaAcanalada90{ background-image:url('pehuamar-lisa-acanalada-v.jpg'); background-size:auto 336px; background-position:center top; flex-basis:140px; height:336px }
+/* en Pehuamar todas las tablas reservan el mismo ancho a la derecha (con o sin foto) para que las columnas coincidan */
+.lays-side .lays-img-vacio{ flex-basis:140px; height:0 }
 /* si la pantalla es angosta la imagen no entra al costado: se oculta para no pisar la tabla */
 @media (max-width: 1280px){ .lays-side .lays-img{ display:none } }
 .subsection-title{
@@ -1489,7 +1491,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-19-f';
+const BUILD = '2026-10-19-g';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -2456,7 +2458,7 @@ function renderInnovaciones(){
     const tabla = productSubTable(pehuamarSubRows, 'pehuamar', k, PEHUAMAR_SUB_LABELS[k], PEHUAMAR_SUB_OBJ);
     return PEHUAMAR_CON_IMG[k]
       ? `<div class="lays-side"><div class="lays-main">${tabla}</div><div class="lays-img lays-img-${k}" role="img" aria-label="${PEHUAMAR_CON_IMG[k]}"></div></div>`
-      : tabla;
+      : `<div class="lays-side"><div class="lays-main">${tabla}</div><div class="lays-img lays-img-vacio" aria-hidden="true"></div></div>`;
   }).join('');
   const innovEl = document.getElementById('innovaciones-content');
   if (innovEl) innovEl.innerHTML = laysHtml + tostitosHtml;
