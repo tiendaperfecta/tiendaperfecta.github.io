@@ -1,0 +1,26 @@
+{
+  "_nota": "Pep Vouchers de Tienda Perfecta, cargados a mano del Power BI 'Mi Negocio +' (paginas Pep Vouchers Clientes / $). Clientes = clientes distintos del mes con al menos un voucher; un cliente puede usar varios combos, por eso la suma por combo supera el total.",
+  "fuente": "Power BI Mi Negocio + - Pep Vouchers",
+  "hasta": "2026-10-20",
+  "extraido": "2026-10-21",
+  "meses": [
+    {"mes": "2026-08", "clientes": 79, "kg": 38.6, "monto": 786508, "parcial": false},
+    {"mes": "2026-09", "clientes": 118, "kg": 66, "monto": 1382848, "parcial": false},
+    {"mes": "2026-10", "clientes": 100, "kg": 53, "monto": 1081169, "parcial": true}
+  ],
+  "combos": [
+    {"codigo": "PV_51699786", "nombre": "Lays Clásicas 85g x25", "2026-08": 48, "2026-09": 45, "2026-10": 20},
+    {"codigo": "PV_51701470", "nombre": "Lays Clásicas 40g x68", "2026-08": 21, "2026-09": 22, "2026-10": 10},
+    {"codigo": "PV_51703940", "nombre": "Doritos Queso 40g x70", "2026-08": 45, "2026-09": 44, "2026-10": 30},
+    {"codigo": "PV_55658561", "nombre": "Doritos Queso 77g x26", "2026-08": 0, "2026-09": 45, "2026-10": 49},
+    {"codigo": "PV_55619670", "nombre": "Lays Queso y Cebolla 77g x25", "2026-08": 0, "2026-09": 4, "2026-10": 2},
+    {"codigo": "PV_55619806", "nombre": "Lays Ketchup 77g x25", "2026-08": 0, "2026-09": 1, "2026-10": 1},
+    {"codigo": "PV_55620001", "nombre": "Lays Jamón Serrano 77g x25", "2026-08": 0, "2026-09": 6, "2026-10": 4},
+    {"codigo": "PV_55620118", "nombre": "Lays Barbacoa 77g x25", "2026-08": 0, "2026-09": 2, "2026-10": 0},
+    {"codigo": "PV_55620177", "nombre": "Pehuamar Acanalada Chimichurri 80g x25", "2026-08": 0, "2026-09": 1, "2026-10": 2},
+    {"codigo": "PV_55620359", "nombre": "Pehuamar Acanalada Matambrito 80g x25", "2026-08": 0, "2026-09": 1, "2026-10": 3},
+    {"codigo": "PV_55620716", "nombre": "Pehuamar Papa Acanalada 90g x22", "2026-08": 0, "2026-09": 3, "2026-10": 5},
+    {"codigo": "PV_55620738", "nombre": "Pehuamar Papa Lisa 90g x22", "2026-08": 0, "2026-09": 4, "2026-10": 4},
+    {"codigo": "PV_55620940", "nombre": "Doritos Queso 20g x88", "2026-08": 0, "2026-09": 1, "2026-10": 0}
+  ]
+}
