@@ -1,22 +1,25 @@
 {
-  "mes": "2026-10",
-  "hasta": "2026-10-12",
-  "total": 205,
-  "pedidosAutonomos": 269,
-  "pedidosMiNegocio": 1689,
-  "definicion": "Clientes distintos con al menos un pedido marcado como Autonomo en el mes (Power BI AR Cliente Autonomo, tabla de visitas/pedidos). Cada cliente se asigna al vendedor con mas pedidos autonomos suyos.",
-  "vendedores": {
-    "Maria Noelia Madia": 12,
-    "Julian Nuñez": 24,
-    "Ezequiel Hack": 16,
-    "Lucas Giayetto": 27,
-    "Nicolas Martinez": 29,
-    "Camila Martinez": 12,
-    "Ramiro Rando": 19,
-    "Martinica Rodriguez": 12,
-    "Ludmila Aylen Martinez": 25,
-    "Matias Parada": 4,
-    "Melanie Larrama": 6,
-    "Agustin Pogorzelski": 19
-  }
+ "mes": "2026-10",
+ "hasta": "2026-10-20",
+ "total": 301,
+ "vendedores": {
+  "Maria Noelia Madia": 13,
+  "Julian Nuñez": 34,
+  "Ezequiel Hack": 23,
+  "Lucas Giayetto": 42,
+  "Nicolas Martinez": 38,
+  "Camila Martinez": 11,
+  "Ramiro Rando": 28,
+  "Martinica Rodriguez": 21,
+  "Ludmila Aylen Martinez": 28,
+  "Matias Parada": 7,
+  "Melanie Larrama": 14,
+  "Agustin Pogorzelski": 23
+ },
+ "sinAsignar": 19,
+ "extraido": "2026-10-21 10:44",
+ "_fuente": "Power BI 'AR Cliente Autonomo' (Analisis Visitas/Pedidos, octubre): clientes con al menos un pedido autonomo en el mes; vendedor segun la ruta del censo de Gescom",
+ "pedidosAutonomos": 503,
+ "pedidosMiNegocio": 2903,
+ "definicion": "Clientes distintos con al menos un pedido marcado como Autonomo en el mes (Power BI AR Cliente Autonomo, lista de clientes de octubre). Cada cliente se asigna al vendedor de su ruta en el censo de Gescom; 19 clientes no se pudieron asignar a un vendedor (nombre sin coincidencia en Gescom) y suman solo al total."
 }
