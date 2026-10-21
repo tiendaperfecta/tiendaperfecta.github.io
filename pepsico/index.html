@@ -663,7 +663,7 @@ td.ip-base.clickable{cursor:pointer}
 <div id="pepv" style="display:none; margin:6px 0 22px">
   <h3 class="subsection-title">Pep Vouchers: clientes que los van usando</h3>
   <p class="section-note">
-    Clientes distintos de Tienda Perfecta que usaron al menos un Pep Voucher en el mes (Power BI "Mi Negocio +").
+    Clientes distintos de Tienda Perfecta que usaron al menos un Pep Voucher en el mes. Sale de Gescom: renglones con descuento del 100 % marcados Pep Voucher, por fecha de entrega (coincide con el Power BI).
     Un cliente puede usar varios combos, por eso la suma por combo es mayor que el total. El mes en curso va hasta
     el <span id="pepv-hasta">—</span>.
   </p>
@@ -1505,7 +1505,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-21-a';
+const BUILD = '2026-10-21-b';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -3316,7 +3316,20 @@ function pintarPepVouchers(d) {
   const k = d.meses.map(m => m.mes), kAct = act.mes, kAnt = ant ? ant.mes : null;
   const combos = (d.combos || []).slice().sort((a, b) => (b[kAct] || 0) - (a[kAct] || 0) || (b[kAnt] || 0) - (a[kAnt] || 0));
   const filasCombo = combos.map(c => `<tr><td class="name">${c.nombre}</td>${k.map(m => `<td>${c[m] ? fmt(c[m]) : '—'}</td>`).join('')}<td>${kAnt ? dif(c[kAct] || 0, c[kAnt] || 0) : '—'}</td></tr>`).join('');
-  box.innerHTML = tarjetas + `
+  // clientes con voucher por vendedor y mes (sale de Gescom: renglones con descuento 100% marcados PV_)
+  const vendOrd = (d.vendedores || []).slice().sort((a, b) => ((b[kAct] || {}).clientes || 0) - ((a[kAct] || {}).clientes || 0));
+  const totVend = m => vendOrd.reduce((s, v) => s + ((v[m] || {}).clientes || 0), 0);
+  const filasVend = vendOrd.map(v => {
+    const ca = (v[kAct] || {}).clientes || 0, cp = kAnt ? ((v[kAnt] || {}).clientes || 0) : null;
+    return `<tr><td class="name">${v.n}</td>${k.map(m => `<td>${(v[m] || {}).clientes ? fmt(v[m].clientes) : '—'}</td>`).join('')}<td>${cp == null ? '—' : dif(ca, cp)}</td><td>${fmt((v[kAct] || {}).kg || 0, 1)}</td><td>$ ${fmt((v[kAct] || {}).monto || 0)}</td></tr>`;
+  }).join('');
+  const tablaVend = vendOrd.length ? `
+    <div class="table-scroll" style="margin-top:14px"><table>
+      <thead><tr class="cols"><th class="name-col">Vendedor (clientes con voucher)</th>${k.map(m => `<th>${nombreMes(m)}${meses.find(x => x.mes === m).parcial ? ' (en curso)' : ''}</th>`).join('')}<th>${kAnt ? nombreMes(kAct) + ' vs ' + nombreMes(kAnt).toLowerCase() : ''}</th><th>Kg ${nombreMes(kAct).toLowerCase()}</th><th>Monto ${nombreMes(kAct).toLowerCase()}</th></tr></thead>
+      <tbody>${filasVend}</tbody>
+      <tfoot><tr><td class="name">Total Tienda Perfecta</td>${k.map(m => `<td>${fmt(meses.find(x => x.mes === m).clientes)}</td>`).join('')}<td>${kAnt ? dif(act.clientes, ant.clientes) : '—'}</td><td>${fmt(act.kg, 1)}</td><td>$ ${fmt(act.monto)}</td></tr></tfoot>
+    </table></div>` : '';
+  box.innerHTML = tarjetas + tablaVend + `
     <div class="table-scroll" style="margin-top:14px"><table>
       <thead><tr class="cols"><th class="name-col">Mes</th><th>Clientes</th><th>Var. vs mes anterior</th><th>Kg</th><th>Monto</th></tr></thead>
       <tbody>${filasMes}</tbody></table></div>
