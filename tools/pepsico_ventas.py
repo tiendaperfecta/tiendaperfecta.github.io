@@ -256,6 +256,7 @@ BASE = "https://base.tienda-perfecta.workers.dev"
 PROVEEDOR_PEPSICO = "100"
 TIPO_POR_CODIGO = {"VEN": None, "DEV-RE": None, "DEV-CA": None}   # se completa abajo
 OBJETIVOS_KG = DIR / "objetivos_kg.json"
+MIN_CLIENTES_HOY = 15   # clientes con pedido hoy para contar el dia en curso como trabajado
 
 
 def hay_base():
@@ -1285,7 +1286,17 @@ def main():
     # vendido). El acumulado ya trae las entregas de pedidos de dias anteriores, por eso es consistente.
     # Igual que el cuadro del usuario: lunes a sabado valen 1 y el dia en curso cuenta como trabajado.
     dias_trabajados = dias_habiles_mes(hoy.year, hoy.month, hasta=hoy)
-    print("Dias trabajados (lunes a sabado, con hoy): %g de %g" % (dias_trabajados, dias_habiles))
+    # El dia en curso solo cuenta cuando ya se arranco a vender: pedidos de al menos MIN_CLIENTES_HOY clientes.
+    # A la manana, con casi nada cargado, sumar el dia entero hace caer el avance, la tendencia y la media necesaria.
+    clientes_hoy = {cod(f.get("Cliente")) for f in filas_detalle
+                    if "PEPSICO" in (f.get("Proveedor") or "").upper() and f.get("TipoDeVenta") == TIPO_VENTA
+                    and (f.get("FechaComprobante") or "")[:10] == hoy.isoformat()}
+    sin_hoy = dias_habiles_mes(hoy.year, hoy.month, hasta=hoy - dt.timedelta(days=1))
+    if len(clientes_hoy) < MIN_CLIENTES_HOY and 0 < sin_hoy < dias_trabajados:
+        print("AVISO: hoy todavia no se arranco a vender (%d clientes con pedido, minimo %d): el dia no cuenta como trabajado" %
+              (len(clientes_hoy), MIN_CLIENTES_HOY))
+        dias_trabajados = sin_hoy
+    print("Dias trabajados (lunes a sabado; hoy cuenta si ya hay ventas): %g de %g" % (dias_trabajados, dias_habiles))
     hist_previo = leer_historial_previo()
     try:
         avance_kg = traer_avance_kg(api, hoy, dias_habiles, dias_trabajados)
