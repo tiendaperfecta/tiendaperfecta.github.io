@@ -1208,12 +1208,12 @@ td.ip-base.clickable{cursor:pointer}
 
   <h2 class="section-title">Seguimiento de Frescura</h2>
   <p class="section-note">
-    Productos de fecha corta de Pepsico (Tienda Perfecta y Rambla de los Lobos), semana del 21/09 al 27/09.
-    <b>Cuota fija toda la semana</b>: foto del depósito tomada el 21/09, artículos que vencen dentro de 50 días,
+    Productos de fecha corta de Pepsico (Tienda Perfecta y Rambla de los Lobos), semana del <span id="fresc-semana">19/10 al 25/10</span>.
+    <b>Cuota fija toda la semana</b>: foto del depósito tomada el <span id="fresc-foto">19/10</span>, artículos que vencen dentro de 50 días,
     repartidos en partes iguales entre los 12 vendedores activos. <b>Vendido</b> = unidades cargadas desde el
-    21/09 (por <code>FechaCarga</code>), sumando ventas y débitos, restando devoluciones y canjes — es todo lo
+    <span id="fresc-desde">19/10</span> (por <code>FechaCarga</code>), sumando ventas y débitos, restando devoluciones y canjes — es todo lo
     vendido de ese código, no solo el lote por vencer. Los % topean en 100% por artículo. Ordenado por urgencia
-    de vencimiento. Click en una fila para ver el objetivo y lo vendido por vendedor.
+    de vencimiento. Click en una fila para ver el objetivo y lo vendido por vendedor. <b id="fresc-act"></b>
   </p>
 
   <div class="tp-summary">
@@ -1508,7 +1508,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-21-d';
+const BUILD = '2026-10-22-a';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -2524,9 +2524,27 @@ function fmtFechaFrescura(iso) {
 }
 function tierDias(d) { return d<=10 ? 'bad' : d<=30 ? 'warn' : 'good'; }
 
+// dias que faltan para el vencimiento, contados desde hoy (el dato que baja del tablero de Frescura puede venir de ayer)
+function diasAVencer(a) {
+  const hoy = new Date(); hoy.setHours(12, 0, 0, 0);
+  const v = new Date(a.fechaVencimiento + 'T12:00:00');
+  return Math.max(Math.round((v - hoy) / 864e5), 0);
+}
 function renderFrescura() {
   if (!frescuraData) return;
   const arts = frescuraData.articulos;
+  if (frescuraData.tomada) {
+    const [y, m, d] = frescuraData.tomada.split('-').map(Number);
+    const ini = new Date(y, m - 1, d), fin = new Date(y, m - 1, d + 6);
+    const dm = f => String(f.getDate()).padStart(2, '0') + '/' + String(f.getMonth() + 1).padStart(2, '0');
+    setTextoSiExiste('fresc-semana', dm(ini) + ' al ' + dm(fin));
+    setTextoSiExiste('fresc-foto', dm(ini));
+    setTextoSiExiste('fresc-desde', dm(ini));
+  }
+  if (frescuraData.vendidoHasta) {
+    const [fy, fm, fd] = frescuraData.vendidoHasta.slice(0, 10).split('-');
+    setTextoSiExiste('fresc-act', `Vendido calculado con Gescom al ${fd}/${fm}${frescuraData.vendidoHasta.length > 10 ? ' ' + frescuraData.vendidoHasta.slice(11, 16) : ''}.`);
+  }
   let totVendido = 0, totCuota = 0;
   arts.forEach(a => {
     totVendido += Math.min(a.vendidoCodigo, a.cuotaTotal);
@@ -2540,15 +2558,16 @@ function renderFrescura() {
 
   document.getElementById('tbody-frescura').innerHTML = arts.map(a => {
     const cuotaVend = a.cuotaTotal / 12;
-    const accion = a.diasAlVencimiento < 30 ? '50% desc' : 'FOCO';
-    const accionClass = a.diasAlVencimiento < 30 ? 'bad' : 'warn';
+    const diasV = diasAVencer(a);
+    const accion = diasV < 30 ? '50% desc' : 'FOCO';
+    const accionClass = diasV < 30 ? 'bad' : 'warn';
     return `
     <tr class="clickable" onclick="drillFrescura('${a.codigo}')">
       <td class="name">${a.descripcion}</td>
       <td>${a.codigo}</td>
       <td>${a.origen}</td>
       <td>${fmtFechaFrescura(a.fechaVencimiento)}</td>
-      <td><span class="pill ${tierDias(a.diasAlVencimiento)}">${a.diasAlVencimiento} d</span></td>
+      <td><span class="pill ${tierDias(diasV)}">${diasV} d</span></td>
       <td>${fmt(a.cuotaTotal)}</td>
       <td>${fmt(cuotaVend,1)}</td>
       <td>${fmt(a.vendidoCodigo)}</td>
@@ -2569,7 +2588,7 @@ function drillFrescura(codigo) {
   if (!a) return;
   const vend = a.porVendedor.slice().sort((x,y) => y.vendido - x.vendido);
   const html = `
-    <p class="modal-count">Cuota total: ${fmt(a.cuotaTotal)} · Vendido: ${fmt(a.vendidoCodigo)} · Vence ${fmtFechaFrescura(a.fechaVencimiento)} (${a.diasAlVencimiento} días)</p>
+    <p class="modal-count">Cuota total: ${fmt(a.cuotaTotal)} · Vendido: ${fmt(a.vendidoCodigo)} · Vence ${fmtFechaFrescura(a.fechaVencimiento)} (${diasAVencer(a)} días)</p>
     <table>
       <thead><tr><th>Vendedor</th><th style="text-align:right">Vendido</th><th style="text-align:right">Objetivo</th><th style="text-align:right">% Cumplido</th></tr></thead>
       <tbody>
