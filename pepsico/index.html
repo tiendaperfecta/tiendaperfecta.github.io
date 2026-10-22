@@ -390,7 +390,7 @@ td.ip-base.clickable{cursor:pointer}
   <div id="banner-archivo" style="display:none; background:var(--accent-soft); color:var(--accent); font-weight:600; padding:8px 14px; border-radius:8px; margin-bottom:16px; font-size:13.5px"></div>
   <p class="sub">
     Medida en <b>kilogramos</b>. Acumulado del <b id="sub-periodo-inicio">01/09</b> hasta hoy, actualizado automáticamente por API dos
-    veces por día (días hábiles = lunes a viernes, el sábado cuenta medio día y el domingo no cuenta; el día en curso cuenta como trabajado). <span id="sub-dias-venta"></span> El <b>Avance</b> es
+    veces por día (días hábiles = lunes a viernes, el sábado cuenta medio día y el domingo no cuenta; el día en curso cuenta como trabajado recién cuando ya arrancó la venta, o sea cuando hay pedidos de al menos 15 clientes). <span id="sub-dias-venta"></span> El <b>Avance</b> es
     contra el objetivo prorrateado a la fecha, no contra el objetivo total del mes.
     Columna <b>Real</b> = kg de los <b>pedidos tomados hoy</b> (fecha de pedido, como el reporte de Gescom); el
     <b>Acumulado</b> cuenta las entregas del mes. <b>Platino+Gold</b> y <b>Silver&amp;Bronze</b> se arman por
@@ -1508,7 +1508,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-22-a';
+const BUILD = '2026-10-22-b';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
