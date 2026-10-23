@@ -1345,7 +1345,8 @@ def main():
         rechazos_ultima_out = {
             "fecha": ultima_fecha,
             "filas": [
-                {"vendedor": vend, "cliente": cli, "motivo": mot, "cant": round(c, 0), "importe": round(i, 2)}
+                {"vendedor": vend, "cliente": cli, "razon": (clientes.get(cli) or {}).get("razon", ""), "motivo": mot,
+                 "cant": round(c, 0), "importe": round(i, 2)}
                 for (vend, cli, mot), (c, i) in sorted(agrupado.items(), key=lambda kv: kv[1][1])
             ],
         }
