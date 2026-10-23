@@ -1507,7 +1507,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-22-e';
+const BUILD = '2026-10-22-f';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -2521,7 +2521,8 @@ function fmtFechaFrescura(iso) {
   const [y,m,d] = iso.split('-');
   return `${d}/${m}`;
 }
-function tierDias(d) { return d<=10 ? 'bad' : d<=30 ? 'warn' : 'good'; }
+// menos de un mes (30 dias) para vencer = rojo; un mes o mas = amarillo (colores llenos, como la escala de cobertura)
+function tierDias(d) { return d < 30 ? 'cob-rojo' : 'cob-amarillo'; }
 
 // dias que faltan para el vencimiento, contados desde hoy (el dato que baja del tablero de Frescura puede venir de ayer)
 function diasAVencer(a) {
@@ -2559,7 +2560,7 @@ function renderFrescura() {
     const cuotaVend = a.cuotaTotal / 12;
     const diasV = diasAVencer(a);
     const accion = diasV < 30 ? '50% desc' : 'FOCO';
-    const accionClass = diasV < 30 ? 'bad' : 'warn';
+    const accionClass = tierDias(diasV);
     return `
     <tr class="clickable" onclick="drillFrescura('${a.codigo}')">
       <td class="name">${a.descripcion}</td>
