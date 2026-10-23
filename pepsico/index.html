@@ -256,13 +256,6 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
 #tfoot-ip td.ip-base{background:transparent; color:var(--accent)}
 /* en la tabla de IP los campos y los totales van centrados en su columna, asi cada total queda justo debajo de su casillero */
 #tbody-ip td{text-align:center}
-#tbody-ip td.ip-plan, #tfoot-ip td#tfoot-ip-pehuamar-plan{color:var(--accent); font-weight:700}
-.pa-chips{display:flex; gap:6px; flex-wrap:wrap; margin:8px 0 12px}
-.pa-chip{border:1px solid var(--border); background:var(--panel); color:var(--text); border-radius:99px; padding:5px 13px; font:600 12px "IBM Plex Mono",monospace; cursor:pointer}
-.pa-chip.on{background:var(--accent); border-color:var(--accent); color:#fff}
-.pa-lista{max-height:460px; overflow:auto; border:1px solid var(--border); border-radius:10px}
-.pa-lista table{margin:0}
-#pehuamar-activar select{font:600 12.5px "IBM Plex Mono",monospace; padding:5px 8px; border:1px solid var(--border); border-radius:8px; background:var(--panel); color:var(--text)}
 #tbody-ip td.name{text-align:left}
 #tbody-ip .ip-freq-cell, #tfoot-ip .ip-freq-cell{justify-content:center}
 
@@ -548,11 +541,9 @@ td.ip-base.clickable{cursor:pointer}
     clientes de la ruta de hoy (<span id="ip-hoy-label"></span>), Compromiso = a cuántos les van a vender — el %
     al lado se calcula solo (Compromiso ÷ Base). <b>Tienda Perfecta Portafolio Ideal</b>: Base = clientes con
     oportunidad de portafolio (60%-79%) de la ruta de hoy, Compromiso = cuántos van a superar el 80%.
-    <b>Cobertura Pehuamar MB</b>: Base = clientes de la ruta de hoy que todavía no compraron Pehuamar Papa Lisa o
-    Acanalada 90gr en lo que va del mes (click para ver el listado), Compromiso = a cuántos clientes más le van a
-    vender. <b>Plan sugerido</b> = cuántos conviene planificar hoy para llegar al objetivo de clientes activos
-    (30% de su universo): lo que le falta, repartido entre los días de ruta que quedan del mes (pasá el mouse por el
-    número para ver el detalle). Abajo se ven los clientes que todavía no están activos, día por día. <b>Mi Negocio Sell Out</b>: Compromiso kg = el compromiso que cargó el vendedor en la tabla "Por
+    <b>Clientes Activos Mi Negocio</b>: Base = clientes de la ruta de hoy que ya están registrados en la app pero todavía
+    no compran por ella (click para ver el listado), Activos/Obj. = clientes activos del mes contra su objetivo,
+    Compromiso = cuántos clientes más proyecta activar. <b>Mi Negocio Sell Out</b>: Compromiso kg = el compromiso que cargó el vendedor en la tabla "Por
     vendedor" (Platino+Gold + Silver&amp;Bronze, se actualiza solo), Proyectado kg = cuántos de esos kg proyecta
     vender por Mi Negocio+ (editable), % Proyectado se calcula solo (Proyectado ÷ Compromiso) con meta &gt;80%.
   </p>
@@ -573,7 +564,7 @@ td.ip-base.clickable{cursor:pointer}
           <th></th>
           <th colspan="2">Tienda Perfecta Portafolio Ideal</th>
           <th></th>
-          <th colspan="3">Cobertura Pehuamar MB</th>
+          <th colspan="3">Clientes Activos Mi Negocio</th>
           <th></th>
           <th colspan="3">Mi Negocio Sell Out</th>
         </tr>
@@ -583,7 +574,7 @@ td.ip-base.clickable{cursor:pointer}
           <th></th>
           <th>Base</th><th>Compromiso</th>
           <th></th>
-          <th>Base</th><th title="Cuántos conviene planificar hoy para llegar al objetivo de clientes activos">Plan sugerido</th><th>Compromiso</th>
+          <th title="Clientes de la ruta de hoy registrados en la app que todavía no compran por ella">Base</th><th title="Clientes activos de Mi Negocio en el mes / objetivo prorrateado">Activos / Obj.</th><th title="Cuántos clientes más proyecta activar">Compromiso</th>
           <th></th>
           <th>Compromiso kg</th><th>Proyectado kg</th><th>% Proyectado</th>
         </tr>
@@ -594,22 +585,19 @@ td.ip-base.clickable{cursor:pointer}
           <td class="name">Total PepsiCo</td>
           <td id="tfoot-ip-freq-base" class="ip-base"></td><td id="tfoot-ip-freq-comp"></td><td></td>
           <td id="tfoot-ip-port-base" class="ip-base"></td><td id="tfoot-ip-port-comp"></td><td></td>
-          <td id="tfoot-ip-pehuamar-base" class="ip-base"></td><td id="tfoot-ip-pehuamar-plan"></td><td id="tfoot-ip-pehuamar-comp"></td><td></td>
+          <td id="tfoot-ip-mnact-base" class="ip-base"></td><td id="tfoot-ip-mnact-obj"></td><td id="tfoot-ip-mnact-comp"></td><td></td>
           <td id="tfoot-ip-mn-base" class="ip-base"></td><td id="tfoot-ip-mn-comp"></td><td id="tfoot-ip-mn-comp-pct"></td>
         </tr>
       </tfoot>
     </table>
   </div>
 
-  <div id="pehuamar-activar" style="display:none; margin-top:20px"></div>
-
   <p class="foot-note">
     Frecuencia con Compra usa el universo de la ruta del día de hoy (misma fuente que <code>No compradores por
     día</code>). Portafolio Ideal usa los clientes con oportunidad de portafolio (60%-79%) de la ruta del día de
-    hoy, de la sección <code>Portafolio</code>. Cobertura Pehuamar identifica clientes reales de la ruta de hoy sin
-    compra de los artículos <code>PEHUA PAPA LISA 90GX22 RM</code> y <code>PEHUA PAPA ACANA 90GX22 RM</code> entre
-    el 01/09 y el 24/09 por <code>FechaCarga</code>, cruzando <code>Detallado de ventas extendido Pepsico</code>
-    (export del 24/09) con el listado de clientes. Mi Negocio Sell Out toma en vivo el Compromiso en kg
+    hoy, de la sección <code>Portafolio</code>. Clientes Activos Mi Negocio usa los clientes registrados en la app que todavía no compran
+    por ella (detalle de clientes del Power BI "Mi Negocio +" cruzado con el censo de Gescom, sección Mi Negocio+) y los
+    objetivos del mes prorrateados por vendedor. Mi Negocio Sell Out toma en vivo el Compromiso en kg
     (Platino+Gold + Silver&amp;Bronze) que cada vendedor cargó en la tabla "Por vendedor" de más arriba.
   </p>
 
@@ -1519,7 +1507,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-22-c';
+const BUILD = '2026-10-22-d';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -1842,7 +1830,6 @@ function aplicarFiltroVendedor(){
   ['tfoot-main', 'tfoot-ip'].forEach(id => { const e = document.getElementById(id); if (e) e.style.display = v ? 'none' : ''; });
   const nota = document.getElementById('vendedor-nota');
   if (nota) nota.textContent = v ? 'Mostrando solo a ' + v + '. Elegí "Todos" para ver el resto.' : '';
-  if (typeof renderPehuamarActivar === 'function') renderPehuamarActivar();
 }
 // ---- Ficha del vendedor: todos sus indicadores juntos (se ve al elegir un vendedor) ----
 let fichaDatos = null;
@@ -2462,7 +2449,6 @@ Promise.all([
   tostitosSubRows = data.tostitos.vendedores;
   subproductoNoComprado = noComprado || {};
   renderInnovaciones();
-  if (typeof pintarPlanPehuamar === 'function') pintarPlanPehuamar();
 }).catch(() => {});
 
 function drillSubproducto(vendedor, grupoClave, label) {
@@ -3471,6 +3457,7 @@ function pintarMnNoReg(nr) {
 fetch('mn_no_fd.json' + CACHE_BUST).then(r => r.ok ? r.json() : null).then(d => {
   if (!d) return;
   mnNoFd = d;
+  if (typeof pintarMnActivosIp === 'function') pintarMnActivosIp();
   const [y, m] = d.periodo.split('-');
   const periodo = (NOMBRES_MES[parseInt(m, 10)] || '').toLowerCase() + ' ' + y;
   setTextoSiExiste('mnfd-periodo', periodo);
@@ -3915,33 +3902,17 @@ if (hoyLabelEl) hoyLabelEl.textContent = hoyDiaIp;
 
 function findByNameIp(arr, name){ return arr.find(x => x.n === name); }
 
-let pehuamar90Detalle = [];
-const pehuamar90DetallePromise = fetch(BASE + 'pehuamar90_no_comprado.json' + CACHE_BUST).then(r => r.json()).then(data => { pehuamar90Detalle = data; }).catch(() => {});
 
 // Bases de la tabla de IP que tenia cada vendedor en cada dia (foto diaria que arma la actualizacion automatica)
 let ipBasesDiarias = {};
 const ipBasesPromise = fetch(BASE + 'ip_bases_diarias.json' + CACHE_BUST).then(r => r.ok ? r.json() : {}).then(d => { ipBasesDiarias = d || {}; }).catch(() => {});
 
-function drillPehuamar90(vendedor) {
-  const list = pehuamar90Detalle.filter(c => c.vendedor === vendedor && (!c.dia || c.dia === hoyDiaIp));
-  openDrillPortafolio(vendedor, `Ruta de hoy (${hoyDiaIp}) — sin compra de Pehuamar 90gr Lisa o Acanalada en lo que va del mes`, list);
-}
 // Dia de ruta con el que se calculan las bases de la tabla de IP: el de hoy, o el del dia elegido en el calendario
 function diaIpActual(){
   if (!proyHistorica() || !fechaProy()) return {dia: hoyDiaIp, key: hoyKeyIp, fecha: ''};
   const [y, m, d] = fechaProy().split('-').map(Number);
   const nombre = DIAS_JS_IP[new Date(y, m - 1, d).getDay()];
   return {dia: nombre, key: DIA_KEY_IP[nombre] || null, fecha: `${String(d).padStart(2,'0')}/${String(m).padStart(2,'0')}`};
-}
-// Pehuamar de un dia pasado: clientes de esa ruta que todavia no llegaron a 3 unidades de Lisa/Acanalada x90g (a la fecha de hoy)
-function pehuamarBaseDia(dia){
-  const por = {};
-  (subproductoNoComprado['pehuamar_LisaAcanalada90'] || []).filter(c => c.dia === dia).forEach(c => { por[c.vendedor] = (por[c.vendedor] || 0) + 1; });
-  return por;
-}
-function drillPehuamar90Dia(vendedor, dia) {
-  const list = (subproductoNoComprado['pehuamar_LisaAcanalada90'] || []).filter(c => c.vendedor === vendedor && c.dia === dia);
-  openDrillPortafolio(vendedor, `Ruta del ${dia} — todavía no llegaron a 3 unidades de Pehuamar Lisa/Acanalada x90g en el mes`, list);
 }
 
 const IP_API = 'https://script.google.com/macros/s/AKfycby29cOLAt2nSOU-jbpaLxwRSiK1_eG-0eWhKrbitGks8U7eJzqdkPBsI7kwkxsT6-K0/exec';
@@ -3953,78 +3924,44 @@ function haySpanEnfocadoEn(clase){
   return !!(el && el.classList && el.classList.contains(clase));
 }
 
-// ---- Pehuamar (Lisa + Acanalada x90g): plan sugerido segun el objetivo y clientes que todavia no estan activos ----
-let paDia = null, paVendLocal = '', ipDiaPlan = null;
-const PA_DIAS = [['Lunes','Lunes'],['Martes','Martes'],['Miercoles','Miércoles'],['Jueves','Jueves'],['Viernes','Viernes'],['Sabado','Sábado']];
-// cuantas veces mas se repite ese dia de ruta en lo que queda del mes (contando hoy)
-function ocurrenciasRestantes(dia){
-  const base = ipDiaPlan && ipDiaPlan.fechaISO ? new Date(ipDiaPlan.fechaISO + 'T12:00:00') : new Date();
-  const y = base.getFullYear(), m = base.getMonth(), ultimo = new Date(y, m + 1, 0).getDate();
-  let n = 0;
-  for (let d = base.getDate(); d <= ultimo; d++) if (DIAS_JS_IP[new Date(y, m, d, 12).getDay()] === dia) n++;
-  return n;
+// ---- Clientes activos de Mi Negocio: base = registrados de la ruta del dia que todavia no compran por la app ----
+// Desde este dia el campo que el tablero guarda como "pehuamar" es la proyeccion de clientes activos de Mi Negocio:
+// los dias anteriores eran de Pehuamar y no se muestran en esta columna.
+const IP_MN_ACT_DESDE = '2026-10-22';
+let ipDiaMn = null;
+function drillMnActivarIp(vendedor, dia) {
+  const list = ((mnNoFd && mnNoFd.clientesSinCompra) || []).filter(c => c.vendedor === vendedor && c.dia === dia)
+    .sort((a, b) => String(a.seg).localeCompare(String(b.seg)) || a.razon.localeCompare(b.razon));
+  const html = `
+    <p class="modal-count">${list.length} clientes de la ruta del ${dia} registrados en la app que todavía no compran por la app</p>
+    <table>
+      <thead><tr><th>Código</th><th>Cliente</th><th>Localidad</th><th>Segmento</th></tr></thead>
+      <tbody>${list.map(c => `<tr><td>${escHtml(String(c.codigo))}</td><td>${escHtml(c.razon)}</td><td>${escHtml(c.localidad || '')}</td><td>${escHtml(String(c.seg || ''))}</td></tr>`).join('')}</tbody>
+    </table>`;
+  openDrillCustom(vendedor, `Ruta de ${dia} — registrados sin comprar por la app`, html);
 }
-function plDia(d, n){ return n === 1 || /s$/.test(d) ? d : d + 's'; }
-function planPehuamar(vendedor, dia){
-  const sub = pehuamarSubRows.find(x => x.n === vendedor);
-  if (!sub) return null;
-  const universo = sub.universo || 0, activos = sub.LisaAcanalada90 || 0;
-  const objetivo = Math.ceil(universo * PEHUAMAR_SUB_OBJ / 100);
-  const faltan = Math.max(objetivo - activos, 0);
-  const lista = pehuamar90Detalle.filter(c => c.vendedor === vendedor);
-  const baseDia = lista.filter(c => c.dia === dia).length;
-  const ocurr = ocurrenciasRestantes(dia);
-  // lo que falta se reparte entre los dias de ruta en proporcion a los clientes sin activar de cada dia, y entre las veces que queda ese dia
-  const sugerido = faltan && lista.length && ocurr ? Math.min(baseDia, Math.ceil(faltan * baseDia / lista.length / ocurr)) : 0;
-  return {universo, activos, objetivo, faltan, baseDia, ocurr, sugerido};
-}
-function pintarPlanPehuamar(){
-  if (!pehuamarSubRows.length || !pehuamar90Detalle.length) return;
-  const dia = (ipDiaPlan && ipDiaPlan.dia) || hoyDiaIp;
-  let tot = 0;
-  document.querySelectorAll('[data-plan-vend]').forEach(td => {
-    const p = planPehuamar(td.dataset.planVend, dia);
-    if (!p) { td.textContent = '—'; return; }
-    tot += p.sugerido;
-    td.innerHTML = p.faltan === 0 ? '<span class="pill good">cumplido</span>' : fmt(p.sugerido);
-    td.title = `Objetivo: ${p.objetivo} clientes activos (${PEHUAMAR_SUB_OBJ}% de ${p.universo}) · hoy tiene ${p.activos} · faltan ${p.faltan}. ` +
-      `${p.ocurr === 1 ? 'Queda' : 'Quedan'} ${p.ocurr} ${plDia(dia, p.ocurr)} en el mes y ese día tiene ${p.baseDia} clientes sin activar.`;
+function pintarMnActivosIp(){
+  const dia = ipDiaMn || hoyDiaIp;
+  const cl = (mnNoFd && mnNoFd.clientesSinCompra) || [];
+  let totBase = 0, totAct = 0, totObj = 0;
+  document.querySelectorAll('[data-mnact-base]').forEach(td => {
+    if (!mnNoFd) { td.textContent = '—'; return; }
+    const b = cl.filter(c => c.vendedor === td.dataset.mnactBase && c.dia === dia).length;
+    td.textContent = fmt(b);
+    totBase += b;
   });
-  const t = document.getElementById('tfoot-ip-pehuamar-plan');
-  if (t) t.textContent = fmt(tot);
-  renderPehuamarActivar();
-}
-function paElegirDia(k){ paDia = k; renderPehuamarActivar(); }
-function paElegirVend(v){ paVendLocal = v; renderPehuamarActivar(); }
-function renderPehuamarActivar(){
-  const cont = document.getElementById('pehuamar-activar');
-  if (!cont || MES_SEL || !pehuamarSubRows.length || !pehuamar90Detalle.length) return;
-  const diaIp = (ipDiaPlan && ipDiaPlan.dia) || hoyDiaIp;
-  const dia = paDia || diaIp;
-  const vend = vendedorSel || paVendLocal;
-  const etiquetaDia = (PA_DIAS.find(x => x[0] === dia) || [dia, dia])[1];
-  const chips = PA_DIAS.map(([k, l]) => `<button type="button" class="pa-chip${k === dia ? ' on' : ''}" onclick="paElegirDia('${k}')">${l}${k === diaIp ? ' (hoy)' : ''}</button>`).join('');
-  const nombres = pehuamarSubRows.map(r => r.n).sort((a, b) => a.localeCompare(b));
-  const selector = vendedorSel ? '' : `<label style="margin-left:10px">Vendedor: <select onchange="paElegirVend(this.value)"><option value="">Todos</option>${nombres.map(n => `<option value="${escHtml(n)}"${n === vend ? ' selected' : ''}>${escHtml(n)}</option>`).join('')}</select></label>`;
-  const lista = pehuamar90Detalle.filter(c => c.dia === dia && (!vend || c.vendedor === vend))
-    .sort((a, b) => a.vendedor.localeCompare(b.vendedor) || String(a.seg).localeCompare(String(b.seg)) || a.razon.localeCompare(b.razon));
-  let resumen = '';
-  if (vend) {
-    const p = planPehuamar(vend, dia);
-    if (p) resumen = `<p class="section-note"><b>${escHtml(vend)}</b>: objetivo <b>${p.objetivo}</b> clientes activos (${PEHUAMAR_SUB_OBJ}% de ${p.universo}) · hoy tiene <b>${p.activos}</b> · ${p.faltan ? `faltan <b>${p.faltan}</b>` : '<b>objetivo cumplido</b>'}.
-      El ${etiquetaDia} tiene <b>${p.baseDia}</b> clientes sin activar y ${p.ocurr === 1 ? 'queda' : 'quedan'} ${p.ocurr} ${plDia(etiquetaDia, p.ocurr)} en el mes${p.faltan ? `: plan sugerido <b>${p.sugerido}</b> por ${etiquetaDia}` : ''}.</p>`;
-  } else {
-    resumen = `<div class="table-scroll"><table><thead><tr class="cols"><th class="name-col">Vendedor</th><th>Universo</th><th>Objetivo (${PEHUAMAR_SUB_OBJ}%)</th><th>Activos</th><th>Faltan</th><th>Sin activar el ${etiquetaDia}</th><th>Plan sugerido</th></tr></thead><tbody>${
-      nombres.map(n => { const p = planPehuamar(n, dia); return p ? `<tr><td class="name">${escHtml(n)}</td><td>${fmt(p.universo)}</td><td>${fmt(p.objetivo)}</td><td>${fmt(p.activos)}</td><td>${p.faltan ? fmt(p.faltan) : '<span class="pill good">cumplido</span>'}</td><td>${fmt(p.baseDia)}</td><td><b>${fmt(p.sugerido)}</b></td></tr>` : ''; }).join('')
-    }</tbody></table></div>`;
-  }
-  const filas = lista.map(c => `<tr>${vend ? '' : `<td class="name">${escHtml(c.vendedor)}</td>`}<td>${escHtml(String(c.codigo))}</td><td class="name">${escHtml(c.razon)}</td><td>${escHtml(c.localidad || '')}</td><td>${escHtml(String(c.seg || ''))}</td></tr>`).join('');
-  cont.innerHTML = `<h4 class="subsection-title">Pehuamar Lisa + Acanalada x90g: clientes que todavía no están activos</h4>
-    <p class="section-note">Clientes de la ruta del día que todavía no llegaron a 3 unidades en el mes. Se mueve con la ruta: arranca en el día de hoy y se puede ver cualquier otro día.</p>
-    <div class="pa-chips">${chips}${selector}</div>${resumen}
-    <p class="modal-count" style="margin:12px 0 6px">${fmt(lista.length)} clientes sin activar · ruta del ${etiquetaDia}${vend ? ' · ' + escHtml(vend) : ''}</p>
-    <div class="pa-lista"><table><thead><tr class="cols">${vend ? '' : '<th class="name-col">Vendedor</th>'}<th>Código</th><th class="name-col">Cliente</th><th>Localidad</th><th>Seg.</th></tr></thead><tbody>${filas || '<tr><td colspan="5">Sin clientes para mostrar.</td></tr>'}</tbody></table></div>`;
-  cont.style.display = 'block';
+  document.querySelectorAll('[data-mnact-obj]').forEach(td => {
+    const n = td.dataset.mnactObj;
+    const m = mnRows.find(x => x.n === n);
+    if (!m) { td.textContent = '—'; return; }
+    const obj = objMnProrr && objMnProrr.activos ? objMnProrr.activos[n] : null;
+    totAct += m.activos;
+    if (obj) totObj += obj;
+    td.textContent = obj ? `${fmt(m.activos)} / ${fmt(obj)}` : fmt(m.activos);
+    td.title = obj ? `Clientes activos de Mi Negocio en el mes: ${m.activos}. Objetivo prorrateado: ${obj}${m.activos < obj ? ' (faltan ' + (obj - m.activos) + ')' : ' (cumplido)'}` : '';
+  });
+  const eb = document.getElementById('tfoot-ip-mnact-base'); if (eb) eb.textContent = mnNoFd ? fmt(totBase) : '—';
+  const eo = document.getElementById('tfoot-ip-mnact-obj'); if (eo) eo.textContent = totObj ? `${fmt(totAct)} / ${fmt(totObj)}` : fmt(totAct);
 }
 
 async function renderIpSection(){
@@ -4032,23 +3969,13 @@ async function renderIpSection(){
   if (ipRenderStarted && haySpanEnfocadoEn('ip-input')) return;
   ipRenderBusy = true;
   ipRenderStarted = true;
-  await Promise.all([rowsReadyPromise, portDiaReadyPromise, pehuamar90DetallePromise, ipBasesPromise]);
+  await Promise.all([rowsReadyPromise, portDiaReadyPromise, ipBasesPromise]);
   if (!rows.length || !noCompraRows.length) { ipRenderStarted = false; ipRenderBusy = false; return; }
 
   if (MES_SEL && !historialProy) await cargarHistorialProy();
   const dIp = diaIpActual();
-  let pehuamarBaseByVendedor = {};
-  if (proyHistorica()) {
-    pehuamarBaseByVendedor = pehuamarBaseDia(dIp.dia);
-  } else {
-    // el archivo trae la ruta de todos los dias: se toma la de hoy segun el reloj (no la del dia en que corrio la actualizacion)
-    pehuamar90Detalle.filter(c => !c.dia || c.dia === hoyDiaIp).forEach(c => {
-      pehuamarBaseByVendedor[c.vendedor] = (pehuamarBaseByVendedor[c.vendedor] || 0) + 1;
-    });
-  }
   if (hoyLabelEl) hoyLabelEl.textContent = dIp.fecha ? `${dIp.dia} ${dIp.fecha}` : dIp.dia;
-  ipDiaPlan = {dia: dIp.dia, fechaISO: dIp.fecha ? fechaProy() : ''};
-  paDia = null;
+  ipDiaMn = dIp.dia;
 
   // si se esta viendo un dia pasado o un mes anterior, se muestra lo que cargaron los vendedores ese dia (solo lectura)
   const pasadoIp = proyHistorica();
@@ -4061,6 +3988,7 @@ async function renderIpSection(){
       console.error('ip: fetch failed:', err);
     }
   }
+  const mnActVale = (pasadoIp ? fProy : hoyISO()) >= IP_MN_ACT_DESDE;
   const compromisos = pasadoIp ? (((historialProy || {}).compromiso || {})[fProy] || {})
                                : ((data && data.ok && data.compromisos) || {});
   const ipGuardado = pasadoIp ? (((historialProy || {}).ip || {})[fProy] || {})
@@ -4071,14 +3999,13 @@ async function renderIpSection(){
     let freqBase = nc && dIp.key ? nc[dIp.key][1] : 0;
     const port = findByNameIp(portDiaRows, r.n);
     const portBase = !portDiaRows.length ? null : (port && port[dIp.dia] ? port[dIp.dia][0] : 0);   // null = el mes no tiene portafolio guardado
-    let pehuamarBase = pehuamarBaseByVendedor[r.n] || 0;
     // dia pasado con foto guardada: se usan las bases que tenia el vendedor ese dia
     const foto = pasadoIp ? ((ipBasesDiarias[fProy] || {})[r.n]) : null;
-    if (foto) { freqBase = foto.freq; pehuamarBase = foto.pehuamar; }
+    if (foto) { freqBase = foto.freq; }
     const guardado = ipGuardado[r.n] || {};
     const comp = compromisos[r.n] || {};
     const mnBase = (typeof comp.pg === 'number' || typeof comp.sb === 'number') ? (comp.pg||0) + (comp.sb||0) : null;
-    return { n: r.n, freqBase, portBase, pehuamarBase, guardado, mnBase };
+    return { n: r.n, freqBase, portBase, guardado, mnBase };
   });
 
   const tbodyIp = document.getElementById('tbody-ip');
@@ -4096,9 +4023,9 @@ async function renderIpSection(){
     <td class="clickable ip-base" onclick="drillPortDia('${r.n}','${dIp.dia}')">${r.portBase === null ? '—' : fmt(r.portBase)}</td>
     <td><input class="ip-input" data-vendedor="${r.n}" data-metric="portafolio" type="number" step="1" placeholder="clientes" /></td>
     <td></td>
-    <td class="clickable ip-base" onclick="${pasadoIp ? `drillPehuamar90Dia('${r.n}','${dIp.dia}')` : `drillPehuamar90('${r.n}')`}">${fmt(r.pehuamarBase)}</td>
-    <td class="ip-plan" data-plan-vend="${r.n}">—</td>
-    <td><input class="ip-input" data-vendedor="${r.n}" data-metric="pehuamar" type="number" step="1" placeholder="clientes" /></td>
+    <td class="clickable ip-base" data-mnact-base="${r.n}" onclick="drillMnActivarIp('${r.n}','${dIp.dia}')">—</td>
+    <td data-mnact-obj="${r.n}">—</td>
+    <td><input class="ip-input" data-vendedor="${r.n}" data-metric="pehuamar" type="number" step="1" placeholder="clientes" title="Cuántos clientes más proyecta activar en Mi Negocio" /></td>
     <td></td>
     <td class="ip-base"><span class="ip-mnbase" data-vendedor-mnbase="${r.n}">${r.mnBase === null ? '—' : fmt(r.mnBase)}</span></td>
     <td><input class="ip-input" data-vendedor="${r.n}" data-metric="sellout" type="number" step="1" placeholder="kg" /></td>
@@ -4108,13 +4035,11 @@ async function renderIpSection(){
 
   const ipFreqBaseTotal = ipRows.reduce((s,r)=>s+r.freqBase,0);
   const ipPortBaseTotal = ipRows.reduce((s,r)=>s+(r.portBase||0),0);
-  const ipPehuamarBaseTotal = ipRows.reduce((s,r)=>s+r.pehuamarBase,0);
   document.getElementById('tfoot-ip-freq-base').textContent = fmt(ipFreqBaseTotal);
   document.getElementById('tfoot-ip-port-base').textContent = portDiaRows.length ? fmt(ipPortBaseTotal) : '—';
-  document.getElementById('tfoot-ip-pehuamar-base').textContent = fmt(ipPehuamarBaseTotal);
   const ipMnBaseTotal = ipRows.reduce((s,r)=>s+(r.mnBase||0),0);
   document.getElementById('tfoot-ip-mn-base').textContent = fmt(ipMnBaseTotal);
-  pintarPlanPehuamar();
+  pintarMnActivosIp();
 
   const byVendedorIp = {};
   [...document.querySelectorAll('.ip-input')].forEach(input => {
@@ -4164,14 +4089,14 @@ async function renderIpSection(){
     ['frecuencia','portafolio','pehuamar','sellout'].forEach(metric => {
       const input = inputs[metric];
       if (!input) return;
-      if (typeof g[metric] === 'number') {
+      if (typeof g[metric] === 'number' && (metric !== 'pehuamar' || mnActVale)) {
         input.value = g[metric];
         input.dispatchEvent(new Event('input', { bubbles: true }));
       }
     });
     if (typeof g.frecuencia === 'number') freqTotal += g.frecuencia;
     if (typeof g.portafolio === 'number') portTotal += g.portafolio;
-    if (typeof g.pehuamar === 'number') pehuamarTotal += g.pehuamar;
+    if (typeof g.pehuamar === 'number' && mnActVale) pehuamarTotal += g.pehuamar;
     if (typeof g.sellout === 'number') { selloutSum += g.sellout; selloutCount++; }
     ipMnBaseByVendedor[r.n] = r.mnBase;
     updateMnPct(r.n, r.mnBase);
@@ -4194,7 +4119,7 @@ async function renderIpSection(){
   }
   const elPort = document.getElementById('tfoot-ip-port-comp');
   if (elPort) elPort.textContent = fmt(portTotal);
-  const elPehuamar = document.getElementById('tfoot-ip-pehuamar-comp');
+  const elPehuamar = document.getElementById('tfoot-ip-mnact-comp');
   if (elPehuamar) elPehuamar.textContent = fmt(pehuamarTotal);
   const elMn = document.getElementById('tfoot-ip-mn-comp');
   if (elMn) {
