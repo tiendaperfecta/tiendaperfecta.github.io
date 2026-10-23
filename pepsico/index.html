@@ -1188,6 +1188,7 @@ td.ip-base.clickable{cursor:pointer}
         <tr class="cols">
           <th class="name-col">Vendedor</th>
           <th class="name-col">Cliente</th>
+          <th class="name-col">Razón social</th>
           <th class="name-col">Motivo</th>
           <th>Unidades</th><th>Importe</th>
         </tr>
@@ -1507,7 +1508,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-22-g';
+const BUILD = '2026-10-22-h';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -2985,6 +2986,7 @@ fetch(BASE + 'rechazos_ultima_fecha.json' + CACHE_BUST).then(r => r.json()).then
   <tr>
     <td class="name">${r.vendedor}</td>
     <td>${r.cliente}</td>
+    <td class="name">${escHtml(r.razon || '—')}</td>
     <td>${r.motivo}</td>
     <td>${fmt(r.cant)}</td>
     <td>-$ ${fmt(Math.abs(r.importe))}</td>
