@@ -8,35 +8,44 @@
    "ruta": 19,
    "visitadosDeRuta": 14,
    "pendientes": 5,
-   "fueraDeRuta": 2,
+   "fueraDeRuta": 14,
    "pct": 73.7
-  },
-  {
-   "sellerId": "4",
-   "vendedor": "Lucas Giayetto",
-   "ruta": 28,
-   "visitadosDeRuta": 11,
-   "pendientes": 17,
-   "fueraDeRuta": 2,
-   "pct": 39.3
   },
   {
    "sellerId": "6",
    "vendedor": "Camila Martinez",
    "ruta": 18,
-   "visitadosDeRuta": 6,
-   "pendientes": 12,
-   "fueraDeRuta": 5,
-   "pct": 33.3
+   "visitadosDeRuta": 12,
+   "pendientes": 6,
+   "fueraDeRuta": 9,
+   "pct": 66.7
+  },
+  {
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "ruta": 28,
+   "visitadosDeRuta": 13,
+   "pendientes": 15,
+   "fueraDeRuta": 14,
+   "pct": 46.4
   },
   {
    "sellerId": "1",
    "vendedor": "Maria Noelia Madia",
    "ruta": 13,
-   "visitadosDeRuta": 0,
+   "visitadosDeRuta": 2,
+   "pendientes": 11,
+   "fueraDeRuta": 22,
+   "pct": 15.4
+  },
+  {
+   "sellerId": "12",
+   "vendedor": "Agustin Pogorzelski",
+   "ruta": 14,
+   "visitadosDeRuta": 1,
    "pendientes": 13,
-   "fueraDeRuta": 12,
-   "pct": 0.0
+   "fueraDeRuta": 30,
+   "pct": 7.1
   },
   {
    "sellerId": "10",
@@ -44,7 +53,7 @@
    "ruta": 21,
    "visitadosDeRuta": 0,
    "pendientes": 21,
-   "fueraDeRuta": 0,
+   "fueraDeRuta": 1,
    "pct": 0.0
   },
   {
@@ -53,16 +62,7 @@
    "ruta": 23,
    "visitadosDeRuta": 0,
    "pendientes": 23,
-   "fueraDeRuta": 8,
-   "pct": 0.0
-  },
-  {
-   "sellerId": "12",
-   "vendedor": "Agustin Pogorzelski",
-   "ruta": 14,
-   "visitadosDeRuta": 0,
-   "pendientes": 14,
-   "fueraDeRuta": 24,
+   "fueraDeRuta": 22,
    "pct": 0.0
   },
   {
@@ -71,7 +71,7 @@
    "ruta": 10,
    "visitadosDeRuta": 0,
    "pendientes": 10,
-   "fueraDeRuta": 0,
+   "fueraDeRuta": 11,
    "pct": 0.0
   },
   {
@@ -89,7 +89,7 @@
    "ruta": 15,
    "visitadosDeRuta": 0,
    "pendientes": 15,
-   "fueraDeRuta": 7,
+   "fueraDeRuta": 24,
    "pct": 0.0
   },
   {
@@ -116,7 +116,7 @@
    "ruta": 22,
    "visitadosDeRuta": 0,
    "pendientes": 22,
-   "fueraDeRuta": 3,
+   "fueraDeRuta": 8,
    "pct": 0.0
   },
   {
@@ -165,12 +165,6 @@
     "taxonomia": "Kiosco/Maxikiosco_A"
    },
    {
-    "clientId": "1584",
-    "nombre": "CHOCOCHIA S.A.",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_A"
-   },
-   {
     "clientId": "1956",
     "nombre": "Podesta Blas",
     "localidad": "MAR DEL PLATA",
@@ -211,12 +205,6 @@
     "nombre": "CLAUDIA SARA BARATTUCCI",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Dietetica_D"
-   },
-   {
-    "clientId": "816",
-    "nombre": "YAN JOHANA",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Autoservicio Tradicional_A"
    }
   ],
   "10": [
@@ -537,12 +525,6 @@
     "taxonomia": "Rotiseria_B"
    },
    {
-    "clientId": "1714",
-    "nombre": "fruticel touch srl",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Kiosco/Maxikiosco_C"
-   },
-   {
     "clientId": "1949",
     "nombre": "IGLESIAS LUCAS ANTONIO",
     "localidad": "MAR DEL PLATA",
@@ -836,12 +818,6 @@
   ],
   "4": [
    {
-    "clientId": "140",
-    "nombre": "CAWZ MDP S.A.",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Autoservicio Tradicional_A"
-   },
-   {
     "clientId": "170",
     "nombre": "YANYUN WANG",
     "localidad": "MAR DEL PLATA",
@@ -906,12 +882,6 @@
     "nombre": "CRISTIAN ROBERTO D IPOLITO",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Limpieza_B"
-   },
-   {
-    "clientId": "5030",
-    "nombre": "ROXANA ELIZABETH MARISCAL",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_C"
    },
    {
     "clientId": "5053",
@@ -1074,34 +1044,16 @@
   ],
   "6": [
    {
-    "clientId": "1386",
-    "nombre": "CLASA SA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Estacion de Servicio - NO OFICIALES_B"
-   },
-   {
     "clientId": "1566",
     "nombre": "LIZARDO WALTER OSVALDO",
     "localidad": "Mar del Plata",
     "taxonomia": "Kiosco/Maxikiosco_B"
    },
    {
-    "clientId": "1859",
-    "nombre": "KIOSMDQ",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Kiosco/Maxikiosco_C"
-   },
-   {
     "clientId": "2065",
     "nombre": "Bove Valeria",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Autoservicio Tradicional_D"
-   },
-   {
-    "clientId": "2068",
-    "nombre": "GUASAPA KIOSKOS SA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_B"
    },
    {
     "clientId": "2483",
@@ -1116,18 +1068,6 @@
     "taxonomia": "Kiosco/Maxikiosco_B"
    },
    {
-    "clientId": "3412",
-    "nombre": "CHOCOCHIA S.A",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_C"
-   },
-   {
-    "clientId": "4466",
-    "nombre": "KIOSMDQ",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_B"
-   },
-   {
     "clientId": "4475",
     "nombre": "IBANOSQUI SANDRA MARIELA",
     "localidad": "MAR DEL PLATA",
@@ -1138,12 +1078,6 @@
     "nombre": "LUCIANA ANAHI BERNAL",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Almacen/Despensa_C"
-   },
-   {
-    "clientId": "5049",
-    "nombre": "ARISTEO S.R.L.",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Fiambreria_B"
    }
   ],
   "7": [
