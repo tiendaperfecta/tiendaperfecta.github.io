@@ -1352,6 +1352,18 @@ def main():
         }
         escribir("rechazos_ultima_fecha.json", rechazos_ultima_out)
         print("Rechazos ultima fecha (%s): %d filas" % (ultima_fecha, len(rechazos_ultima_out["filas"])))
+        # rechazos de todos los dias del mes (para ver "el mismo dia de la semana pasada"), agrupados por vendedor/cliente/motivo
+        agr_fecha = {}
+        for r in rechazos_fecha_rows:
+            acc = agr_fecha.setdefault((r["fecha"][:10], r["vendedor"], r["cliente"], r["motivo"]), [0.0, 0.0])
+            acc[0] += r["cant"]
+            acc[1] += r["importe"]
+        por_fecha = {}
+        for (f, vend, cli, mot), (c, i) in sorted(agr_fecha.items(), key=lambda kv: (kv[0][0], kv[1][1])):
+            por_fecha.setdefault(f, []).append({"vendedor": vend, "cliente": cli, "razon": (clientes.get(cli) or {}).get("razon", ""),
+                                                "motivo": mot, "cant": round(c, 0), "importe": round(i, 2)})
+        escribir("rechazos_por_fecha.json", por_fecha)
+        print("Rechazos por fecha: %d dias" % len(por_fecha))
 
     # Mes anterior con el mismo corte de dia, para la solapa Comparacion (si falla, queda lo anterior)
     try:
