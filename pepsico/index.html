@@ -1197,6 +1197,27 @@ td.ip-base.clickable{cursor:pointer}
     </table>
   </div>
 
+  <h3 class="subsection-title">Clientes que rechazaron — <span id="rechazos-semana-pasada-titulo">el mismo día de la semana pasada</span></h3>
+  <p class="section-note">
+    Devoluciones por rechazo del mismo día de la semana que hoy, pero de la semana pasada
+    (<code>FechaComprobante</code>), para tener presente a qué clientes les rechazaron la visita ese día antes de volver a pasar.
+  </p>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr class="cols">
+          <th class="name-col">Vendedor</th>
+          <th class="name-col">Cliente</th>
+          <th class="name-col">Razón social</th>
+          <th class="name-col">Motivo</th>
+          <th>Unidades</th><th>Importe</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-rechazosSemanaPasada"></tbody>
+    </table>
+  </div>
+
   <p class="foot-note">
     Fuente: <code>Detallado de ventas extendido Pepsico</code>, mismo export usado para Venta $ e Invendible,
     campo <code>MotivoDevolucion</code>.
@@ -1508,7 +1529,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-22-h';
+const BUILD = '2026-10-25-a';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -1831,6 +1852,7 @@ function aplicarFiltroVendedor(){
   ['tfoot-main', 'tfoot-ip'].forEach(id => { const e = document.getElementById(id); if (e) e.style.display = v ? 'none' : ''; });
   const nota = document.getElementById('vendedor-nota');
   if (nota) nota.textContent = v ? 'Mostrando solo a ' + v + '. Elegí "Todos" para ver el resto.' : '';
+  if (typeof pintarRechazosSemanaPasada === 'function') pintarRechazosSemanaPasada();
 }
 // ---- Ficha del vendedor: todos sus indicadores juntos (se ve al elegir un vendedor) ----
 let fichaDatos = null;
@@ -2992,6 +3014,40 @@ fetch(BASE + 'rechazos_ultima_fecha.json' + CACHE_BUST).then(r => r.json()).then
     <td>-$ ${fmt(Math.abs(r.importe))}</td>
   </tr>
 `).join('');
+}).catch(() => {});
+
+// Rechazos del mismo dia de la semana, pero de la semana pasada (pepsico/rechazos_por_fecha.json)
+let rechazosPorFecha = null;
+function fechaRechazosSemanaPasada() {
+  const ref = new Date();
+  ref.setHours(12, 0, 0, 0);
+  if (ref.getDay() === 0) ref.setDate(ref.getDate() + 1);        // domingo: la ruta que sigue es la del lunes
+  ref.setDate(ref.getDate() - 7);
+  const p = n => String(n).padStart(2, '0');
+  const dia = {Miercoles: 'Miércoles', Sabado: 'Sábado'}[DIAS_JS_IP[ref.getDay()]] || DIAS_JS_IP[ref.getDay()];
+  return {iso: `${ref.getFullYear()}-${p(ref.getMonth() + 1)}-${p(ref.getDate())}`, texto: `${dia} ${p(ref.getDate())}/${p(ref.getMonth() + 1)}`};
+}
+function pintarRechazosSemanaPasada() {
+  const tb = document.getElementById('tbody-rechazosSemanaPasada');
+  if (!tb || !rechazosPorFecha) return;
+  const f = fechaRechazosSemanaPasada();
+  setTextoSiExiste('rechazos-semana-pasada-titulo', `${f.texto} (misma jornada de la semana pasada)`);
+  const filas = (rechazosPorFecha[f.iso] || []).filter(r => !vendedorSel || r.vendedor === vendedorSel)
+    .sort((a, b) => a.vendedor.localeCompare(b.vendedor) || a.importe - b.importe);
+  tb.innerHTML = filas.length ? filas.map(r => `
+  <tr>
+    <td class="name">${r.vendedor}</td>
+    <td>${r.cliente}</td>
+    <td class="name">${escHtml(r.razon || '—')}</td>
+    <td>${r.motivo}</td>
+    <td>${fmt(r.cant)}</td>
+    <td>-$ ${fmt(Math.abs(r.importe))}</td>
+  </tr>`).join('') : `<tr><td colspan="6">${vendedorSel ? 'Sin rechazos de este vendedor ese día.' : 'Sin rechazos cargados ese día.'}</td></tr>`;
+}
+fetch(BASE + 'rechazos_por_fecha.json' + CACHE_BUST).then(r => r.ok ? r.json() : null).then(d => {
+  if (!d) return;
+  rechazosPorFecha = d;
+  pintarRechazosSemanaPasada();
 }).catch(() => {});
 
 // Combos (Axum y Mi Negocio): los datos salen de pepsico/combos_datos.json (reportes de Gescom "Analisis Combos" y
