@@ -1,9 +1,15 @@
 {
  "date": "2026-10-25",
- "totalNet": 40850.08,
- "totalGross": 49428.6,
- "orders": 1,
+ "totalNet": 522491.65,
+ "totalGross": 632214.9,
+ "orders": 3,
  "bySeller": [
+  {
+   "sellerId": "1",
+   "name": "Maria Noelia Madia",
+   "orders": 2,
+   "total": 582786.3
+  },
   {
    "sellerId": "20",
    "name": "Deposito",
@@ -13,12 +19,34 @@
  ],
  "byChannel": [
   {
+   "channel": "TRADITIONAL TRADE_A",
+   "orders": 1,
+   "total": 342214.72
+  },
+  {
+   "channel": "TRADITIONAL TRADE_D",
+   "orders": 1,
+   "total": 240571.58
+  },
+  {
    "channel": "TRADITIONAL TRADE_C",
    "orders": 1,
    "total": 49428.6
   }
  ],
  "topClients": [
+  {
+   "clientId": "1627",
+   "name": "FRUTICEL TOUCH (Kiosco/Maxikiosco_A)",
+   "orders": 1,
+   "total": 342214.72
+  },
+  {
+   "clientId": "972",
+   "name": "NICADELO S.A. (Kiosco/Maxikiosco_D)",
+   "orders": 1,
+   "total": 240571.58
+  },
   {
    "clientId": "2839",
    "name": "NESTOR MARCELO LUNGHI (Fiambreria_C)",
