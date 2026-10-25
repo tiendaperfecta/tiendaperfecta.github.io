@@ -1,237 +1,29 @@
 {
- "date": "2026-10-24",
- "totalNet": 5775272.77,
- "totalGross": 6987178.67,
- "orders": 79,
+ "date": "2026-10-25",
+ "totalNet": 40850.08,
+ "totalGross": 49428.6,
+ "orders": 1,
  "bySeller": [
-  {
-   "sellerId": "4",
-   "name": "Lucas Giayetto",
-   "orders": 19,
-   "total": 2829050.57
-  },
-  {
-   "sellerId": "3",
-   "name": "Ezequiel Hack",
-   "orders": 11,
-   "total": 948572.28
-  },
-  {
-   "sellerId": "7",
-   "name": "Ramiro Rando",
-   "orders": 12,
-   "total": 937035.32
-  },
-  {
-   "sellerId": "11",
-   "name": "Melanie Larrama",
-   "orders": 14,
-   "total": 747913.12
-  },
-  {
-   "sellerId": "6",
-   "name": "Camila Martinez",
-   "orders": 9,
-   "total": 466035.29
-  },
   {
    "sellerId": "20",
    "name": "Deposito",
-   "orders": 3,
-   "total": 365285.67
-  },
-  {
-   "sellerId": "2",
-   "name": "Julian Nuñez",
-   "orders": 4,
-   "total": 268928.76
-  },
-  {
-   "sellerId": "9",
-   "name": "Ludmila Aylen Martinez",
-   "orders": 4,
-   "total": 247071.66
-  },
-  {
-   "sellerId": "12",
-   "name": "Agustin Pogorzelski",
-   "orders": 2,
-   "total": 140428.84
-  },
-  {
-   "sellerId": "33",
-   "name": "Jonathan Capetola",
    "orders": 1,
-   "total": 36857.17
+   "total": 49428.6
   }
  ],
  "byChannel": [
   {
-   "channel": "TRADITIONAL TRADE_A",
-   "orders": 22,
-   "total": 3178262.0
-  },
-  {
-   "channel": "TRADITIONAL TRADE_D",
-   "orders": 21,
-   "total": 1591457.92
-  },
-  {
    "channel": "TRADITIONAL TRADE_C",
-   "orders": 17,
-   "total": 1090494.16
-  },
-  {
-   "channel": "TRADITIONAL TRADE_B",
-   "orders": 12,
-   "total": 482391.58
-  },
-  {
-   "channel": "PROXIMITY_B",
-   "orders": 2,
-   "total": 280785.98
-  },
-  {
-   "channel": "AWAY FROM HOME_A",
    "orders": 1,
-   "total": 205143.16
-  },
-  {
-   "channel": "LIMPIEZA_A",
-   "orders": 1,
-   "total": 82643.79
-  },
-  {
-   "channel": "Mayorista_D",
-   "orders": 1,
-   "total": 48642.9
-  },
-  {
-   "channel": "PROXIMITY_D",
-   "orders": 2,
-   "total": 27357.18
+   "total": 49428.6
   }
  ],
  "topClients": [
   {
-   "clientId": "5053",
-   "name": "WANZHEN NI (Autoservicio Tradicional_A)",
-   "orders": 2,
-   "total": 1156857.99
-  },
-  {
-   "clientId": "140",
-   "name": "CAWZ MDP S.A. (Autoservicio Tradicional_A)",
-   "orders": 2,
-   "total": 589644.46
-  },
-  {
-   "clientId": "1510",
-   "name": "MONTEFUSCO LUCAS EZEQUIEL (Kiosco/Maxikiosco_A)",
+   "clientId": "2839",
+   "name": "NESTOR MARCELO LUNGHI (Fiambreria_C)",
    "orders": 1,
-   "total": 388143.22
-  },
-  {
-   "clientId": "1386",
-   "name": "CLASA SA (Estacion de Servicio - NO OFICIALES_B)",
-   "orders": 2,
-   "total": 280785.98
-  },
-  {
-   "clientId": "1988",
-   "name": "ALIVIO MARKET SA (Autoservicio Tradicional_D)",
-   "orders": 2,
-   "total": 252214.64
-  },
-  {
-   "clientId": "571",
-   "name": "LUCENA ELIZABET ROMINA (Almacen/Despensa_D)",
-   "orders": 1,
-   "total": 230255.08
-  },
-  {
-   "clientId": "323",
-   "name": "VICINTIN CAROLINA SILVANA (Panaderia_A)",
-   "orders": 1,
-   "total": 205143.16
-  },
-  {
-   "clientId": "426",
-   "name": "MARTA SUSANA BERARDO (Kiosco/Maxikiosco_A)",
-   "orders": 2,
-   "total": 203988.68
-  },
-  {
-   "clientId": "1665",
-   "name": "Javier Alcides Orellana (Autoservicio Tradicional_D)",
-   "orders": 1,
-   "total": 172928.48
-  },
-  {
-   "clientId": "1024",
-   "name": "PAREDEZ RUBEN DARIO (Almacen/Despensa_B)",
-   "orders": 1,
-   "total": 160428.66
-  },
-  {
-   "clientId": "423",
-   "name": "AJ FAZZAL SRL (Autoservicio Tradicional_C)",
-   "orders": 2,
-   "total": 160285.75
-  },
-  {
-   "clientId": "171",
-   "name": "MARIA NATALIA NUÑEZ (Autoservicio Tradicional_D)",
-   "orders": 1,
-   "total": 118285.95
-  },
-  {
-   "clientId": "577",
-   "name": "DI SCALA FERNANDO ARIEL (Fiambreria_D)",
-   "orders": 2,
-   "total": 116857.24
-  },
-  {
-   "clientId": "1833",
-   "name": "Kiosmdq s.a (Kiosco/Maxikiosco_A)",
-   "orders": 2,
-   "total": 114642.85
-  },
-  {
-   "clientId": "3077",
-   "name": "NICADELO SA (Kiosco/Maxikiosco_C)",
-   "orders": 2,
-   "total": 109642.97
-  },
-  {
-   "clientId": "1622",
-   "name": "KIOSMDQ (Kiosco/Maxikiosco_A)",
-   "orders": 1,
-   "total": 106269.77
-  },
-  {
-   "clientId": "4817",
-   "name": "DAIANA INES MEDINA (Autoservicio Tradicional_C)",
-   "orders": 1,
-   "total": 104571.52
-  },
-  {
-   "clientId": "719",
-   "name": "campomor laura lorena (Almacen/Despensa_D)",
-   "orders": 1,
-   "total": 103277.3
-  },
-  {
-   "clientId": "1717",
-   "name": "Fabiana casavalle (Almacen/Despensa_C)",
-   "orders": 1,
-   "total": 99857.21
-  },
-  {
-   "clientId": "655",
-   "name": "CRISTINA GABRIELA BERNARD (Almacen/Despensa_C)",
-   "orders": 1,
-   "total": 99232.04
+   "total": 49428.6
   }
  ]
 }
