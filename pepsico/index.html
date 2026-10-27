@@ -1531,7 +1531,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-26-d';
+const BUILD = '2026-10-27-a';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -2424,66 +2424,63 @@ function openDrillCustom(title, subtitle, html) {
 }
 function closeDrill() { document.getElementById('drillModal').classList.remove('open'); }
 
-// ---- Combos Lays y Pehua (33+33 y 16+16): clientes que todavia no hicieron el combo, por dia de ruta (septiembre a la fecha) ----
+// ---- Combo Lays y Pehua (33+33 y 16+16): clientes del listado que todavia no hicieron ninguno de los dos, por dia de ruta ----
 let combosPend = null;
 const CP_DIAS = [['Lunes','Lunes'],['Martes','Martes'],['Miercoles','Miércoles'],['Jueves','Jueves'],['Viernes','Viernes'],['Sabado','Sábado']];
-function cpPendientes(cod, vend, dia) {
-  const hechos = new Set((combosPend.combos[cod] || {}).hicieron || []);
-  return combosPend.universo.filter(u => (vend === 'Total' || u.vendedor === vend) && (dia === 'Total' || u.dia === dia) && !hechos.has(u.codigo))
-    .sort((a, b) => a.vendedor.localeCompare(b.vendedor) || String(a.seg).localeCompare(String(b.seg)) || a.razon.localeCompare(b.razon));
+function cpPendientes(vend, dia) {
+  const hecho = combosPend.hecho || {};
+  return combosPend.listado.filter(u => (vend === 'Total' || u.vendedor === vend) && (dia === 'Total' || u.dia === dia) && !hecho[u.codigo])
+    .sort((a, b) => a.vendedor.localeCompare(b.vendedor) || a.razon.localeCompare(b.razon));
 }
-function drillComboPend(cod, vend, dia) {
+function drillComboPend(vend, dia) {
   if (!combosPend) return;
-  const c = combosPend.combos[cod] || {};
-  const list = cpPendientes(cod, vend, dia);
+  const list = cpPendientes(vend, dia);
   const diaTxt = dia === 'Total' ? 'todos los días' : 'ruta de ' + ((CP_DIAS.find(x => x[0] === dia) || [dia, dia])[1]);
   const html = `
-    <p class="modal-count">${fmt(list.length)} clientes que todavía no hicieron el combo ${escHtml(c.nombre || '')}</p>
+    <p class="modal-count">${fmt(list.length)} clientes que todavía no hicieron ninguno de los dos combos (33+33 o 16+16)</p>
     <table>
-      <thead><tr><th>Código</th><th>Cliente</th><th>Localidad</th>${vend === 'Total' ? '<th>Vendedor</th>' : ''}<th>Segmento</th><th>Día</th></tr></thead>
-      <tbody>${list.map(u => `<tr><td>${escHtml(u.codigo)}</td><td>${escHtml(u.razon)}</td><td>${escHtml(u.localidad || '')}</td>${vend === 'Total' ? `<td>${escHtml(u.vendedor)}</td>` : ''}<td>${escHtml(String(u.seg || ''))}</td><td>${u.dia === 'Sin dia' ? '—' : u.dia}</td></tr>`).join('')}</tbody>
+      <thead><tr><th>Código</th><th>Cliente</th><th>Dirección</th>${vend === 'Total' ? '<th>Vendedor</th>' : ''}<th>Ruta</th></tr></thead>
+      <tbody>${list.map(u => `<tr><td>${escHtml(u.codigo)}</td><td>${escHtml(u.razon)}</td><td>${escHtml(u.direccion || '')}</td>${vend === 'Total' ? `<td>${escHtml(u.vendedor)}</td>` : ''}<td>${escHtml(u.ruta || u.dia)}</td></tr>`).join('')}</tbody>
     </table>`;
-  openDrillCustom(vend === 'Total' ? 'Todos los vendedores' : vend, `${c.nombre} — sin combo en ${diaTxt}`, html);
+  openDrillCustom(vend === 'Total' ? 'Todos los vendedores' : vend, `Combo Lays y Pehua — sin combo en ${diaTxt}`, html);
 }
 function renderCombosPend() {
   const cont = document.getElementById('combos-pend');
   if (!cont || !combosPend || MES_SEL) return;
-  const U = combosPend.universo;
-  const vendedores = [...new Set(U.map(u => u.vendedor))].sort((a, b) => a.localeCompare(b)).filter(v => !vendedorSel || v === vendedorSel);
+  const L = combosPend.listado, hecho = combosPend.hecho || {};
+  const vendedores = [...new Set(L.map(u => u.vendedor))].sort((a, b) => a.localeCompare(b)).filter(v => !vendedorSel || v === vendedorSel);
   const fd = iso => iso ? iso.slice(8, 10) + '/' + iso.slice(5, 7) : '';
-  const hoyK = hoyDiaIp;
-  const bloques = Object.keys(combosPend.combos).map(cod => {
-    const c = combosPend.combos[cod];
-    const hechos = new Set(c.hicieron || []);
-    const filas = vendedores.map(v => {
-      let pendV = 0, baseV = 0;
-      const celdas = CP_DIAS.map(([k]) => {
-        const grupo = U.filter(u => u.vendedor === v && u.dia === k);
-        const pend = grupo.filter(u => !hechos.has(u.codigo)).length;
-        pendV += pend; baseV += grupo.length;
-        return `<td class="clickable" onclick="drillComboPend('${cod}','${escHtml(v)}','${k}')">${pend}/${grupo.length}</td>`;
-      }).join('');
-      return `<tr><td class="name">${escHtml(v)}</td>${celdas}<td class="clickable" onclick="drillComboPend('${cod}','${escHtml(v)}','Total')"><b>${pendV}/${baseV}</b></td></tr>`;
+  const lv = L.filter(u => vendedores.includes(u.vendedor));
+  const clientesUnicos = new Set(lv.map(u => u.codigo)), hicieron = new Set(lv.filter(u => hecho[u.codigo]).map(u => u.codigo));
+  const c33 = new Set(lv.filter(u => (hecho[u.codigo] || {}).c33 > 0).map(u => u.codigo)).size;
+  const c16 = new Set(lv.filter(u => (hecho[u.codigo] || {}).c16 > 0).map(u => u.codigo)).size;
+  const filas = vendedores.map(v => {
+    let pendV = 0, baseV = 0;
+    const celdas = CP_DIAS.map(([k]) => {
+      const grupo = L.filter(u => u.vendedor === v && u.dia === k);
+      const pend = grupo.filter(u => !hecho[u.codigo]).length;
+      pendV += pend; baseV += grupo.length;
+      return `<td class="clickable" onclick="drillComboPend('${escHtml(v)}','${k}')">${pend}/${grupo.length}</td>`;
     }).join('');
-    const tot = CP_DIAS.map(([k]) => {
-      const grupo = U.filter(u => u.dia === k && vendedores.includes(u.vendedor));
-      return `<td class="clickable" onclick="drillComboPend('${cod}','Total','${k}')">${grupo.filter(u => !hechos.has(u.codigo)).length}/${grupo.length}</td>`;
-    }).join('');
-    const totU = U.filter(u => vendedores.includes(u.vendedor));
-    return `<h4 class="subsection-title" style="margin-top:18px">${escHtml(c.nombre)} — clientes que todavía no hicieron el combo</h4>
-      <p class="section-note">${fmt(totU.filter(u => hechos.has(u.codigo)).length)} de ${fmt(totU.length)} clientes de ruta ya lo hicieron. Formato <b>faltan/clientes del día</b>; click en un número para ver los clientes de esa ruta.</p>
-      <div class="table-scroll"><table>
-        <thead><tr class="cols"><th class="name-col">Vendedor</th>${CP_DIAS.map(([k, l]) => `<th>${l}${k === hoyK ? ' (hoy)' : ''}</th>`).join('')}<th>Total</th></tr></thead>
-        <tbody>${filas}</tbody>
-        <tfoot><tr><td class="name">Total PepsiCo</td>${tot}<td class="clickable" onclick="drillComboPend('${cod}','Total','Total')"><b>${totU.filter(u => !hechos.has(u.codigo)).length}/${totU.length}</b></td></tr></tfoot>
-      </table></div>`;
+    return `<tr><td class="name">${escHtml(v)}</td>${celdas}<td class="clickable" onclick="drillComboPend('${escHtml(v)}','Total')"><b>${pendV}/${baseV}</b></td></tr>`;
   }).join('');
-  cont.innerHTML = `<h3 class="subsection-title">Lays y Pehua: clientes que todavía no hicieron los combos</h3>
-    <p class="section-note">Combos <b>Lays y Pehua MB 33+33</b> y <b>16+16</b>, de septiembre a la fecha (${fd(combosPend.desde)} a hoy, comprobantes de Gescom <code>Análisis Combos</code>). Aplican a todos los segmentos (A, B, C y D) y a todos los canales, así que el universo son todos los clientes de ruta de los 12 vendedores. Cada cliente aparece en el día de su ruta.</p>` + bloques;
+  const tot = CP_DIAS.map(([k]) => {
+    const grupo = lv.filter(u => u.dia === k);
+    return `<td class="clickable" onclick="drillComboPend('Total','${k}')">${grupo.filter(u => !hecho[u.codigo]).length}/${grupo.length}</td>`;
+  }).join('');
+  cont.innerHTML = `<h3 class="subsection-title">Combo Lays y Pehua (33+33 y 16+16): clientes que todavía no lo hicieron</h3>
+    <p class="section-note">Listado de clientes a los que se les hace el combo (${fmt(clientesUnicos.size)} clientes, por día de ruta), contra los combos vendidos de Gescom desde septiembre hasta hoy (${fd(combosPend.desde)} al ${fd(combosPend.hasta)}).
+    Cuenta como hecho si el cliente hizo <b>cualquiera de los dos</b> combos. <b>${fmt(hicieron.size)}</b> de ${fmt(clientesUnicos.size)} ya lo hicieron (33+33: ${fmt(c33)} · 16+16: ${fmt(c16)}).
+    Formato <b>faltan/clientes del día</b>; click en un número para ver los clientes que faltan.</p>
+    <div class="table-scroll"><table>
+      <thead><tr class="cols"><th class="name-col">Vendedor</th>${CP_DIAS.map(([k, l]) => `<th>${l}${k === hoyDiaIp ? ' (hoy)' : ''}</th>`).join('')}<th>Total</th></tr></thead>
+      <tbody>${filas}</tbody>
+      <tfoot><tr><td class="name">Total PepsiCo</td>${tot}<td class="clickable" onclick="drillComboPend('Total','Total')"><b>${lv.filter(u => !hecho[u.codigo]).length}/${lv.length}</b></td></tr></tfoot>
+    </table></div>`;
   cont.style.display = 'block';
 }
 if (!MES_SEL) {
-  fetch(BASE + 'combos_pendientes.json' + CACHE_BUST).then(r => r.ok ? r.json() : null).then(d => { if (d) { combosPend = d; renderCombosPend(); } }).catch(() => {});
+  fetch(BASE + 'combos_pendientes.json' + CACHE_BUST).then(r => r.ok ? r.json() : null).then(d => { if (d && d.listado) { combosPend = d; renderCombosPend(); } }).catch(() => {});
 }
 
 // Productos que entran en cada grupo del tablero (Platino + Gold = *P01, Silver & Bronze = *P02), sacados del
