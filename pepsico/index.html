@@ -1531,7 +1531,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-27-d';
+const BUILD = '2026-10-27-e';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -2464,7 +2464,7 @@ function renderCombosPend() {
       const pend = grupo.filter(u => !hecho[u.codigo]).length;
       return `<td class="clickable" onclick="drillComboPend('${escHtml(v)}','${k}')">${pend}/${grupo.length}</td>`;
     }).join('');
-    return `<tr><td class="name">${escHtml(v)}</td>${celdas}<td class="clickable" onclick="drillComboPend('${escHtml(v)}','Total')"><b>${pendV}/${baseV}</b></td></tr>`;
+    return `<tr><td class="name">${escHtml(v)}</td>${celdas}<td class="clickable" onclick="drillComboPend('${escHtml(v)}','Total')"><b>${pendV}/${baseV}</b></td><td><b>${baseV - pendV}</b></td></tr>`;
   }).join('');
   const tot = CP_DIAS.map(([k]) => {
     const grupo = lv.filter(u => u.dia === k);
@@ -2475,9 +2475,9 @@ function renderCombosPend() {
     Cuenta como hecho si el cliente hizo <b>cualquiera de los dos</b> combos. <b>${fmt(hicieron.size)}</b> de ${fmt(clientesUnicos.size)} ya lo hicieron (33+33: ${fmt(c33)} · 16+16: ${fmt(c16)}). Cada cliente cuenta una sola vez entre septiembre y octubre.
     Formato <b>faltan/clientes del día</b>; click en un número para ver los clientes que faltan. Si un cliente figura en más de un día, aparece en cada día pero se cuenta una sola vez en el Total.</p>
     <div class="table-scroll"><table>
-      <thead><tr class="cols"><th class="name-col">Vendedor</th>${CP_DIAS.map(([k, l]) => `<th>${l}${k === hoyDiaIp ? ' (hoy)' : ''}</th>`).join('')}<th>Total</th></tr></thead>
+      <thead><tr class="cols"><th class="name-col">Vendedor</th>${CP_DIAS.map(([k, l]) => `<th>${l}${k === hoyDiaIp ? ' (hoy)' : ''}</th>`).join('')}<th>Total faltan</th><th>Con combo</th></tr></thead>
       <tbody>${filas}</tbody>
-      <tfoot><tr><td class="name">Total PepsiCo</td>${tot}<td class="clickable" onclick="drillComboPend('Total','Total')"><b>${clientesUnicos.size - hicieron.size}/${clientesUnicos.size}</b></td></tr></tfoot>
+      <tfoot><tr><td class="name">Total PepsiCo</td>${tot}<td class="clickable" onclick="drillComboPend('Total','Total')"><b>${clientesUnicos.size - hicieron.size}/${clientesUnicos.size}</b></td><td><b>${hicieron.size}</b></td></tr></tfoot>
     </table></div>`;
   cont.style.display = 'block';
 }
