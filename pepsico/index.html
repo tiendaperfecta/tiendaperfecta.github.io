@@ -1531,7 +1531,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-27-c';
+const BUILD = '2026-10-27-d';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -2429,7 +2429,9 @@ let combosPend = null;
 const CP_DIAS = [['Lunes','Lunes'],['Martes','Martes'],['Miercoles','Miércoles'],['Jueves','Jueves'],['Viernes','Viernes'],['Sabado','Sábado']];
 function cpPendientes(vend, dia) {
   const hecho = combosPend.hecho || {};
+  const vistos = new Set();
   return combosPend.listado.filter(u => (vend === 'Total' || u.vendedor === vend) && (dia === 'Total' || u.dia === dia) && !hecho[u.codigo])
+    .filter(u => dia !== 'Total' || (!vistos.has(u.codigo) && vistos.add(u.codigo)))
     .sort((a, b) => a.vendedor.localeCompare(b.vendedor) || a.razon.localeCompare(b.razon));
 }
 function drillComboPend(vend, dia) {
@@ -2455,11 +2457,11 @@ function renderCombosPend() {
   const c33 = new Set(lv.filter(u => (hecho[u.codigo] || {}).c33 > 0).map(u => u.codigo)).size;
   const c16 = new Set(lv.filter(u => (hecho[u.codigo] || {}).c16 > 0).map(u => u.codigo)).size;
   const filas = vendedores.map(v => {
-    let pendV = 0, baseV = 0;
+    const lvv = L.filter(u => u.vendedor === v);
+    const pendV = new Set(lvv.filter(u => !hecho[u.codigo]).map(u => u.codigo)).size, baseV = new Set(lvv.map(u => u.codigo)).size;
     const celdas = CP_DIAS.map(([k]) => {
       const grupo = L.filter(u => u.vendedor === v && u.dia === k);
       const pend = grupo.filter(u => !hecho[u.codigo]).length;
-      pendV += pend; baseV += grupo.length;
       return `<td class="clickable" onclick="drillComboPend('${escHtml(v)}','${k}')">${pend}/${grupo.length}</td>`;
     }).join('');
     return `<tr><td class="name">${escHtml(v)}</td>${celdas}<td class="clickable" onclick="drillComboPend('${escHtml(v)}','Total')"><b>${pendV}/${baseV}</b></td></tr>`;
@@ -2471,11 +2473,11 @@ function renderCombosPend() {
   cont.innerHTML = `<h3 class="subsection-title">Combo Lays y Pehua (33+33 y 16+16): clientes que todavía no lo hicieron</h3>
     <p class="section-note">Listado de clientes a los que se les hace el combo (${fmt(clientesUnicos.size)} clientes, por día de ruta), contra los combos vendidos de Gescom desde septiembre hasta hoy (${fd(combosPend.desde)} al ${fd(combosPend.hasta)}).
     Cuenta como hecho si el cliente hizo <b>cualquiera de los dos</b> combos. <b>${fmt(hicieron.size)}</b> de ${fmt(clientesUnicos.size)} ya lo hicieron (33+33: ${fmt(c33)} · 16+16: ${fmt(c16)}). Cada cliente cuenta una sola vez entre septiembre y octubre.
-    Formato <b>faltan/clientes del día</b>; click en un número para ver los clientes que faltan.</p>
+    Formato <b>faltan/clientes del día</b>; click en un número para ver los clientes que faltan. Si un cliente figura en más de un día, aparece en cada día pero se cuenta una sola vez en el Total.</p>
     <div class="table-scroll"><table>
       <thead><tr class="cols"><th class="name-col">Vendedor</th>${CP_DIAS.map(([k, l]) => `<th>${l}${k === hoyDiaIp ? ' (hoy)' : ''}</th>`).join('')}<th>Total</th></tr></thead>
       <tbody>${filas}</tbody>
-      <tfoot><tr><td class="name">Total PepsiCo</td>${tot}<td class="clickable" onclick="drillComboPend('Total','Total')"><b>${lv.filter(u => !hecho[u.codigo]).length}/${lv.length}</b></td></tr></tfoot>
+      <tfoot><tr><td class="name">Total PepsiCo</td>${tot}<td class="clickable" onclick="drillComboPend('Total','Total')"><b>${clientesUnicos.size - hicieron.size}/${clientesUnicos.size}</b></td></tr></tfoot>
     </table></div>`;
   cont.style.display = 'block';
 }
