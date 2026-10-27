@@ -123,7 +123,7 @@ SUBPRODUCTOS = {
         "skus": {
             "Caprese": {"Lays Rusticas Caprese 77 GRAMOS"},
             "SalMarina": {"Lays Rusticas Sal Marina 85 GRAMOS"},
-            "LimonHierbas": set(),
+            "LimonHierbas": {"Lays Rusticas Limon y Hierbas 77 GRAMOS"},
         },
     },
     "tostitos": {
