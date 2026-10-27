@@ -1531,7 +1531,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-27-b';
+const BUILD = '2026-10-27-c';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -2470,7 +2470,7 @@ function renderCombosPend() {
   }).join('');
   cont.innerHTML = `<h3 class="subsection-title">Combo Lays y Pehua (33+33 y 16+16): clientes que todavía no lo hicieron</h3>
     <p class="section-note">Listado de clientes a los que se les hace el combo (${fmt(clientesUnicos.size)} clientes, por día de ruta), contra los combos vendidos de Gescom desde septiembre hasta hoy (${fd(combosPend.desde)} al ${fd(combosPend.hasta)}).
-    Cuenta como hecho si el cliente hizo <b>cualquiera de los dos</b> combos. <b>${fmt(hicieron.size)}</b> de ${fmt(clientesUnicos.size)} ya lo hicieron (33+33: ${fmt(c33)} · 16+16: ${fmt(c16)})${(combosPend.fuera || []).length && !vendedorSel ? `, y otros <b>${combosPend.fuera.length}</b> clientes que no están en el listado también lo hicieron (<b>${fmt(hicieron.size + combosPend.fuera.length)}</b> clientes con combo en total)` : ''}. Cada cliente cuenta una sola vez entre septiembre y octubre.
+    Cuenta como hecho si el cliente hizo <b>cualquiera de los dos</b> combos. <b>${fmt(hicieron.size)}</b> de ${fmt(clientesUnicos.size)} ya lo hicieron (33+33: ${fmt(c33)} · 16+16: ${fmt(c16)}). Cada cliente cuenta una sola vez entre septiembre y octubre.
     Formato <b>faltan/clientes del día</b>; click en un número para ver los clientes que faltan.</p>
     <div class="table-scroll"><table>
       <thead><tr class="cols"><th class="name-col">Vendedor</th>${CP_DIAS.map(([k, l]) => `<th>${l}${k === hoyDiaIp ? ' (hoy)' : ''}</th>`).join('')}<th>Total</th></tr></thead>
