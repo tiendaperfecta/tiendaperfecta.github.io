@@ -1531,7 +1531,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-27-e';
+const BUILD = '2026-10-27-f';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -2470,6 +2470,13 @@ function renderCombosPend() {
     const grupo = lv.filter(u => u.dia === k);
     return `<td class="clickable" onclick="drillComboPend('Total','${k}')">${grupo.filter(u => !hecho[u.codigo]).length}/${grupo.length}</td>`;
   }).join('');
+  const ordDia = k => CP_DIAS.findIndex(x => x[0] === k), faltanMap = new Map();
+  lv.filter(u => !hecho[u.codigo]).forEach(u => {
+    const e = faltanMap.get(u.codigo) || { ...u, dias: [] };
+    e.dias.push((CP_DIAS[ordDia(u.dia)] || [u.dia, u.dia])[1]);
+    faltanMap.set(u.codigo, e);
+  });
+  const faltan = [...faltanMap.values()].sort((a, b) => a.vendedor.localeCompare(b.vendedor) || ordDia(a.dia) - ordDia(b.dia) || a.razon.localeCompare(b.razon));
   cont.innerHTML = `<h3 class="subsection-title">Combo Lays y Pehua (33+33 y 16+16): clientes que todavía no lo hicieron</h3>
     <p class="section-note">Listado de clientes a los que se les hace el combo (${fmt(clientesUnicos.size)} clientes, por día de ruta), contra los combos vendidos de Gescom desde septiembre hasta hoy (${fd(combosPend.desde)} al ${fd(combosPend.hasta)}).
     Cuenta como hecho si el cliente hizo <b>cualquiera de los dos</b> combos. <b>${fmt(hicieron.size)}</b> de ${fmt(clientesUnicos.size)} ya lo hicieron (33+33: ${fmt(c33)} · 16+16: ${fmt(c16)}). Cada cliente cuenta una sola vez entre septiembre y octubre.
@@ -2478,6 +2485,11 @@ function renderCombosPend() {
       <thead><tr class="cols"><th class="name-col">Vendedor</th>${CP_DIAS.map(([k, l]) => `<th>${l}${k === hoyDiaIp ? ' (hoy)' : ''}</th>`).join('')}<th>Total faltan</th><th>Con combo</th></tr></thead>
       <tbody>${filas}</tbody>
       <tfoot><tr><td class="name">Total PepsiCo</td>${tot}<td class="clickable" onclick="drillComboPend('Total','Total')"><b>${clientesUnicos.size - hicieron.size}/${clientesUnicos.size}</b></td><td><b>${hicieron.size}</b></td></tr></tfoot>
+    </table></div>
+    <h4 style="margin:22px 0 6px">Listado de clientes que les falta hacer el combo (${fmt(faltan.length)})</h4>
+    <div class="table-scroll"><table>
+      <thead><tr class="cols"><th class="name-col">Vendedor</th><th>Día</th><th>Código</th><th class="name-col">Cliente</th><th class="name-col">Dirección</th></tr></thead>
+      <tbody>${faltan.map(u => `<tr><td class="name">${escHtml(u.vendedor)}</td><td>${escHtml(u.dias.join(' / '))}</td><td>${escHtml(u.codigo)}</td><td class="name">${escHtml(u.razon)}</td><td class="name">${escHtml(u.direccion || '')}</td></tr>`).join('')}</tbody>
     </table></div>`;
   cont.style.display = 'block';
 }
