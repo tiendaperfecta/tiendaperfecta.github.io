@@ -250,7 +250,7 @@
             <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#f87171"><use href="#i-clip"/></svg></div>
             <div class="txt"><div>Reclamos de clientes</div><p>Pedidos que no llegaron, faltantes y errores de entrega</p></div>
           </div>
-          <div class="tags"><div class="tag key">Con clave</div><div class="tag est">Verificando</div></div>
+          <div class="tags"><div class="tag key">Con clave</div><div class="tag">claude.ai</div></div>
         </a></li>
       </ul>
     </div>
@@ -297,6 +297,7 @@
   };
   document.querySelectorAll('.card').forEach(async a => {
     const tag = a.querySelector('.tag.est');
+    if (!tag) return;   // tarjetas sin control de estado (ej. claude.ai no permite consultarlo)
     try {
       if (a.dataset.fecha) {
         const txt = await (await fetch(a.dataset.fecha, {cache:'no-store'})).text();
