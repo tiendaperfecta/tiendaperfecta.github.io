@@ -467,6 +467,7 @@ td.ip-base.clickable{cursor:pointer}
     <button type="button" class="tab-btn" data-tab-btn="frescura">Frescura</button>
     <button type="button" class="tab-btn" data-tab-btn="combos-axum">Combos Axum</button>
     <button type="button" class="tab-btn" data-tab-btn="combos-mn">Combos Mi Negocio</button>
+    <button type="button" class="tab-btn" data-tab-btn="quiebres-stock">Quiebres de stock</button>
     <button type="button" class="tab-btn" data-tab-btn="frase-dia">Frase del día</button>
   </div>
 
@@ -1366,6 +1367,33 @@ td.ip-base.clickable{cursor:pointer}
     <div id="comparacion-contenido"></div>
   </div>
 
+  <div class="tab-panel" data-tab-panel="quiebres-stock">
+
+  <h3 class="subsection-title">Quiebres de stock</h3>
+  <p class="section-note">Artículos Pepsico sin stock (listado cargado a mano a pedido del equipo).</p>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr class="cols">
+          <th class="name-col">Código de artículo</th>
+          <th class="name-col">Descripción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="name">300061011</td><td class="name">CHEETOS QUESO CREMA 43GX66</td></tr>
+        <tr><td class="name">300064914</td><td class="name">DINAMITA EXTRA FLAMIN HOT 82G</td></tr>
+        <tr><td class="name">300064055</td><td class="name">DORITOS DINAMITA FH 45GX110X1</td></tr>
+        <tr><td class="name">300065477</td><td class="name">DORITOS QUESO 20GX6X10 TIR</td></tr>
+        <tr><td class="name">300066580</td><td class="name">LAYS ACAN ASADO 77GX25X1</td></tr>
+        <tr><td class="name">300065613</td><td class="name">QUAKER AVENA INST 280GX20 ARG</td></tr>
+        <tr><td class="name">300052694</td><td class="name">TWISTOS MINIT QUESO 155GX20</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  </div>
+
   <div class="tab-panel" data-tab-panel="frase-dia">
 
   <div class="closing-quote">
@@ -1510,7 +1538,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-27-h';
+const BUILD = '2026-10-27-i';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
