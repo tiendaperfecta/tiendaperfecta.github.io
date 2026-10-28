@@ -455,7 +455,8 @@ td.ip-base.clickable{cursor:pointer}
   </div>
 
   <div class="tabs-bar" id="tabs-bar">
-    <button type="button" class="tab-btn active" data-tab-btn="por-vendedor">Por vendedor</button>
+    <button type="button" class="tab-btn active" data-tab-btn="inicio">Inicio</button>
+    <button type="button" class="tab-btn" data-tab-btn="por-vendedor">Por vendedor</button>
     <button type="button" class="tab-btn" data-tab-btn="comparacion">Comparación</button>
     <button type="button" class="tab-btn" data-tab-btn="mi-negocio">Mi Negocio+</button>
     <button type="button" class="tab-btn" data-tab-btn="cobertura">Cobertura</button>
@@ -468,11 +469,22 @@ td.ip-base.clickable{cursor:pointer}
     <button type="button" class="tab-btn" data-tab-btn="combos-axum">Combos Axum</button>
     <button type="button" class="tab-btn" data-tab-btn="combos-mn">Combos Mi Negocio</button>
     <button type="button" class="tab-btn" data-tab-btn="quiebres-stock">Quiebres de stock</button>
-    <button type="button" class="tab-btn" data-tab-btn="focos-semanales">Focos semanales</button>
     <button type="button" class="tab-btn" data-tab-btn="frase-dia">Frase del día</button>
   </div>
 
-  <div class="tab-panel active" data-tab-panel="por-vendedor">
+  <div class="tab-panel active" data-tab-panel="inicio">
+
+  <h3 class="subsection-title">Focos semanales</h3>
+  <ul class="focos-list" style="font-size:1.05rem; line-height:1.7; padding-left:22px; margin-top:12px">
+    <li>Llegar al <b>90%</b> en <b>Silver y Bronze</b>.</li>
+    <li>Reforzar las zonas del <b>centro</b> y <b>Aldrey</b> por los <b>juegos Evita</b>.</li>
+    <li>Foco en el incentivo <b>ATR 3.0</b>: <b>Sell Out</b> (PH + Global) y <b>Cobertura H&amp;L</b> (Taxonomías A&amp;B).</li>
+    <li>Continuar con la colocación de <b>exhibidores Lays Rústicas</b> y, a su vez, con la cobertura.</li>
+  </ul>
+
+  </div>
+
+  <div class="tab-panel" data-tab-panel="por-vendedor">
 
   <div class="vend-filter">
     <label for="vendedor-selector">Ver vendedor:</label>
@@ -1395,18 +1407,6 @@ td.ip-base.clickable{cursor:pointer}
 
   </div>
 
-  <div class="tab-panel" data-tab-panel="focos-semanales">
-
-  <h3 class="subsection-title">Focos semanales</h3>
-  <ul class="focos-list" style="font-size:1.05rem; line-height:1.7; padding-left:22px; margin-top:12px">
-    <li>Llegar al <b>90%</b> en <b>Silver y Bronze</b>.</li>
-    <li>Reforzar las zonas del <b>centro</b> y <b>Aldrey</b> por los <b>juegos Evita</b>.</li>
-    <li>Foco en el incentivo <b>ATR 3.0</b>: <b>Sell Out</b> (PH + Global) y <b>Cobertura H&amp;L</b> (Taxonomías A&amp;B).</li>
-    <li>Continuar con la colocación de <b>exhibidores Lays Rústicas</b> y, a su vez, con la cobertura.</li>
-  </ul>
-
-  </div>
-
   <div class="tab-panel" data-tab-panel="frase-dia">
 
   <div class="closing-quote">
@@ -1455,7 +1455,7 @@ td.ip-base.clickable{cursor:pointer}
     try { sessionStorage.setItem('pepsico-tab', id); } catch (e) {}
   }
   btns.forEach(b => b.addEventListener('click', () => activar(b.dataset.tabBtn)));
-  let inicial = 'por-vendedor';
+  let inicial = 'inicio';
   try {
     const guardado = sessionStorage.getItem('pepsico-tab');
     if (guardado && panels.some(p => p.dataset.tabPanel === guardado)) inicial = guardado;
@@ -1551,7 +1551,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-27-j';
+const BUILD = '2026-10-28-a';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
