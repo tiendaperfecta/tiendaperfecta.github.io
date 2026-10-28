@@ -482,6 +482,8 @@ td.ip-base.clickable{cursor:pointer}
     <li>Continuar con la colocación de <b>exhibidores Lays Rústicas</b> y, a su vez, con la cobertura.</li>
   </ul>
 
+  <div id="inicio-resumen" style="margin-top:30px"></div>
+
   </div>
 
   <div class="tab-panel" data-tab-panel="por-vendedor">
@@ -1551,7 +1553,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-28-a';
+const BUILD = '2026-10-28-b';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -2947,6 +2949,63 @@ fetch(BASE + 'historial_diario.json' + CACHE_BUST).then(r => r.json()).then(data
   historialDiarioData = data || [];
   initSelectorDia();
 }).catch(() => { historialDiarioData = []; initSelectorDia(); });
+
+// Inicio: resumen del ultimo dia con venta (lo que se planifico contra lo que se vendio) + los KPI del mes
+let historialInicioPedido = false;
+function pintarInicio() {
+  const cont = document.getElementById('inicio-resumen');
+  if (!cont || MES_SEL || !Array.isArray(historialDiarioData)) return;
+  if (!historialProy && !historialInicioPedido) { historialInicioPedido = true; cargarHistorialProy(); }
+  const previas = historialDiarioData.filter(f => f.fecha < hoyISO()).sort((a, b) => a.fecha.localeCompare(b.fecha));
+  const e = previas[previas.length - 1];
+  if (!e) return;
+  const [y, m, d] = e.fecha.split('-').map(Number);
+  const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+  const etiqueta = `${dias[new Date(y, m - 1, d).getDay()]} ${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')}`;
+  const hv = id => { const el = document.getElementById(id); return el ? el.innerHTML : '—'; };
+  const comp = ((historialProy || {}).compromiso || {})[e.fecha] || null;
+  const kgComp = n => { const c = comp && comp[n]; return c ? (Number(c.pg) || 0) + (Number(c.sb) || 0) : null; };
+  const kgVend = n => (e.v && typeof e.v[n] === 'number') ? e.v[n] : null;
+  const nombres = rows.map(r => r.n).filter(n => !vendedorSel || n === vendedorSel).sort((a, b) => a.localeCompare(b));
+  let totComp = null, totVend = 0;
+  const filas = nombres.map(n => {
+    const c = kgComp(n), v = kgVend(n);
+    if (c !== null) totComp = (totComp || 0) + c;
+    totVend += v || 0;
+    return {n, c, v};
+  });
+  if (!vendedorSel && typeof e.kg === 'number') totVend = e.kg;
+  const dif = totComp === null ? null : totVend - totComp;
+  const colorDif = dif === null ? '' : dif >= 0 ? 'color:#1b7a3e' : 'color:#b3261e';
+  const signo = x => (x > 0 ? '+' : x < 0 ? '−' : '') + fmt(Math.abs(x));
+  const celdaDif = x => x === null ? '—' : `<span style="${x >= 0 ? 'color:#1b7a3e' : 'color:#b3261e'}">${signo(x)}</span>`;
+  const html = `
+    <h3 class="subsection-title">Resumen del mes${vendedorSel ? ' — ' + escHtml(vendedorSel) : ''}</h3>
+    <div class="kpis">
+      <div class="kpi accent"><div class="label">Objetivo mes</div><div class="value">${hv('kpi-objetivo-mes')}</div></div>
+      <div class="kpi"><div class="label">Acumulado</div><div class="value">${hv('kpi-acumulado')}</div></div>
+      <div class="kpi"><div class="label">Avance a la fecha</div><div class="value">${hv('kpi-avance-fecha')}</div></div>
+      <div class="kpi"><div class="label">Tendencia cierre</div><div class="value">${hv('kpi-tendencia')}</div></div>
+      <div class="kpi"><div class="label">Media necesaria</div><div class="value">${hv('kpi-media-necesaria')}</div></div>
+    </div>
+    <h3 class="subsection-title" style="margin-top:26px">${etiqueta} — vendido contra lo planificado</h3>
+    <div class="kpis">
+      <div class="kpi"><div class="label">Compromiso ${etiqueta}</div><div class="value">${totComp === null ? 'Sin datos' : fmt(totComp) + '<span class="unit">kg</span>'}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">Lo que cargaron los vendedores (Platino+Gold + Silver&amp;Bronze)</div></div>
+      <div class="kpi"><div class="label">Venta real ${etiqueta}</div><div class="value">${fmt(totVend)}<span class="unit">kg</span></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">Pedidos tomados ese día (fecha de pedido)</div></div>
+      <div class="kpi"><div class="label">Diferencia</div><div class="value" style="${colorDif}">${dif === null ? '—' : signo(dif) + '<span class="unit">kg</span>'}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">${dif === null || !totComp ? 'Vendido menos planificado' : fmt(totVend / totComp * 100, 1) + '% de lo planificado'}</div></div>
+    </div>
+    <div class="table-scroll" style="margin-top:14px"><table>
+      <thead><tr class="cols"><th class="name-col">Vendedor</th><th>Compromiso kg</th><th>Vendido kg</th><th>Diferencia kg</th><th>% de lo planificado</th></tr></thead>
+      <tbody>${filas.map(f => `<tr><td class="name">${escHtml(f.n)}</td><td>${f.c === null ? '—' : fmt(f.c)}</td><td>${f.v === null ? 'n/d' : fmt(f.v)}</td>
+        <td>${f.c === null || f.v === null ? '—' : celdaDif(f.v - f.c)}</td><td>${f.c ? (f.v === null ? '—' : fmt(f.v / f.c * 100, 1) + '%') : '—'}</td></tr>`).join('')}</tbody>
+      <tfoot><tr><td class="name">Total</td><td>${totComp === null ? '—' : fmt(totComp)}</td><td>${fmt(totVend)}</td><td>${celdaDif(dif)}</td><td>${totComp ? fmt(totVend / totComp * 100, 1) + '%' : '—'}</td></tr></tfoot>
+    </table></div>`;
+  if (cont.dataset.ultimo !== html) { cont.innerHTML = html; cont.dataset.ultimo = html; }
+}
+setInterval(pintarInicio, 2000);
 
 fetch(BASE + 'tienda_perfecta.json' + CACHE_BUST).then(r => r.json()).then(data => {
   renderTiendaPerfecta(data);
