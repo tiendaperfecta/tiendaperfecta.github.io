@@ -401,23 +401,25 @@ td.ip-base.clickable{cursor:pointer}
   </p>
 
   <div class="kpis">
-    <div class="kpi accent">
+    <!-- Objetivo, acumulado, avance, tendencia, venta real del dia anterior, media necesaria y las barras de segmento se ven
+         en la solapa Inicio (se copian desde estos elementos, que siguen actualizandose aca ocultos). -->
+    <div class="kpi accent" style="display:none">
       <div class="label">Objetivo mes</div>
       <div class="value" id="kpi-objetivo-mes">—</div>
     </div>
-    <div class="kpi">
+    <div class="kpi" style="display:none">
       <div class="label">Acumulado</div>
       <div class="value" id="kpi-acumulado">—</div>
     </div>
-    <div class="kpi">
+    <div class="kpi" style="display:none">
       <div class="label">Avance a la fecha</div>
       <div class="value" id="kpi-avance-fecha">—</div>
     </div>
-    <div class="kpi">
+    <div class="kpi" style="display:none">
       <div class="label">Tendencia cierre</div>
       <div class="value" id="kpi-tendencia">—</div>
     </div>
-    <div class="kpi">
+    <div class="kpi" style="display:none">
       <div class="label" id="kpi-ayer-label">Venta real — día anterior</div>
       <div class="value" id="kpi-ayer">—</div>
       <div id="kpi-ayer-nota" style="font-size:11px;color:var(--muted);margin-top:4px">Pedidos tomados el día anterior</div>
@@ -427,7 +429,7 @@ td.ip-base.clickable{cursor:pointer}
       <div class="value" id="kpi-real-hoy">—</div>
       <div id="kpi-real-nota" style="font-size:11px;color:var(--muted);margin-top:4px">Pedidos tomados hoy (fecha de pedido)</div>
     </div>
-    <div class="kpi">
+    <div class="kpi" style="display:none">
       <div class="label">Media necesaria</div>
       <div class="value" id="kpi-media-necesaria">—</div>
     </div>
@@ -441,7 +443,7 @@ td.ip-base.clickable{cursor:pointer}
     </div>
   </div>
 
-  <div class="segments">
+  <div class="segments" style="display:none">
     <div class="seg">
       <div class="seg-head"><span class="name seg-click" onclick="drillSegmento('p1')" title="Ver qué productos entran en Platino + Gold">Platino + Gold ⓘ</span><span class="pct" id="seg-pg-pct">—</span></div>
       <div class="bar-track"><div class="bar-fill" id="seg-pg-bar" style="width:0%"></div></div>
@@ -1558,7 +1560,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-28-c';
+const BUILD = '2026-10-28-d';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
