@@ -1176,27 +1176,6 @@ td.ip-base.clickable{cursor:pointer}
     </table>
   </div>
 
-  <h3 class="subsection-title">Motivos de devolución — última fecha (<span id="rechazos-ultima-fecha">—</span>)</h3>
-  <p class="section-note">
-    Devoluciones por rechazo del último día con datos, por <code>FechaComprobante</code> (no
-    <code>FechaCarga</code>).
-  </p>
-
-  <div class="table-scroll">
-    <table>
-      <thead>
-        <tr class="cols">
-          <th class="name-col">Vendedor</th>
-          <th class="name-col">Cliente</th>
-          <th class="name-col">Razón social</th>
-          <th class="name-col">Motivo</th>
-          <th>Unidades</th><th>Importe</th>
-        </tr>
-      </thead>
-      <tbody id="tbody-motivosUltimaFecha"></tbody>
-    </table>
-  </div>
-
   <h3 class="subsection-title">Clientes que rechazaron — <span id="rechazos-semana-pasada-titulo">el mismo día de la semana pasada</span></h3>
   <p class="section-note">
     Devoluciones por rechazo del mismo día de la semana que hoy, pero de la semana pasada
@@ -1531,7 +1510,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-27-g';
+const BUILD = '2026-10-27-h';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -3068,24 +3047,6 @@ Promise.all([rechazosDetallePromise, ventaVendedorPromise]).then(([detalle, vent
   document.getElementById('tbody-motivos').innerHTML = motivoRows.map(r => `
   <tr>
     <td class="name">${r.motivo}</td>
-    <td>${fmt(r.cant)}</td>
-    <td>-$ ${fmt(Math.abs(r.importe))}</td>
-  </tr>
-`).join('');
-}).catch(() => {});
-
-fetch(BASE + 'rechazos_ultima_fecha.json' + CACHE_BUST).then(r => r.json()).then(data => {
-  const fechaEl = document.getElementById('rechazos-ultima-fecha');
-  if (fechaEl && data.fecha) {
-    const [anio, mes, dia] = data.fecha.split('-');
-    fechaEl.textContent = `${dia}/${mes}`;
-  }
-  document.getElementById('tbody-motivosUltimaFecha').innerHTML = (data.filas || []).map(r => `
-  <tr>
-    <td class="name">${r.vendedor}</td>
-    <td>${r.cliente}</td>
-    <td class="name">${escHtml(r.razon || '—')}</td>
-    <td>${r.motivo}</td>
     <td>${fmt(r.cant)}</td>
     <td>-$ ${fmt(Math.abs(r.importe))}</td>
   </tr>
