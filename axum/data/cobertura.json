@@ -8,7 +8,7 @@
    "ruta": 37,
    "visitadosDeRuta": 32,
    "pendientes": 5,
-   "fueraDeRuta": 14,
+   "fueraDeRuta": 18,
    "pct": 86.5
   },
   {
@@ -19,6 +19,15 @@
    "pendientes": 7,
    "fueraDeRuta": 4,
    "pct": 78.1
+  },
+  {
+   "sellerId": "3",
+   "vendedor": "Ezequiel Hack",
+   "ruta": 49,
+   "visitadosDeRuta": 37,
+   "pendientes": 12,
+   "fueraDeRuta": 13,
+   "pct": 75.5
   },
   {
    "sellerId": "12",
@@ -37,15 +46,6 @@
    "pendientes": 11,
    "fueraDeRuta": 32,
    "pct": 71.1
-  },
-  {
-   "sellerId": "3",
-   "vendedor": "Ezequiel Hack",
-   "ruta": 49,
-   "visitadosDeRuta": 33,
-   "pendientes": 16,
-   "fueraDeRuta": 13,
-   "pct": 67.3
   },
   {
    "sellerId": "5",
@@ -71,8 +71,17 @@
    "ruta": 41,
    "visitadosDeRuta": 25,
    "pendientes": 16,
-   "fueraDeRuta": 1,
+   "fueraDeRuta": 3,
    "pct": 61.0
+  },
+  {
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "ruta": 40,
+   "visitadosDeRuta": 23,
+   "pendientes": 17,
+   "fueraDeRuta": 4,
+   "pct": 57.5
   },
   {
    "sellerId": "10",
@@ -80,17 +89,8 @@
    "ruta": 42,
    "visitadosDeRuta": 20,
    "pendientes": 22,
-   "fueraDeRuta": 10,
+   "fueraDeRuta": 25,
    "pct": 47.6
-  },
-  {
-   "sellerId": "4",
-   "vendedor": "Lucas Giayetto",
-   "ruta": 40,
-   "visitadosDeRuta": 18,
-   "pendientes": 22,
-   "fueraDeRuta": 3,
-   "pct": 45.0
   },
   {
    "sellerId": "20",
@@ -479,18 +479,6 @@
   "20": [],
   "3": [
    {
-    "clientId": "1059",
-    "nombre": "BUZON BARROS MATIAS AUGUSTO",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_B"
-   },
-   {
-    "clientId": "1207",
-    "nombre": "FERNANDEZ SUAREZ EMMANUEL DOSI",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
     "clientId": "1435",
     "nombre": "JARANA MULTISERVICIOS MYL SA",
     "localidad": "MAR DEL PLATA",
@@ -515,12 +503,6 @@
     "taxonomia": "Almacen/Despensa_C"
    },
    {
-    "clientId": "2137",
-    "nombre": "SILVA SANDRO ALEJANDRO",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Fiambreria_A"
-   },
-   {
     "clientId": "2162",
     "nombre": "NI JINMU",
     "localidad": "MAR DEL PLATA",
@@ -531,12 +513,6 @@
     "nombre": "GRAND NEZ S.A.",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Scape Rooms/Scape Rooms /Jumpinpark_A"
-   },
-   {
-    "clientId": "3356",
-    "nombre": "RICHARD ARIEL ROJAS",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
     "clientId": "401",
@@ -1099,12 +1075,6 @@
     "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
-    "clientId": "1889",
-    "nombre": "BURGOS FERNANDO ARIEL",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Estacion de Servicio_B"
-   },
-   {
     "clientId": "1948",
     "nombre": "CREMONA SA",
     "localidad": "MAR DEL PLATA",
@@ -1121,12 +1091,6 @@
     "nombre": "chen hui",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Autoservicio Tradicional_A"
-   },
-   {
-    "clientId": "290",
-    "nombre": "JUAREZ SONIA BEATRIZ",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_B"
    },
    {
     "clientId": "2979",
@@ -1147,12 +1111,6 @@
     "taxonomia": "Almacen/Despensa_B"
    },
    {
-    "clientId": "3293",
-    "nombre": "MARTIN EZEQUIEL MALDONADO",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_B"
-   },
-   {
     "clientId": "3326",
     "nombre": "MONICA ESTHER GINEPRO",
     "localidad": "MAR DEL PLATA",
@@ -1163,12 +1121,6 @@
     "nombre": "altamirano daiana",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Almacen/Despensa_B"
-   },
-   {
-    "clientId": "3537",
-    "nombre": "IVAN ADRIAN POSADAS",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_C"
    },
    {
     "clientId": "3741",
@@ -1187,12 +1139,6 @@
     "nombre": "SOFIA NAIR MARTINEZ",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Almacen/Despensa_C"
-   },
-   {
-    "clientId": "4869",
-    "nombre": "MARIANO GABRIEL NIEVA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Fiambreria_C"
    },
    {
     "clientId": "5032",
