@@ -1531,7 +1531,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-27-f';
+const BUILD = '2026-10-27-g';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -3096,7 +3096,9 @@ fetch(BASE + 'rechazos_ultima_fecha.json' + CACHE_BUST).then(r => r.json()).then
 let rechazosPorFecha = null;
 function fechaRechazosSemanaPasada() {
   const ref = new Date();
+  const pasadasLas20 = ref.getHours() >= 20;                      // de noche ya se mira la ruta del dia siguiente
   ref.setHours(12, 0, 0, 0);
+  if (pasadasLas20) ref.setDate(ref.getDate() + 1);
   if (ref.getDay() === 0) ref.setDate(ref.getDate() + 1);        // domingo: la ruta que sigue es la del lunes
   ref.setDate(ref.getDate() - 7);
   const p = n => String(n).padStart(2, '0');
