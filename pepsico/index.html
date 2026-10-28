@@ -469,20 +469,13 @@ td.ip-base.clickable{cursor:pointer}
     <button type="button" class="tab-btn" data-tab-btn="combos-axum">Combos Axum</button>
     <button type="button" class="tab-btn" data-tab-btn="combos-mn">Combos Mi Negocio</button>
     <button type="button" class="tab-btn" data-tab-btn="quiebres-stock">Quiebres de stock</button>
+    <button type="button" class="tab-btn" data-tab-btn="focos-semanales">Focos semanales</button>
     <button type="button" class="tab-btn" data-tab-btn="frase-dia">Frase del día</button>
   </div>
 
   <div class="tab-panel active" data-tab-panel="inicio">
 
-  <h3 class="subsection-title">Focos semanales</h3>
-  <ul class="focos-list" style="font-size:1.05rem; line-height:1.7; padding-left:22px; margin-top:12px">
-    <li>Llegar al <b>90%</b> en <b>Silver y Bronze</b>.</li>
-    <li>Reforzar las zonas del <b>centro</b> y <b>Aldrey</b> por los <b>juegos Evita</b>.</li>
-    <li>Foco en el incentivo <b>ATR 3.0</b>: <b>Sell Out</b> (PH + Global) y <b>Cobertura H&amp;L</b> (Taxonomías A&amp;B).</li>
-    <li>Continuar con la colocación de <b>exhibidores Lays Rústicas</b> y, a su vez, con la cobertura.</li>
-  </ul>
-
-  <div id="inicio-resumen" style="margin-top:30px"></div>
+  <div id="inicio-resumen"></div>
 
   </div>
 
@@ -1409,6 +1402,18 @@ td.ip-base.clickable{cursor:pointer}
 
   </div>
 
+  <div class="tab-panel" data-tab-panel="focos-semanales">
+
+  <h3 class="subsection-title">Focos semanales</h3>
+  <ul class="focos-list" style="font-size:1.05rem; line-height:1.7; padding-left:22px; margin-top:12px">
+    <li>Llegar al <b>90%</b> en <b>Silver y Bronze</b>.</li>
+    <li>Reforzar las zonas del <b>centro</b> y <b>Aldrey</b> por los <b>juegos Evita</b>.</li>
+    <li>Foco en el incentivo <b>ATR 3.0</b>: <b>Sell Out</b> (PH + Global) y <b>Cobertura H&amp;L</b> (Taxonomías A&amp;B).</li>
+    <li>Continuar con la colocación de <b>exhibidores Lays Rústicas</b> y, a su vez, con la cobertura.</li>
+  </ul>
+
+  </div>
+
   <div class="tab-panel" data-tab-panel="frase-dia">
 
   <div class="closing-quote">
@@ -1553,7 +1558,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-28-b';
+const BUILD = '2026-10-28-c';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -2963,7 +2968,8 @@ function pintarInicio() {
   const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   const etiqueta = `${dias[new Date(y, m - 1, d).getDay()]} ${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')}`;
   const hv = id => { const el = document.getElementById(id); return el ? el.innerHTML : '—'; };
-  const comp = ((historialProy || {}).compromiso || {})[e.fecha] || null;
+  const segAncho = id => { const el = document.getElementById(id); return (el && el.style.width) || '0%'; };
+  const comp =((historialProy || {}).compromiso || {})[e.fecha] || null;
   const kgComp = n => { const c = comp && comp[n]; return c ? (Number(c.pg) || 0) + (Number(c.sb) || 0) : null; };
   const kgVend = n => (e.v && typeof e.v[n] === 'number') ? e.v[n] : null;
   const nombres = rows.map(r => r.n).filter(n => !vendedorSel || n === vendedorSel).sort((a, b) => a.localeCompare(b));
@@ -2997,12 +3003,18 @@ function pintarInicio() {
       <div class="kpi"><div class="label">Diferencia</div><div class="value" style="${colorDif}">${dif === null ? '—' : signo(dif) + '<span class="unit">kg</span>'}</div>
         <div style="font-size:11px;color:var(--muted);margin-top:4px">${dif === null || !totComp ? 'Vendido menos planificado' : fmt(totVend / totComp * 100, 1) + '% de lo planificado'}</div></div>
     </div>
-    <div class="table-scroll" style="margin-top:14px"><table>
-      <thead><tr class="cols"><th class="name-col">Vendedor</th><th>Compromiso kg</th><th>Vendido kg</th><th>Diferencia kg</th><th>% de lo planificado</th></tr></thead>
-      <tbody>${filas.map(f => `<tr><td class="name">${escHtml(f.n)}</td><td>${f.c === null ? '—' : fmt(f.c)}</td><td>${f.v === null ? 'n/d' : fmt(f.v)}</td>
-        <td>${f.c === null || f.v === null ? '—' : celdaDif(f.v - f.c)}</td><td>${f.c ? (f.v === null ? '—' : fmt(f.v / f.c * 100, 1) + '%') : '—'}</td></tr>`).join('')}</tbody>
-      <tfoot><tr><td class="name">Total</td><td>${totComp === null ? '—' : fmt(totComp)}</td><td>${fmt(totVend)}</td><td>${celdaDif(dif)}</td><td>${totComp ? fmt(totVend / totComp * 100, 1) + '%' : '—'}</td></tr></tfoot>
-    </table></div>`;
+    <div class="segments" style="margin-top:26px">
+      <div class="seg">
+        <div class="seg-head"><span class="name seg-click" onclick="drillSegmento('p1')" title="Ver qué productos entran en Platino + Gold">Platino + Gold ⓘ</span><span class="pct">${hv('seg-pg-pct')}</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:${segAncho('seg-pg-bar')}"></div></div>
+        <div class="seg-foot"><span>${hv('seg-pg-obj')}</span><span>${hv('seg-pg-acum')}</span></div>
+      </div>
+      <div class="seg">
+        <div class="seg-head"><span class="name seg-click" onclick="drillSegmento('p2')" title="Ver qué productos entran en Silver &amp; Bronze">Silver &amp; Bronze ⓘ</span><span class="pct">${hv('seg-sb-pct')}</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:${segAncho('seg-sb-bar')}"></div></div>
+        <div class="seg-foot"><span>${hv('seg-sb-obj')}</span><span>${hv('seg-sb-acum')}</span></div>
+      </div>
+    </div>`;
   if (cont.dataset.ultimo !== html) { cont.innerHTML = html; cont.dataset.ultimo = html; }
 }
 setInterval(pintarInicio, 2000);
