@@ -5645,6 +5645,25 @@
   },
   {
    "fecha": "2026-10-28",
+   "sellerId": "20",
+   "vendedor": "Deposito",
+   "clientId": "4198",
+   "nombre": "LOS VASKITOS",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 29571.48,
+   "fechaVenta": "2026-10-28",
+   "horaVenta": "19:08",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-10-28",
    "sellerId": "3",
    "vendedor": "Ezequiel Hack",
    "clientId": "2240",
@@ -11057,13 +11076,32 @@
    "fechaVenta": "2026-10-28",
    "horaVenta": "15:06",
    "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-10-28",
+   "sellerId": "9",
+   "vendedor": "Ludmila Aylen Martinez",
+   "clientId": "1663",
+   "nombre": "Enzo Joaquin Paolina",
+   "localidad": "Mar del Plata",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 81214.33,
+   "fechaVenta": "2026-10-28",
+   "horaVenta": "18:35",
+   "estado": "vendio_sin_pasar"
   }
  ],
  "resumen": {
   "vendio": 147,
   "paso_sin_vender": 266,
   "sin_visita": 32,
-  "vendio_sin_pasar": 109
+  "vendio_sin_pasar": 111
  },
  "bySeller": [
   {
@@ -11279,8 +11317,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 33,
-   "monto": 987500.39,
+   "pedidos": 34,
+   "monto": 1017071.87,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -11379,8 +11417,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 27,
-   "monto": 4558708.91,
+   "pedidos": 28,
+   "monto": 4639923.24,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -15502,7 +15540,7 @@
  "totales": {
   "visitas": 413,
   "minutos": 1682.2,
-  "pedidos": 310,
-  "monto": 31557655.95
+  "pedidos": 312,
+  "monto": 31668441.76
  }
 }
