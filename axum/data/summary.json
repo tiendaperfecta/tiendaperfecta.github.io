@@ -1,20 +1,26 @@
 {
  "date": "2026-10-29",
- "totalNet": 25906579.84,
- "totalGross": 31335183.82,
- "orders": 327,
+ "totalNet": 29223442.5,
+ "totalGross": 35348587.6,
+ "orders": 353,
  "bySeller": [
-  {
-   "sellerId": "4",
-   "name": "Lucas Giayetto",
-   "orders": 24,
-   "total": 3716433.44
-  },
   {
    "sellerId": "9",
    "name": "Ludmila Aylen Martinez",
-   "orders": 21,
-   "total": 3562803.15
+   "orders": 28,
+   "total": 5022436.94
+  },
+  {
+   "sellerId": "4",
+   "name": "Lucas Giayetto",
+   "orders": 29,
+   "total": 4640805.26
+  },
+  {
+   "sellerId": "2",
+   "name": "Julian Nuñez",
+   "orders": 28,
+   "total": 3492191.69
   },
   {
    "sellerId": "6",
@@ -23,34 +29,28 @@
    "total": 3168950.24
   },
   {
-   "sellerId": "2",
-   "name": "Julian Nuñez",
-   "orders": 24,
-   "total": 3043691.24
+   "sellerId": "5",
+   "name": "Nicolas Martinez",
+   "orders": 28,
+   "total": 2932820.73
   },
   {
    "sellerId": "8",
    "name": "Martinica Rodriguez",
-   "orders": 26,
-   "total": 2673524.07
+   "orders": 29,
+   "total": 2825309.89
   },
   {
-   "sellerId": "5",
-   "name": "Nicolas Martinez",
-   "orders": 24,
-   "total": 2589995.36
+   "sellerId": "7",
+   "name": "Ramiro Rando",
+   "orders": 29,
+   "total": 2762214.23
   },
   {
    "sellerId": "10",
    "name": "Matias Parada",
    "orders": 20,
    "total": 2520748.72
-  },
-  {
-   "sellerId": "7",
-   "name": "Ramiro Rando",
-   "orders": 26,
-   "total": 2110499.32
   },
   {
    "sellerId": "11",
@@ -80,34 +80,34 @@
    "sellerId": "20",
    "name": "Deposito",
    "orders": 38,
-   "total": 1065572.28
+   "total": 1100143.88
   }
  ],
  "byChannel": [
   {
    "channel": "TRADITIONAL TRADE_A",
-   "orders": 77,
-   "total": 11654432.71
-  },
-  {
-   "channel": "TRADITIONAL TRADE_C",
-   "orders": 67,
-   "total": 5902250.47
+   "orders": 82,
+   "total": 13986648.25
   },
   {
    "channel": "TRADITIONAL TRADE_B",
-   "orders": 55,
-   "total": 5091701.51
+   "orders": 63,
+   "total": 6148915.83
+  },
+  {
+   "channel": "TRADITIONAL TRADE_C",
+   "orders": 70,
+   "total": 6008322.04
   },
   {
    "channel": "TRADITIONAL TRADE_D",
-   "orders": 73,
-   "total": 4785510.85
+   "orders": 78,
+   "total": 5005055.77
   },
   {
    "channel": "Mayorista_D",
-   "orders": 4,
-   "total": 1493660.64
+   "orders": 5,
+   "total": 1657160.7
   },
   {
    "channel": "AWAY FROM HOME_A",
@@ -116,7 +116,7 @@
   },
   {
    "channel": "s/canal",
-   "orders": 25,
+   "orders": 26,
    "total": 417429.03
   },
   {
@@ -135,14 +135,14 @@
    "total": 226857.31
   },
   {
+   "channel": "PROXIMITY_D",
+   "orders": 4,
+   "total": 220785.98
+  },
+  {
    "channel": "PROXIMITY_A",
    "orders": 1,
    "total": 174071.64
-  },
-  {
-   "channel": "PROXIMITY_D",
-   "orders": 3,
-   "total": 153071.59
   },
   {
    "channel": "LIMPIEZA_D",
@@ -151,8 +151,13 @@
   },
   {
    "channel": "AWAY FROM HOME_C",
-   "orders": 2,
-   "total": 68464.64
+   "orders": 3,
+   "total": 83607.5
+  },
+  {
+   "channel": "AWAY FROM HOME_B",
+   "orders": 1,
+   "total": 52000.09
   }
  ],
  "topClients": [
@@ -163,6 +168,12 @@
    "total": 1100643.1
   },
   {
+   "clientId": "1816",
+   "name": "LOOVING FOOD S.A (Autoservicio Tradicional_A)",
+   "orders": 1,
+   "total": 1083285.75
+  },
+  {
    "clientId": "1152",
    "name": "WEI JIANHUI (Autoservicio Tradicional_C)",
    "orders": 3,
@@ -171,8 +182,8 @@
   {
    "clientId": "2697",
    "name": "ALICIA ELENA HERNANDEZ (Mayoristas_D)",
-   "orders": 1,
-   "total": 831231.55
+   "orders": 2,
+   "total": 994731.61
   },
   {
    "clientId": "1293",
@@ -185,6 +196,12 @@
    "name": "MATIAS ALEJANDRO LESCANO (Autoservicio Tradicional_D)",
    "orders": 2,
    "total": 611891.72
+  },
+  {
+   "clientId": "1876",
+   "name": "WEI SUPERMARKET SA (Autoservicio Tradicional_A)",
+   "orders": 1,
+   "total": 557714.81
   },
   {
    "clientId": "764",
@@ -217,6 +234,12 @@
    "total": 436676.66
   },
   {
+   "clientId": "617",
+   "name": "SUPER EMANUELLIN S.A. (Autoservicio Tradicional_A)",
+   "orders": 1,
+   "total": 431857.56
+  },
+  {
    "clientId": "787",
    "name": "Zhongqing chen (Autoservicio Tradicional_D)",
    "orders": 1,
@@ -241,6 +264,12 @@
    "total": 408786.09
   },
   {
+   "clientId": "1094",
+   "name": "EL FRACASO S.A (Autoservicio Tradicional_B)",
+   "orders": 2,
+   "total": 403476.92
+  },
+  {
    "clientId": "97",
    "name": "NLNN 2019 SOCIEDAD DE RESPONSABILIDAD LIMITADA (Autoservicio Tradicional_A)",
    "orders": 1,
@@ -251,30 +280,6 @@
    "name": "MERCADOODACREM S.A. (Autoservicio Tradicional_A)",
    "orders": 2,
    "total": 389979.37
-  },
-  {
-   "clientId": "3031",
-   "name": "SUPERMERCADO 6350 MDQ S.A. (Autoservicio Tradicional_B)",
-   "orders": 1,
-   "total": 388285.84
-  },
-  {
-   "clientId": "601",
-   "name": "MERCADO DE LA PLAZA S.R.L. (Autoservicio Tradicional_B)",
-   "orders": 1,
-   "total": 376327.19
-  },
-  {
-   "clientId": "1943",
-   "name": "GREGSAL GROUP SRL (Autoservicio Tradicional_C)",
-   "orders": 1,
-   "total": 370391.4
-  },
-  {
-   "clientId": "110",
-   "name": "ZHONGQING CHEN (Autoservicio Tradicional_A)",
-   "orders": 1,
-   "total": 349214.59
   }
  ]
 }

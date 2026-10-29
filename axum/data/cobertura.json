@@ -24,10 +24,28 @@
    "sellerId": "2",
    "vendedor": "Julian Nuñez",
    "ruta": 38,
-   "visitadosDeRuta": 31,
-   "pendientes": 7,
-   "fueraDeRuta": 7,
-   "pct": 81.6
+   "visitadosDeRuta": 33,
+   "pendientes": 5,
+   "fueraDeRuta": 14,
+   "pct": 86.8
+  },
+  {
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "ruta": 41,
+   "visitadosDeRuta": 30,
+   "pendientes": 11,
+   "fueraDeRuta": 11,
+   "pct": 73.2
+  },
+  {
+   "sellerId": "7",
+   "vendedor": "Ramiro Rando",
+   "ruta": 52,
+   "visitadosDeRuta": 38,
+   "pendientes": 14,
+   "fueraDeRuta": 4,
+   "pct": 73.1
   },
   {
    "sellerId": "10",
@@ -35,7 +53,7 @@
    "ruta": 40,
    "visitadosDeRuta": 29,
    "pendientes": 11,
-   "fueraDeRuta": 10,
+   "fueraDeRuta": 13,
    "pct": 72.5
   },
   {
@@ -48,13 +66,13 @@
    "pct": 71.4
   },
   {
-   "sellerId": "7",
-   "vendedor": "Ramiro Rando",
-   "ruta": 52,
-   "visitadosDeRuta": 37,
-   "pendientes": 15,
-   "fueraDeRuta": 3,
-   "pct": 71.2
+   "sellerId": "3",
+   "vendedor": "Ezequiel Hack",
+   "ruta": 42,
+   "visitadosDeRuta": 30,
+   "pendientes": 12,
+   "fueraDeRuta": 20,
+   "pct": 71.4
   },
   {
    "sellerId": "5",
@@ -64,24 +82,6 @@
    "pendientes": 12,
    "fueraDeRuta": 0,
    "pct": 67.6
-  },
-  {
-   "sellerId": "3",
-   "vendedor": "Ezequiel Hack",
-   "ruta": 42,
-   "visitadosDeRuta": 27,
-   "pendientes": 15,
-   "fueraDeRuta": 13,
-   "pct": 64.3
-  },
-  {
-   "sellerId": "4",
-   "vendedor": "Lucas Giayetto",
-   "ruta": 41,
-   "visitadosDeRuta": 25,
-   "pendientes": 16,
-   "fueraDeRuta": 7,
-   "pct": 61.0
   },
   {
    "sellerId": "12",
@@ -444,18 +444,6 @@
     "nombre": "NADER DIEGO MARTIN",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Almacen/Despensa_D"
-   },
-   {
-    "clientId": "2764",
-    "nombre": "CAROLINA DANIELA PINTIMALLI",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Carniceria/Granja_D"
-   },
-   {
-    "clientId": "2791",
-    "nombre": "DUVAL ST.  ALMACEN S. R. L.",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_A"
    }
   ],
   "20": [],
@@ -485,12 +473,6 @@
     "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
-    "clientId": "1613",
-    "nombre": "ESPIRITU Y VIÑA S.A.",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_A"
-   },
-   {
     "clientId": "1700",
     "nombre": "VELAZQUEZ SABRINA MAGALI",
     "localidad": "MAR DEL PLATA",
@@ -515,22 +497,10 @@
     "taxonomia": "Kiosco/Maxikiosco_C"
    },
    {
-    "clientId": "3440",
-    "nombre": "SALUCLA NEGOCIOS",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_A"
-   },
-   {
     "clientId": "4469",
     "nombre": "SPANO CHRISTIAN RODOLFO",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Almacen/Despensa_D"
-   },
-   {
-    "clientId": "4478",
-    "nombre": "ALFONSO VOTTOLA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_B"
    },
    {
     "clientId": "4675",
@@ -805,18 +775,6 @@
   ],
   "4": [
    {
-    "clientId": "114",
-    "nombre": "LI LIN",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_B"
-   },
-   {
-    "clientId": "1766",
-    "nombre": "LODEPEDRITO",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Fiambreria_C"
-   },
-   {
     "clientId": "2053",
     "nombre": "ILBERA SEBASTIANA GALLARDO",
     "localidad": "Mar del Plata",
@@ -853,34 +811,16 @@
     "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
-    "clientId": "2916",
-    "nombre": "OSCAR MAXIMILIANO ARIAS",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
     "clientId": "2959",
     "nombre": "JONATAN SAMUEL TAPIA",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Panaderia_C"
    },
    {
-    "clientId": "3047",
-    "nombre": "JOAQUIN ESTRADA VEDIA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_A"
-   },
-   {
     "clientId": "3329",
     "nombre": "LAUTARO PACHECO",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Almacen/Despensa_C"
-   },
-   {
-    "clientId": "3836",
-    "nombre": "ZHONGBIAO CHEN",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_A"
    },
    {
     "clientId": "4304",
@@ -1031,12 +971,6 @@
     "nombre": "PROXIMORESTO S A",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Almacen/Despensa_B"
-   },
-   {
-    "clientId": "2230",
-    "nombre": "MARTINEZ MONICA BEATRIZ",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_D"
    },
    {
     "clientId": "3238",
