@@ -8,7 +8,7 @@
    "ruta": 33,
    "visitadosDeRuta": 32,
    "pendientes": 1,
-   "fueraDeRuta": 11,
+   "fueraDeRuta": 20,
    "pct": 97.0
   },
   {
@@ -17,7 +17,7 @@
    "ruta": 31,
    "visitadosDeRuta": 30,
    "pendientes": 1,
-   "fueraDeRuta": 30,
+   "fueraDeRuta": 40,
    "pct": 96.8
   },
   {
@@ -26,7 +26,7 @@
    "ruta": 43,
    "visitadosDeRuta": 40,
    "pendientes": 3,
-   "fueraDeRuta": 11,
+   "fueraDeRuta": 13,
    "pct": 93.0
   },
   {
@@ -35,7 +35,7 @@
    "ruta": 34,
    "visitadosDeRuta": 31,
    "pendientes": 3,
-   "fueraDeRuta": 3,
+   "fueraDeRuta": 7,
    "pct": 91.2
   },
   {
@@ -44,35 +44,35 @@
    "ruta": 21,
    "visitadosDeRuta": 19,
    "pendientes": 2,
-   "fueraDeRuta": 22,
+   "fueraDeRuta": 27,
    "pct": 90.5
-  },
-  {
-   "sellerId": "3",
-   "vendedor": "Ezequiel Hack",
-   "ruta": 34,
-   "visitadosDeRuta": 23,
-   "pendientes": 11,
-   "fueraDeRuta": 5,
-   "pct": 67.6
   },
   {
    "sellerId": "5",
    "vendedor": "Nicolas Martinez",
    "ruta": 37,
-   "visitadosDeRuta": 24,
-   "pendientes": 13,
+   "visitadosDeRuta": 29,
+   "pendientes": 8,
    "fueraDeRuta": 0,
-   "pct": 64.9
+   "pct": 78.4
+  },
+  {
+   "sellerId": "3",
+   "vendedor": "Ezequiel Hack",
+   "ruta": 34,
+   "visitadosDeRuta": 24,
+   "pendientes": 10,
+   "fueraDeRuta": 26,
+   "pct": 70.6
   },
   {
    "sellerId": "4",
    "vendedor": "Lucas Giayetto",
    "ruta": 56,
-   "visitadosDeRuta": 31,
-   "pendientes": 25,
+   "visitadosDeRuta": 34,
+   "pendientes": 22,
    "fueraDeRuta": 0,
-   "pct": 55.4
+   "pct": 60.7
   },
   {
    "sellerId": "7",
@@ -82,6 +82,15 @@
    "pendientes": 19,
    "fueraDeRuta": 2,
    "pct": 53.7
+  },
+  {
+   "sellerId": "1176",
+   "vendedor": "Vendedor",
+   "ruta": 0,
+   "visitadosDeRuta": 0,
+   "pendientes": 0,
+   "fueraDeRuta": 0,
+   "pct": null
   },
   {
    "sellerId": "12",
@@ -190,6 +199,7 @@
     "taxonomia": "Kiosco/Maxikiosco_C"
    }
   ],
+  "1176": [],
   "12": [
    {
     "clientId": "1860",
@@ -423,12 +433,6 @@
     "nombre": "GCL DESARROLLADORA SA",
     "localidad": "Mar del Plata",
     "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
-    "clientId": "1502",
-    "nombre": "CANDELA VIRGINIA GONZALEZ",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_C"
    },
    {
     "clientId": "1523",
@@ -943,12 +947,6 @@
     "taxonomia": "Almacen/Despensa_C"
    },
    {
-    "clientId": "1230",
-    "nombre": "ROSA NATALIA CURILEF JARAMILLO",
-    "localidad": "BARRIO BATAN",
-    "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
     "clientId": "1288",
     "nombre": "LILIANA DEL CARMEN VAZQUEZ",
     "localidad": "BARRIO CHAPADMALAL",
@@ -1027,12 +1025,6 @@
     "taxonomia": "Mayoristas_D"
    },
    {
-    "clientId": "528",
-    "nombre": "SEBASTIAN GONZALO SENDON",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_D"
-   },
-   {
     "clientId": "541",
     "nombre": "ARIEL MARTIN ZAMORA",
     "localidad": "BARRIO BATAN",
@@ -1049,12 +1041,6 @@
     "nombre": "ALMA CREATIVA",
     "localidad": "Miramar",
     "taxonomia": "Almacen/Despensa_D"
-   },
-   {
-    "clientId": "639",
-    "nombre": "MARIA VICTORIA SOFIA ESTORS",
-    "localidad": "BARRIO BATAN",
-    "taxonomia": "Kiosco/Maxikiosco_C"
    },
    {
     "clientId": "714",
@@ -1095,22 +1081,10 @@
     "taxonomia": "Almacen/Despensa_D"
    },
    {
-    "clientId": "2848",
-    "nombre": "LA CURVA DE OTAMENDI S.R.L",
-    "localidad": "COMANDANTE NICANOR OTAMENDI",
-    "taxonomia": "Estacion de Servicio - NO OFICIALES_B"
-   },
-   {
     "clientId": "429",
     "nombre": "MARIO FABIAN LUCHETTA",
     "localidad": "COMANDANTE NICANOR OTAMENDI",
     "taxonomia": "Autoservicio Tradicional_D"
-   },
-   {
-    "clientId": "430",
-    "nombre": "ESTEBAN JAVIER PERERA",
-    "localidad": "COMANDANTE NICANOR OTAMENDI",
-    "taxonomia": "Kiosco/Maxikiosco_A"
    },
    {
     "clientId": "433",
@@ -1131,18 +1105,6 @@
     "taxonomia": "Almacen/Despensa_D"
    },
    {
-    "clientId": "460",
-    "nombre": "DANILA GISELE OPORTO",
-    "localidad": "COMANDANTE NICANOR OTAMENDI",
-    "taxonomia": "Almacen/Despensa_B"
-   },
-   {
-    "clientId": "464",
-    "nombre": "GUTIERREZ NANCY",
-    "localidad": "COMANDANTE NICANOR OTAMENDI",
-    "taxonomia": "Almacen/Despensa_D"
-   },
-   {
     "clientId": "507",
     "nombre": "ríos virginia soledad",
     "localidad": "Comandante Nicanor Otamendi",
@@ -1153,12 +1115,6 @@
     "nombre": "ARIEL SEBASTIAN FRANCUCCI",
     "localidad": "BARRIO BATAN",
     "taxonomia": "Almacen/Despensa_C"
-   },
-   {
-    "clientId": "653",
-    "nombre": "JAVIER DAMIAN RODRIGUEZ",
-    "localidad": "COMANDANTE NICANOR OTAMENDI",
-    "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
     "clientId": "731",
