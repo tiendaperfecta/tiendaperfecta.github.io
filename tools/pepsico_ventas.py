@@ -880,9 +880,29 @@ TP_TIPOS_VALIDADO = {3}
 TP_MAX_DESVIO = 0.25
 
 
-def traer_tienda_perfecta(api, nombre_por_codven, clientes):
-    crudos = api.get("/data/cmd/ventas/api/v1/pepsico/get-resultado-tienda-perfecta")
-    if not crudos:
+OVERRIDE_TP = DIR / "override_censo_tp.json"
+
+
+def leer_override_tp(hoy):
+    """Censo Tienda Perfecta bajado a mano del reporte de Gescom ("6.1 Censo Tienda perfecta - Detallado por
+    Cliente Plano"). Si es DE HOY se usa en lugar del endpoint, que a veces trae menos tiendas perfectas que el
+    reporte. Devuelve las filas (SubCanal, Segmento, TiendaPerfecta, SupOk, Vendedor_ID) o None."""
+    if hoy is None:
+        return None
+    try:
+        ov = json.loads(OVERRIDE_TP.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    if ov.get("fecha") != hoy.isoformat() or not ov.get("filas"):
+        return None
+    print("AVISO: Tienda Perfecta tomada del censo de Gescom (extraido %s): %d clientes" % (ov.get("extraido", ""), len(ov["filas"])))
+    return ov["filas"]
+
+
+def traer_tienda_perfecta(api, nombre_por_codven, clientes, hoy=None):
+    filas_ov = leer_override_tp(hoy)
+    crudos = [] if filas_ov is not None else api.get("/data/cmd/ventas/api/v1/pepsico/get-resultado-tienda-perfecta")
+    if not crudos and filas_ov is None:
         raise RuntimeError("El censo Tienda Perfecta vino vacio.")
     vistos, filas, por_tipo, por_sub, por_ramo = set(), [], {}, {}, {}
     for r in crudos:
@@ -911,6 +931,8 @@ def traer_tienda_perfecta(api, nombre_por_codven, clientes):
             "SupOk": "Si" if tipo in TP_TIPOS_VALIDADO else "No",
             "Vendedor_ID": c.get("codven") or "",
         })
+    if filas_ov is not None:
+        filas = filas_ov
     top = lambda d: sorted(d.items(), key=lambda kv: -kv[1])[:12]
     print("Censo TP (oficial): %d clientes; por perfectStoreType: %s" % (len(filas), por_tipo))
     print("  subRamo mas frecuentes: %s" % top(por_sub))
@@ -1026,7 +1048,7 @@ def main():
     nombre_por_codven = {cod(x.get("codigo")): (x.get("nombre") or "").strip() for x in vendedores_raw}
 
     try:
-        tienda_perfecta = traer_tienda_perfecta(api, nombre_por_codven, clientes)
+        tienda_perfecta = traer_tienda_perfecta(api, nombre_por_codven, clientes, hoy)
         escribir("tienda_perfecta.json", tienda_perfecta)
         print("Tienda Perfecta: universo %d | TP %d | no TP %d | a validar %d" %
               (tienda_perfecta["universoTotal"], tienda_perfecta["tpTotal"],
