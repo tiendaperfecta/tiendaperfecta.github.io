@@ -21,7 +21,7 @@
  },
  "date": "2026-10-31",
  "diaSemana": "sabado",
- "jornadaCerrada": false,
+ "jornadaCerrada": true,
  "umbrales": {
   "llegada": "09:00",
   "salida": "14:00"
@@ -1237,11 +1237,11 @@
    "minutos": 0.1,
    "visito": true,
    "hora": "08:43",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 145857.23,
+   "fechaVenta": "2026-10-31",
+   "horaVenta": "14:20",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-10-31",
@@ -1754,6 +1754,25 @@
    "monto": 42000.07,
    "fechaVenta": "2026-10-31",
    "horaVenta": "11:45",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "20",
+   "vendedor": "Deposito",
+   "clientId": "1714",
+   "nombre": "fruticel touch srl",
+   "localidad": "Mar del Plata",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 18357.16,
+   "fechaVenta": "2026-10-31",
+   "horaVenta": "14:47",
    "estado": "vendio_sin_pasar"
   },
   {
@@ -2349,6 +2368,25 @@
    "fecha": "2026-10-31",
    "sellerId": "4",
    "vendedor": "Lucas Giayetto",
+   "clientId": "1896",
+   "nombre": "VERONICA MICAELA GALVAN",
+   "localidad": "Mar del Plata",
+   "taxonomia": "Almacen/Despensa_B",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 6.5,
+   "visito": true,
+   "hora": "12:54",
+   "pedidos": 1,
+   "monto": 48785.72,
+   "fechaVenta": "2026-10-31",
+   "horaVenta": "12:58",
+   "estado": "vendio"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
    "clientId": "655",
    "nombre": "CRISTINA GABRIELA BERNARD",
    "localidad": "MAR DEL PLATA",
@@ -2539,6 +2577,25 @@
    "fecha": "2026-10-31",
    "sellerId": "4",
    "vendedor": "Lucas Giayetto",
+   "clientId": "89",
+   "nombre": "MONICA NOEMI CHOCOU",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.5,
+   "visito": true,
+   "hora": "14:13",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "paso_sin_vender"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
    "clientId": "2854",
    "nombre": "LEONARDO FABIAN DE BELLIS",
    "localidad": "MAR DEL PLATA",
@@ -2596,6 +2653,234 @@
    "fecha": "2026-10-31",
    "sellerId": "4",
    "vendedor": "Lucas Giayetto",
+   "clientId": "97",
+   "nombre": "NLNN 2019 SOCIEDAD DE RESPONSABILIDAD LIMITADA",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.2,
+   "visito": true,
+   "hora": "14:16",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "paso_sin_vender"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "2779",
+   "nombre": "JUAN DIEGO BUSTAMANTE",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.1,
+   "visito": true,
+   "hora": "14:17",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "paso_sin_vender"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "890",
+   "nombre": "Hernán José Figueroa",
+   "localidad": "Mar del Plata",
+   "taxonomia": "Carniceria/Granja_B",
+   "canal": "AWAY FROM HOME",
+   "enRuta": false,
+   "minutos": 0.1,
+   "visito": true,
+   "hora": "14:15",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "paso_sin_vender"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "1548",
+   "nombre": "PATRICIA LUJAN CACERES",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.1,
+   "visito": true,
+   "hora": "14:13",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "paso_sin_vender"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "1550",
+   "nombre": "ZUBIRIA LEANDRO MAXIMILIANO",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_A",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": "14:13",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "sin_visita"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "1556",
+   "nombre": "FERNANDEZ DANIELA",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Fiambreria_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": "14:14",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "sin_visita"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "5016",
+   "nombre": "GUANG WEI CHEN",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": "14:19",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "sin_visita"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "1948",
+   "nombre": "CREMONA SA",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Mayoristas_A",
+   "canal": "Mayorista",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": "13:03",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "sin_visita"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "4198",
+   "nombre": "LOS VASKITOS",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": "14:13",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "sin_visita"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "3364",
+   "nombre": "Huarte Diego Enrique",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": "14:14",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "sin_visita"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "93",
+   "nombre": "SANTOS CANDELA MARIA JOSE",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": "14:14",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "sin_visita"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "4345",
+   "nombre": "ANA BELEN ZATLOUKAL",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Carniceria/Granja_D",
+   "canal": "AWAY FROM HOME",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": "14:15",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "sin_visita"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
    "clientId": "1948",
    "nombre": "CREMONA SA",
    "localidad": "MAR DEL PLATA",
@@ -2615,6 +2900,158 @@
    "fecha": "2026-10-31",
    "sellerId": "4",
    "vendedor": "Lucas Giayetto",
+   "clientId": "2263",
+   "nombre": "CREMONA SA",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Mayoristas_C",
+   "canal": "Mayorista",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": "14:14",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "sin_visita"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "2497",
+   "nombre": "MARIA SANDRA MEDINA",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": "14:15",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "sin_visita"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "2662",
+   "nombre": "MARCELO DANIEL BLANCO",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Kiosco/Maxikiosco_B",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": "14:15",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "sin_visita"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "4304",
+   "nombre": "PABLO ANDRES MANZO",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": "14:19",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "sin_visita"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "665",
+   "nombre": "DE ROSA GABRIELA ANDREA",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_C",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": "14:14",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "sin_visita"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "444",
+   "nombre": "Cansobre griselda",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": "14:15",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "sin_visita"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "582",
+   "nombre": "SALINAS ROSANA SILVIA",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": "14:15",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "sin_visita"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "3118",
+   "nombre": "CHOCOCHIA S.A.",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Kiosco/Maxikiosco_A",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": "14:15",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "sin_visita"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
    "clientId": "996",
    "nombre": "DAVID EMANUEL GOMEZ",
    "localidad": "MAR DEL PLATA",
@@ -2624,6 +3061,44 @@
    "minutos": 0.0,
    "visito": false,
    "hora": "12:50",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "sin_visita"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "668",
+   "nombre": "CLAUDIA ELIZABETH GARCIA",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": "14:14",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "sin_visita"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "446",
+   "nombre": "LILIANA ANDREA ALBA",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": "14:15",
    "pedidos": 0,
    "monto": 0,
    "fechaVenta": null,
@@ -5175,13 +5650,32 @@
    "fechaVenta": "2026-10-31",
    "horaVenta": "12:33",
    "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-10-31",
+   "sellerId": "9",
+   "vendedor": "Ludmila Aylen Martinez",
+   "clientId": "1768",
+   "nombre": "QUIMEY LOPEZ",
+   "localidad": "Mar del Plata",
+   "taxonomia": "Almacen/Despensa_B",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 107777.73,
+   "fechaVenta": "2026-10-31",
+   "horaVenta": "13:54",
+   "estado": "vendio_sin_pasar"
   }
  ],
  "resumen": {
-  "paso_sin_vender": 133,
-  "vendio": 69,
-  "sin_visita": 14,
-  "vendio_sin_pasar": 55
+  "paso_sin_vender": 137,
+  "vendio": 71,
+  "sin_visita": 32,
+  "vendio_sin_pasar": 57
  },
  "bySeller": [
   {
@@ -5202,7 +5696,7 @@
    "pasoSinVender": 24,
    "km": 17.0,
    "llegoTarde": false,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "7",
@@ -5222,7 +5716,7 @@
    "pasoSinVender": 27,
    "km": 29.0,
    "llegoTarde": true,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "11",
@@ -5237,10 +5731,30 @@
    "visitas": 31,
    "minutosTotal": 155.3,
    "minutosPromedio": 5.0,
-   "pedidos": 21,
-   "monto": 2063359.29,
-   "pasoSinVender": 16,
+   "pedidos": 22,
+   "monto": 2209216.53,
+   "pasoSinVender": 15,
    "km": 14.0,
+   "llegoTarde": false,
+   "salioTemprano": true
+  },
+  {
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "inicioJornada": "08:26",
+   "finJornada": "14:59",
+   "entradaZona": "08:26",
+   "salidaZona": "14:59",
+   "zonaConfiable": true,
+   "primera": "08:46",
+   "ultima": "14:17",
+   "visitas": 26,
+   "minutosTotal": 119.2,
+   "minutosPromedio": 4.6,
+   "pedidos": 19,
+   "monto": 3962871.01,
+   "pasoSinVender": 13,
+   "km": 30.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -5248,9 +5762,9 @@
    "sellerId": "5",
    "vendedor": "Nicolas Martinez",
    "inicioJornada": "08:44",
-   "finJornada": "12:53",
+   "finJornada": "12:55",
    "entradaZona": "08:44",
-   "salidaZona": "12:53",
+   "salidaZona": "12:55",
    "zonaConfiable": true,
    "primera": "08:53",
    "ultima": "12:14",
@@ -5260,9 +5774,9 @@
    "pedidos": 16,
    "monto": 1475548.32,
    "pasoSinVender": 15,
-   "km": 49.0,
+   "km": 56.0,
    "llegoTarde": false,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "1",
@@ -5280,9 +5794,9 @@
    "pedidos": 8,
    "monto": 2334199.97,
    "pasoSinVender": 18,
-   "km": 58.0,
+   "km": 75.0,
    "llegoTarde": true,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "3",
@@ -5302,27 +5816,7 @@
    "pasoSinVender": 18,
    "km": 20.0,
    "llegoTarde": true,
-   "salioTemprano": false
-  },
-  {
-   "sellerId": "4",
-   "vendedor": "Lucas Giayetto",
-   "inicioJornada": "08:26",
-   "finJornada": "12:47",
-   "entradaZona": "08:26",
-   "salidaZona": "08:28",
-   "zonaConfiable": true,
-   "primera": "08:46",
-   "ultima": "12:47",
-   "visitas": 20,
-   "minutosTotal": 111.7,
-   "minutosPromedio": 5.6,
-   "pedidos": 18,
-   "monto": 3914085.29,
-   "pasoSinVender": 8,
-   "km": 16.0,
-   "llegoTarde": false,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "10",
@@ -5342,7 +5836,7 @@
    "pasoSinVender": 7,
    "km": 31.0,
    "llegoTarde": false,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "12",
@@ -5360,7 +5854,7 @@
    "pedidos": 4,
    "monto": 504981.28,
    "pasoSinVender": 0,
-   "km": 2.0,
+   "km": 3.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -5397,8 +5891,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 14,
-   "monto": 968100.22,
+   "pedidos": 15,
+   "monto": 986457.38,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -5477,8 +5971,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 17,
-   "monto": 1528459.07,
+   "pedidos": 18,
+   "monto": 1636236.8,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -5541,6 +6035,91 @@
     "hora": "12:09",
     "clientId": "3374",
     "nombre": "CHOCOCHIA S. A."
+   },
+   {
+    "hora": "14:13",
+    "clientId": "4198",
+    "nombre": "LOS VASKITOS"
+   },
+   {
+    "hora": "14:13",
+    "clientId": "1550",
+    "nombre": "ZUBIRIA LEANDRO MAXIMILIANO"
+   },
+   {
+    "hora": "14:14",
+    "clientId": "3364",
+    "nombre": "Huarte Diego Enrique"
+   },
+   {
+    "hora": "14:14",
+    "clientId": "1556",
+    "nombre": "FERNANDEZ DANIELA"
+   },
+   {
+    "hora": "14:14",
+    "clientId": "2263",
+    "nombre": "CREMONA SA"
+   },
+   {
+    "hora": "14:14",
+    "clientId": "665",
+    "nombre": "DE ROSA GABRIELA ANDREA"
+   },
+   {
+    "hora": "14:14",
+    "clientId": "668",
+    "nombre": "CLAUDIA ELIZABETH GARCIA"
+   },
+   {
+    "hora": "14:14",
+    "clientId": "93",
+    "nombre": "SANTOS CANDELA MARIA JOSE"
+   },
+   {
+    "hora": "14:15",
+    "clientId": "444",
+    "nombre": "Cansobre griselda"
+   },
+   {
+    "hora": "14:15",
+    "clientId": "582",
+    "nombre": "SALINAS ROSANA SILVIA"
+   },
+   {
+    "hora": "14:15",
+    "clientId": "3118",
+    "nombre": "CHOCOCHIA S.A."
+   },
+   {
+    "hora": "14:15",
+    "clientId": "2497",
+    "nombre": "MARIA SANDRA MEDINA"
+   },
+   {
+    "hora": "14:15",
+    "clientId": "446",
+    "nombre": "LILIANA ANDREA ALBA"
+   },
+   {
+    "hora": "14:15",
+    "clientId": "2662",
+    "nombre": "MARCELO DANIEL BLANCO"
+   },
+   {
+    "hora": "14:15",
+    "clientId": "4345",
+    "nombre": "ANA BELEN ZATLOUKAL"
+   },
+   {
+    "hora": "14:19",
+    "clientId": "4304",
+    "nombre": "PABLO ANDRES MANZO"
+   },
+   {
+    "hora": "14:19",
+    "clientId": "5016",
+    "nombre": "GUANG WEI CHEN"
    }
   ],
   "11": [
@@ -5805,6 +6384,36 @@
     "hora": "12:50",
     "clientId": "996",
     "nombre": "DAVID EMANUEL GOMEZ"
+   },
+   {
+    "hora": "12:54",
+    "clientId": "1896",
+    "nombre": "VERONICA MICAELA GALVAN"
+   },
+   {
+    "hora": "14:13",
+    "clientId": "1548",
+    "nombre": "PATRICIA LUJAN CACERES"
+   },
+   {
+    "hora": "14:13",
+    "clientId": "89",
+    "nombre": "MONICA NOEMI CHOCOU"
+   },
+   {
+    "hora": "14:15",
+    "clientId": "890",
+    "nombre": "Hernán José Figueroa"
+   },
+   {
+    "hora": "14:16",
+    "clientId": "97",
+    "nombre": "NLNN 2019 SOCIEDAD DE RESPONSABILIDAD LIMITADA"
+   },
+   {
+    "hora": "14:17",
+    "clientId": "2779",
+    "nombre": "JUAN DIEGO BUSTAMANTE"
    }
   ],
   "5": [
@@ -6584,6 +7193,15 @@
    "pct": 72.7
   },
   {
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "ruta": 28,
+   "visitadosDeRuta": 20,
+   "pendientes": 8,
+   "fueraDeRuta": 6,
+   "pct": 71.4
+  },
+  {
    "sellerId": "1",
    "vendedor": "Maria Noelia Madia",
    "ruta": 13,
@@ -6591,15 +7209,6 @@
    "pendientes": 4,
    "fueraDeRuta": 15,
    "pct": 69.2
-  },
-  {
-   "sellerId": "4",
-   "vendedor": "Lucas Giayetto",
-   "ruta": 28,
-   "visitadosDeRuta": 19,
-   "pendientes": 9,
-   "fueraDeRuta": 1,
-   "pct": 67.9
   },
   {
    "sellerId": "3",
@@ -7064,12 +7673,6 @@
     "nombre": "YANYUN WANG",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Autoservicio Tradicional_A"
-   },
-   {
-    "clientId": "1896",
-    "nombre": "VERONICA MICAELA GALVAN",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Almacen/Despensa_B"
    },
    {
     "clientId": "2534",
@@ -7570,9 +8173,9 @@
   ]
  },
  "totales": {
-  "visitas": 202,
-  "minutos": 879.2,
-  "pedidos": 157,
-  "monto": 18377524.86
+  "visitas": 208,
+  "minutos": 886.7,
+  "pedidos": 161,
+  "monto": 18698302.71
  }
 }
