@@ -1009,6 +1009,17 @@ def main():
     gescom.usar_base()   # desde el 5/10/2026 todo sale de la base propia, nada de Gescom
 
     hoy = dt.datetime.now(TZ_AR).date()
+    # Corrida de cierre de mes: si existe pepsico/.fecha_cierre con "AAAA-MM-DD", se corre una vez como si hoy fuera
+    # ese dia (con sus parches de Gescom) y se borra el marcador. Sirve para cerrar el mes cuando el ultimo dia
+    # se actualizo temprano y el mes ya cambio.
+    marcador_cierre = DIR / ".fecha_cierre"
+    if marcador_cierre.exists():
+        try:
+            hoy = dt.date.fromisoformat(marcador_cierre.read_text(encoding="utf-8").strip())
+            print("AVISO: corrida de cierre con fecha", hoy.isoformat())
+        except Exception as e:
+            print("ERROR en .fecha_cierre:", e)
+        marcador_cierre.unlink()
     inicio_mes = hoy.replace(day=1)
 
     global MES_ARCHIVO
