@@ -1,9 +1,82 @@
 {
  "date": "2026-11-01",
- "totalNet": 0,
- "totalGross": 0,
- "orders": 0,
- "bySeller": [],
- "byChannel": [],
- "topClients": []
+ "totalNet": 214165.08,
+ "totalGross": 258147.11,
+ "orders": 8,
+ "bySeller": [
+  {
+   "sellerId": "1",
+   "name": "Maria Noelia Madia",
+   "orders": 1,
+   "total": 172500.17
+  },
+  {
+   "sellerId": "20",
+   "name": "Deposito",
+   "orders": 7,
+   "total": 85646.94
+  }
+ ],
+ "byChannel": [
+  {
+   "channel": "TRADITIONAL TRADE_D",
+   "orders": 1,
+   "total": 172500.17
+  },
+  {
+   "channel": "s/canal",
+   "orders": 7,
+   "total": 85646.94
+  }
+ ],
+ "topClients": [
+  {
+   "clientId": "972",
+   "name": "NICADELO S.A. (Kiosco/Maxikiosco_D)",
+   "orders": 1,
+   "total": 172500.17
+  },
+  {
+   "clientId": "2685",
+   "name": "",
+   "orders": 1,
+   "total": 18932.07
+  },
+  {
+   "clientId": "3625",
+   "name": "",
+   "orders": 1,
+   "total": 16971.41
+  },
+  {
+   "clientId": "4490",
+   "name": "",
+   "orders": 1,
+   "total": 13513.48
+  },
+  {
+   "clientId": "4125",
+   "name": "",
+   "orders": 1,
+   "total": 12913.31
+  },
+  {
+   "clientId": "586",
+   "name": "",
+   "orders": 1,
+   "total": 10716.35
+  },
+  {
+   "clientId": "503",
+   "name": "",
+   "orders": 1,
+   "total": 9869.86
+  },
+  {
+   "clientId": "4914",
+   "name": "",
+   "orders": 1,
+   "total": 2730.46
+  }
+ ]
 }
