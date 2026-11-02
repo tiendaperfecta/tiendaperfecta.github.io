@@ -1,9 +1,238 @@
 {
  "date": "2026-11-02",
- "totalNet": 0,
- "totalGross": 0,
- "orders": 0,
- "bySeller": [],
- "byChannel": [],
- "topClients": []
+ "totalNet": 2508065.25,
+ "totalGross": 3034758.93,
+ "orders": 57,
+ "bySeller": [
+  {
+   "sellerId": "8",
+   "name": "Martinica Rodriguez",
+   "orders": 12,
+   "total": 1073225.37
+  },
+  {
+   "sellerId": "5",
+   "name": "Nicolas Martinez",
+   "orders": 6,
+   "total": 494250.34
+  },
+  {
+   "sellerId": "7",
+   "name": "Ramiro Rando",
+   "orders": 5,
+   "total": 395096.72
+  },
+  {
+   "sellerId": "4",
+   "name": "Lucas Giayetto",
+   "orders": 2,
+   "total": 201142.91
+  },
+  {
+   "sellerId": "2",
+   "name": "Julian Nuñez",
+   "orders": 4,
+   "total": 194758.09
+  },
+  {
+   "sellerId": "3",
+   "name": "Ezequiel Hack",
+   "orders": 4,
+   "total": 165449.31
+  },
+  {
+   "sellerId": "10",
+   "name": "Matias Parada",
+   "orders": 1,
+   "total": 134714.33
+  },
+  {
+   "sellerId": "11",
+   "name": "Melanie Larrama",
+   "orders": 2,
+   "total": 126499.68
+  },
+  {
+   "sellerId": "1",
+   "name": "Maria Noelia Madia",
+   "orders": 2,
+   "total": 122107.91
+  },
+  {
+   "sellerId": "6",
+   "name": "Camila Martinez",
+   "orders": 5,
+   "total": 90742.88
+  },
+  {
+   "sellerId": "20",
+   "name": "Deposito",
+   "orders": 14,
+   "total": 36771.39
+  }
+ ],
+ "byChannel": [
+  {
+   "channel": "TRADITIONAL TRADE_A",
+   "orders": 12,
+   "total": 1137535.93
+  },
+  {
+   "channel": "TRADITIONAL TRADE_C",
+   "orders": 10,
+   "total": 748163.43
+  },
+  {
+   "channel": "TRADITIONAL TRADE_B",
+   "orders": 6,
+   "total": 454536.86
+  },
+  {
+   "channel": "TRADITIONAL TRADE_D",
+   "orders": 9,
+   "total": 288707.35
+  },
+  {
+   "channel": "Mayorista_D",
+   "orders": 2,
+   "total": 146214.41
+  },
+  {
+   "channel": "PROXIMITY_B",
+   "orders": 3,
+   "total": 124472.37
+  },
+  {
+   "channel": "AWAY FROM HOME_A",
+   "orders": 1,
+   "total": 98357.17
+  },
+  {
+   "channel": "s/canal",
+   "orders": 14,
+   "total": 36771.39
+  }
+ ],
+ "topClients": [
+  {
+   "clientId": "192",
+   "name": "KEES MARTIN ANDRES (Kiosco/Maxikiosco_A)",
+   "orders": 3,
+   "total": 336479.73
+  },
+  {
+   "clientId": "2250",
+   "name": "FERQUIN S.A. (Kiosco/Maxikiosco_A)",
+   "orders": 3,
+   "total": 248882.31
+  },
+  {
+   "clientId": "186",
+   "name": "SUPER LICHARDI S.R.L. (Autoservicio Tradicional_B)",
+   "orders": 2,
+   "total": 223643.19
+  },
+  {
+   "clientId": "193",
+   "name": "DOMINGO OSCAR GOPAR (Autoservicio Tradicional_C)",
+   "orders": 1,
+   "total": 207714.38
+  },
+  {
+   "clientId": "387",
+   "name": "LAZCANO MARIA FLORENCIA (Almacen/Despensa_A)",
+   "orders": 1,
+   "total": 186142.98
+  },
+  {
+   "clientId": "1087",
+   "name": "CREMONA SA (Mayoristas_D)",
+   "orders": 2,
+   "total": 146214.41
+  },
+  {
+   "clientId": "2617",
+   "name": "MARTIN NEBER LEGUIZAMON (Autoservicio Tradicional_C)",
+   "orders": 3,
+   "total": 142244.9
+  },
+  {
+   "clientId": "4443",
+   "name": "WANG ZHENGWEN (Autoservicio Tradicional_C)",
+   "orders": 1,
+   "total": 134714.33
+  },
+  {
+   "clientId": "431",
+   "name": "XIAOLAN SHI (Autoservicio Tradicional_A)",
+   "orders": 1,
+   "total": 129285.8
+  },
+  {
+   "clientId": "1610",
+   "name": "VALLARTA SA (Estacion de Servicio - NO OFICIALES_B)",
+   "orders": 3,
+   "total": 124472.37
+  },
+  {
+   "clientId": "458",
+   "name": "GUILLERMO ADRIAN SCULLI (Carniceria/Granja_A)",
+   "orders": 1,
+   "total": 98357.17
+  },
+  {
+   "clientId": "1577",
+   "name": "KIOSMDQ (Kiosco/Maxikiosco_B)",
+   "orders": 1,
+   "total": 95500.12
+  },
+  {
+   "clientId": "2457",
+   "name": "NICADELO SA (Kiosco/Maxikiosco_A)",
+   "orders": 2,
+   "total": 83745.02
+  },
+  {
+   "clientId": "1380",
+   "name": "THOMAS COUTURIER (Almacen/Despensa_C)",
+   "orders": 2,
+   "total": 81704.29
+  },
+  {
+   "clientId": "2843",
+   "name": "KEES LEONARDO JAVIER (Almacen/Despensa_A)",
+   "orders": 1,
+   "total": 81142.98
+  },
+  {
+   "clientId": "187",
+   "name": "COOPERATIVA DE TRABAJO MARSUR LIMITADA (Autoservicio Tradicional_D)",
+   "orders": 1,
+   "total": 78285.84
+  },
+  {
+   "clientId": "188",
+   "name": "VIRGINIA GABRIELA BROGGI (Almacen/Despensa_D)",
+   "orders": 2,
+   "total": 76178.48
+  },
+  {
+   "clientId": "2157",
+   "name": "ROMINA ANAHI RODRIGUEZ (Almacen/Despensa_A)",
+   "orders": 1,
+   "total": 71857.12
+  },
+  {
+   "clientId": "1066",
+   "name": "WENG YUEN (Autoservicio Tradicional_C)",
+   "orders": 1,
+   "total": 70785.71
+  },
+  {
+   "clientId": "2643",
+   "name": "DUVAL ST ALMACEN SRL (Almacen/Despensa_B)",
+   "orders": 1,
+   "total": 70285.72
+  }
+ ]
 }
