@@ -8,10 +8,9 @@ name: Flujo de caja (recaudacion en vivo)
 # pagos, extractos) lo sube tools/flujo-semanal.ps1 desde la PC de la oficina.
 on:
   schedule:
-    # la base trae rendiciones cada 30 min de 07:00 a 17:00: 08:50 a 18:50 hora argentina
-    - cron: "50 11,13,15,17,19,21 * * 1-6"
-    # domingo, una vez (la base no baja los domingos, pero así el panel queda al día todos los días)
-    - cron: "50 12 * * 0"
+    # la base trae rendiciones cada 30 min de 07:00 a 17:00: 08:50 a 18:50 hora argentina,
+    # todos los dias
+    - cron: "50 11,13,15,17,19,21 * * *"
   workflow_dispatch: {}
 
 permissions:

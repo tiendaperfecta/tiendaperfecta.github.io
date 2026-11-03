@@ -4,13 +4,8 @@ name: Georgalos data refresh
 # JSON que lee el panel: georgalos/indice.json, maestro.json y meses/*.json.
 on:
   schedule:
-    # Cada 1 hora, de lunes a sabado, hora argentina (UTC-3). El cron corre en
-    # UTC, asi que va partido para que el corte caiga en el dia argentino:
-    #   00:00-20:00 AR lun-sab = 03:00-23:00 UTC lun-sab
-    #   21:00-23:00 AR lun-sab = 00:00-02:00 UTC mar-dom
-    # El script calcula la fecha en hora argentina.
-    - cron: "0 3-23 * * 1-6"
-    - cron: "0 0-2 * * 0,2-6"
+    # Cada 1 hora, todos los dias. El script calcula la fecha en hora argentina.
+    - cron: "0 * * * *"
   workflow_dispatch: {}   # permite correrlo a mano desde la pestaña Actions
 
 permissions:

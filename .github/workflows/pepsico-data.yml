@@ -2,8 +2,9 @@ name: Pepsico data refresh
 
 on:
   schedule:
-    - cron: "0 14 * * 1-6"
-    - cron: "0 18 * * 1-6"
+    # 11:00 y 15:00 hora argentina, todos los dias
+    - cron: "0 14 * * *"
+    - cron: "0 18 * * *"
   workflow_dispatch: {}
 
 permissions:
