@@ -4,8 +4,9 @@ name: Georgalos data refresh
 # JSON que lee el panel: georgalos/indice.json, maestro.json y meses/*.json.
 on:
   schedule:
-    # Cada 1 hora, todos los dias. El script calcula la fecha en hora argentina.
-    - cron: "0 * * * *"
+    # Cada 1 hora, todos los dias, al minuto 17 (GitHub descarta muchos de los
+    # programados en punto). El script calcula la fecha en hora argentina.
+    - cron: "17 * * * *"
   workflow_dispatch: {}   # permite correrlo a mano desde la pestaña Actions
 
 permissions:
