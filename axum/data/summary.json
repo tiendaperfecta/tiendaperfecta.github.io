@@ -1,44 +1,74 @@
 {
  "date": "2026-11-03",
- "totalNet": 12595995.6,
- "totalGross": 15236073.4,
- "orders": 186,
+ "totalNet": 15176633.38,
+ "totalGross": 18358645.15,
+ "orders": 230,
  "bySeller": [
   {
    "sellerId": "7",
    "name": "Ramiro Rando",
-   "orders": 17,
-   "total": 2369735.88
+   "orders": 19,
+   "total": 2731736.17
+  },
+  {
+   "sellerId": "8",
+   "name": "Martinica Rodriguez",
+   "orders": 23,
+   "total": 2022192.5
+  },
+  {
+   "sellerId": "5",
+   "name": "Nicolas Martinez",
+   "orders": 20,
+   "total": 1694287.39
+  },
+  {
+   "sellerId": "2",
+   "name": "Julian Nuñez",
+   "orders": 16,
+   "total": 1527548.96
   },
   {
    "sellerId": "20",
    "name": "Deposito",
    "orders": 43,
-   "total": 1881073.39
+   "total": 1459930.31
   },
   {
-   "sellerId": "8",
-   "name": "Martinica Rodriguez",
+   "sellerId": "6",
+   "name": "Camila Martinez",
    "orders": 19,
-   "total": 1852250.36
-  },
-  {
-   "sellerId": "5",
-   "name": "Nicolas Martinez",
-   "orders": 15,
-   "total": 1450482.03
-  },
-  {
-   "sellerId": "2",
-   "name": "Julian Nuñez",
-   "orders": 13,
-   "total": 1356619.29
+   "total": 1398412.17
   },
   {
    "sellerId": "12",
-   "name": "Azul Martinez",
-   "orders": 13,
-   "total": 1228779.05
+   "name": "Agustin Pogorzelski",
+   "orders": 16,
+   "total": 1357544.88
+  },
+  {
+   "sellerId": "10",
+   "name": "Matias Parada",
+   "orders": 18,
+   "total": 1274944.44
+  },
+  {
+   "sellerId": "11",
+   "name": "Melanie Larrama",
+   "orders": 12,
+   "total": 1235299.06
+  },
+  {
+   "sellerId": "9",
+   "name": "Ludmila Aylen Martinez",
+   "orders": 14,
+   "total": 1123642.63
+  },
+  {
+   "sellerId": "1",
+   "name": "Maria Noelia Madia",
+   "orders": 14,
+   "total": 1064020.32
   },
   {
    "sellerId": "4",
@@ -47,62 +77,32 @@
    "total": 1046462.14
   },
   {
-   "sellerId": "10",
-   "name": "Matias Parada",
-   "orders": 14,
-   "total": 1041513.18
-  },
-  {
-   "sellerId": "6",
-   "name": "Camila Martinez",
-   "orders": 14,
-   "total": 922075.6
-  },
-  {
-   "sellerId": "9",
-   "name": "Ludmila Aylen Martinez",
-   "orders": 11,
-   "total": 785570.99
-  },
-  {
-   "sellerId": "1",
-   "name": "Maria Noelia Madia",
-   "orders": 8,
-   "total": 716234.29
-  },
-  {
-   "sellerId": "11",
-   "name": "Melanie Larrama",
-   "orders": 5,
-   "total": 304653.2
-  },
-  {
    "sellerId": "3",
    "name": "Ezequiel Hack",
-   "orders": 6,
-   "total": 280623.98
+   "orders": 8,
+   "total": 422624.17
   }
  ],
  "byChannel": [
   {
    "channel": "TRADITIONAL TRADE_A",
-   "orders": 60,
-   "total": 6884601.67
+   "orders": 70,
+   "total": 8346660.5
   },
   {
    "channel": "TRADITIONAL TRADE_C",
-   "orders": 58,
-   "total": 3655898.13
+   "orders": 74,
+   "total": 4427294.71
   },
   {
    "channel": "TRADITIONAL TRADE_B",
-   "orders": 18,
-   "total": 1996488.08
+   "orders": 25,
+   "total": 2498164.56
   },
   {
    "channel": "TRADITIONAL TRADE_D",
-   "orders": 18,
-   "total": 1505370.53
+   "orders": 27,
+   "total": 1857142.03
   },
   {
    "channel": "Mayorista_B",
@@ -131,12 +131,12 @@
   },
   {
    "channel": "AWAY FROM HOME_C",
-   "orders": 2,
-   "total": 58571.45
+   "orders": 3,
+   "total": 94239.79
   },
   {
    "channel": "s/canal",
-   "orders": 20,
+   "orders": 21,
    "total": 0.0
   }
  ],
@@ -150,8 +150,14 @@
   {
    "clientId": "4386",
    "name": "CHEGGFIELD SOCIEDAD ANÓNIMA (Autoservicio Tradicional_A)",
+   "orders": 3,
+   "total": 637929.84
+  },
+  {
+   "clientId": "5051",
+   "name": "CHEGGFIELD SOCIEDAD ANONIMA (Fiambreria_A)",
    "orders": 1,
-   "total": 588857.38
+   "total": 562571.94
   },
   {
    "clientId": "134",
@@ -214,6 +220,12 @@
    "total": 326143.25
   },
   {
+   "clientId": "1161",
+   "name": "SABELOTE S.A (Autoservicio Tradicional_A)",
+   "orders": 1,
+   "total": 312357.41
+  },
+  {
    "clientId": "1042",
    "name": "CREMONA SA (Mayoristas_B)",
    "orders": 2,
@@ -248,18 +260,6 @@
    "name": "Pezzente Alejandro (Autoservicio Tradicional_C)",
    "orders": 2,
    "total": 275734.87
-  },
-  {
-   "clientId": "2991",
-   "name": "Super Tejedor N 2631 S.r.l. (Autoservicio Tradicional_A)",
-   "orders": 2,
-   "total": 258214.61
-  },
-  {
-   "clientId": "847",
-   "name": "LOS PINARES GRANJA Y ROTISERIA SRL (Almacen/Despensa_A)",
-   "orders": 1,
-   "total": 234857.31
   }
  ]
 }
