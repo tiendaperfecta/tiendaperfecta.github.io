@@ -1060,10 +1060,10 @@ td.ip-base.clickable{cursor:pointer}
     <div class="tp-total-card">
       <div class="tp-total-title">Cobertura de Portafolio</div>
       <div class="tp-tiles">
-        <div class="tp-tile"><div class="v">63,3%</div><div class="l">Cobertura promedio</div></div>
-        <div class="tp-tile"><div class="v good">470</div><div class="l">Con oportunidad (60-79%)</div></div>
-        <div class="tp-tile"><div class="v">2.260</div><div class="l">Universo TP</div></div>
-        <div class="tp-tile"><div class="v">20,8%</div><div class="l">% con oportunidad</div></div>
+        <div class="tp-tile"><div class="v" id="port-prom">—</div><div class="l">Cobertura promedio</div></div>
+        <div class="tp-tile"><div class="v good" id="port-op">—</div><div class="l">Con oportunidad (60-79%)</div></div>
+        <div class="tp-tile"><div class="v" id="port-uni">—</div><div class="l">Universo TP</div></div>
+        <div class="tp-tile"><div class="v" id="port-pct">—</div><div class="l">% con oportunidad</div></div>
       </div>
     </div>
   </div>
@@ -1558,7 +1558,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-10-28-f';
+const BUILD = '2026-11-03-a';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -2808,8 +2808,17 @@ function heatColor(v, min, max){
   return {bg:`hsl(${hue},70%,88%)`, fg:`hsl(${hue},65%,28%)`};
 }
 
+// Tarjetas de arriba de Portafolio: resumen del censo (portafolio_resumen.json)
+fetch(BASE + 'portafolio_resumen.json' + CACHE_BUST).then(r => r.ok ? r.json() : null).then(d => {
+  if (!d) return;
+  setTextoSiExiste('port-prom', fmt(d.promedio, 1) + '%');
+  setTextoSiExiste('port-op', fmt(d.conOportunidad));
+  setTextoSiExiste('port-uni', fmt(d.universo));
+  setTextoSiExiste('port-pct', d.universo ? fmt(d.conOportunidad / d.universo * 100, 1) + '%' : '—');
+}).catch(() => {});
+
 let portafolioDetalle = [];
-const portafolioDetallePromise = fetch(BASE + 'oportunidad_portafolio.json' + CACHE_BUST).then(r => r.json()).then(data => {
+const portafolioDetallePromise =fetch(BASE + 'oportunidad_portafolio.json' + CACHE_BUST).then(r => r.json()).then(data => {
   portafolioDetalle = data;
 }).catch(() => {});
 
