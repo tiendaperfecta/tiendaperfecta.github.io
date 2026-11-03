@@ -1071,7 +1071,8 @@ td.ip-base.clickable{cursor:pointer}
   <h3 class="subsection-title">Oportunidad de portafolio por día de visita</h3>
   <p class="section-note">
     Formato de celda: clientes con oportunidad de portafolio / universo de ese día. Ordenado de mayor a menor
-    cantidad de clientes con oportunidad.
+    cantidad de clientes con oportunidad. Solo cuentan los clientes a los que les toca visita esta semana, según la
+    frecuencia de su ruta (semanal, cada 2 semanas o cada 4 semanas).
   </p>
 
   <div class="table-scroll">
@@ -1558,7 +1559,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-11-03-a';
+const BUILD = '2026-11-03-b';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -2818,8 +2819,14 @@ fetch(BASE + 'portafolio_resumen.json' + CACHE_BUST).then(r => r.ok ? r.json() :
 }).catch(() => {});
 
 let portafolioDetalle = [];
-const portafolioDetallePromise =fetch(BASE + 'oportunidad_portafolio.json' + CACHE_BUST).then(r => r.json()).then(data => {
-  portafolioDetalle = data;
+// Solo los clientes a los que les toca visita esta semana (segun la frecuencia de su ruta: semanal, cada 2 o cada 4 semanas).
+// El censo trae el dia y el pipeline marca "toca" en censo_clientes.json; si ese archivo falta se muestran todos.
+const portafolioDetallePromise = Promise.all([
+  fetch(BASE + 'oportunidad_portafolio.json' + CACHE_BUST).then(r => r.json()),
+  fetch(BASE + 'censo_clientes.json' + CACHE_BUST).then(r => r.ok ? r.json() : []).catch(() => [])
+]).then(([data, censo]) => {
+  const toca = new Map((censo || []).filter(c => typeof c.toca === 'boolean').map(c => [String(c.codigo), c.toca]));
+  portafolioDetalle = data.filter(c => toca.get(String(c.codigo)) !== false);
 }).catch(() => {});
 
 function openDrillPortafolio(title, subtitle, list) {
