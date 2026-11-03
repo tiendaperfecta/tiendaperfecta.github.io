@@ -797,7 +797,7 @@ def traer_avance_kg_reporte(api, hoy, dias_habiles, dias_trabajados):
     }
 
 
-def ruta_de(cliente_raw):
+def ruta_de_ext(cliente_raw):
     """(dia, codven) de la ruta de preventa del cliente. Un cliente puede
     tener mas de una ruta cargada (ej. calle + mayorista/deposito, o dos
     vendedores de calle distintos); tomar siempre la primera entrada del
@@ -808,14 +808,46 @@ def ruta_de(cliente_raw):
     for r in cliente_raw.get("rutasPreventa") or []:
         for i, d in enumerate(DIAS):
             if r.get(d):
-                candidatos.append((DIAS_CAP[i], cod(r.get("codigoVendedor"))))
+                candidatos.append((DIAS_CAP[i], cod(r.get("codigoVendedor")), r))
                 break
     if not candidatos:
-        return None, ""
-    for dia, codven in candidatos:
+        return None, "", None
+    for dia, codven, r in candidatos:
         if codven in VENDEDORES_PEPSICO:
-            return dia, codven
+            return dia, codven, r
     return candidatos[0]
+
+
+def ruta_de(cliente_raw):
+    dia, codven, _ = ruta_de_ext(cliente_raw)
+    return dia, codven
+
+
+FRECUENCIA_SEMANAS = {"Semanal": 1, "Cada2Semanas": 2, "Cada4Semanas": 4}
+
+
+def lunes_de(fecha):
+    """Lunes de la semana de trabajo de una fecha (el domingo cuenta para la semana que viene)."""
+    lunes = fecha - dt.timedelta(days=fecha.weekday())
+    return lunes + dt.timedelta(days=7) if fecha.weekday() == 6 else lunes
+
+
+def toca_esta_semana(ruta, hoy):
+    """True si al cliente le toca visita en la semana de `hoy`, segun la frecuencia de su ruta de preventa:
+    Semanal = todas las semanas; Cada2Semanas / Cada4Semanas = una de cada 2 / 4 semanas, contando desde la
+    semana de fechaPrimeraVisita (la primera semana ya cuenta). Sin ruta o sin fecha: toca."""
+    if not ruta:
+        return True
+    n = FRECUENCIA_SEMANAS.get((ruta.get("frecuencia") or "Semanal").strip(), 1)
+    primera = ruta.get("fechaPrimeraVisita")
+    if not primera:
+        return True
+    try:
+        p = dt.date.fromisoformat(str(primera)[:10])
+    except ValueError:
+        return True
+    semanas = (lunes_de(hoy) - lunes_de(p)).days // 7
+    return semanas >= 0 and semanas % n == 0
 
 
 MES_ARCHIVO = None
@@ -1032,7 +1064,7 @@ def main():
         codigo = cod(c.get("codigo"))
         if not codigo:
             continue
-        dia, codven = ruta_de(c)
+        dia, codven, ruta = ruta_de_ext(c)
         clientes[codigo] = {
             "codigo": codigo,
             "razon": (c.get("nombre") or c.get("razonSocial") or "").strip(),
@@ -1040,12 +1072,18 @@ def main():
             "seg": cod(c.get("codigoSegmento")).upper(),
             "dia": dia,
             "codven": codven,
+            "frec": ((ruta or {}).get("frecuencia") or "Semanal").strip(),
+            "toca": toca_esta_semana(ruta, hoy),
         }
 
     escribir("censo_clientes.json", [
-        {"codigo": c["codigo"], "seg": c["seg"], "dia": c["dia"], "codven": c["codven"]}
+        {"codigo": c["codigo"], "seg": c["seg"], "dia": c["dia"], "codven": c["codven"], "frec": c["frec"], "toca": c["toca"]}
         for c in clientes.values() if c["codven"] in VENDEDORES_PEPSICO
     ])
+    print("Clientes con ruta que les toca esta semana: %d de %d (frecuencias: %s)" % (
+        sum(1 for c in clientes.values() if c["dia"] and c["codven"] in VENDEDORES_PEPSICO and c["toca"]),
+        sum(1 for c in clientes.values() if c["dia"] and c["codven"] in VENDEDORES_PEPSICO),
+        {f: sum(1 for c in clientes.values() if c["dia"] and c["codven"] in VENDEDORES_PEPSICO and c["frec"] == f) for f in FRECUENCIA_SEMANAS}))
 
     subgrupo_por_desc = {}
     for grupo, cfg in SUBPRODUCTOS.items():
@@ -1178,14 +1216,15 @@ def main():
         if not c["dia"] or c["codven"] not in VENDEDORES_PEPSICO:
             continue
         nombre_vend_cli = nombre_por_codven.get(c["codven"], c["codven"])
+        toca = c.get("toca", True)    # solo los clientes a los que les toca visita esta semana (frecuencia de la ruta)
         es_no_comprador = compra_cliente.get(codigo, 0) < 3
-        if es_no_comprador:
+        if es_no_comprador and toca:
             no_compradores.append({**{k: c[k] for k in
                                     ("codigo", "razon", "localidad", "seg", "dia")},
                                     "vendedor": nombre_vend_cli})
         # de TODAS las rutas (con su "dia"): la pagina toma la de hoy segun su reloj, asi no queda la del dia anterior
         # entre la medianoche y la primera actualizacion del dia
-        if pehuamar_compra.get(codigo, 0) <= 0:
+        if pehuamar_compra.get(codigo, 0) <= 0 and toca:
             pehuamar_no_comprado.append({**{k: c[k] for k in
                                           ("codigo", "razon", "localidad", "seg", "dia")},
                                           "vendedor": nombre_vend_cli})
@@ -1202,7 +1241,7 @@ def main():
             if cant >= 3:
                 cumple_sub[sub] = cumple_sub.get(sub, 0) + 1
         for gk in subproducto_no_comprado:
-            if cli_sub.get(gk, 0) < 3:
+            if cli_sub.get(gk, 0) < 3 and toca:
                 subproducto_no_comprado[gk].append({**{k: c[k] for k in
                                                     ("codigo", "razon", "localidad", "seg", "dia")},
                                                     "vendedor": nombre_vend_cli})
@@ -1213,7 +1252,7 @@ def main():
             if compra_cliente.get(codigo, 0) >= 3:
                 segdata[seg]["cumple"] += 1
         clave_dia = DIA_CLAVE.get(c["dia"])
-        if clave_dia:
+        if clave_dia and toca:
             nc_dia = nc_dia_por_vend.setdefault(codven, {k: [0, 0] for k in DIA_CLAVE.values()})
             nc_dia[clave_dia][1] += 1
             if es_no_comprador:
