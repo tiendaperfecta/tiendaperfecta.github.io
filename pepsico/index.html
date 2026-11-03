@@ -1559,7 +1559,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-11-03-b';
+const BUILD = '2026-11-03-c';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -2818,13 +2818,14 @@ fetch(BASE + 'portafolio_resumen.json' + CACHE_BUST).then(r => r.ok ? r.json() :
   setTextoSiExiste('port-pct', d.universo ? fmt(d.conOportunidad / d.universo * 100, 1) + '%' : '—');
 }).catch(() => {});
 
-let portafolioDetalle = [];
+let portafolioDetalle = [], censoClientes = [];
 // Solo los clientes a los que les toca visita esta semana (segun la frecuencia de su ruta: semanal, cada 2 o cada 4 semanas).
 // El censo trae el dia y el pipeline marca "toca" en censo_clientes.json; si ese archivo falta se muestran todos.
 const portafolioDetallePromise = Promise.all([
   fetch(BASE + 'oportunidad_portafolio.json' + CACHE_BUST).then(r => r.json()),
   fetch(BASE + 'censo_clientes.json' + CACHE_BUST).then(r => r.ok ? r.json() : []).catch(() => [])
 ]).then(([data, censo]) => {
+  censoClientes = censo || [];
   const toca = new Map((censo || []).filter(c => typeof c.toca === 'boolean').map(c => [String(c.codigo), c.toca]));
   portafolioDetalle = data.filter(c => toca.get(String(c.codigo)) !== false);
 }).catch(() => {});
@@ -2918,27 +2919,33 @@ function renderPortDiaSection(){
 `;
 }
 
-const portSegRows = [
-  {n:"Camila Martinez",        A:[6,23],  B:[9,28],  C:[16,60], D:[21,70],  totOp:52, totU:181},
-  {n:"Maria Noelia Madia",     A:[11,32], B:[12,28], C:[13,53], D:[9,51],   totOp:45, totU:164},
-  {n:"Julian Nuñez",           A:[9,39],  B:[6,18],  C:[13,49], D:[15,65],  totOp:43, totU:171},
-  {n:"Matias Parada",          A:[5,30],  B:[7,14],  C:[15,55], D:[16,89],  totOp:43, totU:188},
-  {n:"Martinica Rodriguez",    A:[8,22],  B:[6,20],  C:[18,54], D:[10,125], totOp:42, totU:221},
-  {n:"Melanie Larrama",        A:[4,22],  B:[9,28],  C:[11,51], D:[17,71],  totOp:41, totU:172},
-  {n:"Ramiro Rando",           A:[8,39],  B:[6,34],  C:[15,44], D:[11,79],  totOp:40, totU:196},
-  {n:"Lucas Giayetto",         A:[4,41],  B:[7,26],  C:[13,44], D:[13,100], totOp:37, totU:211},
-  {n:"Nicolas Martinez",       A:[6,34],  B:[6,28],  C:[17,53], D:[6,70],   totOp:35, totU:185},
-  {n:"Agustin Pogorzelski",    A:[1,25],  B:[5,23],  C:[16,52], D:[11,80],  totOp:33, totU:180},
-  {n:"Ezequiel Hack",          A:[2,25],  B:[5,21],  C:[12,51], D:[12,103], totOp:31, totU:200},
-  {n:"Ludmila Aylen Martinez", A:[3,41],  B:[3,22],  C:[10,54], D:[12,74],  totOp:28, totU:191},
-];
+let portSegRows = [];
 function tierOportunidad(p){ return p<=15 ? 'good' : p<=25 ? 'warn' : 'bad'; }
 function fmtCellOp([op,u]){ return `${op}/${u}`; }
 
-const tbodyPortSeg = document.getElementById('tbody-portseg');
-tbodyPortSeg.innerHTML = portSegRows.map(r => {
-  const pct = r.totU ? r.totOp/r.totU*100 : 0;
-  return `
+// Oportunidad de portafolio por vendedor y segmento: universo = clientes con ruta a los que les toca visita esta semana
+// (censo_clientes.json, campo "toca"); oportunidad = clientes de oportunidad_portafolio.json (ya filtrados por "toca").
+const VEND_POR_CODIGO = {"1":"Maria Noelia Madia","2":"Julian Nuñez","3":"Ezequiel Hack","4":"Lucas Giayetto","5":"Nicolas Martinez","6":"Camila Martinez",
+  "7":"Ramiro Rando","8":"Martinica Rodriguez","9":"Ludmila Aylen Martinez","10":"Matias Parada","11":"Melanie Larrama","12":"Agustin Pogorzelski"};
+function renderPortSegSection(){
+  if (!censoClientes.length) return;
+  const SEGS = ['A','B','C','D'];
+  const acc = {};
+  Object.values(VEND_POR_CODIGO).forEach(n => { acc[n] = {n, A:[0,0], B:[0,0], C:[0,0], D:[0,0], totOp:0, totU:0}; });
+  censoClientes.forEach(c => {
+    const n = VEND_POR_CODIGO[String(c.codven)];
+    if (!n || c.toca === false || !c.dia || SEGS.indexOf(c.seg) < 0) return;
+    acc[n][c.seg][1]++; acc[n].totU++;
+  });
+  portafolioDetalle.forEach(c => {
+    const a = acc[c.vendedor];
+    if (!a || SEGS.indexOf(c.seg) < 0) return;
+    a[c.seg][0]++; a.totOp++;
+  });
+  portSegRows = Object.values(acc).sort((a, b) => b.totOp - a.totOp);
+  document.getElementById('tbody-portseg').innerHTML = portSegRows.map(r => {
+    const pct = r.totU ? r.totOp/r.totU*100 : 0;
+    return `
   <tr>
     <td class="name">${r.n}</td>
     <td class="clickable" onclick="drillPortSeg('${r.n}','A')">${fmtCellOp(r.A)}</td>
@@ -2948,18 +2955,20 @@ tbodyPortSeg.innerHTML = portSegRows.map(r => {
     <td class="clickable" onclick="drillPortSeg('${r.n}','Total')"><span class="pill ${tierOportunidad(pct)}">${r.totOp}/${r.totU}</span></td>
   </tr>
 `;}).join('');
-const totPortSeg = {A:[0,0],B:[0,0],C:[0,0],D:[0,0],totOp:0,totU:0};
-portSegRows.forEach(r => {
-  ['A','B','C','D'].forEach(s => { totPortSeg[s][0]+=r[s][0]; totPortSeg[s][1]+=r[s][1]; });
-  totPortSeg.totOp += r.totOp; totPortSeg.totU += r.totU;
-});
-document.getElementById('tfoot-portseg').innerHTML = `
+  const totPortSeg = {A:[0,0],B:[0,0],C:[0,0],D:[0,0],totOp:0,totU:0};
+  portSegRows.forEach(r => {
+    SEGS.forEach(s => { totPortSeg[s][0]+=r[s][0]; totPortSeg[s][1]+=r[s][1]; });
+    totPortSeg.totOp += r.totOp; totPortSeg.totU += r.totU;
+  });
+  document.getElementById('tfoot-portseg').innerHTML = `
   <tr>
     <td class="name">Total PepsiCo</td>
     <td>${fmtCellOp(totPortSeg.A)}</td><td>${fmtCellOp(totPortSeg.B)}</td><td>${fmtCellOp(totPortSeg.C)}</td><td>${fmtCellOp(totPortSeg.D)}</td>
     <td>${fmt(totPortSeg.totOp)}/${fmt(totPortSeg.totU)}</td>
   </tr>
 `;
+}
+portafolioDetallePromise.then(() => renderPortSegSection());
 
 function fmt(n, d=0){ return n.toLocaleString('es-AR', {minimumFractionDigits:d, maximumFractionDigits:d}); }
 function tier(p){ return p>=100 ? 'good' : p>=90 ? 'warn' : 'bad'; }
