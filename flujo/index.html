@@ -255,10 +255,14 @@ const MAPA_FIJO = [
   [/\bDYD\b|D ?Y ?D CONSULTORES/, 'estudio'],                          // estudio contable
   [/COMPUTACION IDEA|GESCOM|AXUM|DIGIP/, 'sistemas'],                    // sistemas
   [/\bCLARO\b|TELECOM|MOVISTAR|FIBERTEL/, 'sistemas'],                  // internet
+  // 'no' = no sumar: proveedores que se pagan con los E-CHEQS de Galicia (columnas de cheques);
+  // sumar también sus facturas impagas de Gescom los contaba dos veces (Franco, 4/11/2026).
+  [/\bATR NORTE/, 'no'],
+  [/PRIMEROS PRODU?C?T?OS|PRIMEROS PRODOCTOS|PEHUENIA/, 'no'],
 ];
 function colPorDefecto(nombre, codigo){
   const n = norm(nombre);
-  for (const [re,col] of MAPA_FIJO) if (re.test(n) && E.columnas.some(c=>c.key===col)) return col;
+  for (const [re,col] of MAPA_FIJO) if (re.test(n) && (col==='no' || E.columnas.some(c=>c.key===col))) return col;
   return colAuto(nombre) || ('gp_'+codigo);
 }
 // Facturas entre empresas del grupo: no son pagos a proveedores, no se muestran
@@ -268,7 +272,8 @@ function colDeProveedor(nombre, codigo){
   const elegida = E.mapaProv && E.mapaProv[codigo];
   if (elegida==='no') return null;
   if (elegida && E.columnas.some(c=>c.key===elegida)) return elegida;
-  return colPorDefecto(nombre, codigo);
+  const def = colPorDefecto(nombre, codigo);
+  return def==='no' ? null : def;
 }
 // "PRIMEROS PRODUCTOS PEHUENIAS S.A." → "PRIMEROS PRODUCTOS PEHUENIAS"
 function nombreCorto(n){
@@ -342,7 +347,7 @@ function tablaProveedoresHtml(){
   for (const x of VIVO.facturas){ const [prov,nombre,,,,,,,saldo]=x; if (ES_DEL_GRUPO.test(norm(nombre))) continue; const q=por[prov]=por[prov]||{prov,nombre,n:0,total:0}; q.n++; q.total+=saldo; }
   const lista=Object.values(por).sort((a,b)=>b.total-a.total);
   const opc=(prov,nombre)=>{ const el=(E.mapaProv||{})[prov]||''; const auto=colPorDefecto(nombre,prov);
-    return `<option value="" ${!el?'selected':''}>Automática (${esc(nombreCol(auto))})</option><option value="no" ${el==='no'?'selected':''}>— No sumar —</option>`+
+    return `<option value="" ${!el?'selected':''}>Automática (${auto==='no'?'no se suma: se paga con E-CHEQS':esc(nombreCol(auto))})</option><option value="no" ${el==='no'?'selected':''}>— No sumar —</option>`+
       E.columnas.filter(c=>c.tipo!=='cheque').map(c=>`<option value="${c.key}" ${el===c.key?'selected':''}>${esc(c.nombre)}</option>`).join(''); };
   return `<h4 style="margin:12px 0 4px">En qué columna va cada proveedor</h4>
    <div class="lista" style="max-height:260px">${lista.map(q=>`<div><span style="flex:1">${esc(q.nombre)} <span style="color:var(--sub)">· ${q.n} fact. · $ ${f0(q.total)}</span></span><select data-mprov="${esc(q.prov)}" style="max-width:190px">${opc(q.prov,q.nombre)}</select></div>`).join('')}</div>
