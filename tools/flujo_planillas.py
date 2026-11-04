@@ -17,7 +17,7 @@ CANON=[ # key, label, matchers, cheque
  ('comafi','PRÉSTAMO COMAFI',[r'^PRESTAMO COMAFI'],0),
  ('echeqcomafi','ECHEQ COMAFI',[r'^ECHEQ COMAFI'],0),
  ('estudio','ESTUDIO CONTABLE Y LEGAL',[r'^ESTUDIO'],0),
- ('chq_tp','E-CHEQS TP (Pepsico)',[r'^E-CHEQS (PEPSICO|TP|TIENDA)$'],1),
+ ('chq_tp','E-CHEQS TP (Tienda Perfecta)',[r'^E-CHEQS (PEPSICO|TP|TIENDA)$'],1),
  ('chq_rl','E-CHEQS RL (Rambla)',[r'^E-CHEQS (RAMBLA|RL)$'],1),
  ('despidos','DESPIDOS',[r'^DESPIDOS'],0),
  ('prestamos','PRÉSTAMOS',[r'^PRESTAMOS$'],0),
@@ -165,6 +165,40 @@ def corregir_estimado(estimado):
             d += dt.timedelta(days=1)
         print('recaudacion estimada %s: %s por dia habil' % (mes, diario))
 corregir_estimado(data['estimado'])
+
+# --- CHEQUES DEL BANCO: desde la fecha de la ultima lectura de Galicia Office Banking (cheques
+# electronicos emitidos, pendientes), los E-CHEQS de las planillas se REEMPLAZAN por los del banco
+# (pedido de Franco, 4/11/2026: "reemplaza desde hoy"). TP -> chq_tp, RL -> chq_rl. El detalle
+# (beneficiarios) vive en tools/cheques-galicia.secret, que NO se sube (el repo es publico);
+# aca solo entra cifrado en data.enc.json. Antes de esa fecha quedan los de las planillas.
+def cheques_del_banco(pagos, notas):
+    ruta = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cheques-galicia.secret')
+    if not os.path.exists(ruta):
+        print('cheques del banco: no hay lectura guardada, quedan los de las planillas')
+        return None
+    snap = json.load(open(ruta, encoding='utf-8'))
+    desde = snap['fecha']
+    col = {'TP': 'chq_tp', 'RL': 'chq_rl'}
+    for f in list(pagos):
+        if f >= desde:
+            for c in col.values():
+                pagos[f].pop(c, None)
+            if not pagos[f]:
+                del pagos[f]
+    por = {}
+    for ch in snap['cheques']:
+        if ch['pago'] < desde:
+            continue
+        k = (ch['pago'], col[ch['emp']])
+        por.setdefault(k, []).append(ch)
+    for (f, c), lista in por.items():
+        pagos.setdefault(f, {})[c] = round(sum(x['monto'] for x in lista), 2)
+        notas[f + '|' + c] = 'Galicia (lectura del %s): ' % '/'.join(reversed(desde.split('-'))) + ' · '.join(
+            '%s $%s (n° %s%s)' % (x['benef'], '{:,.0f}'.format(x['monto']).replace(',', '.'), x['nro'],
+                                  '' if x['estado'] == 'Aceptado' else ', ' + x['estado'].lower()) for x in lista)
+    print('cheques del banco (desde %s): %d cheques en %d dias' % (desde, len(snap['cheques']), len(por)))
+    return {'fecha': desde, 'fuente': snap.get('fuente', '')}
+data['chequesBanco'] = cheques_del_banco(data['pagos'], data['notas'])
 # --- caja tesoreria
 def caja_file(mes):
     c=[p for p in glob.glob('W:/Tesoreria/Finanzas_Diarias_*.xlsx') if MESES[mes-1][:4] in norm(os.path.basename(p))]

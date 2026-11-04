@@ -182,7 +182,7 @@ const FERIADOS_DEF = {
 function nuevoEstado(){
   const s = JSON.parse(JSON.stringify(SEED));
   return { v:1, columnas:s.columnas, pagos:s.pagos, estimado:s.estimado, vencido:s.vencido, saldoInicial:s.saldoInicial,
-    caja:s.caja, bancos:s.bancos, ajustes:{}, notas:{...(s.notas||{})}, estados:{}, exclGrupo:{}, excluir:EXCLUIR_DEF,
+    caja:s.caja, bancos:s.bancos, ajustes:{}, notas:{...(s.notas||{})}, notasAuto:Object.fromEntries(Object.keys(s.notas||{}).map(k=>[k,1])), chequesBanco:s.chequesBanco||null, estados:{}, exclGrupo:{}, excluir:EXCLUIR_DEF,
     feriados:{...FERIADOS_DEF}, arrastrar:false, modoRec:'mixto', log:[], fuentes:s.fuentes, archivosBanco:s.archivosBanco };
 }
 let E = null;
@@ -193,13 +193,21 @@ function fusionarSeed(){
   if (E.seedVer === SEED.generado) return;
   E.tocados = E.tocados || {};
   for (const c of SEED.columnas) if (!E.columnas.find(x=>x.key===c.key)) E.columnas.push(c);
+  // nombres que cambiaron en los datos (si nadie los renombró a mano)
+  const VIEJOS={chq_tp:'E-CHEQS TP (Pepsico)'};
+  for (const c of SEED.columnas){ const e=E.columnas.find(x=>x.key===c.key); if (e && VIEJOS[c.key] && e.nombre===VIEJOS[c.key]) e.nombre=c.nombre; }
   Object.assign(E.caja, SEED.caja); Object.assign(E.bancos, SEED.bancos);
   for (const [f,v] of Object.entries(SEED.estimado)) if (!E.tocados[f]) E.estimado[f]=v;
   for (const [f,p] of Object.entries(SEED.pagos)) if (!E.tocados[f]) E.pagos[f]=p;
   // días que ya no están en las planillas (por ejemplo, los fletes que pasaron al jueves) y que
   // nadie tocó a mano: se sacan, si no quedaban montos viejos repetidos
-  for (const f of Object.keys(E.pagos)) if (!(f in SEED.pagos) && !E.tocados[f] && f.startsWith('2026')) delete E.pagos[f];
-  for (const [k,v] of Object.entries(SEED.notas||{})) if (!(k in E.notas)) E.notas[k]=v;
+  for (const f of Object.keys(E.pagos)) if (!(f in SEED.pagos) && !E.tocados[f] && f >= '2026') delete E.pagos[f];
+  // notas que vienen de los datos (fletes promedio, cheques de Galicia): se renuevan con cada
+  // publicación; las que alguien escribió a mano en el panel no se tocan
+  E.notasAuto = E.notasAuto || {};
+  for (const k of Object.keys(E.notasAuto)) if (!(k in (SEED.notas||{}))) { delete E.notas[k]; delete E.notasAuto[k]; }
+  for (const [k,v] of Object.entries(SEED.notas||{})) if (!(k in E.notas) || E.notasAuto[k]) { E.notas[k]=v; E.notasAuto[k]=1; }
+  E.chequesBanco = SEED.chequesBanco || null;
   for (const [k,v] of Object.entries(SEED.vencido)) if (!E.vencido[k]) E.vencido[k]=v;
   for (const [k,v] of Object.entries(SEED.saldoInicial)) if (!(k in E.saldoInicial)) E.saldoInicial[k]=v;
   E.fuentes = SEED.fuentes; E.archivosBanco = SEED.archivosBanco; E.seedVer = SEED.generado;
@@ -624,7 +632,7 @@ function setPago(f,c,monto,nota,origen){
   E.tocados=E.tocados||{}; E.tocados[f]=1;
   if (!monto) { delete E.pagos[f][c]; delete E.estados[f+'|'+c]; } else E.pagos[f][c]=Math.round(monto*100)/100;
   if (!Object.keys(E.pagos[f]).length) delete E.pagos[f];
-  if (nota!==undefined){ if (nota) E.notas[f+'|'+c]=nota; else delete E.notas[f+'|'+c]; }
+  if (nota!==undefined){ if (nota) E.notas[f+'|'+c]=nota; else delete E.notas[f+'|'+c]; if (E.notasAuto) delete E.notasAuto[f+'|'+c]; }
   registrar(`${origen||'Edición'} · ${fechaTxt(f)} · ${nombreCol(c)}: $${f2(prev)} → $${f2(monto)}${nota?' · '+nota:''}`);
   guardar();
 }
@@ -643,7 +651,7 @@ function editarCelda(f,c){
     if (nf!==f){ setPago(f,c,0,'','Movido'); const ya=(E.pagos[nf]||{})[c]||0; setPago(nf,c,ya+n,nota,'Movido desde '+fechaTxt(f)); if(st) E.estados[nf+'|'+c]=st; }
     else {
       if (Math.round(n*100)/100 !== (v||0)) setPago(f,c,n,nota);
-      else if (nota) E.notas[k]=nota; else delete E.notas[k];
+      else if (nota!==(E.notas[k]||'')) { if (nota) E.notas[k]=nota; else delete E.notas[k]; if (E.notasAuto) delete E.notasAuto[k]; }
       if (st&&(n||facturasDe(f,c))) E.estados[k]=st; else delete E.estados[k]; }
     guardar(); cerrarModal(); render(); };
   $('mOk').onclick=ok; $('modal').querySelectorAll('input').forEach(i=>i.addEventListener('keydown',e=>{ if(e.key==='Enter') ok(); }));
@@ -818,6 +826,7 @@ function abrirImport(){
     <div><span>🔁 Control de Transferencias</span><span class="x">${VIVO&&VIVO.transferencias?'desde 29/9 · actualizado '+esc(String(VIVO.generado||'').slice(0,16).replace('T',' ')):'sin datos'}</span></div>
     <div><span>💵 Caja tesorería en vivo</span><span class="x">${VIVO&&VIVO.caja?'hasta '+(Object.keys(VIVO.caja).sort().pop()||'—'):'todavía no conectada'}</span></div>
     <div><span>💵 Caja tesorería (planillas)</span><span class="x">hasta ${ultCaja}</span></div>
+    <div><span>🧾 E-CHEQS (TP y RL)</span><span class="x">${E.chequesBanco?'Galicia, lectura del '+E.chequesBanco.fecha.split('-').reverse().join('/')+' en adelante':'de las planillas'}</span></div>
     ${Object.entries(cuentas).map(([c,f])=>`<div><span>🏦 ${esc(c)}</span><span class="x">hasta ${f}</span></div>`).join('')}
    </div>
    <div class="aviso">Las transferencias del Control se actualizan solas cada 2 horas (lunes a sábado). Mientras la caja en vivo no esté conectada, la caja de octubre en adelante vive en Google Drive (planilla Finanzas_Diarias del mes): bajala como Excel (Archivo → Descargar → .xlsx) y soltala acá. Los extractos se bajan del homebanking, igual que para el Control de Transferencias. Si volvés a cargar un extracto, reemplaza los días y la cuenta que trae: no se duplica.</div>
