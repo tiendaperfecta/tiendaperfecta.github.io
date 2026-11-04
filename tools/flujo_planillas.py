@@ -193,7 +193,7 @@ def cheques_del_banco(pagos, notas):
         por.setdefault(k, []).append(ch)
     for (f, c), lista in por.items():
         pagos.setdefault(f, {})[c] = round(sum(x['monto'] for x in lista), 2)
-        notas[f + '|' + c] = 'Galicia (lectura del %s): ' % '/'.join(reversed(desde.split('-'))) + ' · '.join(
+        notas[f + '|' + c] = 'Galicia (lectura del %s): ' % '/'.join(reversed(snap.get('leido', desde).split('-'))) + ' · '.join(
             '%s $%s (n° %s%s)' % (x['benef'], '{:,.0f}'.format(x['monto']).replace(',', '.'), x['nro'],
                                   '' if x['estado'] == 'Aceptado' else ', ' + x['estado'].lower()) for x in lista)
     print('cheques del banco (desde %s): %d cheques en %d dias' % (desde, len(snap['cheques']), len(por)))
