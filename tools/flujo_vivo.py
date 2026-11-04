@@ -40,6 +40,20 @@ ITER = 200_000
 TRANSFERENCIA = "TRANS"   # mismo filtro que TIPOS_VERIFICABLES del Control de Transferencias
 
 
+def anterior(clave):
+    """El vivo.enc.json publicado antes (para no perder lo que ya se habia leido)."""
+    try:
+        from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+        from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+        from cryptography.hazmat.primitives import hashes
+        env = json.loads((OUT / "vivo.enc.json").read_text(encoding="utf-8"))
+        key = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=base64.b64decode(env["salt"]),
+                         iterations=env["iter"]).derive(clave.encode("utf-8"))
+        return json.loads(AESGCM(key).decrypt(base64.b64decode(env["iv"]), base64.b64decode(env["ct"]), None))
+    except Exception:  # noqa: BLE001
+        return {}
+
+
 def cifrar(obj, clave):
     from cryptography.hazmat.primitives.ciphers.aead import AESGCM
     from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
@@ -219,6 +233,12 @@ def main():
         print("facturas: no se pudieron leer (%s)" % type(e).__name__)
     cj = caja(s, desde, hoy)
     if cj is not None:
+        # los meses que ya se habian leido y hoy no se pueden leer (al cambiar de mes el Apps Script
+        # deja de encontrar la planilla anterior, como paso el 1/11/2026) se conservan del archivo anterior
+        meses_leidos = {f[:7] for f in cj}
+        for f, items in (anterior(clave).get("caja") or {}).items():
+            if f[:7] not in meses_leidos and f not in cj:
+                cj[f] = items
         datos["caja"] = cj
     OUT.mkdir(exist_ok=True)
     (OUT / "vivo.enc.json").write_text(json.dumps(cifrar(datos, clave)), encoding="utf-8")
