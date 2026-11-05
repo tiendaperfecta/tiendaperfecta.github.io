@@ -141,7 +141,7 @@ async function copiar(txt) {
 
 function stockTxt(s) {
   if (!s) return '<span class="chico">no está en Gescom</span>';
-  if (s.pb > 1) return fmt(s.u / s.pb) + ' <span class="chico">bultos</span>';
+  if (s.pb > 1 && s.u >= s.pb) return fmt(s.u / s.pb) + ' <span class="chico">bultos</span>';
   return fmt(s.u) + ' <span class="chico">u.</span>';
 }
 
@@ -232,7 +232,7 @@ async function mostrar(mes) {
     const f = vista.filter(x => !x.ok);
     if (!f.length) return toast('No falta comprar nada');
     const txt = ['Código\tArtículo\tBDU\tStock hoy'].concat(f.map(x =>
-      [x.c, x.d, x.b, x.s ? (x.s.pb > 1 ? fmt(x.s.u / x.s.pb) + ' bultos' : fmt(x.s.u) + ' u.') : ''].join('\t'))).join('\n');
+      [x.c, x.d, x.b, x.s ? (x.s.pb > 1 && x.s.u >= x.s.pb ? fmt(x.s.u / x.s.pb) + ' bultos' : fmt(x.s.u) + ' u.') : ''].join('\t'))).join('\n');
     toast(await copiar(txt) ? `Copiados ${f.length} faltantes` : 'No se pudo copiar');
   };
   pintar();
