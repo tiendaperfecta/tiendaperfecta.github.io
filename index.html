@@ -181,6 +181,13 @@
           </div>
           <div class="tags"><div class="tag est">Verificando</div></div>
         </a></li>
+        <li><a class="card" href="https://marianozeballos-tp.github.io/compras-georgalos/" data-fecha="https://marianozeballos-tp.github.io/compras-georgalos/" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#e58a72"><use href="#i-box"/></svg></div>
+            <div class="txt"><div>Compras Georgalos</div><p>Pedido sugerido por artículo y toneladas recibidas contra el objetivo del mes</p></div>
+          </div>
+          <div class="tags"><div class="tag est">Verificando</div></div>
+        </a></li>
       </ul>
     </div>
 
@@ -293,12 +300,15 @@
   const corto = d => new Date(d + 'T12:00:00').toLocaleDateString('es-AR', {day:'numeric', month:'short'});
   const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
   // Saca la fecha (YYYY-MM-DD) del texto del panel: fleteros "Ultima actualizacion: 2026-09-03",
-  // depósito "generado":"4 de septiembre de 2026", negociaciones "hasta":"2026-10-08"
+  // depósito "generado":"4 de septiembre de 2026", negociaciones "hasta":"2026-10-08",
+  // compras Georgalos "Stock de hoy 04/11/2026"
   const fechaDe = txt => {
     const iso = txt.match(/Ultima actualizacion: (\d{4}-\d{2}-\d{2})/);
     if (iso) return iso[1];
     const hasta = txt.match(/"hasta":"(\d{4}-\d{2}-\d{2})"/);   // negociaciones
     if (hasta) return hasta[1];
+    const stock = txt.match(/Stock de hoy (\d{2})\/(\d{2})\/(\d{4})/);   // compras Georgalos
+    if (stock) return stock[3] + '-' + stock[2] + '-' + stock[1];
     const es = txt.match(/"generado":"(\d{1,2}) de (\w+) de (\d{4})"/);
     return es[3] + '-' + String(MESES.indexOf(es[2]) + 1).padStart(2, '0') + '-' + es[1].padStart(2, '0');
   };
