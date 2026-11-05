@@ -174,10 +174,10 @@
           </div>
           <div class="tags"><div class="tag est">Verificando</div></div>
         </a></li>
-        <li><a class="card" href="https://tiendaperfecta.github.io/disponibilidad/" data-fecha="https://tiendaperfecta.github.io/disponibilidad/fecha.txt" target="_blank" rel="noreferrer">
+        <li><a class="card" href="https://tiendaperfecta.github.io/disponibilidad/" data-fecha="https://marianozeballos-tp.github.io/panel-pepsico/datos/pedido.json" target="_blank" rel="noreferrer">
           <div class="row">
             <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#3b82f6"><use href="#i-check"/></svg></div>
-            <div class="txt"><div>Disponibilidad PepsiCo</div><p>Artículos activos comprados en el mes (meta 100%) y faltantes para el pedido</p></div>
+            <div class="txt"><div>Panel PepsiCo</div><p>Pedido sugerido, objetivo de compra y disponibilidad (meta 100%)</p></div>
           </div>
           <div class="tags"><div class="tag est">Verificando</div></div>
         </a></li>
@@ -309,7 +309,9 @@
     if (hasta) return hasta[1];
     const stock = txt.match(/Stock de hoy (\d{2})\/(\d{2})\/(\d{4})/);   // compras Georgalos
     if (stock) return stock[3] + '-' + stock[2] + '-' + stock[1];
-    const es = txt.match(/"generado":"(\d{1,2}) de (\w+) de (\d{4})"/);
+    const gen = txt.match(/"generado":"(\d{4}-\d{2}-\d{2}T[^"]+)"/);   // panel PepsiCo (pedido.json)
+    if (gen) return new Intl.DateTimeFormat('en-CA', {timeZone:'America/Argentina/Buenos_Aires'}).format(new Date(gen[1]));
+    const es =txt.match(/"generado":"(\d{1,2}) de (\w+) de (\d{4})"/);
     return es[3] + '-' + String(MESES.indexOf(es[2]) + 1).padStart(2, '0') + '-' + es[1].padStart(2, '0');
   };
   document.querySelectorAll('.card').forEach(async a => {

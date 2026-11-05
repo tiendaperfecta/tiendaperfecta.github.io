@@ -1,276 +1,957 @@
 <!doctype html>
 <html lang="es">
-<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Disponibilidad PepsiCo</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;700&display=swap">
+<title>Panel PepsiCo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
-  :root{
-    --s100:241 245 249; --s200:226 232 240; --s300:203 213 225; --s400:148 163 184; --s500:100 116 139;
-    --s700:51 65 85; --s800:30 41 59; --s900:15 23 42;
-    --ok:16 185 129; --warn:251 146 60; --bad:244 63 94; --blue:59 130 246;
+  /* Layout: una sola columna de trabajo con dos pestañas — Pedido sugerido (ajustes, totales, gráfico, tabla) y Objetivo de compra (carga, avance, curva, remitos y meses). */
+  :root {
+    --bg: #f6f7f9;
+    --panel: #ffffff;
+    --fg: #17202c;
+    --muted: #5c6878;
+    --line: #dde2e9;
+    --accent: #1d4f91;
+    --accent-soft: #dbe6f4;
+    --on-accent: #ffffff;
+    --ok: #1f7a4d;
+    --warn: #a35b00;
+    --bad: #b42318;
+    --font-body: "Public Sans", "Segoe UI", system-ui, sans-serif;
+    --font-fig: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --r: 8px;
   }
-  *{box-sizing:border-box}
-  html,body{margin:0;background:rgb(var(--s800));color:rgb(var(--s200))}
-  body{font-family:Manrope,Arial,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
-  a{color:rgb(147 197 253)}
-  button,input,select{font:inherit;color:inherit}
-  .wrap{max-width:1180px;margin:0 auto;padding:24px 16px 48px}
-
-  header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;padding-bottom:16px;border-bottom:2px solid rgb(var(--s200)/.35)}
-  .volver{font-size:13px;text-decoration:none;color:rgb(var(--s400))}
-  .volver:hover{color:rgb(var(--s200))}
-  h1{margin:4px 0 0;font-size:26px;line-height:32px;font-weight:500;color:rgb(var(--s100))}
-  .sub{margin:2px 0 0;font-size:13px;color:rgb(var(--s400))}
-  .mes{display:flex;align-items:center;gap:8px;font-size:13px;color:rgb(var(--s300))}
-  select{background:rgb(var(--s900)/.6);border:1px solid rgb(var(--s700));border-radius:6px;padding:7px 10px;font-size:15px}
-
-  .panel{margin-top:20px;padding:16px;border-radius:8px;background:rgb(255 255 255/.05);box-shadow:0 4px 6px -1px rgb(var(--s900)/.25)}
-  h2{margin:0 0 12px;font-size:16px;font-weight:500;color:rgb(var(--s300))}
-
-  .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:20px}
-  .kpi{padding:14px 16px;border-radius:8px;background:rgb(255 255 255/.05);box-shadow:0 4px 6px -1px rgb(var(--s900)/.25)}
-  .kpi .t{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:rgb(var(--s400))}
-  .kpi .v{font-size:32px;line-height:40px;font-weight:700;font-variant-numeric:tabular-nums;color:rgb(var(--s100))}
-  .kpi .n{font-size:12px;color:rgb(var(--s400))}
-  .kpi.main .v{font-size:40px;line-height:48px}
-  .barra{height:8px;margin-top:8px;border-radius:4px;background:rgb(var(--s900)/.7);overflow:hidden}
-  .barra i{display:block;height:100%;border-radius:4px;background:rgb(var(--blue))}
-  .ok{color:rgb(var(--ok))} .warn{color:rgb(var(--warn))} .bad{color:rgb(var(--bad))}
-  .barra i.ok{background:rgb(var(--ok))} .barra i.warn{background:rgb(var(--warn))} .barra i.bad{background:rgb(var(--bad))}
-  @media (max-width:820px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
-
-  .nota{margin-top:12px;font-size:13px;color:rgb(var(--s300))}
-  .aviso{margin-top:20px;padding:14px 16px;border-radius:8px;border:1px solid rgb(var(--warn)/.5);background:rgb(var(--warn)/.08);font-size:14px}
-  .aviso b{color:rgb(var(--s100))}
-
-  table{width:100%;border-collapse:collapse;font-size:14px}
-  th{text-align:left;font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:rgb(var(--s400));padding:6px 8px;border-bottom:1px solid rgb(var(--s700))}
-  td{padding:7px 8px;border-bottom:1px solid rgb(var(--s700)/.6);vertical-align:top}
-  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-  tr:hover td{background:rgb(255 255 255/.03)}
-  .bdu td:nth-child(2){width:45%}
-  .bdu .barra{margin-top:7px}
-
-  .herr{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
-  .chips{display:flex;gap:4px;padding:3px;border-radius:7px;background:rgb(var(--s900)/.6)}
-  .chip{border:0;background:none;padding:5px 12px;border-radius:5px;cursor:pointer;font-size:13px;color:rgb(var(--s300))}
-  .chip[aria-pressed="true"]{background:rgb(var(--s700));color:rgb(var(--s100))}
-  input[type=search]{flex:1;min-width:160px;background:rgb(var(--s900)/.6);border:1px solid rgb(var(--s700));border-radius:6px;padding:7px 10px;font-size:14px}
-  .btn{border:1px solid rgb(var(--blue)/.6);background:rgb(var(--blue)/.15);border-radius:6px;padding:7px 14px;cursor:pointer;font-size:14px}
-  .btn:hover{background:rgb(var(--blue)/.3)}
-  .estado{display:inline-block;padding:1px 8px;border-radius:4px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.03em}
-  .estado.ok{background:rgb(var(--ok)/.15)} .estado.bad{background:rgb(var(--bad)/.15)}
-  .cod{font-variant-numeric:tabular-nums;color:rgb(var(--s400));white-space:nowrap}
-  .fechas{color:rgb(var(--s300));font-size:13px}
-  .chico{font-size:12px;color:rgb(var(--s400))}
-  .tabla{overflow-x:auto}
-  @media (max-width:640px){.ocultar-movil{display:none} td,th{padding:6px 5px}}
-
-  details{margin-top:20px;font-size:14px;color:rgb(var(--s300))}
-  summary{cursor:pointer;color:rgb(var(--s200))}
-  details ol{padding-left:20px}
-  code{background:rgb(var(--s900)/.7);padding:1px 5px;border-radius:4px;font-size:13px}
-  footer{margin-top:28px;font-size:12px;color:rgb(var(--s400))}
-  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);padding:10px 16px;border-radius:6px;background:rgb(var(--s900));border:1px solid rgb(var(--s700));font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
-  .toast.on{opacity:1}
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #10151c; --panel: #171e27; --fg: #e7ecf2; --muted: #9aa6b5; --line: #2a3441;
+      --accent: #7fa8e0; --accent-soft: #22344d; --on-accent: #10151c; --ok: #5cc28d; --warn: #e0a24d; --bad: #f2867c;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #10151c; --panel: #171e27; --fg: #e7ecf2; --muted: #9aa6b5; --line: #2a3441;
+    --accent: #7fa8e0; --accent-soft: #22344d; --on-accent: #10151c; --ok: #5cc28d; --warn: #e0a24d; --bad: #f2867c;
+    color-scheme: dark;
+  }
+  body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.45; }
+  .wrap { max-width: 1180px; margin-inline: auto; padding-block: 20px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 20px; }
+  .brand { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
+  .brand h1 { font-family: var(--font-fig); font-weight: 600; font-size: 1.9rem; line-height: 1.15; margin: 0; }
+  .brand .fresh { font-size: .82rem; color: var(--muted); }
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+  .tab { font: inherit; font-size: 1rem; color: var(--muted); background: transparent; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; padding: 8px 14px; cursor: pointer; white-space: nowrap; }
+  .tab[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--accent); font-weight: 600; }
+  .view { display: grid; gap: 20px; }
+  .view[hidden] { display: none; }
+  h2 { font-size: 1rem; font-weight: 600; margin: 0; }
+  a { color: var(--accent); }
+  .lead { font-size: 1.05rem; margin: 0; max-width: 72ch; }
+  .lead b { font-weight: 600; }
+  .note { font-size: .82rem; color: var(--muted); margin: 0; max-width: 78ch; }
+  .field { display: grid; gap: 4px; font-size: .8rem; color: var(--muted); }
+  select, input[type=number], input[type=search] { font: inherit; font-size: 1rem; color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 6px 10px; }
+  input[type=number] { width: 6.5rem; font-variant-numeric: tabular-nums; }
+  select:focus-visible, input:focus-visible, button:focus-visible, tr:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .check { display: flex; gap: 6px; align-items: center; padding-block: 6px; cursor: pointer; }
+  .btn { font: inherit; font-weight: 600; color: var(--on-accent); background: var(--accent); border: 0; border-radius: var(--r); padding: 8px 16px; cursor: pointer; }
+  .btn.ghost { color: var(--fg); background: var(--panel); border: 1px solid var(--line); font-weight: 500; padding: 7px 14px; }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 18px 20px; display: grid; gap: 12px; min-width: 0; }
+  .controls { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: end; }
+  .status { font-size: .85rem; color: var(--muted); }
+  .status.ok { color: var(--ok); }
+  .status.bad { color: var(--bad); }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr)); gap: 12px; }
+  .kpi { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 16px; display: grid; gap: 2px; align-content: start; }
+  .kpi .l { font-size: .8rem; color: var(--muted); }
+  .kpi .v { font-family: var(--font-fig); font-size: 1.9rem; line-height: 1.15; font-variant-numeric: tabular-nums; }
+  .kpi .n { font-size: .8rem; color: var(--muted); }
+  .kpi.is-ok .v { color: var(--ok); }
+  .kpi.is-bad .v { color: var(--bad); }
+  .bar { height: 8px; border-radius: 999px; background: var(--accent-soft); overflow: hidden; margin-top: 6px; }
+  .bar > div { height: 100%; width: 0; background: var(--ok); border-radius: 999px; }
+  .chart { position: relative; min-height: 240px; }
+  .chart svg { display: block; width: 100%; height: auto; }
+  .tip { position: absolute; pointer-events: none; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; font-size: .8rem; box-shadow: 0 4px 14px rgba(0,0,0,.12); white-space: nowrap; z-index: 2; }
+  .tip .t { color: var(--muted); }
+  .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font: inherit; font-size: .82rem; color: var(--fg); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 3px 11px; cursor: pointer; }
+  .chip[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+  .search { width: 15rem; max-width: 100%; }
+  .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr)); gap: 20px; }
+  .tbox { overflow: auto; max-height: 620px; border-top: 1px solid var(--line); }
+  table { border-collapse: collapse; width: 100%; font-size: .88rem; font-variant-numeric: tabular-nums; }
+  th { position: sticky; top: 0; background: var(--panel); text-align: right; font-weight: 500; color: var(--muted); padding: 0; border-bottom: 1px solid var(--line); z-index: 1; }
+  th > span, th > button { display: block; padding: 8px; }
+  th > button { all: unset; display: block; box-sizing: border-box; width: 100%; padding: 8px; cursor: pointer; text-align: inherit; }
+  th > button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  td { padding: 6px 8px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  th.l, td.l { text-align: left; }
+  td.art { white-space: normal; min-width: 12rem; }
+  td.b { font-weight: 600; }
+  td.m { color: var(--muted); }
+  tr.zero td.b { color: var(--muted); font-weight: 400; }
+  tr.pick { cursor: pointer; }
+  tr.pick:hover td { background: var(--accent-soft); }
+  tr.sel td { background: var(--accent-soft); font-weight: 600; }
+  .pill { display: inline-block; padding: 1px 8px; border-radius: 999px; border: 1px solid currentColor; font-size: .78rem; }
+  .pill.Quiebre { color: var(--bad); }
+  .pill.Pedir { color: var(--warn); }
+  .pill.OK { color: var(--ok); }
+  .pill.Exceso, .pill.Sin { color: var(--muted); }
+  .pill.si { color: var(--ok); }
+  .pill.no { color: var(--bad); }
+  input[type=file] { font: inherit; font-size: .9rem; color: var(--fg); max-width: 100%; }
+  .tag { color: var(--muted); }
+  .blk { color: var(--bad); font-size: .75rem; }
+  .empty { color: var(--muted); padding: 14px 0; }
+  .alert { border: 1px solid var(--bad); color: var(--bad); border-radius: var(--r); padding: 10px 14px; font-size: .9rem; }
+  [hidden] { display: none !important; }
+  @media (max-width: 640px) { .hide-sm { display: none; } .brand h1 { font-size: 1.6rem; } }
 </style>
-</head>
-<body>
+
+<script src="claude-shim.js"></script>
 <div class="wrap">
-  <header>
-    <div>
-      <a class="volver" href="../">← Central web</a>
-      <h1>Disponibilidad PepsiCo</h1>
-      <p class="sub">Artículos activos con al menos un remito de ingreso de PepsiCo en el mes. La meta es 100%.</p>
-    </div>
-    <label class="mes">Mes <select id="mes" aria-label="Mes"></select></label>
+  <header class="brand">
+    <h1>Panel PepsiCo</h1>
+    <span class="fresh" id="fresh"></span>
   </header>
 
-  <div id="contenido"><p class="nota">Cargando…</p></div>
+  <nav class="tabs" role="tablist" aria-label="Secciones">
+    <button class="tab" id="tab-pedido" type="button" role="tab" data-v="pedido" aria-selected="true" aria-controls="pedido">Pedido sugerido</button>
+    <button class="tab" id="tab-objetivo" type="button" role="tab" data-v="objetivo" aria-selected="false" aria-controls="objetivo">Objetivo de compra</button>
+    <button class="tab" id="tab-disponibilidad" type="button" role="tab" data-v="disponibilidad" aria-selected="false" aria-controls="disponibilidad">Disponibilidad</button>
+  </nav>
 
-  <details>
-    <summary>Cómo se calcula y cómo cargar la lista del mes</summary>
-    <p><b>Disponibilidad</b> = artículos activos del mes con al menos un remito de ingreso de PepsiCo (REMI-I) con fecha dentro del mes ÷ total de artículos activos del mes. Las facturas (FAC-A) repiten los renglones del remito y no se cuentan.</p>
-    <p>Las compras se actualizan solas de lunes a sábado a las 8 y a las 14. El stock es el de hoy en Gescom.</p>
-    <ol>
-      <li>Entrar a <a href="https://github.com/tiendaperfecta/tiendaperfecta.github.io/upload/main/disponibilidad/listas" target="_blank" rel="noreferrer">la carpeta de listas en GitHub</a> (hace falta permiso de edición en el repositorio).</li>
-      <li>Subir el Excel de artículos activos de PepsiCo con el mes en el nombre: <code>2026-12.xlsx</code> o <code>Disponible de pepsico dic 26.xlsx</code>.</li>
-      <li>Confirmar con <i>Commit changes</i>. En un par de minutos la página muestra la lista nueva.</li>
-    </ol>
-    <p>Del Excel se toma la columna <b>Material SAP</b> como código y sólo las filas con <b>Vigencia = 1</b>.</p>
-  </details>
+  <!-- ===================== PEDIDO SUGERIDO ===================== -->
+  <div class="view" id="pedido" role="tabpanel" aria-labelledby="tab-pedido">
+    <p class="lead" id="p-lead">Leyendo stock y ventas de Base Gescom…</p>
+    <p class="note" id="p-fuente"></p>
+    <div class="alert" id="p-alert" hidden></div>
 
-  <footer id="pie"></footer>
+    <section class="card" aria-label="Ajustes del pedido">
+      <div class="controls">
+        <label class="field">Días de stock exigidos
+          <input id="p-cob" type="number" min="1" max="60" step="1" inputmode="numeric" value="14">
+        </label>
+        <label class="field">Días hasta que llega el camión
+          <input id="p-plazo" type="number" min="0" max="30" step="1" inputmode="numeric" value="0">
+        </label>
+        <label class="check"><input id="p-desc" type="checkbox" checked> Descontar la venta desde la foto de stock</label>
+        <button class="btn ghost" id="p-reset" type="button">Restablecer</button>
+      </div>
+    </section>
+
+    <section class="kpis" aria-label="Totales del pedido">
+      <div class="kpi"><span class="l">Bultos a pedir</span><span class="v" id="pk-bultos">—</span><span class="n" id="pk-skus">artículos</span></div>
+      <div class="kpi"><span class="l">Kilos</span><span class="v" id="pk-kg">—</span><span class="n">peso neto del producto</span></div>
+      <div class="kpi"><span class="l">Costo neto del pedido</span><span class="v" id="pk-costo">—</span><span class="n">a precio de costo, sin IVA</span></div>
+      <div class="kpi" id="pk-cob-box"><span class="l">Cobertura actual</span><span class="v" id="pk-cob">—</span><span class="n">días, todo el surtido</span></div>
+      <div class="kpi is-bad"><span class="l">En quiebre</span><span class="v" id="pk-qui">—</span><span class="n">menos de 3 días de stock</span></div>
+    </section>
+
+    <section class="card">
+      <h2>Días de stock de los 20 más vendidos</h2>
+      <p class="note">La línea marca los días exigidos. Rojo: menos de 3 días. Ámbar: por debajo del objetivo.</p>
+      <div class="chart" id="p-chart"></div>
+    </section>
+
+    <section class="card">
+      <div class="row">
+        <h2>Pedido sugerido por artículo</h2>
+        <div class="row" style="gap:8px">
+          <span class="status ok" id="p-copied" hidden>Copiado</span>
+          <button class="btn ghost" id="p-copy" type="button">Copiar pedido</button>
+        </div>
+      </div>
+      <p class="note">Bultos = venta diaria × (días exigidos + días de entrega) − stock de hoy, redondeado hacia arriba al bulto. Copiar pedido copia código, descripción y bultos de las líneas con pedido, para pegar en Excel o en un mail.</p>
+      <div class="row">
+        <div class="chips" id="p-chips" role="group" aria-label="Filtrar por estado"></div>
+        <input class="search" id="p-q" type="search" placeholder="Buscar artículo o código" aria-label="Buscar artículo o código">
+      </div>
+      <div class="tbox">
+        <table id="p-table">
+          <thead><tr>
+            <th class="l"><button type="button" data-k="codigo">Código</button></th>
+            <th class="l"><button type="button" data-k="articulo">Artículo</button></th>
+            <th class="l"><button type="button" data-k="estado">Estado</button></th>
+            <th><button type="button" data-k="venta_diaria">Venta/día</button></th>
+            <th class="hide-sm"><button type="button" data-k="tendencia">4 semanas</button></th>
+            <th><button type="button" data-k="stock_hoy">Stock hoy</button></th>
+            <th><button type="button" data-k="dias_cobertura">Días</button></th>
+            <th><button type="button" data-k="bultos">Bultos</button></th>
+            <th class="hide-sm"><button type="button" data-k="upb">Unid./bulto</button></th>
+            <th class="hide-sm"><button type="button" data-k="kg_pedido">Kg</button></th>
+            <th><button type="button" data-k="costo_pedido">Costo neto</button></th>
+          </tr></thead>
+          <tbody id="p-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===================== OBJETIVO DE COMPRA ===================== -->
+  <div class="view" id="objetivo" role="tabpanel" aria-labelledby="tab-objetivo" hidden>
+    <section class="card" aria-label="Objetivo del mes">
+      <div class="controls">
+        <label class="field">Mes
+          <select id="o-mes" aria-label="Mes"></select>
+        </label>
+        <label class="field">Objetivo de <span id="o-carga-mes">—</span> (toneladas)
+          <input id="o-obj" type="number" min="0" max="10000" step="0.1" inputmode="decimal" placeholder="Ej. 32,5" style="width:8.5rem">
+        </label>
+        <button class="btn" id="o-guardar" type="button">Guardar objetivo</button>
+        <span class="status" id="o-estado" role="status"></span>
+      </div>
+    </section>
+
+    <p class="lead" id="o-lead">Cargando lo recibido…</p>
+
+    <section class="kpis" aria-label="Avance del mes">
+      <div class="kpi"><span class="l">Objetivo</span><span class="v" id="ok-obj">—</span><span class="n">toneladas</span></div>
+      <div class="kpi"><span class="l">Recibido</span><span class="v" id="ok-rec">—</span><span class="n" id="ok-rem">remitos</span></div>
+      <div class="kpi"><span class="l">Restante</span><span class="v" id="ok-rest">—</span><span class="n">toneladas por recibir</span></div>
+      <div class="kpi" id="ok-cum-box"><span class="l">Cumplimiento</span><span class="v" id="ok-cum">—</span><div class="bar" aria-hidden="true"><div id="ok-bar"></div></div></div>
+      <div class="kpi"><span class="l">Ritmo necesario</span><span class="v" id="ok-rit">—</span><span class="n" id="ok-rit-n">toneladas por semana</span></div>
+    </section>
+
+    <section class="card">
+      <h2>Toneladas recibidas en el mes, acumuladas</h2>
+      <p class="note">Cada punto es un remito. La línea de trazos es el objetivo; la punteada, el ritmo parejo para llegar a fin de mes.</p>
+      <div class="chart" id="o-chart"></div>
+    </section>
+
+    <div class="cols">
+      <section class="card">
+        <h2>Remitos del mes</h2>
+        <div class="tbox" style="max-height:420px">
+          <table>
+            <thead><tr><th class="l"><span>Fecha</span></th><th class="l"><span>Remito</span></th><th class="l hide-sm"><span>Cargado</span></th><th><span>Bultos</span></th><th><span>Toneladas</span></th></tr></thead>
+            <tbody id="o-remitos"></tbody>
+          </table>
+        </div>
+      </section>
+      <section class="card">
+        <h2>Todos los meses</h2>
+        <p class="note">Tocá un mes para verlo y cargar su objetivo.</p>
+        <div class="tbox" style="max-height:420px">
+          <table>
+            <thead><tr><th class="l"><span>Mes</span></th><th><span>Objetivo (t)</span></th><th><span>Recibido (t)</span></th><th><span>Cumplimiento</span></th></tr></thead>
+            <tbody id="o-meses"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <p class="note">Cuenta la mercadería recibida de PepsiCo: los remitos de ingreso de Gescom (REMI-I), por la fecha del remito. Las facturas repiten los mismos renglones y no se suman. Toneladas = unidades × peso neto de cada artículo en Gescom. Lo recibido se actualiza de lunes a sábado a las 8:00 y a las 14:00.</p>
+  </div>
+
+  <!-- ===================== DISPONIBILIDAD ===================== -->
+  <div class="view" id="disponibilidad" role="tabpanel" aria-labelledby="tab-disponibilidad" hidden>
+    <section class="card" aria-label="Lista de artículos activos">
+      <div class="controls">
+        <label class="field">Mes
+          <select id="d-mes" aria-label="Mes"></select>
+        </label>
+        <label class="field" id="d-subir-box">Lista de artículos activos (Excel de PepsiCo)
+          <input id="d-file" type="file" accept=".xlsx,.xls">
+        </label>
+        <span class="status" id="d-estado" role="status"></span>
+      </div>
+      <div class="controls" id="d-confirma" hidden>
+        <span id="d-confirma-txt"></span>
+        <button class="btn" id="d-guardar" type="button">Guardar lista</button>
+        <button class="btn ghost" id="d-cancelar" type="button">Cancelar</button>
+      </div>
+    </section>
+
+    <p class="lead" id="d-lead">Cargando la lista de artículos activos…</p>
+
+    <section class="kpis" aria-label="Disponibilidad del mes">
+      <div class="kpi" id="dk-pct-box"><span class="l">Disponibilidad</span><span class="v" id="dk-pct">—</span><div class="bar" aria-hidden="true"><div id="dk-bar"></div></div></div>
+      <div class="kpi"><span class="l">Comprados</span><span class="v" id="dk-si">—</span><span class="n" id="dk-si-n">de los activos</span></div>
+      <div class="kpi" id="dk-no-box"><span class="l">Faltan comprar</span><span class="v" id="dk-no">—</span><span class="n">artículos activos</span></div>
+      <div class="kpi"><span class="l">Días que quedan</span><span class="v" id="dk-dias">—</span><span class="n" id="dk-dias-n">para cerrar el mes</span></div>
+    </section>
+
+    <section class="card">
+      <h2>Por unidad de negocio</h2>
+      <div class="tbox" style="max-height:none">
+        <table>
+          <thead><tr><th class="l"><span>BDU</span></th><th><span>Activos</span></th><th><span>Comprados</span></th><th><span>Faltan</span></th><th><span>Disponibilidad</span></th></tr></thead>
+          <tbody id="d-bdu"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="row">
+        <h2>Artículos activos del mes</h2>
+        <div class="row" style="gap:8px">
+          <span class="status ok" id="d-copied" hidden>Copiado</span>
+          <button class="btn ghost" id="d-copy" type="button">Copiar faltantes</button>
+        </div>
+      </div>
+      <p class="note">Stock y bultos sugeridos salen de la pestaña Pedido sugerido (con sus días de stock). Copiar faltantes copia código, descripción y bultos sugeridos de los que todavía no se compraron.</p>
+      <div class="row">
+        <div class="chips" id="d-chips" role="group" aria-label="Filtrar artículos"></div>
+        <input class="search" id="d-q" type="search" placeholder="Buscar artículo o código" aria-label="Buscar artículo o código">
+      </div>
+      <div class="tbox">
+        <table>
+          <thead><tr>
+            <th class="l"><span>Código</span></th><th class="l"><span>Artículo</span></th><th class="l hide-sm"><span>BDU</span></th>
+            <th class="l"><span>Estado</span></th><th class="l"><span>Comprado</span></th><th><span>Bultos recibidos</span></th>
+            <th><span>Stock hoy</span></th><th class="hide-sm"><span>Días</span></th><th><span>Bultos sugeridos</span></th>
+          </tr></thead>
+          <tbody id="d-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <p class="note">Disponibilidad = artículos activos del mes que tienen al menos un remito de ingreso de PepsiCo (REMI-I) con fecha dentro del mes ÷ artículos activos de la lista. La lista sale del Excel que manda PepsiCo: columna Material SAP (el código de Gescom) y Vigencia = 1.</p>
+  </div>
 </div>
-<div class="toast" id="toast" role="status"></div>
 
 <script>
-const NOMBRES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-const $ = s => document.querySelector(s);
-const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const nombreMes = m => { const [a, n] = m.split('-').map(Number); return NOMBRES[n - 1] + ' ' + a; };
-const mesAnterior = m => { const [a, n] = m.split('-').map(Number); return n === 1 ? `${a - 1}-12` : `${a}-${String(n - 1).padStart(2, '0')}`; };
-const ddmm = f => f.slice(8, 10) + '/' + f.slice(5, 7);
-const pct = (a, b) => b ? Math.round(a * 1000 / b) / 10 : 0;
-const clase = p => p >= 100 ? 'ok' : p >= 90 ? 'warn' : 'bad';
-const fmt = n => n.toLocaleString('es-AR', {maximumFractionDigits: 1});
-const hoyAR = new Intl.DateTimeFormat('en-CA', {timeZone: 'America/Argentina/Buenos_Aires'}).format(new Date());
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const n0 = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 });
+  const n1 = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 1 });
+  const t1 = new Intl.NumberFormat('es-AR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const pct = new Intl.NumberFormat('es-AR', { style: 'percent', maximumFractionDigits: 0 });
+  const money = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 });
+  const moneyC = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', notation: 'compact', maximumFractionDigits: 1 });
+  const ddmm = (s) => s ? s.slice(8, 10) + '/' + s.slice(5, 7) : '—';
+  const ddmmaa = (s) => s ? s.slice(8, 10) + '/' + s.slice(5, 7) + '/' + s.slice(0, 4) : '—';
+  const fechaHora = (ms) => { try { return new Date(ms).toLocaleString('es-AR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }); } catch (e) { return ''; } };
+  const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+  const nombreMes = (m) => MESES[Number(m.slice(5, 7)) - 1] + ' ' + m.slice(0, 4);
+  const NS = 'http://www.w3.org/2000/svg';
+  const el = (n, a, txt) => { const e = document.createElementNS(NS, n); Object.entries(a).forEach(([k, v]) => e.setAttribute(k, v)); if (txt != null) e.textContent = txt; return e; };
+  const fila = (celdas) => { const tr = document.createElement('tr'); celdas.forEach(([t, c]) => { const td = document.createElement('td'); if (c) td.className = c; td.textContent = t; tr.appendChild(td); }); return tr; };
 
-const cache = {};
-async function cargar(ruta) {
-  if (!(ruta in cache)) cache[ruta] = fetch('datos/' + ruta, {cache: 'no-store'}).then(r => r.ok ? r.json() : null).catch(() => null);
-  return cache[ruta];
-}
+  const hoyAR = new Date(Date.now() - 3 * 3600 * 1000);
+  const mesHoy = hoyAR.toISOString().slice(0, 7);
+  const diaHoy = Number(hoyAR.toISOString().slice(8, 10));
+  const diasDe = (m) => new Date(Date.UTC(Number(m.slice(0, 4)), Number(m.slice(5, 7)), 0)).getUTCDate();
 
-let filtro = 'todos', busqueda = '', vista = null, MESES = [];
-
-function toast(txt) {
-  const t = $('#toast'); t.textContent = txt; t.classList.add('on');
-  clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('on'), 2200);
-}
-
-async function copiar(txt) {
-  try { await navigator.clipboard.writeText(txt); return true; }
-  catch {
-    const a = document.createElement('textarea'); a.value = txt; document.body.appendChild(a); a.select();
-    const ok = document.execCommand('copy'); a.remove(); return ok;
+  /* ---------- Pestañas ---------- */
+  const tabs = [...document.querySelectorAll('.tab')];
+  let vista = 'pedido';
+  function mostrar(v) {
+    vista = v;
+    tabs.forEach((b) => b.setAttribute('aria-selected', String(b.dataset.v === v)));
+    document.querySelectorAll('.view').forEach((p) => { p.hidden = p.id !== v; });
+    try { history.replaceState(null, '', '#' + v); } catch (e) { /* sin historial */ }
+    if (v === 'pedido') pedidoRender(); else if (v === 'objetivo') objRender(); else dispRender();
   }
-}
+  tabs.forEach((b) => b.addEventListener('click', () => mostrar(b.dataset.v)));
 
-function stockTxt(s) {
-  if (!s) return '<span class="chico">no está en Gescom</span>';
-  if (s.pb > 1 && s.u >= s.pb) return fmt(s.u / s.pb) + ' <span class="chico">bultos</span>';
-  return fmt(s.u) + ' <span class="chico">u.</span>';
-}
+  /* ===================== PEDIDO SUGERIDO ===================== */
+  const DEF = { cobertura: 14, plazo: 0, descontar: true };
+  const P = { ...DEF, rows: null, at: null, error: null, unwatch: null, filtro: 'A pedir', q: '', sort: 'estado', dir: 1 };
+  const ORDEN = { 'Quiebre': 0, 'Pedir': 1, 'OK': 2, 'Exceso': 3, 'Sin venta': 4 };
+  const ESTADOS = ['A pedir', 'Todos', 'Quiebre', 'Pedir', 'OK', 'Exceso', 'Sin venta'];
 
-async function mostrar(mes) {
-  const [dato, stock, previo] = await Promise.all([cargar(mes + '.json'), cargar('stock.json'),
-    MESES.includes(mesAnterior(mes)) ? cargar(mesAnterior(mes) + '.json') : null]);
-  const art = (stock && stock.articulos) || {};
-  const c = $('#contenido');
-  if (!dato) { c.innerHTML = '<div class="aviso">No hay datos de ' + nombreMes(mes) + '.</div>'; return; }
-  const compras = dato.compras || {};
-  const lista = dato.lista && dato.lista.articulos;
-
-  if (!lista || !lista.length) {
-    const n = Object.keys(compras).length;
-    c.innerHTML = `<div class="aviso"><b>Falta cargar la lista de artículos activos de ${nombreMes(mes)}.</b>
-      Sin la lista no se puede calcular la disponibilidad. Abajo, en <i>Cómo cargar la lista del mes</i>, están los pasos.
-      ${dato.compras_ok ? `<br>En el mes entraron remitos de PepsiCo de ${n} artículos.` : ''}</div>`;
-    pie(dato, stock);
-    return;
-  }
-
-  const filas = lista.map(a => {
-    const f = compras[a.c] || [];
-    const s = art[a.c];
-    return {c: a.c, d: a.d || (s && s.d) || '', b: a.b || 'SIN BDU', f, s, ok: f.length > 0};
-  });
-  const total = filas.length, comprados = filas.filter(x => x.ok).length, p = pct(comprados, total);
-
-  // Días que quedan del mes (contando hoy), sólo para el mes en curso.
-  const [a, n] = mes.split('-').map(Number);
-  const ultimo = new Date(a, n, 0).getDate();
-  let dias = '', diasN = '';
-  if (hoyAR.slice(0, 7) === mes) { dias = ultimo - Number(hoyAR.slice(8, 10)) + 1; diasN = 'contando hoy'; }
-  else if (mes < hoyAR.slice(0, 7)) { dias = '0'; diasN = 'mes cerrado'; }
-
-  // Referencia: el mes anterior con la lista de este mes.
-  let ref = '';
-  if (previo && previo.compras_ok) {
-    const pc = previo.compras || {};
-    const falt = filas.filter(x => !(pc[x.c] || []).length);
-    const comp = total - falt.length;
-    ref = `<p class="nota">Referencia: con esta lista, en ${nombreMes(mesAnterior(mes))} se compraron <b>${comp} de ${total}</b> (${fmt(pct(comp, total))}%).`
-      + (falt.length && falt.length <= 8 ? ' Faltaron: ' + falt.map(x => esc(x.d || x.c)).join(', ') + '.' : '') + '</p>';
+  function sqlPedido(p) {
+    const cob = Math.round(p.cobertura), pl = Math.round(p.plazo), desc = p.descontar ? 1 : 0;
+    return `WITH ref AS (SELECT MAX(fecha_pedido) AS f FROM ventas WHERE borrada = 0),
+foto AS (SELECT substr(actualizado, 1, 10) AS f, datos FROM respuestas WHERE ruta = 'cmd/inventario/api/v1/get-stock'),
+art AS (SELECT json_extract(datos, '$.codigo') AS codigo, json_extract(datos, '$.descripcion') AS articulo, json_extract(datos, '$.tags') AS tags, json_extract(datos, '$.unidadesPorBulto') AS upb, json_extract(datos, '$.precioCosto') AS costo_bulto, json_extract(datos, '$.factorPeso') AS gramos, json_extract(datos, '$.bloqueado') AS bloqueado
+  FROM catalogo WHERE tipo = 'articulos' AND vigente = 1 AND clave LIKE '%|1' AND json_extract(datos, '$.codigoProveedor') = '100' AND json_extract(datos, '$.codigoRubro') <> 'pepsico-1'),
+st AS (SELECT json_extract(e.value, '$.codigoItem') AS codigo,
+  SUM(CASE WHEN json_extract(s.value, '$.codigoDeposito') = '0' THEN json_extract(s.value, '$.cantidad') ELSE 0 END) AS dep0
+  FROM foto, json_each(foto.datos) e, json_each(e.value, '$.stock') s GROUP BY 1),
+ve AS (SELECT l.codigo_item AS codigo, SUM(l.cantidad * COALESCE(l.unidad_factor, 1)) AS u28,
+  SUM(CASE WHEN l.fecha_pedido < date(ref.f, '-21 days') THEN l.cantidad * COALESCE(l.unidad_factor, 1) ELSE 0 END) AS sem1,
+  SUM(CASE WHEN l.fecha_pedido >= date(ref.f, '-21 days') AND l.fecha_pedido < date(ref.f, '-14 days') THEN l.cantidad * COALESCE(l.unidad_factor, 1) ELSE 0 END) AS sem2,
+  SUM(CASE WHEN l.fecha_pedido >= date(ref.f, '-14 days') AND l.fecha_pedido < date(ref.f, '-7 days') THEN l.cantidad * COALESCE(l.unidad_factor, 1) ELSE 0 END) AS sem3,
+  SUM(CASE WHEN l.fecha_pedido >= date(ref.f, '-7 days') THEN l.cantidad * COALESCE(l.unidad_factor, 1) ELSE 0 END) AS sem4
+  FROM venta_lineas l, ref WHERE l.codigo_tipo_venta = 'VEN' AND l.fecha_pedido >= date(ref.f, '-28 days') AND l.fecha_pedido < ref.f AND l.codigo_item IN (SELECT codigo FROM art) GROUP BY 1),
+base AS (SELECT a.*, COALESCE(st.dep0, 0) AS dep0, COALESCE(ve.u28, 0) AS venta_28d, COALESCE(ve.sem1, 0) AS sem1, COALESCE(ve.sem2, 0) AS sem2, COALESCE(ve.sem3, 0) AS sem3, COALESCE(ve.sem4, 0) AS sem4,
+  COALESCE(ve.u28, 0) / 28.0 AS diario, (SELECT f FROM foto) AS fecha_stock, date((SELECT f FROM ref), '-28 days') AS ventas_desde, date((SELECT f FROM ref), '-1 day') AS ventas_hasta,
+  MAX(0, CAST(julianday(date('now', '-3 hours')) - julianday((SELECT f FROM foto)) AS INTEGER)) AS dias_desde_foto
+  FROM art a LEFT JOIN st ON st.codigo = a.codigo LEFT JOIN ve ON ve.codigo = a.codigo),
+hoy AS (SELECT *, dep0 AS stock_foto FROM base WHERE venta_28d > 0 OR dep0 > 0),
+calc AS (SELECT *, MAX(0, stock_foto - CASE WHEN ${desc} THEN diario * dias_desde_foto ELSE 0 END) AS stock_hoy, diario * (${cob} + ${pl}) AS objetivo FROM hoy),
+ped AS (SELECT *, MAX(0, objetivo - stock_hoy) AS faltante FROM calc),
+fin AS (SELECT *, CASE WHEN faltante <= 0 THEN 0 ELSE CAST(faltante / upb AS INTEGER) + (faltante / upb > CAST(faltante / upb AS INTEGER)) END AS bultos FROM ped)
+SELECT codigo, articulo, CASE WHEN tags LIKE '%*P01%' THEN 'P01' WHEN tags LIKE '%*P02%' THEN 'P02' ELSE '' END AS portafolio, upb, bloqueado,
+  ROUND(diario, 1) AS venta_diaria, venta_28d, sem1, sem2, sem3, sem4, dep0, stock_foto, ROUND(stock_hoy) AS stock_hoy,
+  CASE WHEN diario > 0 THEN ROUND(stock_hoy / diario, 1) END AS dias_cobertura,
+  ROUND(objetivo) AS stock_objetivo, bultos,
+  ROUND(bultos * upb * gramos / 1000.0, 1) AS kg_pedido,
+  ROUND(costo_bulto, 2) AS costo_bulto, ROUND(bultos * costo_bulto) AS costo_pedido,
+  CASE WHEN diario = 0 THEN 'Sin venta' WHEN stock_hoy / diario < 3 THEN 'Quiebre' WHEN stock_hoy / diario < ${cob} THEN 'Pedir' WHEN stock_hoy / diario > 2 * ${cob} THEN 'Exceso' ELSE 'OK' END AS estado,
+  fecha_stock, dias_desde_foto, ventas_desde, ventas_hasta
+FROM fin ORDER BY bultos * costo_bulto DESC, venta_28d DESC`;
   }
 
-  const bdus = {};
-  for (const x of filas) { const g = bdus[x.b] ||= {t: 0, ok: 0}; g.t++; if (x.ok) g.ok++; }
-  const filasBdu = Object.entries(bdus).sort((x, y) => y[1].t - x[1].t).map(([b, g]) => {
-    const q = pct(g.ok, g.t);
-    return `<tr><td>${esc(b)}</td><td><div class="barra"><i class="${clase(q)}" style="width:${q}%"></i></div></td>
-      <td class="num">${g.ok} / ${g.t}</td><td class="num ${clase(q)}">${fmt(q)}%</td></tr>`;
-  }).join('');
-
-  vista = filas;
-  c.innerHTML = `
-    <div class="kpis">
-      <div class="kpi main"><div class="t">Disponibilidad</div><div class="v ${clase(p)}">${fmt(p)}%</div>
-        <div class="barra"><i class="${clase(p)}" style="width:${p}%"></i></div></div>
-      <div class="kpi"><div class="t">Comprados</div><div class="v">${comprados}</div><div class="n">de ${total} activos</div></div>
-      <div class="kpi"><div class="t">Faltan comprar</div><div class="v ${total - comprados ? 'bad' : 'ok'}">${total - comprados}</div><div class="n">artículos</div></div>
-      <div class="kpi"><div class="t">Días que quedan</div><div class="v">${dias === '' ? '—' : dias}</div><div class="n">${diasN}</div></div>
-    </div>
-    ${dato.compras_ok ? '' : '<div class="aviso">Todavía no se pudieron bajar las compras de este mes desde Gescom.</div>'}
-    ${ref}
-    <section class="panel">
-      <h2>Por unidad de negocio (BDU)</h2>
-      <div class="tabla"><table class="bdu"><thead><tr><th>BDU</th><th></th><th class="num">Comprados</th><th class="num">%</th></tr></thead>
-      <tbody>${filasBdu}</tbody></table></div>
-    </section>
-    <section class="panel">
-      <h2>Artículos</h2>
-      <div class="herr">
-        <div class="chips" role="group" aria-label="Filtro">
-          <button class="chip" data-f="todos">Todos (${total})</button>
-          <button class="chip" data-f="falta">Faltan (${total - comprados})</button>
-          <button class="chip" data-f="ok">Comprados (${comprados})</button>
-        </div>
-        <input type="search" id="buscar" placeholder="Buscar código o artículo" value="${esc(busqueda)}">
-        <button class="btn" id="copiar">Copiar faltantes</button>
-      </div>
-      <div class="tabla"><table><thead><tr><th>Código</th><th>Artículo</th><th class="ocultar-movil">BDU</th><th>Estado</th>
-        <th class="ocultar-movil">Compras en el mes</th><th class="num">Stock hoy</th></tr></thead><tbody id="filas"></tbody></table></div>
-    </section>`;
-
-  c.querySelectorAll('.chip').forEach(b => b.onclick = () => { filtro = b.dataset.f; pintar(); });
-  $('#buscar').oninput = e => { busqueda = e.target.value; pintar(); };
-  $('#copiar').onclick = async () => {
-    const f = vista.filter(x => !x.ok);
-    if (!f.length) return toast('No falta comprar nada');
-    const txt = ['Código\tArtículo\tBDU\tStock hoy'].concat(f.map(x =>
-      [x.c, x.d, x.b, x.s ? (x.s.pb > 1 && x.s.u >= x.s.pb ? fmt(x.s.u / x.s.pb) + ' bultos' : fmt(x.s.u) + ' u.') : ''].join('\t'))).join('\n');
-    toast(await copiar(txt) ? `Copiados ${f.length} faltantes` : 'No se pudo copiar');
+  const MSG = {
+    needs_reauth: 'Hay que volver a conectar Base Gescom: claude.ai → Configuración → Conectores.',
+    server_not_connected: 'Para ver el pedido sugerido hay que tener el conector Base Gescom: claude.ai → Configuración → Conectores.',
+    selection_required: 'Tenés más de un conector llamado Base Gescom: elegí cuál usar cuando la página lo pregunte.',
+    not_in_manifest: 'Esta página no tiene permiso para leer Base Gescom. Habilitalo desde el menú de permisos de la página.',
+    blocked_by_policy: 'La organización no permite usar Base Gescom desde esta página.',
+    approval_required: 'La organización pide aprobar cada consulta a Base Gescom, y eso todavía no se puede desde una página.',
   };
-  pintar();
-  pie(dato, stock);
-}
+  const DENEGADO = new Set(['needs_reauth', 'server_not_connected', 'blocked_by_policy', 'approval_required', 'not_in_manifest', 'selection_required']);
 
-function pintar() {
-  document.querySelectorAll('.chip').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.f === filtro)));
-  const q = busqueda.trim().toLowerCase();
-  const f = vista
-    .filter(x => filtro === 'todos' || (filtro === 'ok') === x.ok)
-    .filter(x => !q || x.c.includes(q) || x.d.toLowerCase().includes(q))
-    .sort((x, y) => (x.ok - y.ok) || x.b.localeCompare(y.b) || x.d.localeCompare(y.d));
-  $('#filas').innerHTML = f.length ? f.map(x => `<tr>
-      <td class="cod">${esc(x.c)}</td><td>${esc(x.d)}</td><td class="ocultar-movil chico">${esc(x.b)}</td>
-      <td><span class="estado ${x.ok ? 'ok' : 'bad'}">${x.ok ? 'Comprado' : 'Falta'}</span></td>
-      <td class="ocultar-movil fechas">${x.f.map(ddmm).join(', ') || '—'}</td>
-      <td class="num">${stockTxt(x.s)}</td></tr>`).join('')
-    : '<tr><td colspan="6" class="chico">Nada para mostrar con ese filtro.</td></tr>';
-}
+  let mcpNs = null;
+  function pedidoWatch() {
+    if (!mcpNs) return;
+    if (P.unwatch) P.unwatch();
+    const input = { sql: sqlPedido(P), limite: 500 };
+    let reintento = false;
+    P.unwatch = mcpNs.watchTool('Base Gescom', 'consultar_base', input, (ev) => {
+      if (ev.type === 'data') {
+        const pl = ev.result.payload;
+        let a = pl;
+        if (typeof a === 'string') { try { a = JSON.parse(a); } catch (e) { a = null; } }
+        if (!a || !Array.isArray(a.datos)) { P.error = { code: 'tool_error', message: typeof pl === 'string' ? pl : 'La respuesta no trae filas.' }; pedidoRender(); return; }
+        P.rows = a.datos; P.cut = !!a.recortado; P.error = null;
+        P.at = ev.result.cache ? ev.result.cache.storedAt : Date.now();
+        pedidoRender();
+      } else {
+        const e = ev.error || {};
+        if (DENEGADO.has(e.code)) P.rows = null;
+        P.error = e;
+        if (e.retryable && !reintento) { reintento = true; setTimeout(() => pedidoWatch(), Math.min(60000, e.retryAfterMs || 2000 + Math.random() * 2000)); }
+        pedidoRender();
+      }
+    }, { cache: { staleTime: 60000, gcTime: 3600000 }, refetchInterval: 15 * 60000 });
+  }
 
-function pie(dato, stock) {
-  const h = s => s ? new Date(s).toLocaleString('es-AR', {day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'America/Argentina/Buenos_Aires'}) : '—';
-  $('#pie').textContent = `Compras actualizadas: ${h(dato.actualizado)} · Stock: ${h(stock && stock.actualizado)}`
-    + (dato.lista ? ` · Lista: ${dato.lista.archivo} (${dato.lista.articulos.length} activos)` : '');
-}
+  function setParam(k, v) {
+    if (P[k] === v) return;
+    P[k] = v;
+    try { localStorage.setItem('pp-' + k, JSON.stringify(v)); } catch (e) { /* sin almacenamiento */ }
+    pedidoWatch();
+    pedidoRender();
+  }
+  try { ['cobertura', 'plazo', 'descontar'].forEach((k) => { const s = localStorage.getItem('pp-' + k); if (s != null) P[k] = JSON.parse(s); }); } catch (e) { /* sin almacenamiento */ }
 
-(async () => {
-  const idx = await cargar('meses.json');
-  const meses = MESES = (idx && idx.meses) || [];
-  const sel = $('#mes');
-  if (!meses.length) { $('#contenido').innerHTML = '<div class="aviso">Todavía no hay datos.</div>'; return; }
-  sel.innerHTML = meses.map(m => `<option value="${m}">${nombreMes(m)}</option>`).join('');
-  const pedido = new URLSearchParams(location.search).get('mes');
-  sel.value = meses.includes(pedido) ? pedido : (meses.includes(hoyAR.slice(0, 7)) ? hoyAR.slice(0, 7) : meses[0]);
-  sel.onchange = () => { history.replaceState(null, '', '?mes=' + sel.value); mostrar(sel.value); };
-  mostrar(sel.value);
+  const cob = $('p-cob'), plazo = $('p-plazo'), desc = $('p-desc');
+  const entero = (inp, min, max) => { const v = Number(inp.value); return inp.value !== '' && Number.isInteger(v) && v >= min && v <= max ? v : null; };
+  cob.addEventListener('change', () => { const v = entero(cob, 1, 60); if (v != null) setParam('cobertura', v); });
+  plazo.addEventListener('change', () => { const v = entero(plazo, 0, 30); if (v != null) setParam('plazo', v); });
+  cob.addEventListener('blur', () => { cob.value = P.cobertura; });
+  plazo.addEventListener('blur', () => { plazo.value = P.plazo; });
+  desc.addEventListener('change', () => setParam('descontar', desc.checked));
+  $('p-reset').addEventListener('click', () => { Object.assign(P, DEF); try { ['cobertura', 'plazo', 'descontar'].forEach((k) => localStorage.removeItem('pp-' + k)); } catch (e) { /* nada */ } pedidoWatch(); pedidoRender(); });
+
+  const chips = $('p-chips');
+  ESTADOS.forEach((e) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = e; b.dataset.e = e; b.addEventListener('click', () => { P.filtro = e; pedidoTabla(); }); chips.appendChild(b); });
+  $('p-q').addEventListener('input', (ev) => { P.q = ev.target.value.trim().toLowerCase(); pedidoTabla(); });
+  document.querySelectorAll('#p-table th button').forEach((b) => b.addEventListener('click', () => {
+    const k = b.dataset.k;
+    if (P.sort === k) P.dir = -P.dir; else { P.sort = k; P.dir = (k === 'articulo' || k === 'codigo' || k === 'estado') ? 1 : -1; }
+    pedidoTabla();
+  }));
+
+  const tend = (r) => [r.sem1, r.sem2, r.sem3, r.sem4].map(Number);
+  const sortVal = (r, k) => {
+    if (k === 'estado') return ORDEN[r.estado] * 1e12 - Number(r.costo_pedido);
+    if (k === 'tendencia') { const t = tend(r); return t[0] > 0 ? t[3] / t[0] : (t[3] > 0 ? 9 : 0); }
+    if (k === 'articulo' || k === 'codigo') return String(r[k]);
+    return r[k] == null ? -1 : Number(r[k]);
+  };
+
+  function spark(r) {
+    const t = tend(r), w = 64, h = 18, max = Math.max(...t, 1);
+    const pts = t.map((v, i) => [2 + i * (w - 4) / 3, h - 2 - (v / max) * (h - 4)]);
+    const svg = el('svg', { width: w, height: h, viewBox: `0 0 ${w} ${h}` });
+    svg.appendChild(el('title', {}, 'Unidades por semana: ' + t.map((v) => n0.format(v)).join(' · ')));
+    svg.appendChild(el('polyline', { points: pts.map((p) => p.join(',')).join(' '), fill: 'none', stroke: 'var(--muted)', 'stroke-width': 1.5, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }));
+    svg.appendChild(el('circle', { cx: pts[3][0], cy: pts[3][1], r: 2.2, fill: 'var(--fg)' }));
+    return svg;
+  }
+
+  function pedidoTotales(rows) {
+    const conVenta = rows.filter((r) => Number(r.venta_diaria) > 0);
+    const stock = conVenta.reduce((s, r) => s + Number(r.stock_hoy), 0);
+    const diaria = conVenta.reduce((s, r) => s + Number(r.venta_diaria), 0);
+    return {
+      bultos: rows.reduce((s, r) => s + Number(r.bultos), 0),
+      kg: rows.reduce((s, r) => s + Number(r.kg_pedido), 0),
+      costo: rows.reduce((s, r) => s + Number(r.costo_pedido), 0),
+      skus: rows.filter((r) => Number(r.bultos) > 0).length,
+      quiebres: rows.filter((r) => r.estado === 'Quiebre').length,
+      cob: diaria > 0 ? stock / diaria : null,
+    };
+  }
+
+  function pedidoRender() {
+    if (document.activeElement !== cob) cob.value = P.cobertura;
+    if (document.activeElement !== plazo) plazo.value = P.plazo;
+    desc.checked = !!P.descontar;
+    const alerta = $('p-alert');
+    if (P.error) {
+      alerta.hidden = false;
+      alerta.textContent = MSG[P.error.code] || (P.error.code === 'tool_error' ? 'Base Gescom respondió con un error: ' + (P.error.message || '') : 'No se pudo leer Base Gescom en este momento. Probá recargar la página en un rato.')
+        + (P.rows ? ' Se muestran los últimos datos que llegaron.' : '');
+    } else alerta.hidden = true;
+    if (!mcpNs && mcpListo) { alerta.hidden = false; alerta.textContent = 'Esta vista no puede leer Base Gescom. Abrí el panel desde claude.ai con tu cuenta.'; }
+
+    const rows = P.rows;
+    if (!rows) { if (!P.error) $('p-lead').textContent = 'Leyendo stock y ventas de Base Gescom…'; else $('p-lead').textContent = 'Sin datos de Base Gescom.'; return; }
+    const T = pedidoTotales(rows);
+    $('pk-bultos').textContent = n0.format(T.bultos);
+    $('pk-skus').textContent = T.skus + ' artículos';
+    $('pk-kg').textContent = n0.format(T.kg);
+    $('pk-costo').textContent = moneyC.format(T.costo);
+    $('pk-costo').title = money.format(T.costo);
+    $('pk-cob').textContent = T.cob == null ? '—' : n1.format(T.cob);
+    $('pk-cob-box').classList.toggle('is-bad', T.cob != null && T.cob < P.cobertura);
+    $('pk-qui').textContent = n0.format(T.quiebres);
+    const lead = $('p-lead');
+    lead.replaceChildren();
+    const b = (t) => { const x = document.createElement('b'); x.textContent = t; return x; };
+    lead.append('Para llegar a ', b(String(P.cobertura)), ' días de stock hay que pedir ', b(n0.format(T.bultos)), ' bultos (' + n0.format(T.kg) + ' kg, costo neto ' + money.format(T.costo) + '). Hay ', b(String(T.quiebres)), ' artículos con menos de 3 días de stock.');
+    const r0 = rows[0] || {};
+    const extra = [];
+    if (P.descontar && Number(r0.dias_desde_foto) > 0) extra.push('al stock se le descuentan ' + r0.dias_desde_foto + ' días de venta promedio desde la foto');
+    extra.push('cuenta sólo el depósito local (0), el único que se vende');
+    $('p-fuente').textContent = 'Stock al ' + ddmmaa(r0.fecha_stock) + ' · venta promedio del ' + ddmmaa(r0.ventas_desde) + ' al ' + ddmmaa(r0.ventas_hasta) + ' (28 días, sólo ventas VEN de las tres empresas) · ' + extra.join(' · ') + '.' + (P.cut ? ' La consulta vino recortada a 500 artículos.' : '');
+    $('fresh').textContent = P.at ? 'Base Gescom leída el ' + fechaHora(P.at) : '';
+    if (vista === 'pedido') pedidoChart(rows);
+    pedidoTabla();
+    if (vista === 'disponibilidad') dispRender();
+  }
+
+  function pedidoTabla() {
+    chips.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.e === P.filtro)));
+    document.querySelectorAll('#p-table th').forEach((th) => { const k = th.querySelector('button').dataset.k; if (k === P.sort) th.setAttribute('aria-sort', P.dir > 0 ? 'ascending' : 'descending'); else th.removeAttribute('aria-sort'); });
+    const tb = $('p-body');
+    if (!P.rows) { tb.replaceChildren(); return; }
+    const rows = P.rows.filter((r) => {
+      if (P.filtro === 'A pedir' && !(Number(r.bultos) > 0)) return false;
+      if (P.filtro !== 'Todos' && P.filtro !== 'A pedir' && r.estado !== P.filtro) return false;
+      if (P.q && !(String(r.articulo).toLowerCase().includes(P.q) || String(r.codigo).includes(P.q))) return false;
+      return true;
+    }).sort((a, c) => { const x = sortVal(a, P.sort), y = sortVal(c, P.sort); return (x < y ? -1 : x > y ? 1 : 0) * P.dir; });
+    if (!rows.length) { const tr = document.createElement('tr'); const td = document.createElement('td'); td.colSpan = 11; td.className = 'l empty'; td.textContent = 'No hay artículos con este filtro.'; tr.appendChild(td); tb.replaceChildren(tr); return; }
+    tb.replaceChildren(...rows.map((r) => {
+      const tr = document.createElement('tr');
+      if (!(Number(r.bultos) > 0)) tr.className = 'zero';
+      const td = (txt, c) => { const x = document.createElement('td'); if (c) x.className = c; x.textContent = txt; tr.appendChild(x); return x; };
+      td(r.codigo, 'l m');
+      const art = td(r.articulo, 'l art');
+      if (r.portafolio) { const s = document.createElement('span'); s.className = 'tag'; s.textContent = ' · ' + r.portafolio; art.appendChild(s); }
+      if (Number(r.bloqueado)) { const s = document.createElement('span'); s.className = 'blk'; s.textContent = ' bloqueado'; art.appendChild(s); }
+      const est = td('', 'l'); const pill = document.createElement('span'); pill.className = 'pill ' + String(r.estado).split(' ')[0]; pill.textContent = r.estado; est.appendChild(pill);
+      td(n1.format(r.venta_diaria));
+      td('', 'hide-sm').appendChild(spark(r));
+      td(n0.format(r.stock_hoy));
+      td(r.dias_cobertura == null ? '—' : n1.format(r.dias_cobertura));
+      td(n0.format(r.bultos), 'b');
+      td(n0.format(r.upb), 'hide-sm');
+      td(n0.format(r.kg_pedido), 'hide-sm');
+      td(money.format(r.costo_pedido));
+      return tr;
+    }));
+  }
+
+  function pedidoChart(all) {
+    const box = $('p-chart');
+    box.replaceChildren();
+    const rows = all.filter((r) => Number(r.venta_diaria) > 0).sort((a, c) => c.venta_diaria - a.venta_diaria).slice(0, 20);
+    if (!rows.length) return;
+    const W = Math.max(300, box.clientWidth || 700), rowH = 22, top = 22, bottom = 8, H = top + rows.length * rowH + bottom;
+    const objetivo = P.cobertura, xmax = Math.max(objetivo * 2, 1);
+    const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Días de stock por artículo' });
+    box.appendChild(svg);
+    const short = (s) => s.length > 30 ? s.slice(0, 29) + '…' : s;
+    let lw = 0;
+    rows.forEach((r) => { const t = el('text', { 'font-size': 12 }, short(r.articulo)); svg.appendChild(t); lw = Math.max(lw, t.getComputedTextLength()); svg.removeChild(t); });
+    lw = Math.min(lw || 160, W * 0.45);
+    const left = lw + 10, right = 40;
+    const X = (v) => left + Math.min(v, xmax) / xmax * (W - left - right);
+    const color = (v) => v < 3 ? 'var(--bad)' : v < objetivo ? 'var(--warn)' : 'var(--muted)';
+    const paso = [1, 2, 5, 7, 10, 14, 20, 30].find((p) => xmax / p <= Math.max(2, Math.floor((W - left - right) / 70))) || 30;
+    for (let v = 0; v <= xmax; v += paso) {
+      svg.appendChild(el('line', { x1: X(v), x2: X(v), y1: top - 4, y2: H - bottom, stroke: 'var(--line)', 'stroke-width': 1 }));
+      svg.appendChild(el('text', { x: X(v), y: 12, 'text-anchor': 'middle', fill: 'var(--muted)', 'font-size': 11 }, String(v)));
+    }
+    const tip = document.createElement('div'); tip.className = 'tip'; tip.hidden = true; box.appendChild(tip);
+    rows.forEach((r, i) => {
+      const y = top + i * rowH, d = Number(r.dias_cobertura);
+      svg.appendChild(el('text', { x: left - 8, y: y + rowH / 2, dy: '0.35em', 'text-anchor': 'end', fill: 'var(--fg)', 'font-size': 12 }, short(r.articulo)));
+      svg.appendChild(el('rect', { x: left, y: y + 4, height: rowH - 8, rx: 4, width: Math.max(2, X(d) - left), fill: color(d) }));
+      svg.appendChild(el('text', { x: X(d) + 4, y: y + rowH / 2, dy: '0.35em', fill: 'var(--muted)', 'font-size': 11 }, (d > xmax ? '>' : '') + n1.format(Math.min(d, xmax))));
+      const hit = el('rect', { x: 0, y, width: W, height: rowH, fill: 'transparent' });
+      hit.addEventListener('mousemove', (ev) => {
+        tip.replaceChildren();
+        const a = document.createElement('div'); a.className = 't'; a.textContent = r.articulo;
+        const b = document.createElement('div'); b.textContent = n1.format(d) + ' días · stock ' + n0.format(r.stock_hoy) + ' u. · vende ' + n1.format(r.venta_diaria) + '/día';
+        const c = document.createElement('div'); c.textContent = 'Pedir ' + n0.format(r.bultos) + ' bultos';
+        tip.append(a, b, c); tip.hidden = false;
+        const rb = box.getBoundingClientRect();
+        tip.style.left = Math.max(0, Math.min(ev.clientX - rb.left + 12, rb.width - tip.offsetWidth)) + 'px';
+        tip.style.top = (ev.clientY - rb.top + 14) + 'px';
+      });
+      hit.addEventListener('mouseleave', () => { tip.hidden = true; });
+      svg.appendChild(hit);
+    });
+    svg.appendChild(el('line', { x1: X(objetivo), x2: X(objetivo), y1: top - 4, y2: H - bottom, stroke: 'var(--fg)', 'stroke-width': 1.5, 'stroke-dasharray': '4 3' }));
+  }
+
+  $('p-copy').addEventListener('click', () => {
+    if (!P.rows) return;
+    const lines = P.rows.filter((r) => Number(r.bultos) > 0).sort((a, c) => ORDEN[a.estado] - ORDEN[c.estado] || c.costo_pedido - a.costo_pedido).map((r) => [r.codigo, r.articulo, r.bultos].join('\t'));
+    const text = ['Código\tArtículo\tBultos', ...lines].join('\n');
+    const ok = () => { const m = $('p-copied'); m.hidden = false; setTimeout(() => { m.hidden = true; }, 2000); };
+    navigator.clipboard.writeText(text).then(ok).catch(() => {
+      const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); ok(); } catch (e) { /* sin portapapeles */ }
+      ta.remove();
+    });
+  });
+
+  /* ===================== OBJETIVO DE COMPRA ===================== */
+  const O = { mes: mesHoy, objetivos: {}, recibido: {}, cargadoObj: false, cargadoRec: false, puedeEditar: null, db: null, guardando: false };
+
+  function oMeses() { return [...new Set([mesHoy, O.mes, ...Object.keys(O.objetivos), ...Object.keys(O.recibido)])].sort().reverse(); }
+  function oResumen(m) {
+    const r = O.recibido[m], o = O.objetivos[m];
+    const rec = Math.round((r ? Number(r.kg_total) || 0 : 0) / 100) / 10;
+    const obj = o && typeof o.toneladas === 'number' ? o.toneladas : null;
+    return { mes: m, rec, obj, remitos: r && Array.isArray(r.remitos) ? r.remitos : [], rest: obj == null ? null : Math.max(0, obj - rec), cum: obj ? rec / obj : null };
+  }
+
+  function objRender() {
+    const m = O.mes;
+    const sel = $('o-mes');
+    sel.replaceChildren(...oMeses().map((x) => new Option(nombreMes(x), x)));
+    sel.value = m;
+    $('o-carga-mes').textContent = nombreMes(m);
+    const r = oResumen(m);
+    const inp = $('o-obj');
+    if (document.activeElement !== inp && !O.guardando) inp.value = r.obj == null ? '' : String(r.obj);
+    const o = O.objetivos[m], est = $('o-estado');
+    if (!est.dataset.sticky) {
+      est.className = 'status';
+      est.textContent = O.puedeEditar === false ? 'Sólo los editores del panel pueden cambiar el objetivo.'
+        : o && o.actualizado ? 'Guardado el ' + fechaHora(o.actualizado) + '.'
+        : O.cargadoObj ? 'Todavía no hay objetivo para este mes.' : '';
+    }
+    inp.disabled = O.puedeEditar === false || !O.db;
+    $('o-guardar').disabled = inp.disabled || O.guardando;
+    if (!O.cargadoRec) return;
+
+    $('ok-obj').textContent = r.obj == null ? 'Sin cargar' : t1.format(r.obj);
+    $('ok-rec').textContent = t1.format(r.rec);
+    $('ok-rem').textContent = r.remitos.length === 1 ? '1 remito' : r.remitos.length + ' remitos';
+    $('ok-rest').textContent = r.rest == null ? '—' : t1.format(r.rest);
+    $('ok-cum').textContent = r.cum == null ? '—' : pct.format(r.cum);
+    $('ok-bar').style.width = r.cum == null ? '0%' : Math.min(100, r.cum * 100) + '%';
+    $('ok-cum-box').classList.toggle('is-ok', r.cum != null && r.cum >= 1);
+    if (m === mesHoy && r.obj != null) {
+      const quedan = diasDe(m) - diaHoy + 1;
+      $('ok-rit').textContent = r.rest === 0 ? 'Cumplido' : t1.format(r.rest / quedan * 7);
+      $('ok-rit-n').textContent = r.rest === 0 ? 'el objetivo del mes' : 'toneladas por semana · quedan ' + quedan + ' días';
+    } else {
+      $('ok-rit').textContent = '—';
+      $('ok-rit-n').textContent = m === mesHoy ? 'falta el objetivo' : m < mesHoy ? 'mes cerrado' : 'mes por venir';
+    }
+    $('o-lead').textContent = r.obj == null
+      ? `En ${nombreMes(m)} se recibieron ${t1.format(r.rec)} t. Cargá arriba el objetivo del mes para ver cuánto falta.`
+      : r.rec >= r.obj
+        ? `En ${nombreMes(m)} se cumplió el objetivo: ${t1.format(r.rec)} t recibidas de ${t1.format(r.obj)} t.`
+        : `En ${nombreMes(m)} se recibieron ${t1.format(r.rec)} t de ${t1.format(r.obj)} t. Faltan ${t1.format(r.rest)} t.`;
+
+    const tb = $('o-remitos');
+    if (!r.remitos.length) {
+      const tr = document.createElement('tr'); const td = document.createElement('td'); td.colSpan = 5; td.className = 'l empty'; td.textContent = 'Todavía no hay remitos de PepsiCo en este mes.'; tr.appendChild(td); tb.replaceChildren(tr);
+    } else {
+      tb.replaceChildren(...r.remitos.slice().sort((a, b) => (a.fecha < b.fecha ? 1 : -1)).map((x) => fila([[ddmm(x.fecha), 'l'], [x.remito, 'l'], [ddmm(x.fecha_carga), 'l hide-sm m'], [n0.format(x.bultos), ''], [t1.format(x.kg / 1000), 'b']])));
+    }
+    $('o-meses').replaceChildren(...oMeses().map((x) => {
+      const s = oResumen(x);
+      const tr = fila([[nombreMes(x), 'l'], [s.obj == null ? 'Sin cargar' : t1.format(s.obj), s.obj == null ? 'm' : ''], [t1.format(s.rec), ''], [s.cum == null ? '—' : pct.format(s.cum), '']]);
+      tr.className = 'pick' + (x === m ? ' sel' : ''); tr.tabIndex = 0;
+      tr.addEventListener('click', () => oElegir(x));
+      tr.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); oElegir(x); } });
+      return tr;
+    }));
+    if (vista === 'objetivo') oChart(r);
+  }
+
+  function oChart(r) {
+    const box = $('o-chart');
+    box.replaceChildren();
+    const W = Math.max(300, box.clientWidth || 700), H = 260, ml = 44, mr = 16, mt = 18, mb = 26;
+    const dias = diasDe(r.mes);
+    const pts = [{ d: 0, t: 0 }];
+    let acum = 0;
+    r.remitos.slice().sort((a, b) => (a.fecha < b.fecha ? -1 : 1)).forEach((x) => { acum += x.kg / 1000; pts.push({ d: Number(x.fecha.slice(8, 10)), t: acum, x }); });
+    const ymax = Math.max(r.obj || 0, acum, 1) * 1.12;
+    const X = (d) => ml + d / dias * (W - ml - mr);
+    const Y = (t) => H - mb - t / ymax * (H - mt - mb);
+    const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Toneladas acumuladas por día del mes' });
+    const paso = [1, 2, 5, 10, 20, 25, 50, 100, 200, 500].find((p) => ymax / p <= 5) || 1000;
+    for (let v = 0; v <= ymax; v += paso) {
+      svg.appendChild(el('line', { x1: ml, x2: W - mr, y1: Y(v), y2: Y(v), stroke: 'var(--line)', 'stroke-width': 1 }));
+      svg.appendChild(el('text', { x: ml - 6, y: Y(v), dy: '0.35em', 'text-anchor': 'end', fill: 'var(--muted)', 'font-size': 11 }, n0.format(v)));
+    }
+    [1, 5, 10, 15, 20, 25, dias].filter((d, i, a) => a.indexOf(d) === i && (d === dias || dias - d >= 3)).forEach((d) => {
+      svg.appendChild(el('text', { x: X(d), y: H - 8, 'text-anchor': 'middle', fill: 'var(--muted)', 'font-size': 11 }, String(d)));
+    });
+    if (r.obj) {
+      svg.appendChild(el('line', { x1: X(0), y1: Y(0), x2: X(dias), y2: Y(r.obj), stroke: 'var(--muted)', 'stroke-width': 1.5, 'stroke-dasharray': '1 4', 'stroke-linecap': 'round' }));
+      svg.appendChild(el('line', { x1: ml, x2: W - mr, y1: Y(r.obj), y2: Y(r.obj), stroke: 'var(--muted)', 'stroke-width': 1.5, 'stroke-dasharray': '6 4' }));
+      svg.appendChild(el('text', { x: ml + 6, y: Y(r.obj) - 6, fill: 'var(--muted)', 'font-size': 11 }, 'Objetivo ' + t1.format(r.obj) + ' t'));
+    }
+    if (r.mes === mesHoy) {
+      svg.appendChild(el('line', { x1: X(diaHoy), x2: X(diaHoy), y1: mt, y2: H - mb, stroke: 'var(--line)', 'stroke-width': 1.5 }));
+      svg.appendChild(el('text', { x: X(diaHoy) + 4, y: mt + 10, fill: 'var(--muted)', 'font-size': 11 }, 'hoy'));
+    }
+    const fin = r.mes === mesHoy ? diaHoy : r.mes < mesHoy ? dias : 0;
+    let d = `M${X(0)},${Y(0)}`;
+    pts.slice(1).forEach((p) => { d += `H${X(p.d)}V${Y(p.t)}`; });
+    if (fin > pts[pts.length - 1].d) d += `H${X(fin)}`;
+    svg.appendChild(el('path', { d, fill: 'none', stroke: 'var(--accent)', 'stroke-width': 2.2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }));
+    const tip = document.createElement('div'); tip.className = 'tip'; tip.hidden = true;
+    pts.slice(1).forEach((p) => {
+      const c = el('circle', { cx: X(p.d), cy: Y(p.t), r: 4, fill: 'var(--accent)', stroke: 'var(--panel)', 'stroke-width': 1.5 });
+      c.addEventListener('mousemove', (ev) => {
+        tip.replaceChildren();
+        const a = document.createElement('div'); a.className = 't'; a.textContent = ddmm(p.x.fecha) + ' · remito ' + p.x.remito;
+        const b = document.createElement('div'); b.textContent = t1.format(p.x.kg / 1000) + ' t · acumulado ' + t1.format(p.t) + ' t';
+        tip.append(a, b); tip.hidden = false;
+        const rb = box.getBoundingClientRect();
+        tip.style.left = Math.max(0, Math.min(ev.clientX - rb.left + 12, rb.width - tip.offsetWidth)) + 'px';
+        tip.style.top = (ev.clientY - rb.top + 14) + 'px';
+      });
+      c.addEventListener('mouseleave', () => { tip.hidden = true; });
+      svg.appendChild(c);
+    });
+    box.append(svg, tip);
+  }
+
+  function oElegir(m) { O.mes = m; delete $('o-estado').dataset.sticky; objRender(); dispRender(); }
+  $('o-mes').addEventListener('change', (ev) => oElegir(ev.target.value));
+
+  async function oGuardar() {
+    const est = $('o-estado');
+    const raw = $('o-obj').value.trim().replace(',', '.');
+    const v = Number(raw);
+    if (raw === '' || !isFinite(v) || v < 0 || v > 10000) { est.dataset.sticky = '1'; est.className = 'status bad'; est.textContent = 'Escribí las toneladas del mes con un número, por ejemplo 32,5.'; return; }
+    const tn = Math.round(v * 10) / 10;
+    const actual = O.objetivos[O.mes];
+    if (actual && actual.toneladas === tn) { est.dataset.sticky = '1'; est.className = 'status ok'; est.textContent = 'Ese objetivo ya está guardado.'; return; }
+    O.guardando = true; objRender();
+    try {
+      const user = await claude.use('user');
+      const uid = user ? await user.id() : null;
+      await O.db.doc('objetivos/' + O.mes).set({ mes: O.mes, toneladas: tn, actualizado: new Date().toISOString(), por: uid });
+      est.dataset.sticky = '1'; est.className = 'status ok'; est.textContent = 'Objetivo de ' + nombreMes(O.mes) + ' guardado: ' + t1.format(tn) + ' t.';
+    } catch (e) {
+      est.dataset.sticky = '1'; est.className = 'status bad';
+      if (e && e.code === 'invalid_argument') { O.puedeEditar = false; est.textContent = 'No tenés permiso para cambiar el objetivo. Pedile al dueño del panel acceso de editor.'; }
+      else est.textContent = 'No se pudo guardar. Probá de nuevo en un momento.';
+    } finally { O.guardando = false; objRender(); }
+  }
+  $('o-guardar').addEventListener('click', oGuardar);
+  $('o-obj').addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); oGuardar(); } });
+  $('o-obj').addEventListener('input', () => { delete $('o-estado').dataset.sticky; });
+
+  /* ===================== DISPONIBILIDAD ===================== */
+  const D = { activos: {}, cargado: false, filtro: 'Faltan', q: '', pendiente: null };
+  const D_FILTROS = ['Faltan', 'Comprados', 'Todos'];
+
+  function dResumen(m) {
+    const lista = D.activos[m] && Array.isArray(D.activos[m].articulos) ? D.activos[m].articulos : null;
+    const rec = O.recibido[m];
+    const porCodigo = {};
+    (rec && Array.isArray(rec.articulos) ? rec.articulos : []).forEach((a) => { porCodigo[String(a.codigo)] = a; });
+    const stock = {};
+    (P.rows || []).forEach((r) => { stock[String(r.codigo)] = r; });
+    const items = (lista || []).map((a) => {
+      const c = String(a.codigo), comp = porCodigo[c] || null, s = stock[c] || null;
+      return { ...a, codigo: c, comprado: !!comp, compra: comp, ped: s };
+    });
+    const si = items.filter((x) => x.comprado).length;
+    return { lista, items, si, no: items.length - si, pct: items.length ? si / items.length : null };
+  }
+
+  function dispRender() {
+    const m = O.mes;
+    const sel = $('d-mes');
+    const meses = [...new Set([...oMeses(), ...Object.keys(D.activos)])].sort().reverse();
+    sel.replaceChildren(...meses.map((x) => new Option(nombreMes(x), x)));
+    sel.value = m;
+    $('d-subir-box').hidden = O.puedeEditar === false;
+    const est = $('d-estado');
+    if (!est.dataset.sticky) {
+      const a = D.activos[m];
+      est.className = 'status';
+      est.textContent = a ? 'Lista de ' + nombreMes(m) + ': ' + (a.articulos || []).length + ' artículos' + (a.archivo ? ', de "' + a.archivo + '"' : '') + (a.cargado ? ', cargada el ' + fechaHora(a.cargado) : '') + '.' : D.cargado ? 'Todavía no hay lista de artículos activos para ' + nombreMes(m) + '.' : '';
+    }
+    if (!D.cargado || !O.cargadoRec) return;
+
+    const R = dResumen(m);
+    if (!R.lista) {
+      $('d-lead').textContent = 'Subí el Excel de artículos activos de ' + nombreMes(m) + ' para ver la disponibilidad del mes.';
+      ['dk-pct', 'dk-si', 'dk-no'].forEach((id) => { $(id).textContent = '—'; });
+      $('dk-bar').style.width = '0%';
+      $('d-bdu').replaceChildren(); $('d-body').replaceChildren();
+    } else {
+      $('dk-pct').textContent = pct.format(R.pct);
+      $('dk-bar').style.width = Math.min(100, R.pct * 100) + '%';
+      $('dk-pct-box').classList.toggle('is-ok', R.pct >= 1);
+      $('dk-pct-box').classList.toggle('is-bad', R.pct < 1 && m < mesHoy);
+      $('dk-si').textContent = n0.format(R.si);
+      $('dk-si-n').textContent = 'de ' + R.items.length + ' activos';
+      $('dk-no').textContent = n0.format(R.no);
+      $('dk-no-box').classList.toggle('is-bad', R.no > 0);
+      $('d-lead').textContent = R.no === 0
+        ? `En ${nombreMes(m)} ya se compraron los ${R.items.length} artículos activos: disponibilidad del 100%.`
+        : `En ${nombreMes(m)} se compraron ${R.si} de ${R.items.length} artículos activos (${pct.format(R.pct)}). Faltan comprar ${R.no} para llegar al 100%.`;
+
+      const bdus = {};
+      R.items.forEach((x) => { const k = x.bdu || 'Sin BDU'; bdus[k] = bdus[k] || { n: 0, si: 0 }; bdus[k].n++; if (x.comprado) bdus[k].si++; });
+      $('d-bdu').replaceChildren(...Object.entries(bdus).sort((a, b) => b[1].n - a[1].n).map(([k, v]) => fila([[k, 'l'], [n0.format(v.n), ''], [n0.format(v.si), ''], [n0.format(v.n - v.si), v.n - v.si ? 'b' : 'm'], [pct.format(v.si / v.n), '']])));
+
+      $('d-chips').querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.f === D.filtro)));
+      const vis = R.items.filter((x) => (D.filtro === 'Todos' || (D.filtro === 'Faltan' ? !x.comprado : x.comprado))
+        && (!D.q || x.descripcion.toLowerCase().includes(D.q) || x.codigo.includes(D.q)))
+        .sort((a, b) => (a.comprado - b.comprado) || ((b.ped ? Number(b.ped.venta_diaria) : 0) - (a.ped ? Number(a.ped.venta_diaria) : 0)));
+      const tb = $('d-body');
+      if (!vis.length) {
+        const tr = document.createElement('tr'); const td = document.createElement('td'); td.colSpan = 9; td.className = 'l empty';
+        td.textContent = D.filtro === 'Faltan' && !D.q ? 'No falta comprar ningún artículo activo.' : 'No hay artículos con este filtro.';
+        tr.appendChild(td); tb.replaceChildren(tr);
+      } else {
+        tb.replaceChildren(...vis.map((x) => {
+          const tr = document.createElement('tr');
+          const td = (t, c) => { const e = document.createElement('td'); if (c) e.className = c; e.textContent = t; tr.appendChild(e); return e; };
+          td(x.codigo, 'l m'); td(x.descripcion, 'l art'); td(x.bdu || '', 'l hide-sm m');
+          const est2 = td('', 'l'); const p = document.createElement('span'); p.className = 'pill ' + (x.comprado ? 'si' : 'no'); p.textContent = x.comprado ? 'Comprado' : 'Falta'; est2.appendChild(p);
+          td(x.comprado ? ddmm(x.compra.primera) + (x.compra.ultima && x.compra.ultima !== x.compra.primera ? ' al ' + ddmm(x.compra.ultima) : '') : '—', 'l');
+          td(x.comprado ? n0.format(x.compra.bultos) : '—');
+          td(x.ped ? n0.format(x.ped.stock_hoy) : (P.rows ? '0' : '—'));
+          td(x.ped && x.ped.dias_cobertura != null ? n1.format(x.ped.dias_cobertura) : '—', 'hide-sm');
+          td(x.ped ? n0.format(x.ped.bultos) : '—', x.comprado ? '' : 'b');
+          return tr;
+        }));
+      }
+    }
+    if (m === mesHoy) { $('dk-dias').textContent = String(diasDe(m) - diaHoy + 1); $('dk-dias-n').textContent = 'para cerrar el mes'; }
+    else { $('dk-dias').textContent = '—'; $('dk-dias-n').textContent = m < mesHoy ? 'mes cerrado' : 'mes por venir'; }
+  }
+
+  D_FILTROS.forEach((f) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = f; b.dataset.f = f; b.addEventListener('click', () => { D.filtro = f; dispRender(); }); $('d-chips').appendChild(b); });
+  $('d-q').addEventListener('input', (ev) => { D.q = ev.target.value.trim().toLowerCase(); dispRender(); });
+  $('d-mes').addEventListener('change', (ev) => oElegir(ev.target.value));
+
+  $('d-copy').addEventListener('click', () => {
+    const R = dResumen(O.mes);
+    const lines = R.items.filter((x) => !x.comprado).map((x) => [x.codigo, x.descripcion, x.ped ? x.ped.bultos : ''].join('\t'));
+    const text = ['Código\tArtículo\tBultos sugeridos', ...lines].join('\n');
+    const ok = () => { const mm = $('d-copied'); mm.hidden = false; setTimeout(() => { mm.hidden = true; }, 2000); };
+    navigator.clipboard.writeText(text).then(ok).catch(() => {
+      const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); ok(); } catch (e) { /* sin portapapeles */ }
+      ta.remove();
+    });
+  });
+
+  // Leer el Excel de PepsiCo: busca la fila de títulos con "Material SAP" en cualquier hoja.
+  const norm = (s) => String(s == null ? '' : s).normalize('NFD').replace(/[̀-ͯ]/g, '').trim().toLowerCase();
+  function leerActivos(buf) {
+    if (typeof XLSX === 'undefined') throw new Error('No se pudo cargar el lector de Excel. Recargá la página y probá de nuevo.');
+    const wb = XLSX.read(buf, { type: 'array' });
+    for (const nombre of wb.SheetNames) {
+      const filas = XLSX.utils.sheet_to_json(wb.Sheets[nombre], { header: 1, defval: '', raw: true });
+      const h = filas.findIndex((f) => f.some((c) => norm(c) === 'material sap'));
+      if (h < 0) continue;
+      const col = (n) => filas[h].findIndex((c) => norm(c) === n);
+      const ix = { cod: col('material sap'), des: col('descripcion'), marca: col('brand'), bdu: col('bdu'), base: col('base por pallets'), cajas: col('cajas x pallets'), vig: col('vigencia') };
+      const vistos = new Set();
+      const arts = [];
+      filas.slice(h + 1).forEach((f) => {
+        const cod = String(f[ix.cod] == null ? '' : f[ix.cod]).trim().replace(/\.0+$/, '');
+        if (!/^\d{5,}$/.test(cod) || vistos.has(cod)) return;
+        if (ix.vig >= 0 && String(f[ix.vig]).trim() !== '' && Number(f[ix.vig]) !== 1) return;
+        vistos.add(cod);
+        arts.push({ codigo: cod, descripcion: ix.des >= 0 ? String(f[ix.des]).trim() : '', marca: ix.marca >= 0 ? String(f[ix.marca]).trim() : '', bdu: ix.bdu >= 0 ? String(f[ix.bdu]).trim() : '', base_pallet: ix.base >= 0 ? Number(f[ix.base]) || null : null, cajas_pallet: ix.cajas >= 0 ? Number(f[ix.cajas]) || null : null });
+      });
+      return arts;
+    }
+    throw new Error('No encontré la columna "Material SAP" en el Excel.');
+  }
+
+  $('d-file').addEventListener('change', async (ev) => {
+    const f = ev.target.files && ev.target.files[0];
+    const est = $('d-estado');
+    if (!f) return;
+    est.dataset.sticky = '1';
+    try {
+      const arts = leerActivos(await f.arrayBuffer());
+      if (!arts.length) throw new Error('El Excel no tiene artículos con Vigencia = 1.');
+      D.pendiente = { mes: O.mes, archivo: f.name, articulos: arts };
+      est.className = 'status'; est.textContent = '';
+      $('d-confirma-txt').textContent = 'Encontré ' + arts.length + ' artículos activos en "' + f.name + '". Se van a guardar como la lista de ' + nombreMes(O.mes) + (D.activos[O.mes] ? ', reemplazando la que hay.' : '.');
+      $('d-confirma').hidden = false;
+    } catch (e) {
+      est.className = 'status bad'; est.textContent = e.message || 'No se pudo leer el Excel.';
+      $('d-confirma').hidden = true;
+    }
+    ev.target.value = '';
+  });
+  $('d-cancelar').addEventListener('click', () => { D.pendiente = null; $('d-confirma').hidden = true; delete $('d-estado').dataset.sticky; dispRender(); });
+  $('d-guardar').addEventListener('click', async () => {
+    const p = D.pendiente, est = $('d-estado');
+    if (!p || !O.db) return;
+    $('d-guardar').disabled = true;
+    try {
+      const user = await claude.use('user');
+      const uid = user ? await user.id() : null;
+      await O.db.doc('activos/' + p.mes).set({ mes: p.mes, archivo: p.archivo, articulos: p.articulos, cargado: new Date().toISOString(), por: uid });
+      est.className = 'status ok'; est.textContent = 'Lista de ' + nombreMes(p.mes) + ' guardada: ' + p.articulos.length + ' artículos.';
+      D.pendiente = null; $('d-confirma').hidden = true;
+    } catch (e) {
+      est.className = 'status bad';
+      est.textContent = e && e.code === 'invalid_argument' ? 'No tenés permiso para cambiar la lista. Pedile al dueño del panel acceso de editor.' : 'No se pudo guardar la lista. Probá de nuevo en un momento.';
+    } finally { $('d-guardar').disabled = false; dispRender(); }
+  });
+
+  /* ---------- Arranque ---------- */
+  let mcpListo = false;
+  const h = location.hash.slice(1);
+  mostrar(h === 'objetivo' || h === 'disponibilidad' ? h : 'pedido');
+
+  (async () => {
+    mcpNs = await claude.use('mcp');
+    mcpListo = true;
+    if (mcpNs) pedidoWatch();
+    pedidoRender();
+  })();
+
+  (async () => {
+    const db = await claude.use('db');
+    if (!db) { $('o-lead').textContent = 'No se pudo abrir la base del panel. Abrí esta página desde claude.ai con tu cuenta.'; $('o-obj').disabled = true; $('o-guardar').disabled = true; return; }
+    O.db = db;
+    const user = await claude.use('user');
+    if (user) O.puedeEditar = await user.canEdit();
+    db.collection('objetivos').onSnapshot((snap) => { const o = {}; snap.docs.forEach((d) => { if (d.exists) o[d.id] = d.data(); }); O.objetivos = o; O.cargadoObj = true; objRender(); }, () => { O.cargadoObj = true; objRender(); });
+    db.collection('recibido').onSnapshot((snap) => { const o = {}; snap.docs.forEach((d) => { if (d.exists) o[d.id] = d.data(); }); O.recibido = o; O.cargadoRec = true; objRender(); dispRender(); }, () => { O.cargadoRec = true; $('o-lead').textContent = 'No se pudo leer lo recibido.'; $('d-lead').textContent = 'No se pudo leer lo recibido.'; });
+    db.collection('activos').onSnapshot((snap) => { const o = {}; snap.docs.forEach((d) => { if (d.exists) o[d.id] = d.data(); }); D.activos = o; D.cargado = true; dispRender(); }, () => { D.cargado = true; $('d-lead').textContent = 'No se pudo leer la lista de artículos activos.'; });
+  })();
+
+  let ancho = 0;
+  window.addEventListener('resize', () => {
+    const w = document.querySelector('.wrap').clientWidth; if (w === ancho) return; ancho = w;
+    if (vista === 'pedido' && P.rows) pedidoChart(P.rows);
+    if (vista === 'objetivo' && O.cargadoRec) oChart(oResumen(O.mes));
+  });
 })();
 </script>
-</body>
-</html>
