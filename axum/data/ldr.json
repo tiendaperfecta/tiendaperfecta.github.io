@@ -1,6 +1,13 @@
 {
- "date": "2026-11-05",
+ "date": "2026-11-06",
  "camiones": [
+  {
+   "id": "10",
+   "lat": -38.0923826,
+   "lng": -57.5640647,
+   "hora": "4:59 PM",
+   "etiqueta": "nnn"
+  },
   {
    "id": "4",
    "lat": -37.9997787,
@@ -16,16 +23,30 @@
    "etiqueta": "nnn"
   },
   {
-   "id": "10",
-   "lat": -38.0923826,
-   "lng": -57.5640647,
+   "id": "1",
+   "lat": -38.0402659,
+   "lng": -57.56044095,
    "hora": "4:59 PM",
    "etiqueta": "nnn"
   },
   {
-   "id": "1",
-   "lat": -38.0402659,
-   "lng": -57.56044095,
+   "id": "7",
+   "lat": -38.011845,
+   "lng": -57.5411233333333,
+   "hora": "4:59 PM",
+   "etiqueta": "nnn"
+  },
+  {
+   "id": "2",
+   "lat": -38.0553931,
+   "lng": -57.5368192,
+   "hora": "4:59 PM",
+   "etiqueta": "nnn"
+  },
+  {
+   "id": "6",
+   "lat": -37.912774,
+   "lng": -57.5903774,
    "hora": "4:59 PM",
    "etiqueta": "nnn"
   },
@@ -49,34 +70,13 @@
    "lng": -57.5696195,
    "hora": "4:59 PM",
    "etiqueta": "nnn"
-  },
-  {
-   "id": "6",
-   "lat": -37.912774,
-   "lng": -57.5903774,
-   "hora": "4:59 PM",
-   "etiqueta": "nnn"
-  },
-  {
-   "id": "2",
-   "lat": -38.0553931,
-   "lng": -57.5368192,
-   "hora": "4:59 PM",
-   "etiqueta": "nnn"
-  },
-  {
-   "id": "7",
-   "lat": -38.011845,
-   "lng": -57.5411233333333,
-   "hora": "4:59 PM",
-   "etiqueta": "nnn"
   }
  ],
  "fuente": "Panel de Fleteros (API GesCom) + posiciones de Axum GPS",
  "nota": "Axum solo expone la posición de los camiones: sus reportes de reparto, km y eventos por camión responden vacío o error. Las estadísticas de choferes salen del Panel de Fleteros.",
  "fleteros": {
   "fecha": "2026-11-05",
-  "esDeHoy": true,
+  "esDeHoy": false,
   "cartonesCargados": false,
   "rows": [
    {
