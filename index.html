@@ -80,14 +80,14 @@
 
   /* intro: el logo de Tienda Perfecta en primer plano y despues la central */
   #intro{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;
-    background:rgb(var(--s900));animation:intro-out .7s ease 1.6s forwards}
+    background:rgb(var(--s900));animation:intro-out .7s ease 3s forwards}
   #intro img{width:min(200px,42vw);height:min(200px,42vw);border-radius:50%;object-fit:cover;background:#fff;
     box-shadow:0 24px 64px -24px rgb(0 0 0/.9);animation:intro-in .8s cubic-bezier(.2,.8,.2,1) both}
   #intro.off{animation:none;opacity:0;visibility:hidden}
   @keyframes intro-in{from{opacity:0;transform:scale(.86)}to{opacity:1;transform:none}}
   @keyframes intro-out{to{opacity:0;visibility:hidden}}
   @media (prefers-reduced-motion:reduce){
-    #intro{animation-duration:.3s;animation-delay:1.2s}
+    #intro{animation-duration:.3s;animation-delay:2.7s}
     #intro img{animation:none}
   }
 </style>
@@ -349,7 +349,7 @@
     }
   });
 
-  // El intro se va solo a los 1,6 s; un click o una tecla lo saltea.
+  // El intro se va solo a los 3 s; un click o una tecla lo saltea.
   const intro = document.getElementById('intro');
   if (intro) {
     const cerrar = () => intro.classList.add('off');
