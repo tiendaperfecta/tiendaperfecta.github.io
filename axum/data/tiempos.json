@@ -1,7 +1,7 @@
 {
  "date": "2026-11-07",
  "diaSemana": "sabado",
- "jornadaCerrada": false,
+ "jornadaCerrada": true,
  "umbrales": {
   "llegada": "09:00",
   "salida": "14:00"
@@ -11,21 +11,21 @@
    "sellerId": "6",
    "vendedor": "Camila Martinez",
    "inicioJornada": "08:59",
-   "finJornada": "12:05",
+   "finJornada": "13:54",
    "entradaZona": "08:59",
-   "salidaZona": "12:04",
+   "salidaZona": "13:53",
    "zonaConfiable": true,
    "primera": "08:59",
-   "ultima": "12:05",
-   "visitas": 51,
-   "minutosTotal": 109.0,
-   "minutosPromedio": 2.1,
+   "ultima": "13:54",
+   "visitas": 54,
+   "minutosTotal": 109.6,
+   "minutosPromedio": 2.0,
    "pedidos": 22,
    "monto": 3211284.11,
-   "pasoSinVender": 41,
-   "km": 11.0,
+   "pasoSinVender": 44,
+   "km": 18.0,
    "llegoTarde": false,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "7",
@@ -45,7 +45,7 @@
    "pasoSinVender": 32,
    "km": 25.0,
    "llegoTarde": false,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "10",
@@ -63,9 +63,9 @@
    "pedidos": 11,
    "monto": 798968.23,
    "pasoSinVender": 28,
-   "km": 57.0,
+   "km": 64.0,
    "llegoTarde": true,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "1",
@@ -83,9 +83,9 @@
    "pedidos": 17,
    "monto": 1895520.2,
    "pasoSinVender": 24,
-   "km": 46.0,
+   "km": 70.0,
    "llegoTarde": true,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "11",
@@ -105,7 +105,7 @@
    "pasoSinVender": 22,
    "km": 13.0,
    "llegoTarde": false,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "2",
@@ -125,7 +125,7 @@
    "pasoSinVender": 23,
    "km": 5.0,
    "llegoTarde": true,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "4",
@@ -143,9 +143,9 @@
    "pedidos": 13,
    "monto": 1669911.0,
    "pasoSinVender": 16,
-   "km": 22.0,
+   "km": 24.0,
    "llegoTarde": false,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "12",
@@ -163,9 +163,9 @@
    "pedidos": 23,
    "monto": 3085129.78,
    "pasoSinVender": 14,
-   "km": 19.0,
+   "km": 27.0,
    "llegoTarde": false,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "5",
@@ -185,7 +185,7 @@
    "pasoSinVender": 15,
    "km": 69.0,
    "llegoTarde": false,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "3",
@@ -200,12 +200,12 @@
    "visitas": 19,
    "minutosTotal": 62.4,
    "minutosPromedio": 3.3,
-   "pedidos": 8,
-   "monto": 959661.1,
-   "pasoSinVender": 16,
+   "pedidos": 10,
+   "monto": 1059375.57,
+   "pasoSinVender": 15,
    "km": 24.0,
    "llegoTarde": true,
-   "salioTemprano": false
+   "salioTemprano": true
   },
   {
    "sellerId": "8",
@@ -240,8 +240,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 18,
-   "monto": 1937599.23,
+   "pedidos": 20,
+   "monto": 2100083.27,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -1132,6 +1132,21 @@
     "hora": "12:05",
     "clientId": "1389",
     "nombre": "KIOSMDQ"
+   },
+   {
+    "hora": "13:50",
+    "clientId": "228",
+    "nombre": "PEÑA PAMELA GISELE"
+   },
+   {
+    "hora": "13:51",
+    "clientId": "2325",
+    "nombre": "PALERMO PABLO ANDRES"
+   },
+   {
+    "hora": "13:54",
+    "clientId": "355",
+    "nombre": "MANUEL LEONCIO TOLEDO"
    }
   ],
   "5": [
