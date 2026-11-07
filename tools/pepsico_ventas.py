@@ -69,7 +69,7 @@ MARCA_LABEL = {
     "PEHUAMAR": "Pehuamar", "PEP": "Pep", "QUAKER": "Quaker", "TOSTITOS": "Tostitos", "TWISTOS": "Twistos",
 }
 SEGMENTOS = ["A", "B", "C", "D"]
-CCC_OBJETIVO_SEG = {"A": 371, "B": 318, "C": 675, "D": 913}     # octubre 2026: 2.277 clientes
+CCC_OBJETIVO_SEG = {"A": 371, "B": 324, "C": 672, "D": 906}     # noviembre 2026: 2.273 clientes
 
 # Avance de Ventas Pepsico (kg): reporte generico de Gescom, mismo motor que
 # usa la UI (Reportes > Objetivos > Avance de Ventas Pepsico). Da Objetivo,
