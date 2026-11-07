@@ -1557,7 +1557,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-11-04-a';
+const BUILD = '2026-11-07-a';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -2688,10 +2688,12 @@ const MARCA_COLS = ["3Ds","Cheetos","Doritos","Lays","Pehuamar","Pep","Quaker","
 const OBJ_COBERTURA = {
   '2026-09': {"3Ds":72.98, "Cheetos":70.79, "Doritos":87.31, "Lays":81.46, "Pehuamar":53.51, "Pep":58.57, "Quaker":6.23, "Tostitos":14.02, "Twistos":54.71},
   '2026-10': {"3Ds":72, "Cheetos":70, "Doritos":84, "Lays":80, "Pehuamar":62, "Pep":62, "Quaker":6, "Tostitos":19, "Twistos":56},
+  '2026-11': {"3Ds":73, "Cheetos":70, "Doritos":86, "Lays":82, "Pehuamar":61, "Pep":64, "Quaker":5, "Tostitos":16, "Twistos":61},
 };
 // Objetivos de Mi Negocio del mes (clientes y % de venta por la app). Se prorratean por vendedor segun su universo.
 const OBJ_MN = {
   '2026-10': {registrados:2191, activos:1740, fullyDigital:1496, sellout:81, autonomos:288},
+  '2026-11': {registrados:2209, activos:1876, fullyDigital:1617, sellout:87, autonomos:332},
 };
 const MES_OBJ = MES_SEL || hoyISO().slice(0, 7);
 // Clientes autonomos del mes (Power BI "AR Cliente Autonomo"): clientes con al menos un pedido autonomo en el mes.
