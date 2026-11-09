@@ -1,0 +1,62 @@
+name: Seguimiento de pedidos (copia)
+
+on:
+  schedule:
+    # Cada hora de 7 a 18 hora argentina, lunes a sabado (UTC = hora argentina + 3).
+    # El tablero original se actualiza cada hora; esto copia la foto 15 minutos despues.
+    - cron: "15 10-21 * * 1-6"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pedidos-data
+  cancel-in-progress: false
+
+jobs:
+  copiar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Traer la ultima foto del tablero Pedidos PepsiCo
+        env:
+          # Repo publico de solo lectura: no hace falta clave.
+          ORIGEN: https://raw.githubusercontent.com/marianozeballos-tp/panel-pepsico/main/pedidos/datos.json
+        run: |
+          curl -fsSL --retry 3 --retry-delay 10 -o pedidos/datos.nuevo.json "$ORIGEN"
+          python3 - <<'PY'
+          import json, sys
+          d = json.load(open('pedidos/datos.nuevo.json', encoding='utf-8'))
+          ped = d.get('pedidos')
+          if not isinstance(ped, list) or not ped:
+              sys.exit('::error title=Seguimiento de pedidos::datos.json vino sin pedidos')
+          print('Foto del', d.get('generado'), 'con', len(ped), 'pedidos')
+          # fecha.txt: lo lee la tarjeta de la central para saber si el dato es de hoy
+          open('pedidos/fecha.txt', 'w', encoding='utf-8').write(
+              'Ultima actualizacion: %s\n' % str(d.get('generado', ''))[:16])
+          PY
+          mv pedidos/datos.nuevo.json pedidos/datos.json
+
+      - name: Commit data if changed
+        run: |
+          git config user.name  "pedidos-bot"
+          git config user.email "pedidos-bot@users.noreply.github.com"
+          git add -A pedidos/
+          if git diff --cached --quiet; then
+            echo "Sin cambios en los datos."
+            exit 0
+          fi
+          git commit -m "chore(pedidos): refresh data $(date -u +%FT%TZ)"
+          for i in 1 2 3; do
+            if git push; then
+              exit 0
+            fi
+            echo "Push rechazado, reintento $i tras rebase..."
+            git pull --rebase origin "${GITHUB_REF_NAME}" || exit 1
+            sleep 5
+          done
+          echo "::error title=Seguimiento de pedidos::No se pudo pushear los datos tras 3 intentos."
+          exit 1
