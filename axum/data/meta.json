@@ -1,23 +1,25 @@
 {
- "generatedAt": "2026-11-09T14:31:02-03:00",
+ "generatedAt": "2026-11-09T18:08:26-03:00",
  "date": "2026-11-09",
- "errors": [
-  "gescom: ChunkedEncodingError: ('Connection broken: IncompleteRead(2428 bytes read, 7812 more expected)', IncompleteRead(2428 bytes read, 7812 more expected))"
- ],
+ "errors": [],
  "pedidos": {
-  "traidos": 373,
-  "totalSegunApi": 373
+  "traidos": 378,
+  "totalSegunApi": 378
  },
  "formatoGps": {
-  "posicion": "'-38.0923837,-57.5640627,2,2:30 PM,44,,'",
-  "visitados": "{'sellerID': '10', 'visitedClient': '3512'}",
+  "posicion": "'-38.0923943,-57.5640275,2,4:59 PM,4103,,'",
+  "visitados": "{'sellerID': '6', 'visitedClient': '1433'}",
   "km": null,
-  "visitadosTotal": 463,
+  "visitadosTotal": 469,
   "kmError": null
+ },
+ "gescom": {
+  "clientes": 2821,
+  "zonas": 73
  },
  "alerta": "hay 4 llegadas tarde, sin casilla configurada",
  "detalle": {
-  "filas": 559,
+  "filas": 568,
   "vendedores": 13,
   "diasEnHistoria": 79
  },

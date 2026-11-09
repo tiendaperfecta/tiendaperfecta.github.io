@@ -20,10 +20,10 @@
    "visitas": 69,
    "minutosTotal": 159.8,
    "minutosPromedio": 2.3,
-   "pedidos": 33,
-   "monto": 3996472.43,
+   "pedidos": 34,
+   "monto": 4043758.2,
    "pasoSinVender": 45,
-   "km": null,
+   "km": 81.0,
    "llegoTarde": true,
    "salioTemprano": false
   },
@@ -40,8 +40,8 @@
    "visitas": 55,
    "minutosTotal": 237.6,
    "minutosPromedio": 4.3,
-   "pedidos": 34,
-   "monto": 2944653.66,
+   "pedidos": 35,
+   "monto": 2988010.85,
    "pasoSinVender": 34,
    "km": 28.0,
    "llegoTarde": true,
@@ -63,7 +63,7 @@
    "pedidos": 42,
    "monto": 3709715.68,
    "pasoSinVender": 31,
-   "km": 21.0,
+   "km": 37.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -80,8 +80,8 @@
    "visitas": 51,
    "minutosTotal": 165.1,
    "minutosPromedio": 3.2,
-   "pedidos": 27,
-   "monto": 4427742.06,
+   "pedidos": 29,
+   "monto": 4725028.26,
    "pasoSinVender": 30,
    "km": 607.0,
    "llegoTarde": false,
@@ -103,7 +103,7 @@
    "pedidos": 18,
    "monto": 3442915.05,
    "pasoSinVender": 34,
-   "km": 43.0,
+   "km": 45.0,
    "llegoTarde": false,
    "salioTemprano": true
   },
@@ -148,6 +148,26 @@
    "salioTemprano": false
   },
   {
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "inicioJornada": "08:24",
+   "finJornada": "15:15",
+   "entradaZona": "14:39",
+   "salidaZona": "15:15",
+   "zonaConfiable": true,
+   "primera": "08:24",
+   "ultima": "14:35",
+   "visitas": 36,
+   "minutosTotal": 198.3,
+   "minutosPromedio": 5.5,
+   "pedidos": 30,
+   "monto": 4138512.71,
+   "pasoSinVender": 21,
+   "km": 48.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
    "sellerId": "5",
    "vendedor": "Nicolas Martinez",
    "inicioJornada": "08:37",
@@ -163,27 +183,7 @@
    "pedidos": 30,
    "monto": 3263153.45,
    "pasoSinVender": 11,
-   "km": 49.0,
-   "llegoTarde": false,
-   "salioTemprano": false
-  },
-  {
-   "sellerId": "4",
-   "vendedor": "Lucas Giayetto",
-   "inicioJornada": "08:24",
-   "finJornada": "14:10",
-   "entradaZona": null,
-   "salidaZona": null,
-   "zonaConfiable": false,
-   "primera": "08:24",
-   "ultima": "14:10",
-   "visitas": 30,
-   "minutosTotal": 194.4,
-   "minutosPromedio": 6.5,
-   "pedidos": 30,
-   "monto": 4138512.71,
-   "pasoSinVender": 15,
-   "km": 26.0,
+   "km": 53.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -220,7 +220,7 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 24,
+   "pedidos": 25,
    "monto": 0.0,
    "pasoSinVender": 0,
    "km": 0.0,
@@ -366,6 +366,21 @@
     "nombre": "OSCAR MAXIMILIANO ARIAS"
    },
    {
+    "hora": "12:58",
+    "clientId": "3087",
+    "nombre": "SPOSATO PLUMED PAOLA GIANNINA"
+   },
+   {
+    "hora": "12:58",
+    "clientId": "2603",
+    "nombre": "DIEGO HERNAN BERARDO"
+   },
+   {
+    "hora": "12:58",
+    "clientId": "2959",
+    "nombre": "JONATAN SAMUEL TAPIA"
+   },
+   {
     "hora": "13:00",
     "clientId": "446",
     "nombre": "LILIANA ANDREA ALBA"
@@ -424,6 +439,21 @@
     "hora": "14:05",
     "clientId": "1669",
     "nombre": "LIN ARIEL"
+   },
+   {
+    "hora": "14:34",
+    "clientId": "4869",
+    "nombre": "MARIANO GABRIEL NIEVA"
+   },
+   {
+    "hora": "14:35",
+    "clientId": "3537",
+    "nombre": "IVAN ADRIAN POSADAS"
+   },
+   {
+    "hora": "14:35",
+    "clientId": "377",
+    "nombre": "CHEN YALIN"
    }
   ],
   "5": [
@@ -661,21 +691,6 @@
    },
    {
     "hora": "12:58",
-    "clientId": "3087",
-    "nombre": "SPOSATO PLUMED PAOLA GIANNINA"
-   },
-   {
-    "hora": "12:58",
-    "clientId": "2603",
-    "nombre": "DIEGO HERNAN BERARDO"
-   },
-   {
-    "hora": "12:58",
-    "clientId": "2959",
-    "nombre": "JONATAN SAMUEL TAPIA"
-   },
-   {
-    "hora": "12:58",
     "clientId": "1468",
     "nombre": "Rotiseria STOP"
    },
@@ -713,6 +728,21 @@
     "hora": "14:02",
     "clientId": "1727",
     "nombre": "Roberta Quenaya"
+   },
+   {
+    "hora": "14:34",
+    "clientId": "4458",
+    "nombre": "FERNANDA AURELIA SOSA"
+   },
+   {
+    "hora": "14:35",
+    "clientId": "290",
+    "nombre": "JUAREZ SONIA BEATRIZ"
+   },
+   {
+    "hora": "14:35",
+    "clientId": "3293",
+    "nombre": "MARTIN EZEQUIEL MALDONADO"
    }
   ],
   "7": [
