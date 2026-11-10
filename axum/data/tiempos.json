@@ -11,19 +11,19 @@
    "sellerId": "10",
    "vendedor": "Matias Parada",
    "inicioJornada": "08:49",
-   "finJornada": "15:10",
+   "finJornada": "15:31",
    "entradaZona": "08:49",
    "salidaZona": "09:02",
    "zonaConfiable": true,
    "primera": "09:02",
-   "ultima": "15:10",
-   "visitas": 56,
-   "minutosTotal": 248.9,
-   "minutosPromedio": 4.4,
+   "ultima": "15:31",
+   "visitas": 67,
+   "minutosTotal": 251.0,
+   "minutosPromedio": 3.7,
    "pedidos": 37,
    "monto": 4394246.5,
-   "pasoSinVender": 33,
-   "km": 45.0,
+   "pasoSinVender": 44,
+   "km": 57.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -40,9 +40,9 @@
    "visitas": 51,
    "minutosTotal": 177.2,
    "minutosPromedio": 3.5,
-   "pedidos": 35,
-   "monto": 3055877.05,
-   "pasoSinVender": 26,
+   "pedidos": 36,
+   "monto": 3122734.19,
+   "pasoSinVender": 25,
    "km": 17.0,
    "llegoTarde": true,
    "salioTemprano": true
@@ -51,19 +51,19 @@
    "sellerId": "12",
    "vendedor": "Agustin Pogorzelski",
    "inicioJornada": "09:00",
-   "finJornada": "14:06",
-   "entradaZona": null,
-   "salidaZona": null,
-   "zonaConfiable": false,
+   "finJornada": "16:59",
+   "entradaZona": "16:00",
+   "salidaZona": "16:59",
+   "zonaConfiable": true,
    "primera": "09:00",
    "ultima": "14:06",
    "visitas": 45,
    "minutosTotal": 188.3,
    "minutosPromedio": 4.2,
-   "pedidos": 24,
-   "monto": 1781606.93,
-   "pasoSinVender": 28,
-   "km": 20.0,
+   "pedidos": 25,
+   "monto": 1845249.88,
+   "pasoSinVender": 27,
+   "km": 28.0,
    "llegoTarde": true,
    "salioTemprano": false
   },
@@ -80,9 +80,9 @@
    "visitas": 42,
    "minutosTotal": 193.1,
    "minutosPromedio": 4.6,
-   "pedidos": 21,
-   "monto": 2505304.23,
-   "pasoSinVender": 27,
+   "pedidos": 22,
+   "monto": 2576089.98,
+   "pasoSinVender": 26,
    "km": 15.0,
    "llegoTarde": true,
    "salioTemprano": false
@@ -100,9 +100,9 @@
    "visitas": 35,
    "minutosTotal": 219.3,
    "minutosPromedio": 6.3,
-   "pedidos": 36,
-   "monto": 7089176.77,
-   "pasoSinVender": 13,
+   "pedidos": 37,
+   "monto": 7174248.24,
+   "pasoSinVender": 12,
    "km": 250.0,
    "llegoTarde": false,
    "salioTemprano": false
@@ -120,10 +120,10 @@
    "visitas": 34,
    "minutosTotal": 189.5,
    "minutosPromedio": 5.6,
-   "pedidos": 22,
-   "monto": 2947191.74,
-   "pasoSinVender": 18,
-   "km": 47.0,
+   "pedidos": 26,
+   "monto": 3192977.69,
+   "pasoSinVender": 14,
+   "km": 67.0,
    "llegoTarde": true,
    "salioTemprano": false
   },
@@ -148,6 +148,26 @@
    "salioTemprano": false
   },
   {
+   "sellerId": "5",
+   "vendedor": "Nicolas Martinez",
+   "inicioJornada": "08:12",
+   "finJornada": "15:37",
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": "08:12",
+   "ultima": "15:37",
+   "visitas": 27,
+   "minutosTotal": 278.4,
+   "minutosPromedio": 10.3,
+   "pedidos": 32,
+   "monto": 7011790.42,
+   "pasoSinVender": 11,
+   "km": 173.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
    "sellerId": "7",
    "vendedor": "Ramiro Rando",
    "inicioJornada": "08:19",
@@ -168,26 +188,6 @@
    "salioTemprano": true
   },
   {
-   "sellerId": "5",
-   "vendedor": "Nicolas Martinez",
-   "inicioJornada": "08:12",
-   "finJornada": "14:15",
-   "entradaZona": null,
-   "salidaZona": null,
-   "zonaConfiable": false,
-   "primera": "08:12",
-   "ultima": "14:15",
-   "visitas": 26,
-   "minutosTotal": 278.3,
-   "minutosPromedio": 10.7,
-   "pedidos": 32,
-   "monto": 7011790.42,
-   "pasoSinVender": 10,
-   "km": 129.0,
-   "llegoTarde": false,
-   "salioTemprano": false
-  },
-  {
    "sellerId": "3",
    "vendedor": "Ezequiel Hack",
    "inicioJornada": "11:24",
@@ -200,9 +200,9 @@
    "visitas": 24,
    "minutosTotal": 103.7,
    "minutosPromedio": 4.3,
-   "pedidos": 21,
-   "monto": 3829575.59,
-   "pasoSinVender": 21,
+   "pedidos": 23,
+   "monto": 3988504.36,
+   "pasoSinVender": 20,
    "km": 19.0,
    "llegoTarde": true,
    "salioTemprano": false
@@ -220,8 +220,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 39,
-   "monto": 892640.49,
+   "pedidos": 31,
+   "monto": 375640.14,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -434,6 +434,11 @@
     "hora": "14:18",
     "clientId": "466",
     "nombre": "L.G.H.S CAP I SECC IV"
+   },
+   {
+    "hora": "15:37",
+    "clientId": "3535",
+    "nombre": "ANALIA CRISTINA VIVAS"
    }
   ],
   "7": [
@@ -914,24 +919,9 @@
     "nombre": "TOLABA CHOQUE WILSON GABRIEL"
    },
    {
-    "hora": "09:03",
-    "clientId": "3317",
-    "nombre": "LEANDRO MAXIMILIANO ZUBIRIA"
-   },
-   {
     "hora": "09:05",
     "clientId": "2443",
     "nombre": "AMELIA CAROLINA ROSELLI"
-   },
-   {
-    "hora": "09:05",
-    "clientId": "2661",
-    "nombre": "BRANDO SOCIEDAD ANONIMA"
-   },
-   {
-    "hora": "09:34",
-    "clientId": "4935",
-    "nombre": "SERGIO ASKER"
    },
    {
     "hora": "09:34",
@@ -947,6 +937,16 @@
     "hora": "14:05",
     "clientId": "1890",
     "nombre": "RUBIOLO CAMILA VANINA"
+   },
+   {
+    "hora": "15:29",
+    "clientId": "619",
+    "nombre": "AUTOSERVICO SIGLO XXI"
+   },
+   {
+    "hora": "15:35",
+    "clientId": "1381",
+    "nombre": "LLANOS LANDEO CAMILA ALDANA"
    }
   ],
   "6": [
@@ -1682,6 +1682,11 @@
     "nombre": "MANDAGARAN MATTA JOSE"
    },
    {
+    "hora": "09:03",
+    "clientId": "3317",
+    "nombre": "LEANDRO MAXIMILIANO ZUBIRIA"
+   },
+   {
     "hora": "09:04",
     "clientId": "1317",
     "nombre": "VAZQUEZ GUADALUPE CECILIA"
@@ -1728,6 +1733,11 @@
    },
    {
     "hora": "09:05",
+    "clientId": "2661",
+    "nombre": "BRANDO SOCIEDAD ANONIMA"
+   },
+   {
+    "hora": "09:05",
     "clientId": "3550",
     "nombre": "ORELLANA JOSE LUIS"
    },
@@ -1755,6 +1765,11 @@
     "hora": "09:33",
     "clientId": "2926",
     "nombre": "ROSA CECILIA NUÑEZ PAREDES"
+   },
+   {
+    "hora": "09:34",
+    "clientId": "4935",
+    "nombre": "SERGIO ASKER"
    },
    {
     "hora": "09:34",
@@ -1915,6 +1930,16 @@
     "hora": "15:10",
     "clientId": "469",
     "nombre": "COLAIZZO DAMARIS CELESTE"
+   },
+   {
+    "hora": "15:27",
+    "clientId": "3760",
+    "nombre": "NICADELO SA"
+   },
+   {
+    "hora": "15:31",
+    "clientId": "2107",
+    "nombre": "LANDE MARIA DE LOS ÁNGELES"
    }
   ],
   "1": [
