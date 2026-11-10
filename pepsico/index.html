@@ -1,4 +1,7 @@
+<!DOCTYPE html>
+<html lang="es">
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Avance PepsiCo TP</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +21,16 @@ body{
 }
 .wrap{width:100%; max-width:1440px; position:relative}
 .tp-logo-hero{position:absolute; top:0; right:0; width:190px; height:190px; border-radius:50%}
-@media (max-width:640px){ .tp-logo-hero{width:110px; height:110px} }
+/* El logo esta posicionado absoluto arriba a la derecha: en pantalla angosta
+   le reservamos el lugar al titulo para que el texto no corra por abajo. */
+@media (max-width:640px){
+  .tp-logo-hero{width:84px; height:84px}
+  .eyebrow, h1{padding-right:96px}
+}
+@media (max-width:380px){
+  .tp-logo-hero{width:64px; height:64px}
+  .eyebrow, h1{padding-right:74px}
+}
 .eyebrow{
   font:600 12px/1 "IBM Plex Mono", monospace; letter-spacing:.12em; text-transform:uppercase;
   color:var(--accent); margin:0 0 10px;
@@ -86,7 +98,13 @@ h1{
 .kpis{
   display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; margin-bottom:20px;
 }
-@media (max-width:860px){ .kpis{grid-template-columns:repeat(2,1fr)} }
+/* minmax(0,...) y no 1fr a secas: sin eso las tarjetas no pueden achicarse
+   por debajo de su contenido y a 320px se pasaban del ancho. */
+@media (max-width:860px){ .kpis{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:360px){
+  .kpi{padding:13px 11px 11px}
+  .kpi .value{font-size:22px}
+}
 .kpi{
   background:var(--panel); border:1px solid var(--border); border-radius:12px;
   padding:16px 16px 14px; box-shadow:var(--shadow);
@@ -271,7 +289,7 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
 .tp-tile .v.good{color:var(--good)} .tp-tile .v.bad{color:var(--bad)}
 .tp-tile .l{font:600 10.5px "IBM Plex Mono",monospace; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); margin-top:4px}
 .tp-status-row{display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:12px; margin-bottom:12px}
-@media (max-width:760px){ .tp-status-row{grid-template-columns:1fr 1fr} .tp-tiles{grid-template-columns:1fr 1fr} }
+@media (max-width:760px){ .tp-status-row{grid-template-columns:repeat(2,minmax(0,1fr))} .tp-tiles{grid-template-columns:repeat(2,minmax(0,1fr))} }
 .tp-status{border-radius:10px; padding:10px 14px; text-align:center; border:1px solid var(--border)}
 .tp-status .l{font:700 11px "IBM Plex Mono",monospace; letter-spacing:.04em; text-transform:uppercase; margin-bottom:8px}
 .tp-status .v{font-family:"Fraunces",serif; font-weight:600; font-size:19px}
@@ -281,7 +299,9 @@ tfoot td.name{text-align:left; font-family:"IBM Plex Sans"}
 .tp-status.warn{background:var(--warn-soft)} .tp-status.warn .l,.tp-status.warn .v,.tp-status.warn .p{color:var(--warn)}
 .tp-status.neutral{background:var(--panel)} .tp-status.neutral .l{color:var(--muted)} .tp-status.neutral .v{color:var(--text)}
 .tp-tax-row{display:grid; grid-template-columns:repeat(4,1fr); gap:12px}
-@media (max-width:760px){ .tp-tax-row{grid-template-columns:1fr 1fr} }
+@media (max-width:760px){ .tp-tax-row{grid-template-columns:repeat(2,minmax(0,1fr))} }
+/* A 320px las tablitas de adentro no entran en media pantalla: una por fila. */
+@media (max-width:360px){ .tp-tax-row{grid-template-columns:1fr} }
 .tp-tax-card{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:10px 12px; box-shadow:var(--shadow)}
 .tp-tax-head{display:flex; align-items:center; gap:8px; margin-bottom:8px}
 .tp-tax-badge{
