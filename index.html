@@ -4,405 +4,369 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Central web</title>
-<meta name="description" content="Accesos a los paneles internos de Tienda Perfecta.">
-<meta name="theme-color" content="#0d1726">
-<link rel="icon" href="assets/img/logo-tiendaperfecta.jpeg">
-<link rel="apple-touch-icon" href="assets/img/logo-tiendaperfecta.jpeg">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&display=swap">
+</head><body><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;700&display=swap">
 <style>
+  /* Réplica del tema "slate · dark" de gethomepage.dev (Tailwind slate, bg = slate-800) */
   :root{
-    --ink:#0d1726;        /* fondo, el azul del logo llevado a tinta */
-    --ink2:#152133;       /* superficie de cada bloque */
-    --line:#243349;
-    --text:#e3ebf5;
-    --muted:#8ba0ba;
-    --fresh:#45c08a;      /* al día */
-    --stale:#e0a23f;      /* atrasado */
-    --alert:#ec6d60;      /* sin respuesta */
-    --focus:#64a8ff;
-    --radio:10px;
+    --s200:226 232 240; --s300:203 213 225; --s400:148 163 184; --s500:100 116 139;
+    --s800:30 41 59; --s900:15 23 42;
+    --emerald:16 185 129; --blue:59 130 246;
   }
-  *{box-sizing:border-box}
-  html{background:var(--ink)}
-  body{
-    margin:0;min-height:100%;
-    background:var(--ink);
-    font-family:Barlow,system-ui,Arial,sans-serif;
-    color:var(--text);font-size:16px;line-height:1.45;
-    -webkit-font-smoothing:antialiased;
-    -webkit-text-size-adjust:100%;
-  }
-  /* Una sola luz, arriba a la izquierda, donde está la marca. Nada más de decoración. */
-  body::before{
-    content:"";position:fixed;inset:0 0 auto;height:420px;z-index:0;pointer-events:none;
-    background:radial-gradient(120% 100% at 8% 0%,#1b2d47 0%,transparent 62%);
-  }
+  *{box-sizing:border-box;border:0 solid}
+  html,body{margin:0;height:100%;background:rgb(var(--s800))}
+  body{font-family:Manrope,Arial,sans-serif;letter-spacing:.1px;-webkit-font-smoothing:antialiased;color:rgb(var(--s200));font-size:16px;line-height:1.5}
   a{color:inherit;text-decoration:none}
   ul{list-style:none;margin:0;padding:0}
-  h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.01em}
+  h2{margin:0}
   svg{display:block}
-  :focus-visible{outline:2px solid var(--focus);outline-offset:-2px;border-radius:4px}
 
-  .hoja{position:relative;z-index:1;max-width:1360px;margin:0 auto;padding:14px 14px 40px}
+  /* background: image + linear-gradient(bg/.5) + blur sm · saturate 50 · brightness 50 */
+  #background{position:fixed;inset:-12px;z-index:0;pointer-events:none;
+    background:linear-gradient(rgb(var(--s800)/.65),rgb(var(--s800)/.65)),url("assets/img/hero-flota.jpeg") center/cover no-repeat;
+    filter:blur(4px) saturate(.5) brightness(.45)}
 
-  /* ---- cabecera: marca, estado del día y reloj en una franja baja ---- */
-  .cabecera{
-    display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;
-    padding:0 2px 13px;margin-bottom:16px;border-bottom:1px solid var(--line);
+  .container{position:relative;z-index:10;max-width:1536px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+
+  /* headerStyle: underlined */
+  .header{display:flex;flex-wrap:wrap;justify-content:space-between;gap:0 8px;margin:36px 36px 4px;padding-bottom:16px;border-bottom:2px solid rgb(var(--s200)/.5)}
+  .widgets{display:flex;flex-wrap:wrap;gap:0 8px}
+  .widget{display:flex;flex-direction:column;justify-content:center;margin-top:8px;padding:8px 12px;border-radius:6px;background:rgb(255 255 255/.05);
+    box-shadow:0 4px 6px -1px rgb(var(--s900)/.2),0 2px 4px -2px rgb(var(--s900)/.2)}
+  .widget.logo{padding:8px 12px}
+  .logos{display:flex;gap:6px;margin-right:12px}
+  .logos img{width:32px;height:32px;border-radius:50%;object-fit:cover;background:#fff}
+  .greeting{font-size:20px;line-height:28px;margin-right:12px}
+  .datetime{display:flex;align-items:center;justify-content:flex-end;font-size:18px;line-height:28px;font-variant-numeric:tabular-nums}
+
+  /* groups */
+  .groups{display:flex;flex-wrap:wrap;align-items:flex-start;margin:16px 32px 8px}
+  .group{flex:1 1 100%;padding:4px 4px 0}
+  @media (min-width:700px){.group{flex-basis:50%}.bm{flex-basis:25%}}
+  @media (min-width:1100px){.group{flex-basis:25%}.bm{flex-basis:16.6667%}}
+  .ghead{display:flex;width:100%;align-items:center;user-select:none}
+.ghead.sub{margin-top:8px}
+  .ghead svg{flex:none;width:28px;height:28px;margin-right:8px;stroke:rgb(var(--s300))}
+  .ghead h2{font-size:20px;line-height:28px;font-weight:500;color:rgb(var(--s300))}
+  .list{margin-top:12px;display:flex;flex-direction:column}
+
+  /* service card */
+  .card{display:block;position:relative;overflow:clip;margin-bottom:8px;padding:4px;border-radius:6px;font-weight:500;color:rgb(var(--s200));background:rgb(255 255 255/.05);
+    box-shadow:0 4px 6px -1px rgb(var(--s900)/.2),0 2px 4px -2px rgb(var(--s900)/.2);transition:all .15s}
+  .card:hover{background:rgb(255 255 255/.1);color:rgb(var(--s300))}
+  .card .row{display:flex;user-select:none}
+  .icon{flex:none;display:flex;align-items:center;justify-content:center;width:48px}
+  .icon svg{width:32px;height:32px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .txt{flex:1;padding:8px;font-size:14px;line-height:20px;text-align:left}
+  .txt p{margin:0;font-size:12px;line-height:16px;font-weight:300;color:rgb(var(--s300))}
+  .tags{position:absolute;top:0;right:0;display:flex;gap:8px;margin-right:8px;z-index:10}
+  .tag{padding:2px 6px;border-radius:0 0 3px 3px;background:rgb(var(--s900)/.5);font-size:8px;line-height:12px;font-weight:700;text-transform:uppercase;letter-spacing:.02em;color:rgb(255 255 255/.4)}
+  .tag.key{color:rgb(var(--blue)/.8)}
+  .tag.ok{color:rgb(var(--emerald)/.8)}
+  .tag.warn{color:rgb(251 146 60/.8)}
+  .tag.bad{color:rgb(244 63 94/.8)}
+
+  /* bookmarks */
+  .bmk{display:block;width:100%;margin-bottom:12px;border-radius:6px;font-weight:500;color:rgb(var(--s200));background:rgb(255 255 255/.05);
+    box-shadow:0 4px 6px -1px rgb(var(--s900)/.2),0 2px 4px -2px rgb(var(--s900)/.2);transition:all .15s}
+  .bmk:hover{background:rgb(255 255 255/.1);color:rgb(var(--s300))}
+  .bmk .row{display:flex}
+  .abbr{flex:none;display:flex;align-items:center;justify-content:center;width:44px;border-radius:6px 0 0 6px;background:rgb(var(--s900)/.5);font-size:14px;line-height:20px}
+  .bt{flex:1;overflow:hidden;display:flex;align-items:center;justify-content:space-between}
+  .bt .n{padding:8px 0 8px 12px;font-size:12px;line-height:16px;white-space:nowrap}
+  .bt .d{flex-shrink:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:8px;font-size:12px;line-height:16px;color:rgb(var(--s300))}
+
+  footer{margin-top:auto;padding:32px;display:flex;justify-content:flex-end;font-size:12px;line-height:16px;color:rgb(var(--s400))}
+  @media (prefers-reduced-motion:reduce){.card,.bmk{transition:none}}
+
+  /* intro: el logo de Tienda Perfecta en primer plano y despues la central */
+  #intro{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;
+    background:rgb(var(--s900));animation:intro-out .7s ease 3s forwards}
+  #intro img{width:min(200px,42vw);height:min(200px,42vw);border-radius:50%;object-fit:cover;background:#fff;
+    box-shadow:0 24px 64px -24px rgb(0 0 0/.9);animation:intro-in .8s cubic-bezier(.2,.8,.2,1) both}
+  #intro.off{animation:none;opacity:0;visibility:hidden}
+  @keyframes intro-in{from{opacity:0;transform:scale(.86)}to{opacity:1;transform:none}}
+  @keyframes intro-out{to{opacity:0;visibility:hidden}}
+  @media (prefers-reduced-motion:reduce){
+    #intro{animation-duration:.3s;animation-delay:2.7s}
+    #intro img{animation:none}
   }
-  .marca{display:flex;align-items:center;gap:10px;min-width:0}
-  .marca img{width:34px;height:34px;flex:none;border-radius:50%;object-fit:cover;background:#fff}
-  .marca img + img{margin-left:-12px;box-shadow:0 0 0 2px var(--ink)}
-  .titulos{min-width:0;margin-left:4px}
-  h1{font-size:19px;line-height:1.2}
-  #resumen{margin:1px 0 0;font-size:13px;line-height:1.3;color:var(--muted)}
-  /* En el celular el reloj del teléfono está a dos centímetros: acá sobra. */
-  #reloj{display:none}
-
-  /* ---- los grupos: el bloque es la tarjeta, los accesos son renglones ---- */
-  /* Columnas que empaquetan: cada grupo cae donde entra, sin huecos debajo
-     de los grupos cortos. En el celular queda una sola columna. */
-  .grupos{column-width:360px;column-gap:20px}
-  .grupo{display:inline-block;width:100%;margin:0 0 26px;break-inside:avoid;-webkit-column-break-inside:avoid}
-  .grupo-tit{
-    display:flex;align-items:center;gap:8px;
-    margin:0 2px 11px;font-size:15px;line-height:1.3;color:var(--text);
-  }
-  .grupo-tit svg{flex:none;width:17px;height:17px;fill:none;stroke:var(--muted);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
-  .cuenta{margin-left:auto;font-size:12.5px;font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums}
-  .subtit{margin:20px 2px 11px;font-size:13px;font-weight:500;color:var(--muted)}
-
-  .filas{background:var(--ink2);border:1px solid var(--line);border-radius:var(--radio);overflow:hidden}
-  .filas li + li{border-top:1px solid var(--line)}
-
-  .fila{
-    display:grid;grid-template-columns:28px minmax(0,1fr) auto;column-gap:11px;
-    padding:12px 13px;border-left:2px solid var(--line);
-    transition:background .12s ease;
-  }
-  .fila:hover,.fila:active{background:rgb(255 255 255/.045)}
-  .fila.ok{border-left-color:var(--fresh)}
-  .fila.warn{border-left-color:var(--stale)}
-  .fila.bad{border-left-color:var(--alert)}
-
-  .ic{grid-row:1/span 2;align-self:start;margin-top:4px;width:22px;height:22px;
-    fill:none;stroke:var(--c,var(--muted));stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
-  .nom{grid-column:2;font-size:15px;font-weight:500;line-height:1.35}
-  .des{grid-column:2/-1;margin-top:3px;font-size:12.5px;line-height:1.4;color:var(--muted)}
-  .meta{grid-column:3;grid-row:1;display:flex;align-items:center;gap:6px;padding-left:14px;white-space:nowrap}
-  .llave{width:12.5px;height:12.5px;flex:none;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.72}
-  .est{font-size:12px;font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums}
-  .est.ok{color:var(--fresh)}
-  .est.warn{color:var(--stale)}
-  .est.bad{color:var(--alert)}
-
-  /* ---- marcadores: misma forma de renglón, con sigla en lugar de ícono ---- */
-  .sigla{
-    grid-row:1/span 2;align-self:start;margin-top:2px;
-    display:flex;align-items:center;justify-content:center;
-    width:28px;height:28px;border-radius:7px;
-    background:rgb(255 255 255/.06);color:var(--muted);
-    font-size:11.5px;font-weight:600;letter-spacing:.02em;
-  }
-  .dom{grid-column:2/-1;margin-top:3px;font-size:12.5px;line-height:1.4;color:var(--muted);
-    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-
-  @media (min-width:700px){
-    .hoja{padding:24px 24px 56px}
-    .cabecera{padding-bottom:18px;margin-bottom:26px}
-    h1{font-size:21px}
-    .fila{padding:14px 16px}
-    .nom{font-size:15.5px}
-    .des{font-size:13px}
-    #reloj{
-      display:block;margin-left:auto;flex:none;font-size:13.5px;color:var(--muted);
-      font-variant-numeric:tabular-nums;font-feature-settings:"tnum"
-    }
-  }
-  @media (max-width:360px){
-    .hoja{padding:12px 10px 36px}
-    .fila{column-gap:10px;padding:11px}
-    .meta{padding-left:10px}
-    .des,.dom{font-size:12px}
-  }
-  @media (prefers-reduced-motion:reduce){.fila{transition:none}}
 </style>
-</head>
-<body>
 
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
-  <g id="i-truck"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></g>
-  <g id="i-cash"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></g>
-  <g id="i-box"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96 12 12.01l8.73-5.05"/><line x1="12" y1="22.08" x2="12" y2="12"/></g>
-  <g id="i-chart"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></g>
-  <g id="i-check"><path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></g>
-  <g id="i-card"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></g>
-  <g id="i-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></g>
-  <g id="i-map"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></g>
-  <g id="i-clip"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></g>
-  <g id="i-plug"><path d="M4 7h16"/><path d="M7 7v6a5 5 0 0 0 10 0V7"/><path d="M9 3v4"/><path d="M15 3v4"/><path d="M12 18v3"/></g>
-  <g id="i-key"><rect x="4" y="10.5" width="16" height="10.5" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></g>
-</defs></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="i-truck"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></g>
+    <g id="i-cash"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></g>
+    <g id="i-box"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96 12 12.01l8.73-5.05"/><line x1="12" y1="22.08" x2="12" y2="12"/></g>
+    <g id="i-chart"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></g>
+    <g id="i-check"><path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></g>
+    <g id="i-card"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></g>
+    <g id="i-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></g>
+    <g id="i-map"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></g>
+    <g id="i-clip"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></g>
+  </defs>
+</svg>
 
-<div class="hoja">
+<div id="background"></div>
+<div id="intro" aria-hidden="true"><img src="assets/img/logo-tiendaperfecta.jpeg" alt="Tienda Perfecta"></div>
+<div class="container">
 
-  <header class="cabecera">
-    <div class="marca">
-      <img src="assets/img/logo-tiendaperfecta.jpeg" alt="" width="34" height="34">
-      <img src="assets/img/logo-rambla.jpeg" alt="" width="34" height="34">
-      <div class="titulos">
-        <h1>Central web</h1>
-        <p id="resumen">Tienda Perfecta y Rambla de los Lobos</p>
-      </div>
+  <div class="header">
+    <div class="widgets">
+      <div class="widget logo"><div style="display:flex;align-items:center">
+        <div class="logos"><img src="assets/img/logo-tiendaperfecta.jpeg" alt="Tienda Perfecta" title="Tienda Perfecta S.A."><img src="assets/img/logo-rambla.jpeg" alt="Rambla de los Lobos" title="Rambla de los Lobos S.A."></div>
+        <span class="greeting">Central web</span></div></div>
     </div>
-    <time id="reloj"></time>
-  </header>
+    <div class="widgets">
+      <div class="widget"><div class="datetime" id="dt"></div></div>
+    </div>
+  </div>
 
-  <div class="grupos">
+  <div class="groups">
 
-    <section class="grupo">
-      <h2 class="grupo-tit"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-clip"/></svg>Administración<span class="cuenta"></span></h2>
-      <ul class="filas">
-        <li><a class="fila" href="https://tiendaperfecta.github.io/caja/" target="_blank" rel="noreferrer">
-          <svg class="ic" style="--c:#45c08a" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cash"/></svg>
-          <span class="nom">Caja tesorería</span>
-          <span class="meta"><svg class="llave" viewBox="0 0 24 24" role="img" aria-label="Pide clave"><title>Pide clave</title><use href="#i-key"/></svg><span class="est">—</span></span>
-          <span class="des">Movimientos de caja</span>
+    <div class="group">
+      <div class="ghead"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-clip"/></svg><h2>Administración</h2></div>
+      <ul class="list">
+        <li><a class="card" href="https://tiendaperfecta.github.io/caja/" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#10b981"><use href="#i-cash"/></svg></div>
+            <div class="txt"><div>Caja tesorería</div><p>Movimientos de caja</p></div>
+          </div>
+          <div class="tags"><div class="tag key">Con clave</div><div class="tag est">Verificando</div></div>
         </a></li>
-        <li><a class="fila" href="https://tiendaperfecta.github.io/flujo/" data-fecha="https://tiendaperfecta.github.io/flujo/fecha.txt" target="_blank" rel="noreferrer">
-          <svg class="ic" style="--c:#5fc98e" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chart"/></svg>
-          <span class="nom">Flujo de caja vs pagos futuros</span>
-          <span class="meta"><svg class="llave" viewBox="0 0 24 24" role="img" aria-label="Pide clave"><title>Pide clave</title><use href="#i-key"/></svg><span class="est">—</span></span>
-          <span class="des">Pagos, cheques y recaudación por mes</span>
+        <li><a class="card" href="https://tiendaperfecta.github.io/flujo/" data-fecha="https://tiendaperfecta.github.io/flujo/fecha.txt" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#22c55e"><use href="#i-chart"/></svg></div>
+            <div class="txt"><div>Flujo de caja vs pagos futuros</div><p>Pagos, cheques y recaudación (caja + transferencias) por mes y año</p></div>
+          </div>
+          <div class="tags"><div class="tag key">Con clave</div><div class="tag est">Verificando</div></div>
         </a></li>
-        <li><a class="fila" href="https://arca-vs-gescom.tienda-perfecta.workers.dev" target="_blank" rel="noreferrer">
-          <svg class="ic" style="--c:#5bb8e8" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>
-          <span class="nom">Conciliación ARCA vs Gescom</span>
-          <span class="meta"><svg class="llave" viewBox="0 0 24 24" role="img" aria-label="Pide clave"><title>Pide clave</title><use href="#i-key"/></svg><span class="est">—</span></span>
-          <span class="des">Compras contra Mis Comprobantes</span>
+        <li><a class="card" href="https://arca-vs-gescom.tienda-perfecta.workers.dev" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#38bdf8"><use href="#i-check"/></svg></div>
+            <div class="txt"><div>Conciliación ARCA vs Gescom</div><p>Compras contra Mis Comprobantes, 2 empresas</p></div>
+          </div>
+          <div class="tags"><div class="tag key">Con clave</div><div class="tag est">Verificando</div></div>
         </a></li>
-        <li><a class="fila" href="https://transferencias.tienda-perfecta.workers.dev" target="_blank" rel="noreferrer">
-          <svg class="ic" style="--c:#7eb3f5" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-card"/></svg>
-          <span class="nom">Control de transferencias</span>
-          <span class="meta"><svg class="llave" viewBox="0 0 24 24" role="img" aria-label="Pide clave"><title>Pide clave</title><use href="#i-key"/></svg><span class="est">—</span></span>
-          <span class="des">Cobros de cada reparto</span>
+        <li><a class="card" href="https://transferencias.tienda-perfecta.workers.dev" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#60a5fa"><use href="#i-card"/></svg></div>
+            <div class="txt"><div>Control de transferencias</div><p>Verifica los cobros de cada reparto</p></div>
+          </div>
+          <div class="tags"><div class="tag key">Con clave</div><div class="tag est">Verificando</div></div>
         </a></li>
-        <li><a class="fila" href="https://tiendaperfecta.github.io/ctacte/" data-fecha="https://tiendaperfecta.github.io/ctacte/fecha.txt" target="_blank" rel="noreferrer">
-          <svg class="ic" style="--c:#ec6d60" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-users"/></svg>
-          <span class="nom">Cuentas corrientes</span>
-          <span class="meta"><svg class="llave" viewBox="0 0 24 24" role="img" aria-label="Pide clave"><title>Pide clave</title><use href="#i-key"/></svg><span class="est">—</span></span>
-          <span class="des">Saldos, vencimientos y deudores</span>
+        <li><a class="card" href="https://tiendaperfecta.github.io/ctacte/" data-fecha="https://tiendaperfecta.github.io/ctacte/fecha.txt" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#f43f5e"><use href="#i-users"/></svg></div>
+            <div class="txt"><div>Cuentas corrientes</div><p>Saldos, vencimientos y lista negra de deudores</p></div>
+          </div>
+          <div class="tags"><div class="tag key">Con clave</div><div class="tag est">Verificando</div></div>
         </a></li>
-        <li><a class="fila" href="https://clientes.tienda-perfecta.workers.dev" target="_blank" rel="noreferrer">
-          <svg class="ic" style="--c:#e0a23f" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-users"/></svg>
-          <span class="nom">Pagos a proveedores</span>
-          <span class="meta"><svg class="llave" viewBox="0 0 24 24" role="img" aria-label="Pide clave"><title>Pide clave</title><use href="#i-key"/></svg><span class="est">—</span></span>
-          <span class="des">Órdenes de pago contra Gescom</span>
+        <li><a class="card" href="https://clientes.tienda-perfecta.workers.dev" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#f59e0b"><use href="#i-users"/></svg></div>
+            <div class="txt"><div>Pagos a proveedores</div><p>Órdenes de pago y comprobantes contra Gescom</p></div>
+          </div>
+          <div class="tags"><div class="tag key">Con clave</div><div class="tag est">Verificando</div></div>
         </a></li>
-        <li><a class="fila" href="https://tiendaperfecta.github.io/auditoria-2026/" target="_blank" rel="noreferrer">
-          <svg class="ic" style="--c:#f08a80" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>
-          <span class="nom">Auditoría 2026</span>
-          <span class="meta"><svg class="llave" viewBox="0 0 24 24" role="img" aria-label="Pide clave"><title>Pide clave</title><use href="#i-key"/></svg><span class="est">—</span></span>
-          <span class="des">Guía Rumbo PepsiCo, punto por punto</span>
+        <li><a class="card" href="https://tiendaperfecta.github.io/auditoria-2026/" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#f87171"><use href="#i-check"/></svg></div>
+            <div class="txt"><div>Auditoría 2026</div><p>Guía Rumbo PepsiCo: puntos, valores y estado de cada lineamiento</p></div>
+          </div>
+          <div class="tags"><div class="tag key">Con clave</div><div class="tag est">Verificando</div></div>
         </a></li>
       </ul>
-    </section>
+    </div>
 
-    <section class="grupo">
-      <h2 class="grupo-tit"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-box"/></svg>Depósito<span class="cuenta"></span></h2>
-      <ul class="filas">
-        <li><a class="fila" href="https://deposito.tienda-perfecta.workers.dev" data-fecha="https://deposito.tienda-perfecta.workers.dev/" target="_blank" rel="noreferrer">
-          <svg class="ic" style="--c:#e0a23f" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-users"/></svg>
-          <span class="nom">Panel de depósito</span>
-          <span class="meta"><span class="est">—</span></span>
-          <span class="des">Rendimiento de los operarios</span>
+    <div class="group">
+      <div class="ghead"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-box"/></svg><h2>Depósito</h2></div>
+      <ul class="list">
+        <li><a class="card" href="https://deposito.tienda-perfecta.workers.dev" data-fecha="https://deposito.tienda-perfecta.workers.dev/" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#fbbf24"><use href="#i-users"/></svg></div>
+            <div class="txt"><div>Panel de depósito</div><p>Operarios: análisis y rendimientos</p></div>
+          </div>
+          <div class="tags"><div class="tag est">Verificando</div></div>
         </a></li>
-        <li><a class="fila" href="https://tiendaperfecta.github.io/disponibilidad/" data-fecha="https://marianozeballos-tp.github.io/panel-pepsico/datos/pedido.json" target="_blank" rel="noreferrer">
-          <svg class="ic" style="--c:#5b9cf5" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg>
-          <span class="nom">Panel PepsiCo</span>
-          <span class="meta"><span class="est">—</span></span>
-          <span class="des">Pedido sugerido, objetivo y disponibilidad</span>
+        <li><a class="card" href="https://tiendaperfecta.github.io/disponibilidad/" data-fecha="https://marianozeballos-tp.github.io/panel-pepsico/datos/pedido.json" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#3b82f6"><use href="#i-check"/></svg></div>
+            <div class="txt"><div>Panel PepsiCo</div><p>Pedido sugerido, objetivo de compra y disponibilidad (meta 100%)</p></div>
+          </div>
+          <div class="tags"><div class="tag est">Verificando</div></div>
         </a></li>
-        <li><a class="fila" href="https://marianozeballos-tp.github.io/compras-georgalos/" data-fecha="https://marianozeballos-tp.github.io/compras-georgalos/" target="_blank" rel="noreferrer">
-          <svg class="ic" style="--c:#e58a72" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-box"/></svg>
-          <span class="nom">Compras Georgalos</span>
-          <span class="meta"><span class="est">—</span></span>
-          <span class="des">Pedido por artículo y toneladas del mes</span>
+        <li><a class="card" href="https://marianozeballos-tp.github.io/compras-georgalos/" data-fecha="https://marianozeballos-tp.github.io/compras-georgalos/" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#e58a72"><use href="#i-box"/></svg></div>
+            <div class="txt"><div>Compras Georgalos</div><p>Pedido sugerido por artículo y toneladas recibidas contra el objetivo del mes</p></div>
+          </div>
+          <div class="tags"><div class="tag est">Verificando</div></div>
         </a></li>
       </ul>
-    </section>
+    </div>
 
-    <section class="grupo">
-      <h2 class="grupo-tit"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chart"/></svg>Ventas<span class="cuenta"></span></h2>
-      <ul class="filas">
-        <li><a class="fila" href="https://ventas.tienda-perfecta.workers.dev" target="_blank" rel="noreferrer">
-          <svg class="ic" style="--c:#a78bfa" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chart"/></svg>
-          <span class="nom">Panel de ventas</span>
-          <span class="meta"><svg class="llave" viewBox="0 0 24 24" role="img" aria-label="Pide clave"><title>Pide clave</title><use href="#i-key"/></svg><span class="est">—</span></span>
-          <span class="des">Ventas, objetivos y proveedores</span>
+    <div class="group">
+      <div class="ghead"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-chart"/></svg><h2>Ventas</h2></div>
+      <ul class="list">
+        <li><a class="card" href="https://ventas.tienda-perfecta.workers.dev" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#a78bfa"><use href="#i-chart"/></svg></div>
+            <div class="txt"><div>Panel de ventas</div><p>Ventas, objetivos y proveedores</p></div>
+          </div>
+          <div class="tags"><div class="tag key">Con clave</div><div class="tag est">Verificando</div></div>
         </a></li>
-        <li><a class="fila" href="https://ventas.tienda-perfecta.workers.dev/rutas" target="_blank" rel="noreferrer">
-          <svg class="ic" style="--c:#3fc9bd" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-map"/></svg>
-          <span class="nom">Rutas de vendedor PepsiCo</span>
-          <span class="meta"><svg class="llave" viewBox="0 0 24 24" role="img" aria-label="Pide clave"><title>Pide clave</title><use href="#i-key"/></svg><span class="est">—</span></span>
-          <span class="des">Tiendas, taxonomías y visitas GPS</span>
+        <li><a class="card" href="https://ventas.tienda-perfecta.workers.dev/rutas" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#2dd4bf"><use href="#i-map"/></svg></div>
+            <div class="txt"><div>Rutas de vendedor PepsiCo</div><p>Auditoría 2026: tiendas, taxonomías, compras PepsiCo y visitas GPS</p></div>
+          </div>
+          <div class="tags"><div class="tag key">Con clave</div><div class="tag est">Verificando</div></div>
         </a></li>
       </ul>
-
-      <h3 class="subtit">Tableros</h3>
-      <ul class="filas">
-        <li><a class="fila" href="https://tiendaperfecta.github.io/axum/" target="_blank" rel="noreferrer">
-          <svg class="ic" style="--c:#45c08a" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chart"/></svg>
-          <span class="nom">Panel Axum</span>
-          <span class="meta"><span class="est">—</span></span>
-          <span class="des">Mapa de vendedores, visitas y cruce GPS</span>
+      <div class="ghead sub"><h2>Tableros</h2></div>
+      <ul class="list">
+        <li><a class="card" href="https://tiendaperfecta.github.io/axum/" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#34d399"><use href="#i-chart"/></svg></div>
+            <div class="txt"><div>Panel Axum</div><p>Ventas, mapa de vendedores, visitas y cruce GPS</p></div>
+          </div>
+          <div class="tags"><div class="tag est">Verificando</div></div>
         </a></li>
-        <li><a class="fila" href="https://tiendaperfecta.github.io/pepsico/" target="_blank" rel="noreferrer">
-          <svg class="ic" style="--c:#f472b6" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chart"/></svg>
-          <span class="nom">Avance PepsiCo</span>
-          <span class="meta"><span class="est">—</span></span>
-          <span class="des">Objetivo en kg, cobertura, CCC y Mi Negocio+</span>
+        <li><a class="card" href="https://tiendaperfecta.github.io/pepsico/" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#f472b6"><use href="#i-chart"/></svg></div>
+            <div class="txt"><div>Avance PepsiCo</div><p>Objetivo en kg, cobertura, CCC y Mi Negocio+</p></div>
+          </div>
+          <div class="tags"><div class="tag est">Verificando</div></div>
         </a></li>
-        <li><a class="fila" href="https://tiendaperfecta.github.io/georgalos/" target="_blank" rel="noreferrer">
-          <svg class="ic" style="--c:#e58a72" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chart"/></svg>
-          <span class="nom">Ventas Georgalos</span>
-          <span class="meta"><span class="est">—</span></span>
-          <span class="des">Descuento, margen y cobertura por vendedor</span>
+        <li><a class="card" href="https://tiendaperfecta.github.io/georgalos/" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#e58a72"><use href="#i-chart"/></svg></div>
+            <div class="txt"><div>Ventas Georgalos</div><p>Marcas, descuento, margen, cobertura y taxonomía por vendedor</p></div>
+          </div>
+          <div class="tags"><div class="tag est">Verificando</div></div>
         </a></li>
-        <li><a class="fila" href="https://negociaciones.tienda-perfecta.workers.dev" data-fecha="https://negociaciones.tienda-perfecta.workers.dev/datos" target="_blank" rel="noreferrer">
-          <svg class="ic" style="--c:#5bb8e8" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cash"/></svg>
-          <span class="nom">Negociaciones</span>
-          <span class="meta"><span class="est">—</span></span>
-          <span class="des">Descuento máximo y rentabilidad por artículo</span>
+        <li><a class="card" href="https://negociaciones.tienda-perfecta.workers.dev" data-fecha="https://negociaciones.tienda-perfecta.workers.dev/datos" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#38bdf8"><use href="#i-cash"/></svg></div>
+            <div class="txt"><div>Negociaciones</div><p>Precio lista 1 contra costo, descuento máximo y rentabilidad por artículo</p></div>
+          </div>
+          <div class="tags"><div class="tag est">Verificando</div></div>
         </a></li>
-        <li><a class="fila" href="https://frescura.tienda-perfecta.workers.dev" data-fecha="https://frescura.tienda-perfecta.workers.dev/" target="_blank" rel="noreferrer">
-          <svg class="ic" style="--c:#45c08a" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chart"/></svg>
-          <span class="nom">Seguimiento Frescura</span>
-          <span class="meta"><span class="est">—</span></span>
-          <span class="des">Productos próximos a vencer</span>
-        </a></li>
-      </ul>
-    </section>
-
-    <section class="grupo">
-      <h2 class="grupo-tit"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-truck"/></svg>Logística<span class="cuenta"></span></h2>
-      <ul class="filas">
-        <li><a class="fila" href="https://tiendaperfecta.github.io/fleteros/" data-fecha="https://tiendaperfecta.github.io/fleteros/data.js" target="_blank" rel="noreferrer">
-          <svg class="ic" style="--c:#45c08a" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-truck"/></svg>
-          <span class="nom">Fleteros Tienda Perfecta</span>
-          <span class="meta"><span class="est">—</span></span>
-          <span class="des">Efectividad de entrega y retorno de cartón</span>
-        </a></li>
-        <li><a class="fila" href="https://tiendaperfecta.github.io/pedidos/" data-fecha="https://tiendaperfecta.github.io/pedidos/fecha.txt" target="_blank" rel="noreferrer">
-          <svg class="ic" style="--c:#7eb3f5" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-box"/></svg>
-          <span class="nom">Seguimiento de pedidos</span>
-          <span class="meta"><span class="est">—</span></span>
-          <span class="des">Armado, camión y entrega de cada pedido</span>
-        </a></li>
-        <li><a class="fila" href="https://claude.ai/artifact/BZJkodiWEGe9um1wZBFEwF" target="_blank" rel="noreferrer">
-          <svg class="ic" style="--c:#f08a80" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-clip"/></svg>
-          <span class="nom">Reclamos de clientes</span>
-          <span class="meta"><svg class="llave" viewBox="0 0 24 24" role="img" aria-label="Pide clave"><title>Pide clave</title><use href="#i-key"/></svg><span class="est">claude.ai</span></span>
-          <span class="des">Faltantes y errores de entrega</span>
+        <li><a class="card" href="https://frescura.tienda-perfecta.workers.dev" data-fecha="https://frescura.tienda-perfecta.workers.dev/" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#34d399"><use href="#i-chart"/></svg></div>
+            <div class="txt"><div>Seguimiento Frescura</div><p>Venta de productos próximos a vencer</p></div>
+          </div>
+          <div class="tags"><div class="tag est">Verificando</div></div>
         </a></li>
       </ul>
-    </section>
+    </div>
 
-    <section class="grupo">
-      <h2 class="grupo-tit"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-plug"/></svg>Sistemas<span class="cuenta"></span></h2>
-      <ul class="filas">
-        <li><a class="fila" href="https://tiendaperfecta.gescom.online" target="_blank" rel="noreferrer">
-          <span class="sigla" aria-hidden="true">GT</span><span class="nom">Gescom Tienda Perfecta</span><span class="dom">tiendaperfecta.gescom.online</span></a></li>
-        <li><a class="fila" href="https://app.digipwms.com" target="_blank" rel="noreferrer">
-          <span class="sigla" aria-hidden="true">DG</span><span class="nom">Digip WMS</span><span class="dom">app.digipwms.com</span></a></li>
-        <li><a class="fila" href="https://web.whatsapp.com/" target="_blank" rel="noreferrer">
-          <span class="sigla" aria-hidden="true">WA</span><span class="nom">WhatsApp Web</span><span class="dom">web.whatsapp.com</span></a></li>
-        <li><a class="fila" href="https://www.axum.com.ar/tiendaperfecta/login.aspx" target="_blank" rel="noreferrer">
-          <span class="sigla" aria-hidden="true">AX</span><span class="nom">Axum Order360</span><span class="dom">axum.com.ar/tiendaperfecta</span></a></li>
-        <li><a class="fila" href="https://gps.axumvm.com.ar/Login.aspx" target="_blank" rel="noreferrer">
-          <span class="sigla" aria-hidden="true">GP</span><span class="nom">Axum GPS</span><span class="dom">gps.axumvm.com.ar</span></a></li>
-        <li><a class="fila" href="https://portalcf.cloud.afip.gob.ar/portal/app/" target="_blank" rel="noreferrer">
-          <span class="sigla" aria-hidden="true">AR</span><span class="nom">ARCA</span><span class="dom">Mis Comprobantes</span></a></li>
+    <div class="group">
+      <div class="ghead"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-truck"/></svg><h2>Logística</h2></div>
+      <ul class="list">
+        <li><a class="card" href="https://tiendaperfecta.github.io/fleteros/" data-fecha="https://tiendaperfecta.github.io/fleteros/data.js" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#34d399"><use href="#i-truck"/></svg></div>
+            <div class="txt"><div>Fleteros Tienda Perfecta</div><p>Efectividad de entrega y retorno de cartón</p></div>
+          </div>
+          <div class="tags"><div class="tag est">Verificando</div></div>
+        </a></li>
+        <li><a class="card" href="https://tiendaperfecta.github.io/pedidos/" data-fecha="https://tiendaperfecta.github.io/pedidos/fecha.txt" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#60a5fa"><use href="#i-box"/></svg></div>
+            <div class="txt"><div>Seguimiento de pedidos</div><p>Armado, camión y Digip de cada pedido, y entrega en tiempo y forma</p></div>
+          </div>
+          <div class="tags"><div class="tag est">Verificando</div></div>
+        </a></li>
+        <li><a class="card" href="https://claude.ai/artifact/BZJkodiWEGe9um1wZBFEwF" target="_blank" rel="noreferrer">
+          <div class="row">
+            <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#f87171"><use href="#i-clip"/></svg></div>
+            <div class="txt"><div>Reclamos de clientes</div><p>Pedidos que no llegaron, faltantes y errores de entrega</p></div>
+          </div>
+          <div class="tags"><div class="tag key">Con clave</div><div class="tag">claude.ai</div></div>
+        </a></li>
       </ul>
-    </section>
+    </div>
+
+    <div class="group bm">
+      <div class="ghead"><h2>Sistemas</h2></div>
+      <ul class="list">
+        <li><a class="bmk" href="https://tiendaperfecta.gescom.online" target="_blank" rel="noreferrer"><div class="row"><div class="abbr">GT</div><div class="bt"><div class="n">Gescom Tienda Perfecta</div><div class="d">tiendaperfecta.gescom.online</div></div></div></a></li>
+        <li><a class="bmk" href="https://app.digipwms.com" target="_blank" rel="noreferrer"><div class="row"><div class="abbr">DG</div><div class="bt"><div class="n">Digip WMS</div><div class="d">app.digipwms.com</div></div></div></a></li>
+        <li><a class="bmk" href="https://web.whatsapp.com/" target="_blank" rel="noreferrer"><div class="row"><div class="abbr">WA</div><div class="bt"><div class="n">WhatsApp Web</div><div class="d">web.whatsapp.com</div></div></div></a></li>
+        <li><a class="bmk" href="https://www.axum.com.ar/tiendaperfecta/login.aspx" target="_blank" rel="noreferrer"><div class="row"><div class="abbr">AX</div><div class="bt"><div class="n">Axum Order360</div><div class="d">axum.com.ar/tiendaperfecta</div></div></div></a></li>
+        <li><a class="bmk" href="https://gps.axumvm.com.ar/Login.aspx" target="_blank" rel="noreferrer"><div class="row"><div class="abbr">GP</div><div class="bt"><div class="n">Axum GPS</div><div class="d">gps.axumvm.com.ar</div></div></div></a></li>
+      </ul>
+    </div>
+    <div class="group bm">
+      <div class="ghead"><h2>Externos</h2></div>
+      <ul class="list">
+        <li><a class="bmk" href="https://portalcf.cloud.afip.gob.ar/portal/app/" target="_blank" rel="noreferrer"><div class="row"><div class="abbr">AR</div><div class="bt"><div class="n">ARCA</div><div class="d">Mis Comprobantes</div></div></div></a></li>
+      </ul>
+    </div>
 
   </div>
+
+  <footer>Central web</footer>
 </div>
 
 <script>
-  // Reloj de la cabecera.
-  const fmt = new Intl.DateTimeFormat('es-AR', {weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit', hour12:false});
-  const reloj = document.getElementById('reloj');
-  const tick = () => reloj.textContent = fmt.format(new Date());
-  tick(); setInterval(tick, 10000);
+  const f = new Intl.DateTimeFormat('es-AR', {weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false});
+  const el = document.getElementById('dt');
+  const tick = () => el.textContent = f.format(new Date());
+  tick(); setInterval(tick, 1000);
 
-  // Cuántos accesos tiene cada grupo.
-  document.querySelectorAll('.grupo').forEach(g => {
-    const n = g.querySelectorAll('.fila').length;
-    g.querySelector('.cuenta').textContent = n;
-  });
-
-  // Estado de cada acceso: si el panel publica su fecha (data-fecha), verde sólo si
-  // es la de hoy en hora argentina; si no publica nada, verde si el sitio contesta.
+  // Estado de cada tarjeta: si el panel publica su fecha de actualización (data-fecha),
+  // verde solo si es de hoy (hora argentina); si no, verde si el sitio responde.
   const hoy = new Intl.DateTimeFormat('en-CA', {timeZone:'America/Argentina/Buenos_Aires'}).format(new Date());
   const corto = d => new Date(d + 'T12:00:00').toLocaleDateString('es-AR', {day:'numeric', month:'short'});
   const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-
-  // Saca la fecha (YYYY-MM-DD) del texto que publica cada panel: fleteros
-  // "Ultima actualizacion: 2026-09-03", depósito "generado":"4 de septiembre de 2026",
-  // negociaciones "hasta":"2026-10-08", compras Georgalos "Stock de hoy 04/11/2026".
+  // Saca la fecha (YYYY-MM-DD) del texto del panel: fleteros "Ultima actualizacion: 2026-09-03",
+  // depósito "generado":"4 de septiembre de 2026", negociaciones "hasta":"2026-10-08",
+  // compras Georgalos "Stock de hoy 04/11/2026"
   const fechaDe = txt => {
     const iso = txt.match(/Ultima actualizacion: (\d{4}-\d{2}-\d{2})/);
     if (iso) return iso[1];
-    const hasta = txt.match(/"hasta":"(\d{4}-\d{2}-\d{2})"/);
+    const hasta = txt.match(/"hasta":"(\d{4}-\d{2}-\d{2})"/);   // negociaciones
     if (hasta) return hasta[1];
-    const stock = txt.match(/Stock de hoy (\d{2})\/(\d{2})\/(\d{4})/);
+    const stock = txt.match(/Stock de hoy (\d{2})\/(\d{2})\/(\d{4})/);   // compras Georgalos
     if (stock) return stock[3] + '-' + stock[2] + '-' + stock[1];
-    const gen = txt.match(/"generado":"(\d{4}-\d{2}-\d{2}T[^"]+)"/);
+    const gen = txt.match(/"generado":"(\d{4}-\d{2}-\d{2}T[^"]+)"/);   // panel PepsiCo (pedido.json)
     if (gen) return new Intl.DateTimeFormat('en-CA', {timeZone:'America/Argentina/Buenos_Aires'}).format(new Date(gen[1]));
-    const es = txt.match(/"generado":"(\d{1,2}) de (\w+) de (\d{4})"/);
-    if (es) return es[3] + '-' + String(MESES.indexOf(es[2]) + 1).padStart(2, '0') + '-' + es[1].padStart(2, '0');
-    return null;   // contestó, pero no publica fecha en un formato conocido
+    const es =txt.match(/"generado":"(\d{1,2}) de (\w+) de (\d{4})"/);
+    return es[3] + '-' + String(MESES.indexOf(es[2]) + 1).padStart(2, '0') + '-' + es[1].padStart(2, '0');
   };
-
-  const pintar = (a, texto, clase) => {
-    a.querySelector('.est').textContent = texto;
-    a.querySelector('.est').className = 'est ' + clase;
-    a.className = 'fila ' + clase;
-  };
-
-  const pendientes = [...document.querySelectorAll('.fila')].filter(a => a.querySelector('.est')?.textContent === '—');
-
-  Promise.all(pendientes.map(async a => {
+  document.querySelectorAll('.card').forEach(async a => {
+    const tag = a.querySelector('.tag.est');
+    if (!tag) return;   // tarjetas sin control de estado (ej. claude.ai no permite consultarlo)
     try {
       if (a.dataset.fecha) {
         const txt = await (await fetch(a.dataset.fecha, {cache:'no-store'})).text();
         const f = fechaDe(txt);
-        if (!f) return pintar(a, 'sin fecha', '');
-        const alDia = f === hoy;
-        pintar(a, alDia ? 'hoy' : corto(f), alDia ? 'ok' : 'warn');
-        return alDia ? null : 'atrasado';
+        const ok = f === hoy;
+        tag.textContent = ok ? 'Actualizado hoy' : 'Actualizado ' + corto(f);
+        tag.className = 'tag est ' + (ok ? 'ok' : 'warn');
+      } else {
+        await fetch(a.href, {mode:'no-cors', cache:'no-store'});
+        tag.textContent = 'En línea';
+        tag.className = 'tag est ok';
       }
-      // Sin data-fecha sólo sabemos que el sitio contesta, no si el dato es de hoy:
-      // va en gris, para que el verde signifique siempre "verificado hoy".
-      await fetch(a.href, {mode:'no-cors', cache:'no-store'});
-      pintar(a, 'en línea', '');
     } catch {
-      pintar(a, 'sin respuesta', 'bad');
-      return 'caido';
+      tag.textContent = 'Sin respuesta';
+      tag.className = 'tag est bad';
     }
-  })).then(r => {
-    const accesos = document.querySelectorAll('.fila').length;
-    const atrasados = r.filter(x => x === 'atrasado').length;
-    const caidos = r.filter(x => x === 'caido').length;
-    const partes = [accesos + ' accesos'];
-    if (atrasados) partes.push(atrasados === 1 ? '1 panel atrasado' : atrasados + ' paneles atrasados');
-    if (caidos) partes.push(caidos === 1 ? '1 sin respuesta' : caidos + ' sin respuesta');
-    if (!atrasados && !caidos) partes.push('todo al día');
-    document.getElementById('resumen').textContent = partes.join(', ');
   });
+
+  // El intro se va solo a los 3 s; un click o una tecla lo saltea.
+  const intro = document.getElementById('intro');
+  if (intro) {
+    const cerrar = () => intro.classList.add('off');
+    intro.addEventListener('click', cerrar);
+    addEventListener('keydown', cerrar, {once:true});
+    intro.addEventListener('animationend', e => { if (e.animationName === 'intro-out') intro.remove(); });
+  }
 </script>
 
-</body>
-</html>
+</body></html>
