@@ -206,7 +206,7 @@ tfoot td{padding:12px 10px; font-weight:700; border-top:2px solid var(--border);
   <!-- ============================ CUADRO 2 ============================ -->
   <section class="block">
     <h2 class="block-title">Por taxonomía</h2>
-    <p class="block-note">Taxonomía = segmento del cliente en GesCom (A, B, C, D), el mismo que usa el CCC de PepsiCo.</p>
+    <p class="block-note">Taxonomía = segmento del cliente en GesCom (A, B, C, D), el mismo que usa el CCC de PepsiCo. Z son los clientes que en GesCom tienen el segmento Z.</p>
 
     <h3 class="section-title">Venta por taxonomía</h3>
     <p class="section-note">Venta neta de Georgalos por segmento del cliente y, entre paréntesis, la participación de cada segmento dentro de la venta del vendedor.</p>
@@ -215,9 +215,9 @@ tfoot td{padding:12px 10px; font-weight:700; border-top:2px solid var(--border);
         <thead>
           <tr class="cols">
             <th class="name-col">Vendedor</th>
-            <th>A</th><th>B</th><th>C</th><th>D</th>
+            <th>A</th><th>B</th><th>C</th><th>D</th><th>Z</th>
             <th class="sep"></th>
-            <th>Total</th><th>Margen A</th><th>Margen B</th><th>Margen C</th><th>Margen D</th>
+            <th>Total</th><th>Margen A</th><th>Margen B</th><th>Margen C</th><th>Margen D</th><th>Margen Z</th>
           </tr>
         </thead>
         <tbody id="tb-taxo"></tbody>
@@ -236,7 +236,7 @@ tfoot td{padding:12px 10px; font-weight:700; border-top:2px solid var(--border);
         <thead>
           <tr class="cols">
             <th class="name-col">Vendedor</th>
-            <th>A</th><th>B</th><th>C</th><th>D</th>
+            <th>A</th><th>B</th><th>C</th><th>D</th><th>Z</th>
             <th class="sep"></th>
             <th>Total</th><th>% sin compra</th>
           </tr>
@@ -266,7 +266,7 @@ tfoot td{padding:12px 10px; font-weight:700; border-top:2px solid var(--border);
 </div>
 
 <script>
-const SEGS = ["A","B","C","D"];
+const SEGS = ["A","B","C","D","Z"];
 let D = null, metric = "venta";
 
 const $ = id => document.getElementById(id);
