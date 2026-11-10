@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Central web</title>
+<meta name="theme-color" content="#1e293b">
+<link rel="icon" href="assets/img/logo-tiendaperfecta.jpeg">
+<link rel="apple-touch-icon" href="assets/img/logo-tiendaperfecta.jpeg">
 </head><body><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;700&display=swap">
 <style>
   /* Réplica del tema "slate · dark" de gethomepage.dev (Tailwind slate, bg = slate-800) */
@@ -40,7 +43,9 @@
 
   /* groups */
   .groups{display:flex;flex-wrap:wrap;align-items:flex-start;margin:16px 32px 8px}
-  .group{flex:1 1 100%;padding:4px 4px 0}
+  /* min-width:0: sin esto el grupo es un item flex con minimo automatico y se
+     estira al largo del marcador mas ancho, desbordando la pantalla. */
+  .group{flex:1 1 100%;min-width:0;padding:4px 4px 0}
   @media (min-width:700px){.group{flex-basis:50%}.bm{flex-basis:25%}}
   @media (min-width:1100px){.group{flex-basis:25%}.bm{flex-basis:16.6667%}}
   .ghead{display:flex;width:100%;align-items:center;user-select:none}
@@ -71,23 +76,28 @@
   .bmk:hover{background:rgb(255 255 255/.1);color:rgb(var(--s300))}
   .bmk .row{display:flex}
   .abbr{flex:none;display:flex;align-items:center;justify-content:center;width:44px;border-radius:6px 0 0 6px;background:rgb(var(--s900)/.5);font-size:14px;line-height:20px}
-  .bt{flex:1;overflow:hidden;display:flex;align-items:center;justify-content:space-between}
-  .bt .n{padding:8px 0 8px 12px;font-size:12px;line-height:16px;white-space:nowrap}
-  .bt .d{flex-shrink:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:8px;font-size:12px;line-height:16px;color:rgb(var(--s300))}
+  /* min-width:0 en los tres: sin eso el texto con nowrap no deja encoger la fila
+     y el marcador mas largo desbordaba la pantalla a lo ancho en el celular.
+     El dominio encoge primero (shrink alto) y recien despues el nombre. */
+  .bt{flex:1;min-width:0;overflow:hidden;display:flex;align-items:center;justify-content:space-between}
+  .bt .n{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;padding:8px 0 8px 12px;font-size:12px;line-height:16px;white-space:nowrap}
+  .bt .d{flex:0 999 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:8px;font-size:12px;line-height:16px;color:rgb(var(--s300))}
 
   footer{margin-top:auto;padding:32px;display:flex;justify-content:flex-end;font-size:12px;line-height:16px;color:rgb(var(--s400))}
   @media (prefers-reduced-motion:reduce){.card,.bmk{transition:none}}
 
-  /* intro: el logo de Tienda Perfecta en primer plano y despues la central */
-  #intro{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;
-    background:rgb(var(--s900));animation:intro-out .7s ease 3s forwards}
+  /* intro: el logo de Tienda Perfecta en primer plano y despues la central.
+     pointer-events:none para que el primer toque llegue siempre a la tarjeta
+     de abajo: el logo se ve, pero no bloquea. */
+  #intro{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;pointer-events:none;
+    background:rgb(var(--s900));animation:intro-out .45s ease .9s forwards}
   #intro img{width:min(200px,42vw);height:min(200px,42vw);border-radius:50%;object-fit:cover;background:#fff;
-    box-shadow:0 24px 64px -24px rgb(0 0 0/.9);animation:intro-in .8s cubic-bezier(.2,.8,.2,1) both}
+    box-shadow:0 24px 64px -24px rgb(0 0 0/.9);animation:intro-in .5s cubic-bezier(.2,.8,.2,1) both}
   #intro.off{animation:none;opacity:0;visibility:hidden}
   @keyframes intro-in{from{opacity:0;transform:scale(.86)}to{opacity:1;transform:none}}
   @keyframes intro-out{to{opacity:0;visibility:hidden}}
   @media (prefers-reduced-motion:reduce){
-    #intro{animation-duration:.3s;animation-delay:2.7s}
+    #intro{animation-duration:.2s;animation-delay:.5s}
     #intro img{animation:none}
   }
 </style>
@@ -359,11 +369,11 @@
     }
   });
 
-  // El intro se va solo a los 3 s; un click o una tecla lo saltea.
+  // El intro se va solo en menos de 1,5 s y no recibe clicks (pointer-events:none),
+  // asi que el primer toque entra directo al panel; una tecla lo saltea igual.
   const intro = document.getElementById('intro');
   if (intro) {
     const cerrar = () => intro.classList.add('off');
-    intro.addEventListener('click', cerrar);
     addEventListener('keydown', cerrar, {once:true});
     intro.addEventListener('animationend', e => { if (e.animationName === 'intro-out') intro.remove(); });
   }
