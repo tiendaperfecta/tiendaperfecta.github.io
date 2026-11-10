@@ -106,11 +106,11 @@ tfoot td{padding:12px 10px; font-weight:700; border-top:2px solid var(--border);
   border:1px solid var(--border); border-radius:12px; padding:14px 16px; box-shadow:var(--shadow); margin-bottom:20px;
 }
 .filtros label{display:flex; flex-direction:column; gap:5px; font:600 11px/1 "IBM Plex Mono",monospace; letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
-.filtros input[type=date]{
+.filtros input[type=date], .filtros select{
   font:500 14px "IBM Plex Sans"; color:var(--text); background:var(--panel-2); border:1px solid var(--border);
   border-radius:8px; padding:7px 10px; min-height:36px;
 }
-.filtros input[type=date]:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.filtros input[type=date]:focus-visible, .filtros select:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
 .filtros .estado{font-size:12.5px; color:var(--muted); margin-left:auto; align-self:center}
 @media (max-width:640px){ .filtros .estado{margin-left:0; width:100%} }
 
@@ -137,6 +137,7 @@ tfoot td{padding:12px 10px; font-weight:700; border-top:2px solid var(--border);
   <div class="filtros">
     <label>Desde <input type="date" id="f-desde"></label>
     <label>Hasta <input type="date" id="f-hasta"></label>
+    <label>Vendedor <select id="f-vend"><option value="">Todo el equipo</option></select></label>
     <div class="seg-ctl" role="group" aria-label="Período rápido" id="ctl-rango">
       <button type="button" data-r="hoy" aria-pressed="false">Hoy</button>
       <button type="button" data-r="ayer" aria-pressed="false">Ayer</button>
@@ -298,7 +299,8 @@ function heat(v, min, max, invert){
 
 function render(){
   const T = D.total, V = D.vendedores;
-  $("eyebrow").textContent = `Georgalos · Tienda Perfecta · ${rangoNombre(D.desde, D.corte)}`;
+  $("eyebrow").textContent = `Georgalos · Tienda Perfecta · ${rangoNombre(D.desde, D.corte)}` +
+    (D.vend ? ` · ${D.vend} - ${MAESTRO.vendedores[D.vend] || "Vendedor " + D.vend}` : "");
   $("sub").innerHTML = `Venta neta en <b>pesos sin IVA</b>, del <b>${fechaAR(D.desde)}</b> al <b>${fechaAR(D.corte)}</b>
     (fecha de comprobante; lo pedido y todavía sin facturar entra por fecha de pedido).
     Datos actualizados el <b>${D.generado.slice(8,10)}/${D.generado.slice(5,7)} a las ${D.generado.slice(11,16)}</b>
@@ -322,7 +324,7 @@ function render(){
       <td>${fmt(r.compradores)}/${fmt(r.universo)}</td><td>${bar(cp, tierCob(cp))}</td>
     </tr>`;}).join("");
   const dpt = pct(desc(T),T.bruta), mpt = pct(marg(T),T.neta), cpt = pct(T.compradores,T.universo);
-  $("tf-resumen").innerHTML = `<tr><td class="name">Total Georgalos</td>
+  $("tf-resumen").innerHTML = `<tr><td class="name">${D.vend ? "Total del vendedor" : "Total Georgalos"}</td>
     <td>${money(T.neta)}</td><td>100,0%</td><td></td>
     <td>${money(desc(T))}</td><td>${fp(dpt)}</td><td></td>
     <td>${money(marg(T))}</td><td>${fp(mpt)}</td><td></td>
@@ -380,7 +382,7 @@ function renderMarca(){
       return heat(v, Math.min(...xs), Math.max(...xs), M.inv) + M.cell(v) + "</td>";
     }).join("")}</tr>`).join("");
   const byM = Object.fromEntries(D.marcas.map(m => [m.marca, m]));
-  $("tf-marca").innerHTML = `<tr><td class="name">Total Georgalos</td>${marcas.map(m => `<td>${M.tot(byM[m])}</td>`).join("")}</tr>`;
+  $("tf-marca").innerHTML = `<tr><td class="name">${D.vend ? "Total del vendedor" : "Total Georgalos"}</td>${marcas.map(m => `<td>${M.tot(byM[m])}</td>`).join("")}</tr>`;
 }
 
 function renderTaxo(){
@@ -390,7 +392,7 @@ function renderTaxo(){
     <td class="sep"></td><td>${money(r.neta)}</td>
     ${SEGS.map(s => { const x = r.segmentos[s], p = x.neta ? pct(marg(x), x.neta) : null; return `<td>${pill(p, tierMargen(p))}</td>`; }).join("")}
   </tr>`).join("");
-  $("tf-taxo").innerHTML = `<tr><td class="name">Total Georgalos</td>
+  $("tf-taxo").innerHTML = `<tr><td class="name">${D.vend ? "Total del vendedor" : "Total Georgalos"}</td>
     ${SEGS.map(s => `<td>${money(S[s].neta)} <span class="muted">(${fmt(pct(S[s].neta, D.total.neta) ?? 0,0)}%)</span></td>`).join("")}
     <td></td><td>${money(D.total.neta)}</td>
     ${SEGS.map(s => `<td>${fp(S[s].neta ? pct(marg(S[s]), S[s].neta) : null)}</td>`).join("")}</tr>`;
@@ -408,7 +410,7 @@ function renderTaxo(){
       <td>${pill(p, p <= 60 ? "good" : p <= 72 ? "warn" : "bad")}</td></tr>`;
   }).join("");
   const tu = D.total.universo, tn = tu - D.total.compradores;
-  $("tf-nc").innerHTML = `<tr><td class="name">Total Georgalos</td>
+  $("tf-nc").innerHTML = `<tr><td class="name">${D.vend ? "Total del vendedor" : "Total Georgalos"}</td>
     ${SEGS.map(s => `<td>${fmt(S[s].universo - S[s].compradores)}/${fmt(S[s].universo)}</td>`).join("")}
     <td></td><td>${fmt(tn)}/${fmt(tu)}</td><td>${fp(pct(tn, tu))}</td></tr>`;
 }
@@ -463,12 +465,12 @@ function cargarMes(mes){
   return cacheMes.get(mes);
 }
 
-function calcular(filas, desde, hasta){
+function calcular(filas, desde, hasta, vend){
   const cli = MAESTRO.clientes, rutas = MAESTRO.rutas, noVend = new Set(MAESTRO.noVendedores);
   const seg = c => cli[c] ? cli[c][4] : "—";
   const z = () => ({bruta:0, neta:0, costo:0});
   const add = (a, r) => { a.bruta += r[4]; a.neta += r[5]; a.costo += r[6]; };
-  const tot = z(), pv = {}, pvm = {}, pm = {}, ps = {}, pvs = {}, qc = {}, qcm = {};
+  const tot = z(), pv = {}, pvm = {}, pm = {}, ps = {}, pvs = {}, qc = {}, qcm = {}, pvSf = {};
   let sinFact = 0;
   for (const r of filas) {
     const [f, v, c, m, , n, , u, sf] = r;
@@ -477,13 +479,13 @@ function calcular(filas, desde, hasta){
     add(tot, r); add(pv[v] ??= z(), r); add(pvm[v+"|"+m] ??= z(), r); add(pm[m] ??= z(), r);
     add(ps[s] ??= z(), r); add(pvs[v+"|"+s] ??= z(), r);
     qc[c] = (qc[c] || 0) + u; qcm[c+"|"+m] = (qcm[c+"|"+m] || 0) + u;
-    if (sf) sinFact += n;
+    if (sf) { sinFact += n; pvSf[v] = (pvSf[v] || 0) + n; }
   }
   const compr = new Set(Object.keys(qc).filter(c => qc[c] > 0));
   const marcas = Object.keys(pm).sort((a,b) => pm[b].neta - pm[a].neta);
   // Solo vendedores que vendieron Georgalos en el período: hay fuerzas de
   // venta con ruta propia que no llevan la línea.
-  const codigos = Object.keys(pv).filter(v => v && !noVend.has(v) && pv[v].bruta > 0);
+  const codigos = vend ? [vend] : Object.keys(pv).filter(v => v && !noVend.has(v) && pv[v].bruta > 0);
   const segUni = (uni, s) => uni.filter(c => seg(c) === s);
 
   const vendedores = codigos.map(v => {
@@ -494,7 +496,7 @@ function calcular(filas, desde, hasta){
     const mm = {};
     marcas.forEach(m => { mm[m] = {...(pvm[v+"|"+m] || z()), clientes: uni.filter(c => (qcm[c+"|"+m] || 0) > 0).length}; });
     return {cod:v, nombre: MAESTRO.vendedores[v] || ("Vendedor " + v), universo: uni.length,
-            compradores: uni.filter(c => compr.has(c)).length, ...pv[v], marcas: mm, segmentos};
+            compradores: uni.filter(c => compr.has(c)).length, ...(pv[v] || z()), marcas: mm, segmentos};
   }).sort((a,b) => b.neta - a.neta);
 
   const noCompradores = [];
@@ -503,6 +505,16 @@ function calcular(filas, desde, hasta){
     const x = cli[c] || ["", "", "", "", "—"];
     noCompradores.push({vend:v, codigo:c, nombre:x[0], direccion:x[1], localidad:x[2], telefono:x[3], seg:x[4], dias});
   }));
+  if (vend) {
+    // un solo vendedor: los totales, las marcas y los segmentos son los suyos
+    const r = vendedores[0];
+    return {
+      desde, corte: hasta, generado: INDICE.generado, vend,
+      total: {bruta: r.bruta, neta: r.neta, costo: r.costo, universo: r.universo, compradores: r.compradores, sinFacturar: pvSf[vend] || 0},
+      marcas: marcas.map(m => ({marca: m, ...r.marcas[m]})).filter(m => m.bruta || m.clientes),
+      segmentos: r.segmentos, vendedores, noCompradores, otrosSinFila: 0,
+    };
+  }
   const todos = [...new Set(codigos.flatMap(v => Object.keys(rutas[v] || {})))];
   const segmentos = {};
   SEGS.forEach(s => { const u = segUni(todos, s);
@@ -517,7 +529,7 @@ function calcular(filas, desde, hasta){
 }
 
 // ------------------------------------------------------------------ filtro
-const fD = $("f-desde"), fH = $("f-hasta");
+const fD = $("f-desde"), fH = $("f-hasta"), fV = $("f-vend");
 let pedido = 0;
 
 function rangoRapido(r){
@@ -541,16 +553,18 @@ async function aplicar(){
   if (!desde || !hasta) return;
   if (desde > hasta) { [desde, hasta] = [hasta, desde]; fD.value = desde; fH.value = hasta; }
   marcarRapido();
-  try { history.replaceState(null, "", `?desde=${desde}&hasta=${hasta}`); } catch (_) {}
+  const vend = fV.value;
+  try { history.replaceState(null, "", `?desde=${desde}&hasta=${hasta}` + (vend ? `&vendedor=${vend}` : "")); } catch (_) {}
   const n = ++pedido;
   $("f-estado").textContent = "Calculando…";
   $("alert").style.display = "none";
   try {
     const meses = await Promise.all(mesesEntre(desde, hasta).map(cargarMes));
     if (n !== pedido) return;
-    D = calcular(meses.flat(), desde, hasta);
+    D = calcular(meses.flat(), desde, hasta, vend);
     render();
-    $("f-estado").textContent = D.vendedores.length ? "" : "Sin ventas de Georgalos en este período.";
+    $("f-estado").textContent = !D.vendedores.length ? "Sin ventas de Georgalos en este período."
+      : vend && !D.total.bruta ? "Este vendedor no vendió Georgalos en este período." : "";
   } catch (e) {
     const a = $("alert"); a.style.display = "block"; a.textContent = "No se pudieron cargar los datos (" + e.message + ").";
     $("f-estado").textContent = "";
@@ -558,6 +572,7 @@ async function aplicar(){
 }
 fD.addEventListener("change", aplicar);
 fH.addEventListener("change", aplicar);
+fV.addEventListener("change", aplicar);
 $("ctl-rango").addEventListener("click", e => {
   const b = e.target.closest("button"); if (!b) return;
   [fD.value, fH.value] = rangoRapido(b.dataset.r);
@@ -572,6 +587,10 @@ Promise.all([json("indice.json"), json("maestro.json")]).then(([i, m]) => {
   fD.max = fH.max = hoy;
   const q = new URLSearchParams(location.search), ok = x => /^\d{4}-\d{2}-\d{2}$/.test(x || "");
   [fD.value, fH.value] = ok(q.get("desde")) && ok(q.get("hasta")) ? [q.get("desde"), q.get("hasta")] : rangoRapido("mes");
+  const noVend = new Set(m.noVendedores);
+  Object.keys(m.rutas).filter(v => !noVend.has(v)).sort((a, b) => a - b).forEach(v =>
+    fV.add(new Option(v + " - " + (m.vendedores[v] || "Vendedor " + v), v)));
+  if (q.get("vendedor") && m.rutas[q.get("vendedor")]) fV.value = q.get("vendedor");
   aplicar();
 }).catch(e => { $("sub").textContent = ""; const a = $("alert"); a.style.display = "block"; a.textContent = "No se pudieron cargar los datos (" + e.message + ")."; });
 </script>
