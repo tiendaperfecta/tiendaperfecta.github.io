@@ -3,94 +3,103 @@
  "diaSemana": "miercoles",
  "bySeller": [
   {
-   "sellerId": "1",
-   "vendedor": "Maria Noelia Madia",
-   "ruta": 34,
-   "visitadosDeRuta": 0,
-   "pendientes": 34,
-   "fueraDeRuta": 0,
-   "pct": 0.0
-  },
-  {
-   "sellerId": "10",
-   "vendedor": "Matias Parada",
-   "ruta": 41,
-   "visitadosDeRuta": 0,
-   "pendientes": 41,
-   "fueraDeRuta": 0,
-   "pct": 0.0
-  },
-  {
-   "sellerId": "11",
-   "vendedor": "Melanie Larrama",
-   "ruta": 25,
-   "visitadosDeRuta": 0,
-   "pendientes": 25,
-   "fueraDeRuta": 0,
-   "pct": 0.0
-  },
-  {
-   "sellerId": "12",
-   "vendedor": "Agustin Pogorzelski",
-   "ruta": 43,
-   "visitadosDeRuta": 0,
-   "pendientes": 43,
-   "fueraDeRuta": 0,
-   "pct": 0.0
-  },
-  {
    "sellerId": "2",
    "vendedor": "Julian Nuñez",
    "ruta": 34,
-   "visitadosDeRuta": 0,
-   "pendientes": 34,
-   "fueraDeRuta": 0,
-   "pct": 0.0
-  },
-  {
-   "sellerId": "3",
-   "vendedor": "Ezequiel Hack",
-   "ruta": 51,
-   "visitadosDeRuta": 0,
-   "pendientes": 51,
-   "fueraDeRuta": 0,
-   "pct": 0.0
-  },
-  {
-   "sellerId": "4",
-   "vendedor": "Lucas Giayetto",
-   "ruta": 41,
-   "visitadosDeRuta": 0,
-   "pendientes": 41,
-   "fueraDeRuta": 0,
-   "pct": 0.0
-  },
-  {
-   "sellerId": "5",
-   "vendedor": "Nicolas Martinez",
-   "ruta": 35,
-   "visitadosDeRuta": 0,
-   "pendientes": 35,
-   "fueraDeRuta": 0,
-   "pct": 0.0
-  },
-  {
-   "sellerId": "6",
-   "vendedor": "Camila Martinez",
-   "ruta": 38,
-   "visitadosDeRuta": 0,
-   "pendientes": 38,
-   "fueraDeRuta": 0,
-   "pct": 0.0
+   "visitadosDeRuta": 12,
+   "pendientes": 22,
+   "fueraDeRuta": 4,
+   "pct": 35.3
   },
   {
    "sellerId": "7",
    "vendedor": "Ramiro Rando",
    "ruta": 41,
-   "visitadosDeRuta": 0,
-   "pendientes": 41,
+   "visitadosDeRuta": 11,
+   "pendientes": 30,
+   "fueraDeRuta": 2,
+   "pct": 26.8
+  },
+  {
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "ruta": 41,
+   "visitadosDeRuta": 8,
+   "pendientes": 33,
    "fueraDeRuta": 0,
-   "pct": 0.0
+   "pct": 19.5
+  },
+  {
+   "sellerId": "11",
+   "vendedor": "Melanie Larrama",
+   "ruta": 25,
+   "visitadosDeRuta": 4,
+   "pendientes": 21,
+   "fueraDeRuta": 9,
+   "pct": 16.0
+  },
+  {
+   "sellerId": "6",
+   "vendedor": "Camila Martinez",
+   "ruta": 38,
+   "visitadosDeRuta": 6,
+   "pendientes": 32,
+   "fueraDeRuta": 1,
+   "pct": 15.8
+  },
+  {
+   "sellerId": "3",
+   "vendedor": "Ezequiel Hack",
+   "ruta": 51,
+   "visitadosDeRuta": 8,
+   "pendientes": 43,
+   "fueraDeRuta": 1,
+   "pct": 15.7
+  },
+  {
+   "sellerId": "1",
+   "vendedor": "Maria Noelia Madia",
+   "ruta": 34,
+   "visitadosDeRuta": 5,
+   "pendientes": 29,
+   "fueraDeRuta": 6,
+   "pct": 14.7
+  },
+  {
+   "sellerId": "5",
+   "vendedor": "Nicolas Martinez",
+   "ruta": 35,
+   "visitadosDeRuta": 4,
+   "pendientes": 31,
+   "fueraDeRuta": 0,
+   "pct": 11.4
+  },
+  {
+   "sellerId": "12",
+   "vendedor": "Agustin Pogorzelski",
+   "ruta": 43,
+   "visitadosDeRuta": 4,
+   "pendientes": 39,
+   "fueraDeRuta": 0,
+   "pct": 9.3
+  },
+  {
+   "sellerId": "10",
+   "vendedor": "Matias Parada",
+   "ruta": 41,
+   "visitadosDeRuta": 3,
+   "pendientes": 38,
+   "fueraDeRuta": 23,
+   "pct": 7.3
+  },
+  {
+   "sellerId": "20",
+   "vendedor": "Deposito",
+   "ruta": 0,
+   "visitadosDeRuta": 0,
+   "pendientes": 0,
+   "fueraDeRuta": 0,
+   "pct": null
   },
   {
    "sellerId": "8",
@@ -180,28 +189,10 @@
     "taxonomia": "Almacen/Despensa_D"
    },
    {
-    "clientId": "1692",
-    "nombre": "Cooperativa de trabajo mil producciones limitada",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
-    "clientId": "1762",
-    "nombre": "FLORENCIA CAPURRO",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
     "clientId": "1825",
     "nombre": "ZAPOPET SRL",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Almacen/Despensa_D"
-   },
-   {
-    "clientId": "1956",
-    "nombre": "Podesta Blas",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_A"
    },
    {
     "clientId": "2067",
@@ -214,18 +205,6 @@
     "nombre": "STEPFER GABRIELA NOEMI",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Almacen/Despensa_D"
-   },
-   {
-    "clientId": "2073",
-    "nombre": "TABORDA NADIA SOLEDAD",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Panaderia_C"
-   },
-   {
-    "clientId": "2080",
-    "nombre": "MARIA BEGOÑA OZCARIZ",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_C"
    },
    {
     "clientId": "2136",
@@ -506,18 +485,6 @@
     "taxonomia": "Autoservicio Tradicional_D"
    },
    {
-    "clientId": "710",
-    "nombre": "LOPEZ NICOLAS",
-    "localidad": "Santa Clara del Mar",
-    "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
-    "clientId": "73",
-    "nombre": "ROBERTO ORLANDO MARINO",
-    "localidad": "SANTA CLARA DEL MAR",
-    "taxonomia": "Kiosco/Maxikiosco_C"
-   },
-   {
     "clientId": "76",
     "nombre": "RAMON RUPERTO GUERRERO PEVE",
     "localidad": "SANTA CLARA DEL MAR",
@@ -546,12 +513,6 @@
     "nombre": "VANESA MABEL WIETIG",
     "localidad": "SANTA CLARA DEL MAR",
     "taxonomia": "Autoservicio Tradicional_C"
-   },
-   {
-    "clientId": "81",
-    "nombre": "CHEN ZHENXIONG",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_A"
    },
    {
     "clientId": "822",
@@ -592,18 +553,6 @@
     "taxonomia": "Almacen/Despensa_B"
    },
    {
-    "clientId": "1364",
-    "nombre": "TEMBRA SANDRA MARIELA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_A"
-   },
-   {
-    "clientId": "1407",
-    "nombre": "TEMBRA GABRIEL FABIO",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_C"
-   },
-   {
     "clientId": "1515",
     "nombre": "CANINI ARIEL ALFREDO",
     "localidad": "MAR DEL PLATA",
@@ -632,18 +581,6 @@
     "nombre": "PICADO FINO",
     "localidad": "Mar del Plata",
     "taxonomia": "Fiambreria_D"
-   },
-   {
-    "clientId": "1923",
-    "nombre": "ZUCCHIATTI MAURO",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_C"
-   },
-   {
-    "clientId": "1968",
-    "nombre": "KIRONDA DEBORA ALEJANDRA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_C"
    },
    {
     "clientId": "2100",
@@ -774,12 +711,6 @@
     "taxonomia": "Almacen/Despensa_D"
    },
    {
-    "clientId": "1534",
-    "nombre": "GAITERO RUBEN ALBERTO",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_D"
-   },
-   {
     "clientId": "1537",
     "nombre": "JUAN CRUZ SUAREZ",
     "localidad": "MAR DEL PLATA",
@@ -792,12 +723,6 @@
     "taxonomia": "Kiosco/Maxikiosco_A"
    },
    {
-    "clientId": "1620",
-    "nombre": "RETAMAL CARLOS NORBERTO",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_D"
-   },
-   {
     "clientId": "1649",
     "nombre": "Roldán braian",
     "localidad": "Mar del Plata",
@@ -808,12 +733,6 @@
     "nombre": "EMILIANO ORLOV",
     "localidad": "Mar del Plata",
     "taxonomia": "Fiambreria_A"
-   },
-   {
-    "clientId": "1716",
-    "nombre": "WANG YIAN",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_B"
    },
    {
     "clientId": "1729",
@@ -966,12 +885,6 @@
     "taxonomia": "Fiambreria_C"
    },
    {
-    "clientId": "780",
-    "nombre": "LUIS ALBERTO IBAÑEZ",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_D"
-   },
-   {
     "clientId": "796",
     "nombre": "Gerardo rito horario Cáceres",
     "localidad": "Mar del Plata",
@@ -979,18 +892,6 @@
    }
   ],
   "2": [
-   {
-    "clientId": "100",
-    "nombre": "MARNIAN GROUP SRL",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_C"
-   },
-   {
-    "clientId": "1012",
-    "nombre": "SABELOTE S.A",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_A"
-   },
    {
     "clientId": "1029",
     "nombre": "CARABAJAL GUSTAVO DAVID",
@@ -1010,32 +911,14 @@
     "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
-    "clientId": "1277",
-    "nombre": "LIZARDO MRAD FLORENCIA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_A"
-   },
-   {
     "clientId": "1281",
     "nombre": "FRUTICEL TOUCH S.R.L",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Kiosco/Maxikiosco_B"
    },
    {
-    "clientId": "1367",
-    "nombre": "DEEP WASH",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_A"
-   },
-   {
     "clientId": "1369",
     "nombre": "FRUTICEL TOUCH",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_B"
-   },
-   {
-    "clientId": "1370",
-    "nombre": "OLEVANO MARIA FLORENCIA",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Kiosco/Maxikiosco_B"
    },
@@ -1046,32 +929,14 @@
     "taxonomia": "Kiosco/Maxikiosco_A"
    },
    {
-    "clientId": "1409",
-    "nombre": "Macarena carla tapia",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_A"
-   },
-   {
     "clientId": "1420",
     "nombre": "ALANIS ROBERTO LUIS",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Kiosco/Maxikiosco_C"
    },
    {
-    "clientId": "1421",
-    "nombre": "ALDO GUSTAVO LOPEZ",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
     "clientId": "1671",
     "nombre": "Schlegel pozzoni s.a",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_C"
-   },
-   {
-    "clientId": "169",
-    "nombre": "SANTIAGO FEDERICO RAMON GRIMALDI",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Kiosco/Maxikiosco_C"
    },
@@ -1088,12 +953,6 @@
     "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
-    "clientId": "1925",
-    "nombre": "CHOCOCHIA S.A",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_A"
-   },
-   {
     "clientId": "1977",
     "nombre": "CORIA CLAUDIA BEATRIZ",
     "localidad": "MAR DEL PLATA",
@@ -1104,12 +963,6 @@
     "nombre": "Fanroz doblea s.r.l",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Vinoteca_D"
-   },
-   {
-    "clientId": "2498",
-    "nombre": "MILANE GASEO S.A",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_A"
    },
    {
     "clientId": "2544",
@@ -1136,22 +989,10 @@
     "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
-    "clientId": "29",
-    "nombre": "FERNANDEZ PATRICIA BEATRIZ",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Fiambreria_D"
-   },
-   {
     "clientId": "3177",
     "nombre": "ELIDA GISELE ACOSTA CORTEZ",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Dietetica_D"
-   },
-   {
-    "clientId": "3407",
-    "nombre": "LOCABA POLIRRUBROS SA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_B"
    },
    {
     "clientId": "3783",
@@ -1184,6 +1025,7 @@
     "taxonomia": "Almacen/Despensa_C"
    }
   ],
+  "20": [],
   "3": [
    {
     "clientId": "1001",
@@ -1208,12 +1050,6 @@
     "nombre": "CHEN YUN",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Autoservicio Tradicional_A"
-   },
-   {
-    "clientId": "1107",
-    "nombre": "IVANOFF MARISOL ROMINA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_B"
    },
    {
     "clientId": "1140",
@@ -1246,21 +1082,9 @@
     "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
-    "clientId": "1208",
-    "nombre": "JOVINE MARCELO JAVIER",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_C"
-   },
-   {
     "clientId": "1210",
     "nombre": "PENNISI HORACIO ARIEL",
     "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
-    "clientId": "1408",
-    "nombre": "Laura Prado",
-    "localidad": "Mar del Plata",
     "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
@@ -1330,12 +1154,6 @@
     "taxonomia": "Fiambreria_D"
    },
    {
-    "clientId": "2093",
-    "nombre": "TORRENTE FABIAN ALEJANDRO",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_C"
-   },
-   {
     "clientId": "2137",
     "nombre": "SILVA SANDRO ALEJANDRO",
     "localidad": "MAR DEL PLATA",
@@ -1366,12 +1184,6 @@
     "taxonomia": "Autoservicio Tradicional_C"
    },
    {
-    "clientId": "2334",
-    "nombre": "VALERO EVA ROSALIA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Carniceria/Granja_B"
-   },
-   {
     "clientId": "2482",
     "nombre": "ESPERANZA NICEFORA PEDRAZA",
     "localidad": "MAR DEL PLATA",
@@ -1390,18 +1202,6 @@
     "taxonomia": "Panaderia_C"
    },
    {
-    "clientId": "2827",
-    "nombre": "MICAELA LAZZATI",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_B"
-   },
-   {
-    "clientId": "3091",
-    "nombre": "MATIAS VICTOR JOSE DONZELLI",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
     "clientId": "3166",
     "nombre": "JORGE LOPEZ",
     "localidad": "MAR DEL PLATA",
@@ -1410,12 +1210,6 @@
    {
     "clientId": "3356",
     "nombre": "RICHARD ARIEL ROJAS",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
-    "clientId": "3449",
-    "nombre": "VALENTINA PISSARELLO",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Kiosco/Maxikiosco_D"
    },
@@ -1536,18 +1330,6 @@
     "taxonomia": "Autoservicio Tradicional_A"
    },
    {
-    "clientId": "1889",
-    "nombre": "BURGOS FERNANDO ARIEL",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Estacion de Servicio_B"
-   },
-   {
-    "clientId": "1948",
-    "nombre": "CREMONA SA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Mayoristas_A"
-   },
-   {
     "clientId": "2263",
     "nombre": "CREMONA SA",
     "localidad": "MAR DEL PLATA",
@@ -1590,34 +1372,16 @@
     "taxonomia": "Almacen/Despensa_A"
    },
    {
-    "clientId": "3279",
-    "nombre": "MARIANA PIRE",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_B"
-   },
-   {
     "clientId": "3291",
     "nombre": "virginia leonor saez",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Autoservicio Tradicional_C"
    },
    {
-    "clientId": "3293",
-    "nombre": "MARTIN EZEQUIEL MALDONADO",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_B"
-   },
-   {
     "clientId": "3326",
     "nombre": "MONICA ESTHER GINEPRO",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Almacen/Despensa_C"
-   },
-   {
-    "clientId": "3361",
-    "nombre": "altamirano daiana",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_B"
    },
    {
     "clientId": "3364",
@@ -1630,18 +1394,6 @@
     "nombre": "IVAN ADRIAN POSADAS",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Almacen/Despensa_C"
-   },
-   {
-    "clientId": "3741",
-    "nombre": "VANESA ANDREA GINESTEL",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_D"
-   },
-   {
-    "clientId": "377",
-    "nombre": "CHEN YALIN",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_B"
    },
    {
     "clientId": "4198",
@@ -1666,12 +1418,6 @@
     "nombre": "MARIANO GABRIEL NIEVA",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Fiambreria_C"
-   },
-   {
-    "clientId": "5032",
-    "nombre": "MARTA SUSANA NAVEIRA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_D"
    },
    {
     "clientId": "5039",
@@ -1802,18 +1548,6 @@
     "taxonomia": "Almacen/Despensa_C"
    },
    {
-    "clientId": "2805",
-    "nombre": "Oscar Osvaldo Russo",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_C"
-   },
-   {
-    "clientId": "2810",
-    "nombre": "NATALIA ELIZABETH ECHEVERRIA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
     "clientId": "2893",
     "nombre": "ALFCAR DELMAR SRL EN FORMACION",
     "localidad": "MAR DEL PLATA",
@@ -1830,12 +1564,6 @@
     "nombre": "ERICA NATALIA VILLARREAL",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Almacen/Despensa_D"
-   },
-   {
-    "clientId": "3566",
-    "nombre": "tang huiyong",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_B"
    },
    {
     "clientId": "3839",
@@ -1908,12 +1636,6 @@
     "nombre": "JESSICA MARTIN",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Almacen/Despensa_A"
-   },
-   {
-    "clientId": "551",
-    "nombre": "MARCELO FABIAN POLLIO",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_D"
    },
    {
     "clientId": "603",
@@ -2008,12 +1730,6 @@
     "taxonomia": "Almacen/Despensa_A"
    },
    {
-    "clientId": "1509",
-    "nombre": "favala matias eduardo",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Fiambreria_A"
-   },
-   {
     "clientId": "1738",
     "nombre": "DADE MATIAS JUAN DANIEL",
     "localidad": "MAR DEL PLATA",
@@ -2038,34 +1754,16 @@
     "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
-    "clientId": "1745",
-    "nombre": "GARCIA FERNANDO",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
     "clientId": "1748",
     "nombre": "IGLESIAS KUPER LEONEL",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Kiosco/Maxikiosco_C"
    },
    {
-    "clientId": "1751",
-    "nombre": "DE GARATE EVANGELINA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_D"
-   },
-   {
     "clientId": "1756",
     "nombre": "SURCULENTO MAMANI VICTOR JAVIE",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
-    "clientId": "1757",
-    "nombre": "DAMAS GARCÍA LEONEL GIANCARLOS",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Verduleria_D"
    },
    {
     "clientId": "1983",
@@ -2134,12 +1832,6 @@
     "taxonomia": "Fiambreria_B"
    },
    {
-    "clientId": "2562",
-    "nombre": "DIEGO GASTON MIGUEL ETCHEVERRIA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_C"
-   },
-   {
     "clientId": "2563",
     "nombre": "CARINA GABRIELA PORTA",
     "localidad": "MAR DEL PLATA",
@@ -2174,21 +1866,9 @@
     "nombre": "GOURMAND MAR DEL PLATA  S. R. L.",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Autoservicio Tradicional_D"
-   },
-   {
-    "clientId": "994",
-    "nombre": "WALTER RAUL RIVERO",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_D"
    }
   ],
   "7": [
-   {
-    "clientId": "1244",
-    "nombre": "Melanie Johana ramell",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Kiosco/Maxikiosco_D"
-   },
    {
     "clientId": "139",
     "nombre": "YUEYING CHEN",
@@ -2226,28 +1906,10 @@
     "taxonomia": "Almacen/Despensa_D"
    },
    {
-    "clientId": "189",
-    "nombre": "LOBOS VERONICA BEATRIZ",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Almacen/Despensa_C"
-   },
-   {
-    "clientId": "1892",
-    "nombre": "NICADELO SA",
-    "localidad": "Mar del Plata",
-    "taxonomia": "Kiosco/Maxikiosco_C"
-   },
-   {
     "clientId": "2051",
     "nombre": "ELIZONDO MARÍA DE LOS ÁNGELES",
     "localidad": "Mar del Plata",
     "taxonomia": "Autoservicio Tradicional_Z"
-   },
-   {
-    "clientId": "2125",
-    "nombre": "ESTRELLA AMIN S.A. EN FORMACION",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_A"
    },
    {
     "clientId": "237",
@@ -2260,12 +1922,6 @@
     "nombre": "MONICA ELVIRA BENGOCHEA",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Almacen/Despensa_D"
-   },
-   {
-    "clientId": "2469",
-    "nombre": "CUMELCAN S R L",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Estacion de Servicio - NO OFICIALES_B"
    },
    {
     "clientId": "2475",
@@ -2304,12 +1960,6 @@
     "taxonomia": "Dietetica_D"
    },
    {
-    "clientId": "3130",
-    "nombre": "MAXIMILIANO FERNANDEZ CUARTO",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_D"
-   },
-   {
     "clientId": "323",
     "nombre": "VICINTIN CAROLINA SILVANA",
     "localidad": "Mar del Plata",
@@ -2346,12 +1996,6 @@
     "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
-    "clientId": "413",
-    "nombre": "LUCAS ELIZONDO",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Autoservicio Tradicional_D"
-   },
-   {
     "clientId": "4393",
     "nombre": "BRAIAN EMANUEL MILICAY",
     "localidad": "MAR DEL PLATA",
@@ -2370,18 +2014,6 @@
     "taxonomia": "Kiosco/Maxikiosco_D"
    },
    {
-    "clientId": "4546",
-    "nombre": "CAREMI S. A.",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Resto de On Premise_B"
-   },
-   {
-    "clientId": "540",
-    "nombre": "MAXIMILIANO ESTEBAN TORRES",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_C"
-   },
-   {
     "clientId": "542",
     "nombre": "Sonia Benítez",
     "localidad": "Mar del Plata",
@@ -2398,18 +2030,6 @@
     "nombre": "VILLALVA MARCOS ARIEL",
     "localidad": "MAR DEL PLATA",
     "taxonomia": "Kiosco/Maxikiosco_B"
-   },
-   {
-    "clientId": "636",
-    "nombre": "SAHORES MARIA FERNANDA",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Almacen/Despensa_B"
-   },
-   {
-    "clientId": "640",
-    "nombre": "IRUBAT S.A.",
-    "localidad": "MAR DEL PLATA",
-    "taxonomia": "Kiosco/Maxikiosco_C"
    },
    {
     "clientId": "7648",
