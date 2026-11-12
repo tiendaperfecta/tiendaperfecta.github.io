@@ -3,73 +3,73 @@
  "camiones": [
   {
    "id": "3",
-   "lat": -37.9976104,
-   "lng": -57.5431744,
-   "hora": "3:08 PM",
-   "etiqueta": "310"
-  },
-  {
-   "id": "5",
-   "lat": -38.034754,
-   "lng": -57.5882393,
-   "hora": "3:11 PM",
-   "etiqueta": "88"
+   "lat": -37.9976071,
+   "lng": -57.5431666,
+   "hora": "4:56 PM",
+   "etiqueta": "nnn"
   },
   {
    "id": "1",
-   "lat": -38.0049041,
-   "lng": -57.5654999,
-   "hora": "3:12 PM",
-   "etiqueta": "84"
+   "lat": -38.0048763,
+   "lng": -57.5651797,
+   "hora": "4:59 PM",
+   "etiqueta": "nnn"
   },
   {
    "id": "7",
-   "lat": -38.0112607,
-   "lng": -57.5405553,
-   "hora": "3:12 PM",
-   "etiqueta": "85"
+   "lat": -38.01123,
+   "lng": -57.5404804,
+   "hora": "4:59 PM",
+   "etiqueta": "nnn"
   },
   {
    "id": "4",
-   "lat": -37.996064,
-   "lng": -57.5519364,
-   "hora": "3:12 PM",
-   "etiqueta": "85"
+   "lat": -37.9998254,
+   "lng": -57.5468852,
+   "hora": "4:59 PM",
+   "etiqueta": "nnn"
   },
   {
-   "id": "10",
-   "lat": -38.0009225,
-   "lng": -57.606954,
-   "hora": "3:12 PM",
-   "etiqueta": "84"
-  },
-  {
-   "id": "11",
-   "lat": -38.0154363,
-   "lng": -57.5738611,
-   "hora": "3:12 PM",
-   "etiqueta": "84"
-  },
-  {
-   "id": "2",
-   "lat": -38.0924947,
-   "lng": -57.5640246,
-   "hora": "3:11 PM",
-   "etiqueta": "87"
+   "id": "5",
+   "lat": -38.0347175,
+   "lng": -57.5882136,
+   "hora": "4:59 PM",
+   "etiqueta": "nnn"
   },
   {
    "id": "6",
-   "lat": -37.9738298,
-   "lng": -57.5612062,
-   "hora": "3:13 PM",
-   "etiqueta": "15"
+   "lat": -37.9738153,
+   "lng": -57.561177,
+   "hora": "4:59 PM",
+   "etiqueta": "nnn"
   },
   {
    "id": "12",
-   "lat": -38.0178556,
-   "lng": -57.5696547,
-   "hora": "3:12 PM",
-   "etiqueta": "84"
+   "lat": -38.0178665,
+   "lng": -57.5696434,
+   "hora": "4:59 PM",
+   "etiqueta": "nnn"
+  },
+  {
+   "id": "2",
+   "lat": -38.0923412333333,
+   "lng": -57.5640803666667,
+   "hora": "4:59 PM",
+   "etiqueta": "nnn"
+  },
+  {
+   "id": "11",
+   "lat": -38.0154367,
+   "lng": -57.5738562,
+   "hora": "4:59 PM",
+   "etiqueta": "nnn"
+  },
+  {
+   "id": "10",
+   "lat": -38.000875,
+   "lng": -57.6069005,
+   "hora": "4:59 PM",
+   "etiqueta": "nnn"
   }
  ],
  "fuente": "Panel de Fleteros (API GesCom) + posiciones de Axum GPS",
@@ -135,6 +135,17 @@
     "efCartones": null
    },
    {
+    "fletero": "Enzo Julián Rizzoni",
+    "zona": "",
+    "repartos": 1,
+    "asignadas": 1,
+    "realizadas": 1,
+    "efectividad": 100.0,
+    "cartonesARetornar": 0,
+    "cartonesRetornados": 0,
+    "efCartones": null
+   },
+   {
     "fletero": "Ezequiel Dario Gargan",
     "zona": "",
     "repartos": 2,
@@ -179,17 +190,6 @@
     "efCartones": null
    },
    {
-    "fletero": "Mario Luis Gastiarena",
-    "zona": "",
-    "repartos": 1,
-    "asignadas": 1,
-    "realizadas": 1,
-    "efectividad": 100.0,
-    "cartonesARetornar": 0,
-    "cartonesRetornados": 0,
-    "efCartones": null
-   },
-   {
     "fletero": "Rodrigo Martin Soto",
     "zona": "",
     "repartos": 2,
@@ -218,17 +218,6 @@
   "boletas": 3919,
   "actualizado": "2026-11-11",
   "ranking": [
-   {
-    "nombre": "Mario Luis Gastiarena",
-    "repartos": 1,
-    "asist": 5,
-    "efE": 100,
-    "efC": 0,
-    "premio": 0,
-    "recBol": 0,
-    "compSac": 0,
-    "impRech": 0
-   },
    {
     "nombre": "Marcelo Javier Acuña",
     "repartos": 8,
@@ -296,6 +285,17 @@
     "impRech": 580940
    },
    {
+    "nombre": "Enzo Julián Rizzoni",
+    "repartos": 7,
+    "asist": 33,
+    "efE": 96.6,
+    "efC": 85.1,
+    "premio": 0,
+    "recBol": 4,
+    "compSac": 172,
+    "impRech": 392440
+   },
+   {
     "nombre": "Alejandro Fabian Maiorano",
     "repartos": 9,
     "asist": 43,
@@ -305,17 +305,6 @@
     "recBol": 5,
     "compSac": 257,
     "impRech": 552830
-   },
-   {
-    "nombre": "Enzo Julián Rizzoni",
-    "repartos": 6,
-    "asist": 29,
-    "efE": 96.5,
-    "efC": 85.1,
-    "premio": 0,
-    "recBol": 4,
-    "compSac": 172,
-    "impRech": 392440
    },
    {
     "nombre": "Emanuel Valentino Cossu",
