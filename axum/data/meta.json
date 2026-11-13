@@ -1,27 +1,26 @@
 {
- "generatedAt": "2026-11-13T00:40:23-03:00",
+ "generatedAt": "2026-11-13T15:09:52-03:00",
  "date": "2026-11-13",
- "errors": [],
- "pedidos": {
-  "traidos": 1,
-  "totalSegunApi": 1
- },
+ "errors": [
+  "orders360: HTTPSConnectionPool(host='masuno-order360.axumweb.com', port=443): Max retries exceeded with url: /api/Orders?entity=orders&dateSince=2026-11-13&dateUntil=2026-11-13 (Caused by ConnectTimeoutError(<HTTPSConnection(host='masuno-order360.axumweb.com', port=443) at 0x7a697c33ffe0>, 'Connection to masuno-order360.axumweb.com timed out. (connect timeout=90)'))"
+ ],
  "formatoGps": {
-  "posicion": "'-37.9998062,-57.5468799,4,4:59 PM,nnn,,'",
-  "visitados": null,
+  "posicion": "'-38.0409925,-57.7136684,5,3:05 PM,323,,'",
+  "visitados": "{'sellerID': '1', 'visitedClient': '1246'}",
   "km": null,
-  "visitadosTotal": 0,
+  "visitadosTotal": 372,
   "kmError": null
  },
  "gescom": {
-  "clientes": 2819,
+  "clientes": 2817,
   "zonas": 73
  },
+ "alerta": "hay 5 llegadas tarde, sin casilla configurada",
  "detalle": {
-  "filas": 1,
-  "vendedores": 13,
+  "filas": 396,
+  "vendedores": 12,
   "diasEnHistoria": 83
  },
- "ordersOk": true,
+ "ordersOk": false,
  "gpsOk": true
 }
