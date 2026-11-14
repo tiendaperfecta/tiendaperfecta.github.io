@@ -894,7 +894,7 @@ GUID_TIENDA_PERFECTA = "81221fe2-5545-47ec-a149-6c95d47afb44"
 # Hotel, etc.) que no son parte de este universo.
 SUBCANALES_TP = {"Kiosco/Maxikiosco", "Almacen/Despensa", "Autoservicio Tradicional",
                   "Estacion de Servicio - NO OFICIALES", "Fiambreria"}
-TP_OBJETIVO_SEG = {"A": 246, "B": 184, "C": 328, "D": 442}      # octubre 2026: 1.200 tiendas perfectas
+TP_OBJETIVO_SEG = {"A": 165, "B": 145, "C": 90, "D": 50}      # noviembre 2026: 450 tiendas perfectas
 
 
 def es_si(v):
