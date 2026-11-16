@@ -1,8 +1,8 @@
 {
  "date": "2026-11-15",
- "totalNet": 2499115.92,
- "totalGross": 3023930.2,
- "orders": 6,
+ "totalNet": 2737427.71,
+ "totalGross": 3312287.47,
+ "orders": 12,
  "bySeller": [
   {
    "sellerId": "1",
@@ -13,21 +13,38 @@
   {
    "sellerId": "20",
    "name": "Deposito",
-   "orders": 2,
-   "total": 533928.91
+   "orders": 6,
+   "total": 691643.19
   },
   {
    "sellerId": "7",
    "name": "Ramiro Rando",
    "orders": 2,
    "total": 247857.29
+  },
+  {
+   "sellerId": "4",
+   "name": "Lucas Giayetto",
+   "orders": 1,
+   "total": 93214.35
+  },
+  {
+   "sellerId": "2",
+   "name": "Julian Nuñez",
+   "orders": 1,
+   "total": 37428.64
   }
  ],
  "byChannel": [
   {
    "channel": "TRADITIONAL TRADE_A",
-   "orders": 4,
-   "total": 2776072.91
+   "orders": 5,
+   "total": 2862001.45
+  },
+  {
+   "channel": "TRADITIONAL TRADE_D",
+   "orders": 3,
+   "total": 166714.43
   },
   {
    "channel": "AWAY FROM HOME_A",
@@ -38,6 +55,11 @@
    "channel": "TRADITIONAL TRADE_B",
    "orders": 1,
    "total": 110857.21
+  },
+  {
+   "channel": "TRADITIONAL TRADE_C",
+   "orders": 2,
+   "total": 35714.3
   }
  ],
  "topClients": [
@@ -70,6 +92,42 @@
    "name": "MARIANA OLGA DOMINGUEZ (Fiambreria_B)",
    "orders": 1,
    "total": 110857.21
+  },
+  {
+   "clientId": "3019",
+   "name": "Sommariva Maria Eugenia (Kiosco/Maxikiosco_D)",
+   "orders": 1,
+   "total": 93214.35
+  },
+  {
+   "clientId": "976",
+   "name": "Fiore María Cecilia  (Almacen/Despensa_A)",
+   "orders": 1,
+   "total": 85928.54
+  },
+  {
+   "clientId": "1673",
+   "name": "DONFRANCESCO LUIS ALBERTO (Kiosco/Maxikiosco_D)",
+   "orders": 1,
+   "total": 37428.64
+  },
+  {
+   "clientId": "3082",
+   "name": "VERONICA VICTORIA LOURO (Autoservicio Tradicional_D)",
+   "orders": 1,
+   "total": 36071.44
+  },
+  {
+   "clientId": "1131",
+   "name": "TOMATTIS EDUARDO ADRIAN (Almacen/Despensa_C)",
+   "orders": 1,
+   "total": 22000.01
+  },
+  {
+   "clientId": "1994",
+   "name": "CORREA NOELIA ALEJANDRA (Almacen/Despensa_C)",
+   "orders": 1,
+   "total": 13714.29
   }
  ]
 }
