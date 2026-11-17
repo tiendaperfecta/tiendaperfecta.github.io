@@ -58,14 +58,14 @@
   details dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; }
   details dt { color: var(--fg); font-weight: 600; } details dd { margin: 0; }
   .err { color: var(--bad); }
-  .home { font-size: 12px; color: var(--muted); text-decoration: none; }
-  .home:hover { color: var(--fg); text-decoration: underline; }
   .tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid var(--line); }
   .tabs button { border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: none; color: var(--muted); padding: 8px 14px; margin-bottom: -1px; font-size: 14px; }
   .tabs button[aria-selected=true] { color: var(--fg); border-bottom-color: var(--fg); font-weight: 600; }
   .panel { display: grid; gap: 20px; min-width: 0; }
   .panel[hidden] { display: none; }
   .d-mal { color: var(--bad); font-weight: 600; } .d-adel { color: var(--warn); font-weight: 600; }
+  .home { font-size: 12px; color: var(--muted); text-decoration: none; }
+  .home:hover { color: var(--fg); text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -108,7 +108,9 @@
   <section class="card">
     <h2>Pedidos</h2>
     <div class="filters">
+      <label>Período <select class="f-dias" aria-label="Período"><option value="1">Hoy</option><option value="3">Últimos 3 días</option><option value="7">Últimos 7 días</option><option value="14">Últimos 14 días</option></select></label>
       <label>Fecha de carga <select id="f-fecha"><option value="">Todas</option></select></label>
+      <label>Fecha de entrega <select id="f-entrega"><option value="">Todas</option></select></label>
       <label>Camión <select id="f-camion"><option value="">Todos</option><option value="__sin">Sin camión</option></select></label>
       <label>Canal <select id="f-canal"><option value="">Todos</option><option value="AXUM">AXUM (preventa)</option><option value="MiNegocio">MiNegocio (app del cliente)</option><option value="gcw">Cargado en Gescom</option></select></label>
       <label>Armado <select id="f-armado"><option value="">Todos</option><option>Armado</option><option>Salió en camión</option><option>En preparación</option><option>Sin armar</option><option>Sin verificar</option><option value="__no">Todo lo no armado</option></select></label>
@@ -156,6 +158,7 @@
       <p class="note">Fecha correcta = el primer día de entrega del cliente desde que cargó el pedido más su demora. Su día de entrega es el día de visita más la demora (1 día casi siempre); si cae sábado o domingo, pasa al lunes.</p>
       <div class="filters">
         <label>Resultado <select id="e-res"><option value="__mal">Todo lo que no está en fecha</option><option value="">Todos</option><option>En fecha</option><option>Atrasado</option><option>Adelantado</option><option>Camión en otra fecha</option><option>Sin fecha de entrega</option><option>Cliente sin días</option></select></label>
+        <label>Período <select class="f-dias" aria-label="Período"><option value="1">Hoy</option><option value="3">Últimos 3 días</option><option value="7">Últimos 7 días</option><option value="14">Últimos 14 días</option></select></label>
         <label>Fecha de carga <select id="e-fcarga"><option value="">Todas</option></select></label>
         <label>Fecha de entrega <select id="e-fecha"><option value="">Todas</option></select></label>
         <label>Camión <select id="e-camion"><option value="">Todos</option><option value="__sin">Sin camión</option></select></label>
@@ -203,7 +206,7 @@
 
 <script>
 (function () {
-  var D = null, st = { sort: 'cargado', dir: -1, fecha: '', camion: '', canal: '', armado: '', digip: '', q: '' };
+  var D = null, st = { sort: 'cargado', dir: -1, fecha: '', entrega: '', camion: '', canal: '', armado: '', digip: '', q: '' };
   var $ = function (id) { return document.getElementById(id); };
   var nf = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 });
   var nf2 = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 2 });
@@ -236,8 +239,8 @@
     txt($('k-cam'), nf.format(cam));
     txt($('k-dig'), nf.format(nod));
     txt($('k-digs'), nf.format(n(enDigip)) + ' sí figuran en Digip');
-    txt($('take'), 'En los últimos ' + D.dias + ' días se cargaron ' + nf.format(P.length) + ' pedidos con productos PepsiCo. ' + nf.format(sin) + ' figuran sin armar, ' + nf.format(cam) + ' todavía no tienen camión y ' + nf.format(nod) + ' tienen camión pero no figuran en Digip.');
-    txt($('stamp'), 'Actualizado ' + dia(D.generado) + ' ' + hora(D.generado) + ' · armado leído de Gescom ' + dia(D.armado_leido) + ' ' + hora(D.armado_leido) + ' · Digip ' + dia(D.digip_leido) + ' ' + hora(D.digip_leido) + '. Copia del tablero Pedidos PepsiCo, se actualiza cada hora.');
+    txt($('take'), (D.dias == 1 ? 'Hoy' : 'En los últimos ' + D.dias + ' días') + ' se cargaron ' + nf.format(P.length) + ' pedidos con productos PepsiCo. ' + nf.format(sin) + ' figuran sin armar, ' + nf.format(cam) + ' todavía no tienen camión y ' + nf.format(nod) + ' tienen camión pero no figuran en Digip.');
+    txt($('stamp'), 'Actualizado ' + dia(D.generado) + ' ' + hora(D.generado) + ' · armado leído de Gescom ' + dia(D.armado_leido) + ' ' + hora(D.armado_leido) + ' · Digip ' + dia(D.digip_leido) + ' ' + hora(D.digip_leido) + '. Copia de solo lectura, se actualiza cada hora.');
   }
 
   function chart() {
@@ -281,6 +284,7 @@
     var q = st.q.trim().toLowerCase();
     return D.pedidos.filter(function (r) {
       if (st.fecha && r.cargado.slice(0, 10) !== st.fecha) return false;
+      if (st.entrega && String(r.entrega || '').slice(0, 10) !== st.entrega) return false;
       if (st.camion === '__sin' && r.camion) return false;
       if (st.camion && st.camion !== '__sin' && String(r.camion) !== st.camion) return false;
       if (st.canal && r.canal !== st.canal) return false;
@@ -329,19 +333,21 @@
   }
 
   function fillSelects() {
+    $('f-fecha').replaceChildren(new Option('Todas', '')); $('f-entrega').replaceChildren(new Option('Todas', '')); $('f-camion').replaceChildren(new Option('Todos', ''), new Option('Sin camión', '__sin'));
+    Array.from(new Set(D.pedidos.map(function (p) { return String(p.entrega || '').slice(0, 10); }).filter(Boolean))).sort().forEach(function (d) { $('f-entrega').appendChild(new Option(dia(d), d)); });
     var dias = Array.from(new Set(D.pedidos.map(function (p) { return p.cargado.slice(0, 10); }))).sort().reverse();
     dias.forEach(function (d) { $('f-fecha').appendChild(new Option(dia(d), d)); });
     var cams = Array.from(new Set(D.pedidos.map(function (p) { return p.camion; }).filter(Boolean))).sort(function (a, b) { return String(a).localeCompare(String(b), 'es', { numeric: true }); });
     cams.forEach(function (c) { $('f-camion').appendChild(new Option('Camión ' + c, String(c))); });
   }
 
-  [['f-fecha', 'fecha'], ['f-camion', 'camion'], ['f-canal', 'canal'], ['f-armado', 'armado'], ['f-digip', 'digip']].forEach(function (x) {
+  [['f-fecha', 'fecha'], ['f-entrega', 'entrega'], ['f-camion', 'camion'], ['f-canal', 'canal'], ['f-armado', 'armado'], ['f-digip', 'digip']].forEach(function (x) {
     $(x[0]).addEventListener('change', function (e) { st[x[1]] = e.target.value; if (x[1] === 'fecha') chart(); table(); });
   });
   $('f-q').addEventListener('input', function (e) { st.q = e.target.value; table(); });
   $('f-reset').addEventListener('click', function () {
-    ['fecha', 'camion', 'canal', 'armado', 'digip', 'q'].forEach(function (k) { st[k] = ''; });
-    ['f-fecha', 'f-camion', 'f-canal', 'f-armado', 'f-digip', 'f-q'].forEach(function (id) { $(id).value = ''; });
+    ['fecha', 'entrega', 'camion', 'canal', 'armado', 'digip', 'q'].forEach(function (k) { st[k] = ''; });
+    ['f-fecha', 'f-entrega', 'f-camion', 'f-canal', 'f-armado', 'f-digip', 'f-q'].forEach(function (id) { $(id).value = ''; });
     chart(); table();
   });
   document.querySelectorAll('th[data-k] button').forEach(function (b) {
@@ -387,6 +393,7 @@
     txt($('ek-ok'), nf.format(ok)); txt($('ek-pct'), (tot ? pf.format(ok / tot) : '—') + ' de los pedidos');
     txt($('ek-atr'), nf.format(n('Atrasado'))); txt($('ek-adel'), nf.format(n('Adelantado'))); txt($('ek-otra'), nf.format(n('Camión en otra fecha'))); txt($('ek-sin'), nf.format(sin));
     txt($('e-take'), 'De ' + nf.format(tot) + ' pedidos con día de entrega definido, ' + nf.format(ok) + ' están para entregar en su fecha correcta. ' + nf.format(n('Atrasado')) + ' tienen una entrega más tarde que la que le corresponde al cliente, ' + nf.format(n('Adelantado')) + ' una más temprana y ' + nf.format(n('Camión en otra fecha')) + ' están en un camión de otra fecha.');
+    $('e-fecha').replaceChildren(new Option('Todas', '')); $('e-fcarga').replaceChildren(new Option('Todas', '')); $('e-camion').replaceChildren(new Option('Todos', ''), new Option('Sin camión', '__sin'));
     var fe = Array.from(new Set(P.map(function (p) { return String(p.entrega || '').slice(0, 10); }).filter(Boolean))).sort();
     fe.forEach(function (d) { $('e-fecha').appendChild(new Option(dia(d), d)); });
     Array.from(new Set(P.map(function (p) { return p.cargado.slice(0, 10); }))).sort().reverse().forEach(function (d) { $('e-fcarga').appendChild(new Option(dia(d), d)); });
@@ -445,10 +452,22 @@
   });
   (function () { var s = null; try { s = localStorage.getItem('pp-tab'); } catch (e) {} showTab(s && $(s) ? s : 'tab-pedidos'); })();
 
+  // ---- período (los datos traen 14 días; se recorta en la página) ----
+  function applyPeriod(n) {
+    var hasta = D.generado.slice(0, 10), desde = addD(hasta, -(n - 1));
+    D.pedidos = D.all.filter(function (p) { return p.cargado.slice(0, 10) >= desde; });
+    D.dias = n;
+    document.querySelectorAll('.f-dias').forEach(function (s) { s.value = String(n); });
+    try { localStorage.setItem('pp-dias', String(n)); } catch (e) {}
+    st.fecha = ''; st.entrega = ''; st.camion = ''; es.fecha = ''; es.fcarga = ''; es.camion = '';
+    summary(); fillSelects(); chart(); table(); calcEntrega(); tableEnt();
+  }
+  document.querySelectorAll('.f-dias').forEach(function (s) { s.addEventListener('change', function () { if (D) applyPeriod(Number(s.value)); }); });
+
   var rt; window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { if (D) chart(); }, 150); });
 
-  fetch('datos.json', { cache: 'no-store' }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-    .then(function (j) { D = j; summary(); fillSelects(); chart(); table(); calcEntrega(); tableEnt(); })
+  fetch('https://marianozeballos-tp.github.io/panel-pepsico/pedidos/datos.json?v=' + Date.now(), { cache: 'no-store' }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function (j) { D = j; D.all = j.pedidos; var p = null; try { p = Number(localStorage.getItem('pp-dias')); } catch (e) {} applyPeriod([1, 3, 7, 14].indexOf(p) >= 0 ? p : (j.dias || 7)); })
     .catch(function () { var t = $('take'); t.className = 'take err'; t.textContent = 'No se pudieron cargar los datos. Recargá la página en unos minutos.'; });
 })();
 </script>

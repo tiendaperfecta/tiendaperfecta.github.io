@@ -283,7 +283,7 @@
           </div>
           <div class="tags"><div class="tag est">Verificando</div></div>
         </a></li>
-        <li><a class="card" href="https://tiendaperfecta.github.io/pedidos/" data-fecha="https://tiendaperfecta.github.io/pedidos/fecha.txt" target="_blank" rel="noreferrer">
+        <li><a class="card" href="https://tiendaperfecta.github.io/pedidos/" data-fecha="https://marianozeballos-tp.github.io/panel-pepsico/pedidos/datos.json" target="_blank" rel="noreferrer">
           <div class="row">
             <div class="icon"><svg viewBox="0 0 24 24" style="stroke:#60a5fa"><use href="#i-box"/></svg></div>
             <div class="txt"><div>Seguimiento de pedidos</div><p>Armado, camión y Digip de cada pedido, y entrega en tiempo y forma</p></div>
@@ -343,6 +343,8 @@
     if (hasta) return hasta[1];
     const stock = txt.match(/Stock de hoy (\d{2})\/(\d{2})\/(\d{4})/);   // compras Georgalos
     if (stock) return stock[3] + '-' + stock[2] + '-' + stock[1];
+    const genAR = txt.match(/"generado":"(\d{4}-\d{2}-\d{2}) \d{2}:\d{2}"/);   // seguimiento de pedidos (datos.json, hora argentina)
+    if (genAR) return genAR[1];
     const gen = txt.match(/"generado":"(\d{4}-\d{2}-\d{2}T[^"]+)"/);   // panel PepsiCo (pedido.json)
     if (gen) return new Intl.DateTimeFormat('en-CA', {timeZone:'America/Argentina/Buenos_Aires'}).format(new Date(gen[1]));
     const es =txt.match(/"generado":"(\d{1,2}) de (\w+) de (\d{4})"/);

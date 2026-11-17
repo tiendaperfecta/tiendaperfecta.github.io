@@ -9,7 +9,7 @@ repo. Cada panel es una carpeta con su propio `index.html`.
 | `ctacte/` | Cuenta corriente | `ctacte-data.yml` (8, 10, 12, 14, 16 hs) |
 | `axum/` | Axum | `axum-data.yml` (cada hora, 8–20) |
 | `georgalos/` | Georgalos | `georgalos-data.yml` (cada hora) |
-| `pedidos/` | Pedidos | `pedidos-data.yml` |
+| `pedidos/` | Pedidos | en vivo desde la web de Mariano, no guarda datos |
 | `flujo/` | Flujo de caja | `flujo-vivo.yml` + tarea de Windows 09:00 |
 | `disponibilidad/` | Disponibilidad | en vivo, no guarda datos |
 | `auditoria-2026/` | Auditoría | — |
