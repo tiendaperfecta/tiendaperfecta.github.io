@@ -148,6 +148,30 @@
       </div>
     </section>
 
+    <section class="card" aria-label="Pedidos en camino">
+      <div class="row">
+        <h2>Pedidos en camino</h2>
+        <span class="status" id="c-estado" role="status"></span>
+      </div>
+      <p class="note">Camiones pedidos a PepsiCo que todavía no llegaron. Sus cajas se suman al stock de hoy para calcular los bultos a pedir, hasta que se marque que el camión llegó. Se cargan con la planilla de carga de PepsiCo (hoja PLANILLA DE CARGA, columnas Material SAP y Cajas Pedidas).</p>
+      <div class="controls" id="c-subir-box">
+        <label class="field">Planilla de carga del camión (.xlsm o .xlsx)
+          <input id="c-file" type="file" accept=".xlsm,.xlsx,.xls">
+        </label>
+      </div>
+      <div class="controls" id="c-confirma" hidden>
+        <span id="c-confirma-txt"></span>
+        <button class="btn" id="c-guardar" type="button">Guardar camión</button>
+        <button class="btn ghost" id="c-cancelar" type="button">Cancelar</button>
+      </div>
+      <div class="tbox" style="max-height:none">
+        <table>
+          <thead><tr><th class="l"><span>Camión</span></th><th class="l hide-sm"><span>Cargado</span></th><th><span>Artículos</span></th><th><span>Cajas</span></th><th><span>Kg</span></th><th><span></span></th></tr></thead>
+          <tbody id="c-body"></tbody>
+        </table>
+      </div>
+    </section>
+
     <section class="kpis" aria-label="Totales del pedido">
       <div class="kpi"><span class="l">Bultos a pedir</span><span class="v" id="pk-bultos">—</span><span class="n" id="pk-skus">artículos</span></div>
       <div class="kpi"><span class="l">Kilos</span><span class="v" id="pk-kg">—</span><span class="n">peso neto del producto</span></div>
@@ -170,7 +194,7 @@
           <button class="btn ghost" id="p-copy" type="button">Copiar pedido</button>
         </div>
       </div>
-      <p class="note">Bultos = venta diaria × (días exigidos + días de entrega) − stock de hoy, redondeado hacia arriba al bulto. Copiar pedido copia código, descripción y bultos de las líneas con pedido, para pegar en Excel o en un mail.</p>
+      <p class="note">Bultos = venta diaria × (días exigidos + días de entrega) − stock de hoy − cajas en camino, redondeado hacia arriba al bulto. En camino = cajas de los camiones pedidos que todavía no llegaron. El estado Quiebre mira sólo el stock de hoy; Pedir, OK y Exceso cuentan también lo que está en camino. Copiar pedido copia código, descripción y bultos de las líneas con pedido, para pegar en Excel o en un mail.</p>
       <div class="row">
         <div class="chips" id="p-chips" role="group" aria-label="Filtrar por estado"></div>
         <input class="search" id="p-q" type="search" placeholder="Buscar artículo o código" aria-label="Buscar artículo o código">
@@ -185,6 +209,7 @@
             <th class="hide-sm"><button type="button" data-k="tendencia">4 semanas</button></th>
             <th><button type="button" data-k="stock_hoy">Stock hoy</button></th>
             <th><button type="button" data-k="dias_cobertura">Días</button></th>
+            <th><button type="button" data-k="en_camino">En camino</button></th>
             <th><button type="button" data-k="bultos">Bultos</button></th>
             <th class="hide-sm"><button type="button" data-k="upb">Unid./bulto</button></th>
             <th class="hide-sm"><button type="button" data-k="kg_pedido">Kg</button></th>
@@ -404,6 +429,89 @@ FROM fin ORDER BY bultos * costo_bulto DESC, venta_28d DESC`;
   };
   const DENEGADO = new Set(['needs_reauth', 'server_not_connected', 'blocked_by_policy', 'approval_required', 'not_in_manifest', 'selection_required']);
 
+  /* ---------- Pedidos en camino (camiones pedidos a PepsiCo que todavía no llegaron) ---------- */
+  const C = { docs: {}, cargado: false, pendiente: null };
+  const camiones = () => Object.entries(C.docs).filter(([, d]) => d && !d.entregado && Array.isArray(d.articulos)).sort((a, b) => String(a[1].cargado).localeCompare(String(b[1].cargado)));
+  function enCamino() {
+    const m = {};
+    camiones().forEach(([, d]) => d.articulos.forEach((a) => {
+      const x = m[a.codigo] || (m[a.codigo] = { cajas: 0, kg: 0 });
+      x.cajas += Number(a.cajas) || 0; x.kg += Number(a.kg) || 0;
+    }));
+    return m;
+  }
+  // Suma las cajas en camino al stock y recalcula bultos, kilos, costo y estado de cada artículo.
+  function ajustar(raw) {
+    if (!raw) return raw;
+    const m = enCamino(), cob = Number(P.cobertura) || 14;
+    return raw.map((r) => {
+      const ec = m[r.codigo];
+      const cajas = ec ? ec.cajas : 0;
+      const upb = Number(r.upb) || 1, diario = Number(r.venta_28d) / 28, stock = Number(r.stock_hoy);
+      const disp = stock + cajas * upb;
+      const falta = Math.max(0, Number(r.stock_objetivo) - disp);
+      const bultos = falta > 0 ? Math.ceil(falta / upb - 1e-9) : 0;
+      const kgBulto = Number(r.bultos) > 0 ? Number(r.kg_pedido) / Number(r.bultos) : (ec && ec.cajas > 0 ? ec.kg / ec.cajas : 0);
+      let estado = r.estado;
+      if (diario > 0) estado = stock / diario < 3 ? 'Quiebre' : disp / diario < cob ? 'Pedir' : disp / diario > 2 * cob ? 'Exceso' : 'OK';
+      return { ...r, en_camino: cajas, bultos, kg_pedido: Math.round(bultos * kgBulto * 10) / 10, costo_pedido: Math.round(bultos * Number(r.costo_bulto)), estado, dias_con_camino: diario > 0 ? disp / diario : null };
+    });
+  }
+  function recalcular() { if (P.raw) P.rows = ajustar(P.raw); camionesRender(); pedidoRender(); }
+
+  function camionesRender() {
+    const lista = camiones(), tb = $('c-body'), est = $('c-estado');
+    $('c-subir-box').hidden = O.puedeEditar === false;
+    if (!est.dataset.sticky) {
+      const caj = lista.reduce((s, [, d]) => s + (Number(d.cajas) || 0), 0), kg = lista.reduce((s, [, d]) => s + (Number(d.kg) || 0), 0);
+      est.className = 'status';
+      est.textContent = !C.cargado ? '' : lista.length ? lista.length + (lista.length === 1 ? ' camión' : ' camiones') + ' en camino: ' + n0.format(caj) + ' cajas, ' + t1.format(kg / 1000) + ' t.' : 'No hay camiones en camino.';
+    }
+    if (!lista.length) { const tr = document.createElement('tr'); const td = document.createElement('td'); td.colSpan = 6; td.className = 'l empty'; td.textContent = C.cargado ? 'No hay camiones en camino cargados.' : 'Cargando…'; tr.appendChild(td); tb.replaceChildren(tr); return; }
+    tb.replaceChildren(...lista.map(([id, d]) => {
+      const tr = fila([[d.archivo || id, 'l art'], [d.cargado ? fechaHora(d.cargado) : '—', 'l hide-sm m'], [n0.format(d.articulos.length)], [n0.format(d.cajas)], [n0.format(d.kg)]]);
+      const td = document.createElement('td');
+      if (O.puedeEditar !== false) {
+        const b = document.createElement('button'); b.type = 'button'; b.className = 'btn ghost'; b.textContent = 'Llegó';
+        b.title = 'Marcar que este camión ya llegó: deja de contarse como en camino';
+        b.addEventListener('click', async () => {
+          if (!O.db) return;
+          b.disabled = true;
+          try { await O.db.doc('pendientes/' + id).update({ entregado: new Date().toISOString() }); }
+          catch (e) { b.disabled = false; est.dataset.sticky = '1'; est.className = 'status bad'; est.textContent = e && e.code === 'invalid_argument' ? 'No tenés permiso para cambiar los camiones. Pedile al dueño del panel acceso de editor.' : 'No se pudo marcar el camión. Probá de nuevo en un momento.'; }
+        });
+        td.appendChild(b);
+      }
+      tr.appendChild(td);
+      return tr;
+    }));
+  }
+
+  // Leer la planilla de carga de PepsiCo: fila de títulos con "Material SAP" y "Cajas Pedidas".
+  function leerCamion(buf) {
+    if (typeof XLSX === 'undefined') throw new Error('No se pudo cargar el lector de Excel. Recargá la página y probá de nuevo.');
+    const wb = XLSX.read(buf, { type: 'array' });
+    const nombres = [...wb.SheetNames].sort((a, b) => (norm(b) === 'planilla de carga') - (norm(a) === 'planilla de carga'));
+    for (const nombre of nombres) {
+      const filas = XLSX.utils.sheet_to_json(wb.Sheets[nombre], { header: 1, defval: '', raw: true });
+      const h = filas.findIndex((f) => f.some((c) => norm(c) === 'material sap') && f.some((c) => norm(c) === 'cajas pedidas'));
+      if (h < 0) continue;
+      const col = (n) => filas[h].findIndex((c) => norm(c) === n);
+      const ix = { cod: col('material sap'), des: col('descripcion'), cajas: col('cajas pedidas'), kg: col('kg pedidos') };
+      const m = new Map();
+      filas.slice(h + 1).forEach((f) => {
+        const cod = String(f[ix.cod] == null ? '' : f[ix.cod]).trim().replace(/\.0+$/, '');
+        const cajas = Number(f[ix.cajas]);
+        if (!/^\d{5,}$/.test(cod) || !(cajas > 0)) return;
+        const x = m.get(cod) || { codigo: cod, descripcion: ix.des >= 0 ? String(f[ix.des]).trim() : '', cajas: 0, kg: 0 };
+        x.cajas += cajas; x.kg += ix.kg >= 0 ? Number(f[ix.kg]) || 0 : 0;
+        m.set(cod, x);
+      });
+      return [...m.values()].map((a) => ({ ...a, kg: Math.round(a.kg * 10) / 10 }));
+    }
+    throw new Error('No encontré las columnas "Material SAP" y "Cajas Pedidas" en el archivo.');
+  }
+
   let mcpNs = null;
   function pedidoWatch() {
     if (!mcpNs) return;
@@ -416,7 +524,7 @@ FROM fin ORDER BY bultos * costo_bulto DESC, venta_28d DESC`;
         let a = pl;
         if (typeof a === 'string') { try { a = JSON.parse(a); } catch (e) { a = null; } }
         if (!a || !Array.isArray(a.datos)) { P.error = { code: 'tool_error', message: typeof pl === 'string' ? pl : 'La respuesta no trae filas.' }; pedidoRender(); return; }
-        P.rows = a.datos; P.cut = !!a.recortado; P.error = null;
+        P.raw = a.datos; P.rows = ajustar(a.datos); P.cut = !!a.recortado; P.error = null;
         P.at = ev.result.cache ? ev.result.cache.storedAt : Date.now();
         pedidoRender();
       } else {
@@ -515,6 +623,8 @@ FROM fin ORDER BY bultos * costo_bulto DESC, venta_28d DESC`;
     lead.replaceChildren();
     const b = (t) => { const x = document.createElement('b'); x.textContent = t; return x; };
     lead.append('Para llegar a ', b(String(P.cobertura)), ' días de stock hay que pedir ', b(n0.format(T.bultos)), ' bultos (' + n0.format(T.kg) + ' kg, costo neto ' + money.format(T.costo) + '). Hay ', b(String(T.quiebres)), ' artículos con menos de 3 días de stock.');
+    const enc = rows.reduce((s, r) => s + (Number(r.en_camino) || 0), 0);
+    if (enc > 0) { const nc = camiones().length; lead.append(' Ya se descuentan ', b(n0.format(enc)), ' cajas en camino (' + nc + (nc === 1 ? ' camión' : ' camiones') + ').'); }
     const r0 = rows[0] || {};
     const extra = [];
     if (P.descontar && Number(r0.dias_desde_foto) > 0) extra.push('al stock se le descuentan ' + r0.dias_desde_foto + ' días de venta promedio desde la foto');
@@ -537,7 +647,7 @@ FROM fin ORDER BY bultos * costo_bulto DESC, venta_28d DESC`;
       if (P.q && !(String(r.articulo).toLowerCase().includes(P.q) || String(r.codigo).includes(P.q))) return false;
       return true;
     }).sort((a, c) => { const x = sortVal(a, P.sort), y = sortVal(c, P.sort); return (x < y ? -1 : x > y ? 1 : 0) * P.dir; });
-    if (!rows.length) { const tr = document.createElement('tr'); const td = document.createElement('td'); td.colSpan = 11; td.className = 'l empty'; td.textContent = 'No hay artículos con este filtro.'; tr.appendChild(td); tb.replaceChildren(tr); return; }
+    if (!rows.length) { const tr = document.createElement('tr'); const td = document.createElement('td'); td.colSpan = 12; td.className = 'l empty'; td.textContent = 'No hay artículos con este filtro.'; tr.appendChild(td); tb.replaceChildren(tr); return; }
     tb.replaceChildren(...rows.map((r) => {
       const tr = document.createElement('tr');
       if (!(Number(r.bultos) > 0)) tr.className = 'zero';
@@ -551,6 +661,8 @@ FROM fin ORDER BY bultos * costo_bulto DESC, venta_28d DESC`;
       td('', 'hide-sm').appendChild(spark(r));
       td(n0.format(r.stock_hoy));
       td(r.dias_cobertura == null ? '—' : n1.format(r.dias_cobertura));
+      const ec = td(Number(r.en_camino) > 0 ? n0.format(r.en_camino) : '—', Number(r.en_camino) > 0 ? '' : 'm');
+      if (Number(r.en_camino) > 0) ec.title = n0.format(r.en_camino) + ' cajas en camino' + (r.dias_con_camino != null ? ': con ellas llega a ' + n1.format(r.dias_con_camino) + ' días' : '');
       td(n0.format(r.bultos), 'b');
       td(n0.format(r.upb), 'hide-sm');
       td(n0.format(r.kg_pedido), 'hide-sm');
@@ -591,7 +703,7 @@ FROM fin ORDER BY bultos * costo_bulto DESC, venta_28d DESC`;
         tip.replaceChildren();
         const a = document.createElement('div'); a.className = 't'; a.textContent = r.articulo;
         const b = document.createElement('div'); b.textContent = n1.format(d) + ' días · stock ' + n0.format(r.stock_hoy) + ' u. · vende ' + n1.format(r.venta_diaria) + '/día';
-        const c = document.createElement('div'); c.textContent = 'Pedir ' + n0.format(r.bultos) + ' bultos';
+        const c = document.createElement('div'); c.textContent = (Number(r.en_camino) > 0 ? n0.format(r.en_camino) + ' cajas en camino · ' : '') + 'Pedir ' + n0.format(r.bultos) + ' bultos';
         tip.append(a, b, c); tip.hidden = false;
         const rb = box.getBoundingClientRect();
         tip.style.left = Math.max(0, Math.min(ev.clientX - rb.left + 12, rb.width - tip.offsetWidth)) + 'px';
@@ -924,6 +1036,45 @@ FROM fin ORDER BY bultos * costo_bulto DESC, venta_28d DESC`;
     } finally { $('d-guardar').disabled = false; dispRender(); }
   });
 
+  $('c-file').addEventListener('change', async (ev) => {
+    const f = ev.target.files && ev.target.files[0];
+    const est = $('c-estado');
+    if (!f) return;
+    est.dataset.sticky = '1';
+    try {
+      const arts = leerCamion(await f.arrayBuffer());
+      if (!arts.length) throw new Error('La planilla no tiene cajas pedidas.');
+      const cajas = arts.reduce((s, a) => s + a.cajas, 0), kg = arts.reduce((s, a) => s + a.kg, 0);
+      const repetido = Object.values(C.docs).some((d) => d && !d.entregado && d.archivo === f.name);
+      C.pendiente = { archivo: f.name, articulos: arts, cajas, kg: Math.round(kg) };
+      est.className = 'status'; est.textContent = '';
+      $('c-confirma-txt').textContent = 'Encontré ' + arts.length + ' artículos, ' + n0.format(cajas) + ' cajas y ' + n0.format(kg) + ' kg en "' + f.name + '".' + (repetido ? ' Ojo: ya hay un camión en camino cargado con ese mismo archivo.' : '');
+      $('c-confirma').hidden = false;
+    } catch (e) {
+      est.className = 'status bad'; est.textContent = e.message || 'No se pudo leer el archivo.';
+      $('c-confirma').hidden = true;
+    }
+    ev.target.value = '';
+  });
+  $('c-cancelar').addEventListener('click', () => { C.pendiente = null; $('c-confirma').hidden = true; delete $('c-estado').dataset.sticky; camionesRender(); });
+  $('c-guardar').addEventListener('click', async () => {
+    const p = C.pendiente, est = $('c-estado');
+    if (!p || !O.db) return;
+    $('c-guardar').disabled = true;
+    try {
+      const user = await claude.use('user');
+      const uid = user ? await user.id() : null;
+      const id = 'c' + Date.now().toString(36);
+      await O.db.doc('pendientes/' + id).set({ archivo: p.archivo, articulos: p.articulos, cajas: p.cajas, kg: p.kg, cargado: new Date().toISOString(), entregado: null, por: uid });
+      est.className = 'status ok'; est.textContent = 'Camión guardado: ' + n0.format(p.cajas) + ' cajas en camino.';
+      C.pendiente = null; $('c-confirma').hidden = true;
+      setTimeout(() => { delete est.dataset.sticky; camionesRender(); }, 4000);
+    } catch (e) {
+      est.className = 'status bad';
+      est.textContent = e && e.code === 'invalid_argument' ? 'No tenés permiso para cargar camiones. Pedile al dueño del panel acceso de editor.' : 'No se pudo guardar el camión. Probá de nuevo en un momento.';
+    } finally { $('c-guardar').disabled = false; }
+  });
+
   /* ---------- Arranque ---------- */
   let mcpListo = false;
   const h = location.hash.slice(1);
@@ -944,6 +1095,7 @@ FROM fin ORDER BY bultos * costo_bulto DESC, venta_28d DESC`;
     if (user) O.puedeEditar = await user.canEdit();
     db.collection('objetivos').onSnapshot((snap) => { const o = {}; snap.docs.forEach((d) => { if (d.exists) o[d.id] = d.data(); }); O.objetivos = o; O.cargadoObj = true; objRender(); }, () => { O.cargadoObj = true; objRender(); });
     db.collection('recibido').onSnapshot((snap) => { const o = {}; snap.docs.forEach((d) => { if (d.exists) o[d.id] = d.data(); }); O.recibido = o; O.cargadoRec = true; objRender(); dispRender(); }, () => { O.cargadoRec = true; $('o-lead').textContent = 'No se pudo leer lo recibido.'; $('d-lead').textContent = 'No se pudo leer lo recibido.'; });
+    db.collection('pendientes').onSnapshot((snap) => { const o = {}; snap.docs.forEach((d) => { if (d.exists) o[d.id] = d.data(); }); C.docs = o; C.cargado = true; recalcular(); }, () => { C.cargado = true; recalcular(); });
     db.collection('activos').onSnapshot((snap) => { const o = {}; snap.docs.forEach((d) => { if (d.exists) o[d.id] = d.data(); }); D.activos = o; D.cargado = true; dispRender(); }, () => { D.cargado = true; $('d-lead').textContent = 'No se pudo leer la lista de artículos activos.'; });
   })();
 

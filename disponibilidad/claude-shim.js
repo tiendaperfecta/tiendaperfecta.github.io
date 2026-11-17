@@ -55,7 +55,7 @@
     if (!aviso) return;
     var cuando = '';
     try { cuando = generado ? ' (datos al ' + new Date(generado).toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ')' : ''; } catch (e) { /* nada */ }
-    aviso.textContent = 'Copia de sólo lectura' + cuando + '. El pedido se calcula con 14 días de stock y entrega en el día. El objetivo y la lista de artículos activos se cargan desde el panel en claude.ai.';
+    aviso.textContent = 'Copia de sólo lectura' + cuando + '. El pedido se calcula con 14 días de stock y entrega en el día. El objetivo, la lista de artículos activos y los camiones en camino se cargan desde el panel en claude.ai.';
   }
   document.addEventListener('DOMContentLoaded', function () {
     ['p-cob', 'p-plazo', 'p-desc', 'p-reset'].forEach(function (id) { var e = document.getElementById(id); if (e) e.disabled = true; });
