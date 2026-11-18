@@ -51,13 +51,14 @@ jobs:
             exit 0
           fi
           git commit -m "chore(flujo): recaudacion en vivo $(date -u +%FT%TZ)"
-          for i in 1 2 3; do
+          # los robots de axum/georgalos/ctacte publican seguido: se reintenta con espera creciente
+          for i in 1 2 3 4 5 6; do
             if git push; then
               exit 0
             fi
             echo "Push rechazado, reintento $i tras rebase..."
+            sleep $((i * 7 + RANDOM % 10))
             git pull --rebase origin "${GITHUB_REF_NAME}" || exit 1
-            sleep 5
           done
-          echo "::error title=Flujo::No se pudo pushear tras 3 intentos."
+          echo "::error title=Flujo::No se pudo pushear tras 6 intentos."
           exit 1
