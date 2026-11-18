@@ -464,6 +464,9 @@ function recaudacion(f){
   const transfControl = tItems.reduce((a,x)=>a+x[2],0);
   const enControl = dentro(cob.control, f);
   const conControl = enControl;
+  // hubo cobranza en la caja pero el Control todavía no tiene NINGUNA rendición de ese día (se
+  // rinden al día siguiente o más tarde): las transferencias no se dan por $0, se espera
+  const rendDelDia = !!(VIVO && VIVO.valoresPorTipo && VIVO.valoresPorTipo[f]);
   const sinRend = (enControl && VIVO.sinRendicion && VIVO.sinRendicion[f]) || 0;
   let banco=0, bancoExcl=0;
   for (const g of (E.bancos[f]||[])) { if (grupoExcluido(f,g)) bancoExcl+=g[2]; else banco+=g[2]; }
@@ -472,7 +475,8 @@ function recaudacion(f){
   const aj = (E.ajustes[f]||[]).reduce((a,x)=>a+x.monto,0);
   const est = E.estimado[f]||0;
   const cubreCaja = dentro(cob.cajaW, f) || dentro(cob.cajaV, f);
-  const cubreTransf = enControl || usaBanco;
+  const transfPendiente = enControl && !rendDelDia && cj.items.length>0;
+  const cubreTransf = (enControl && !transfPendiente) || usaBanco;
   const hayCaja = cj.items.length>0, hayTransf = transf>0;
   const real = caja+transf;
   const pasado = f < HOY, hoy = f === HOY;
@@ -493,7 +497,8 @@ function recaudacion(f){
     if (hoy && real>0) avisos.push(`Hoy van $${f0(real)} reales (caja $${f0(caja)||0} + transferencias $${f0(transf)||0})`);
     else if (fuente==='e' && (hayCaja||hayTransf)) avisos.push(`Real parcial: caja $${f0(caja)||0} + transferencias $${f0(transf)||0}. Se usa la estimada hasta tener las dos fuentes de ese período`);
     if (pasado && !cubreCaja) avisos.push('No hay datos de caja de ese período');
-    if (pasado && !cubreTransf) avisos.push(`No hay transferencias de ese período${cob.control?' (el Control de Transferencias arranca el '+cob.control[0].split('-').reverse().join('/')+')':''}`);
+    if (pasado && !cubreTransf && !transfPendiente) avisos.push(`No hay transferencias de ese período${cob.control?' (el Control de Transferencias arranca el '+cob.control[0].split('-').reverse().join('/')+')':''}`);
+    if (transfPendiente) avisos.push('El Control de Transferencias todavía no tiene rendiciones de ese día: se usa la estimada hasta que lleguen');
     if (sinRend) avisos.push(`Control de Transferencias: ${sinRend===1?'falta 1 rendición':'faltan '+sinRend+' rendiciones'}`);
     if (usaBanco && banco) avisos.push('Transferencias tomadas de los extractos (el Control no tiene ese día)');
   }
