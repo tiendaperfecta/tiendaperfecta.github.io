@@ -3263,11 +3263,11 @@
    "minutos": 5.2,
    "visito": true,
    "hora": "11:47",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 886428.94,
+   "fechaVenta": "2026-11-17",
+   "horaVenta": "20:46",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-11-17",
@@ -4540,6 +4540,25 @@
    "monto": 122500.06,
    "fechaVenta": "2026-11-17",
    "horaVenta": "14:24",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-11-17",
+   "sellerId": "3",
+   "vendedor": "Ezequiel Hack",
+   "clientId": "1133",
+   "nombre": "AGUIRRE AGATA AYELEN",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 175428.62,
+   "fechaVenta": "2026-11-17",
+   "horaVenta": "19:46",
    "estado": "vendio_sin_pasar"
   },
   {
@@ -5969,6 +5988,25 @@
   },
   {
    "fecha": "2026-11-17",
+   "sellerId": "5",
+   "vendedor": "Nicolas Martinez",
+   "clientId": "3684",
+   "nombre": "EL CRUCE S A",
+   "localidad": "LAS ARMAS",
+   "taxonomia": "Estacion de Servicio - NO OFICIALES_D",
+   "canal": "PROXIMITY",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 15857.15,
+   "fechaVenta": "2026-11-17",
+   "horaVenta": "14:22",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-11-17",
    "sellerId": "6",
    "vendedor": "Camila Martinez",
    "clientId": "1393",
@@ -7329,11 +7367,11 @@
    "minutos": 1.3,
    "visito": true,
    "hora": "09:10",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 36428.65,
+   "fechaVenta": "2026-11-17",
+   "horaVenta": "16:32",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-11-17",
@@ -7656,6 +7694,25 @@
    "monto": 111285.82,
    "fechaVenta": "2026-11-17",
    "horaVenta": "13:49",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-11-17",
+   "sellerId": "7",
+   "vendedor": "Ramiro Rando",
+   "clientId": "1989",
+   "nombre": "CANO SOFIA ELIZABETH",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Vinoteca_B",
+   "canal": "AWAY FROM HOME",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 98642.87,
+   "fechaVenta": "2026-11-17",
+   "horaVenta": "18:07",
    "estado": "vendio_sin_pasar"
   },
   {
@@ -8211,6 +8268,25 @@
   },
   {
    "fecha": "2026-11-17",
+   "sellerId": "8",
+   "vendedor": "Martinica Rodriguez",
+   "clientId": "3321",
+   "nombre": "MARIA SOL PERRETTA",
+   "localidad": "BALCARCE",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 173500.0,
+   "fechaVenta": "2026-11-17",
+   "horaVenta": "20:01",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-11-17",
    "sellerId": "9",
    "vendedor": "Ludmila Aylen Martinez",
    "clientId": "2202",
@@ -8762,9 +8838,9 @@
   }
  ],
  "resumen": {
-  "vendio": 163,
-  "paso_sin_vender": 161,
+  "vendio": 165,
+  "paso_sin_vender": 159,
   "sin_visita": 16,
-  "vendio_sin_pasar": 121
+  "vendio_sin_pasar": 125
  }
 }

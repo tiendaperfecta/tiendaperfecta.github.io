@@ -3542,11 +3542,11 @@
    "minutos": 5.2,
    "visito": true,
    "hora": "11:47",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 886428.94,
+   "fechaVenta": "2026-11-17",
+   "horaVenta": "20:46",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-11-17",
@@ -4819,6 +4819,25 @@
    "monto": 122500.06,
    "fechaVenta": "2026-11-17",
    "horaVenta": "14:24",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-11-17",
+   "sellerId": "3",
+   "vendedor": "Ezequiel Hack",
+   "clientId": "1133",
+   "nombre": "AGUIRRE AGATA AYELEN",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 175428.62,
+   "fechaVenta": "2026-11-17",
+   "horaVenta": "19:46",
    "estado": "vendio_sin_pasar"
   },
   {
@@ -6248,6 +6267,25 @@
   },
   {
    "fecha": "2026-11-17",
+   "sellerId": "5",
+   "vendedor": "Nicolas Martinez",
+   "clientId": "3684",
+   "nombre": "EL CRUCE S A",
+   "localidad": "LAS ARMAS",
+   "taxonomia": "Estacion de Servicio - NO OFICIALES_D",
+   "canal": "PROXIMITY",
+   "enRuta": true,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 15857.15,
+   "fechaVenta": "2026-11-17",
+   "horaVenta": "14:22",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-11-17",
    "sellerId": "6",
    "vendedor": "Camila Martinez",
    "clientId": "1393",
@@ -7608,11 +7646,11 @@
    "minutos": 1.3,
    "visito": true,
    "hora": "09:10",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 36428.65,
+   "fechaVenta": "2026-11-17",
+   "horaVenta": "16:32",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-11-17",
@@ -7935,6 +7973,25 @@
    "monto": 111285.82,
    "fechaVenta": "2026-11-17",
    "horaVenta": "13:49",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-11-17",
+   "sellerId": "7",
+   "vendedor": "Ramiro Rando",
+   "clientId": "1989",
+   "nombre": "CANO SOFIA ELIZABETH",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Vinoteca_B",
+   "canal": "AWAY FROM HOME",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 98642.87,
+   "fechaVenta": "2026-11-17",
+   "horaVenta": "18:07",
    "estado": "vendio_sin_pasar"
   },
   {
@@ -8490,6 +8547,25 @@
   },
   {
    "fecha": "2026-11-17",
+   "sellerId": "8",
+   "vendedor": "Martinica Rodriguez",
+   "clientId": "3321",
+   "nombre": "MARIA SOL PERRETTA",
+   "localidad": "BALCARCE",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 173500.0,
+   "fechaVenta": "2026-11-17",
+   "horaVenta": "20:01",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-11-17",
    "sellerId": "9",
    "vendedor": "Ludmila Aylen Martinez",
    "clientId": "2202",
@@ -9041,10 +9117,10 @@
   }
  ],
  "resumen": {
-  "vendio": 163,
-  "paso_sin_vender": 161,
+  "vendio": 165,
+  "paso_sin_vender": 159,
   "sin_visita": 16,
-  "vendio_sin_pasar": 121
+  "vendio_sin_pasar": 125
  },
  "bySeller": [
   {
@@ -9100,8 +9176,8 @@
    "visitas": 40,
    "minutosTotal": 204.7,
    "minutosPromedio": 5.1,
-   "pedidos": 20,
-   "monto": 3526872.11,
+   "pedidos": 21,
+   "monto": 3702300.73,
    "pasoSinVender": 25,
    "km": 21.0,
    "llegoTarde": true,
@@ -9120,9 +9196,9 @@
    "visitas": 34,
    "minutosTotal": 262.1,
    "minutosPromedio": 7.7,
-   "pedidos": 34,
-   "monto": 7060846.51,
-   "pasoSinVender": 10,
+   "pedidos": 35,
+   "monto": 7947275.45,
+   "pasoSinVender": 9,
    "km": 34.0,
    "llegoTarde": false,
    "salioTemprano": false
@@ -9183,7 +9259,7 @@
    "pedidos": 24,
    "monto": 2332441.37,
    "pasoSinVender": 13,
-   "km": 20.0,
+   "km": 21.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -9200,8 +9276,8 @@
    "visitas": 28,
    "minutosTotal": 231.6,
    "minutosPromedio": 8.3,
-   "pedidos": 23,
-   "monto": 3661367.81,
+   "pedidos": 24,
+   "monto": 3677224.95,
    "pasoSinVender": 12,
    "km": 165.0,
    "llegoTarde": false,
@@ -9220,9 +9296,9 @@
    "visitas": 27,
    "minutosTotal": 253.0,
    "minutosPromedio": 9.4,
-   "pedidos": 38,
-   "monto": 5731764.21,
-   "pasoSinVender": 12,
+   "pedidos": 40,
+   "monto": 5866835.73,
+   "pasoSinVender": 11,
    "km": 68.0,
    "llegoTarde": false,
    "salioTemprano": true
@@ -9260,8 +9336,8 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 33,
-   "monto": 3995927.95,
+   "pedidos": 34,
+   "monto": 4169427.95,
    "pasoSinVender": 0,
    "km": 0.0,
    "llegoTarde": false,
@@ -12457,7 +12533,7 @@
  "totales": {
   "visitas": 324,
   "minutos": 2015.5,
-  "pedidos": 373,
-  "monto": 57336642.39
+  "pedidos": 379,
+  "monto": 58722928.61
  }
 }
