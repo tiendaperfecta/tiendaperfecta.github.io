@@ -3745,6 +3745,25 @@
   },
   {
    "fecha": "2026-11-18",
+   "sellerId": "12",
+   "vendedor": "Agustin Pogorzelski",
+   "clientId": "1624",
+   "nombre": "ALDAMA IVAN ABEL",
+   "localidad": "Mar del Plata",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 181714.3,
+   "fechaVenta": "2026-11-18",
+   "horaVenta": "19:47",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-11-18",
    "sellerId": "2",
    "vendedor": "Julian Nuñez",
    "clientId": "1277",
@@ -4782,7 +4801,7 @@
    "minutos": 0.0,
    "visito": false,
    "hora": null,
-   "pedidos": 2,
+   "pedidos": 3,
    "monto": 0.0,
    "fechaVenta": "2026-11-18",
    "horaVenta": "10:49",
@@ -6378,11 +6397,11 @@
    "minutos": 0.6,
    "visito": true,
    "hora": "10:44",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 40214.35,
+   "fechaVenta": "2026-11-18",
+   "horaVenta": "16:36",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-11-18",
@@ -6445,6 +6464,25 @@
    "fecha": "2026-11-18",
    "sellerId": "4",
    "vendedor": "Lucas Giayetto",
+   "clientId": "1179",
+   "nombre": "SILVIA TERESITA ALSINA",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Carniceria/Granja_D",
+   "canal": "AWAY FROM HOME",
+   "enRuta": false,
+   "minutos": 0.3,
+   "visito": true,
+   "hora": "16:50",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "paso_sin_vender"
+  },
+  {
+   "fecha": "2026-11-18",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
    "clientId": "95",
    "nombre": "ZHENGLE NI",
    "localidad": "MAR DEL PLATA",
@@ -6478,6 +6516,44 @@
    "fechaVenta": "2026-11-18",
    "horaVenta": "14:21",
    "estado": "vendio"
+  },
+  {
+   "fecha": "2026-11-18",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "4362",
+   "nombre": "GABRIELA EUGENIA CALLERO",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Almacen/Despensa_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.1,
+   "visito": true,
+   "hora": "16:50",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "paso_sin_vender"
+  },
+  {
+   "fecha": "2026-11-18",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "1265",
+   "nombre": "XIAOQIANG CHEN",
+   "localidad": "Mar del Plata",
+   "taxonomia": "Autoservicio Tradicional_C",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": "16:49",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "sin_visita"
   },
   {
    "fecha": "2026-11-18",
@@ -6530,6 +6606,25 @@
    "minutos": 0.0,
    "visito": false,
    "hora": "13:46",
+   "pedidos": 0,
+   "monto": 0,
+   "fechaVenta": null,
+   "horaVenta": null,
+   "estado": "sin_visita"
+  },
+  {
+   "fecha": "2026-11-18",
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "clientId": "3169",
+   "nombre": "ALEJANDRA NOEMI ZAMORA",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Kiosco/Maxikiosco_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": "16:49",
    "pedidos": 0,
    "monto": 0,
    "fechaVenta": null,
@@ -9103,6 +9198,25 @@
   },
   {
    "fecha": "2026-11-18",
+   "sellerId": "7",
+   "vendedor": "Ramiro Rando",
+   "clientId": "173",
+   "nombre": "DANIELA VICTORIA ROJAS",
+   "localidad": "Mar del Plata",
+   "taxonomia": "Kiosco/Maxikiosco_C",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 68785.81,
+   "fechaVenta": "2026-11-18",
+   "horaVenta": "18:24",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-11-18",
    "sellerId": "8",
    "vendedor": "Martinica Rodriguez",
    "clientId": "2611",
@@ -10167,10 +10281,10 @@
   }
  ],
  "resumen": {
-  "vendio": 165,
-  "paso_sin_vender": 196,
-  "sin_visita": 14,
-  "vendio_sin_pasar": 132
+  "vendio": 166,
+  "paso_sin_vender": 197,
+  "sin_visita": 16,
+  "vendio_sin_pasar": 134
  },
  "bySeller": [
   {
@@ -10189,7 +10303,7 @@
    "pedidos": 20,
    "monto": 2256759.84,
    "pasoSinVender": 57,
-   "km": 57.0,
+   "km": 60.0,
    "llegoTarde": true,
    "salioTemprano": false
   },
@@ -10229,7 +10343,7 @@
    "pedidos": 33,
    "monto": 4443205.93,
    "pasoSinVender": 19,
-   "km": 32.0,
+   "km": 46.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -10246,10 +10360,10 @@
    "visitas": 40,
    "minutosTotal": 232.3,
    "minutosPromedio": 5.8,
-   "pedidos": 36,
-   "monto": 5209343.6,
+   "pedidos": 37,
+   "monto": 5278129.41,
    "pasoSinVender": 20,
-   "km": 32.0,
+   "km": 44.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -10269,7 +10383,27 @@
    "pedidos": 26,
    "monto": 2669304.84,
    "pasoSinVender": 25,
-   "km": 23.0,
+   "km": 26.0,
+   "llegoTarde": false,
+   "salioTemprano": false
+  },
+  {
+   "sellerId": "4",
+   "vendedor": "Lucas Giayetto",
+   "inicioJornada": "08:58",
+   "finJornada": "16:50",
+   "entradaZona": null,
+   "salidaZona": null,
+   "zonaConfiable": false,
+   "primera": "08:58",
+   "ultima": "16:50",
+   "visitas": 38,
+   "minutosTotal": 247.5,
+   "minutosPromedio": 6.5,
+   "pedidos": 35,
+   "monto": 16218303.9,
+   "pasoSinVender": 16,
+   "km": 29.0,
    "llegoTarde": false,
    "salioTemprano": false
   },
@@ -10289,28 +10423,8 @@
    "pedidos": 25,
    "monto": 2223728.79,
    "pasoSinVender": 18,
-   "km": 64.0,
+   "km": 72.0,
    "llegoTarde": true,
-   "salioTemprano": false
-  },
-  {
-   "sellerId": "4",
-   "vendedor": "Lucas Giayetto",
-   "inicioJornada": "08:58",
-   "finJornada": "14:33",
-   "entradaZona": null,
-   "salidaZona": null,
-   "zonaConfiable": false,
-   "primera": "08:58",
-   "ultima": "14:33",
-   "visitas": 36,
-   "minutosTotal": 247.1,
-   "minutosPromedio": 6.9,
-   "pedidos": 34,
-   "monto": 16178089.55,
-   "pasoSinVender": 15,
-   "km": 22.0,
-   "llegoTarde": false,
    "salioTemprano": false
   },
   {
@@ -10326,8 +10440,8 @@
    "visitas": 28,
    "minutosTotal": 248.0,
    "minutosPromedio": 8.9,
-   "pedidos": 30,
-   "monto": 2794542.16,
+   "pedidos": 31,
+   "monto": 2976256.46,
    "pasoSinVender": 12,
    "km": 24.0,
    "llegoTarde": false,
@@ -10349,7 +10463,7 @@
    "pedidos": 27,
    "monto": 3521838.9,
    "pasoSinVender": 11,
-   "km": 46.0,
+   "km": 56.0,
    "llegoTarde": true,
    "salioTemprano": false
   },
@@ -10386,7 +10500,7 @@
    "visitas": 0,
    "minutosTotal": 0.0,
    "minutosPromedio": 0,
-   "pedidos": 15,
+   "pedidos": 16,
    "monto": 107859.49,
    "pasoSinVender": 0,
    "km": 0.0,
@@ -11373,6 +11487,16 @@
     "hora": "14:19",
     "clientId": "4458",
     "nombre": "FERNANDA AURELIA SOSA"
+   },
+   {
+    "hora": "16:50",
+    "clientId": "1179",
+    "nombre": "SILVIA TERESITA ALSINA"
+   },
+   {
+    "hora": "16:50",
+    "clientId": "4362",
+    "nombre": "GABRIELA EUGENIA CALLERO"
    }
   ],
   "12": [
@@ -12096,6 +12220,16 @@
     "hora": "14:43",
     "clientId": "2247",
     "nombre": "ACUÑA SILVANA DEBORA"
+   },
+   {
+    "hora": "16:49",
+    "clientId": "1265",
+    "nombre": "XIAOQIANG CHEN"
+   },
+   {
+    "hora": "16:49",
+    "clientId": "3169",
+    "nombre": "ALEJANDRA NOEMI ZAMORA"
    }
   ],
   "1": [
@@ -12329,7 +12463,7 @@
    "ruta": 41,
    "visitadosDeRuta": 30,
    "pendientes": 11,
-   "fueraDeRuta": 5,
+   "fueraDeRuta": 7,
    "pct": 73.2
   },
   {
@@ -13681,9 +13815,9 @@
   ]
  },
  "totales": {
-  "visitas": 361,
-  "minutos": 1944.4,
-  "pedidos": 396,
-  "monto": 60387431.75
+  "visitas": 363,
+  "minutos": 1944.8,
+  "pedidos": 400,
+  "monto": 60678146.21
  }
 }
