@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Libros de IVA</title>
+<link rel="icon" href="../assets/img/logo-tiendaperfecta.jpeg">
+<link rel="apple-touch-icon" href="../assets/img/logo-tiendaperfecta.jpeg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Portada con clave: mismos colores y letras que el panel, para que al entrar no "salte" */
+  :root {
+    --bg:#f5f6f4; --surface:#ffffff; --ink:#1b2321; --muted:#5d6966; --line:#dfe3e0;
+    --accent:#0f6b5c; --accent-ink:#ffffff; --accent-soft:#e2efec; --neg:#b3261e;
+    --display:"Archivo",system-ui,sans-serif; --body:"Inter",system-ui,sans-serif;
+  }
+  @media (prefers-color-scheme:dark) { :root:not([data-theme="light"]) {
+    --bg:#121615; --surface:#1a201e; --ink:#e6ebe9; --muted:#9aa6a2; --line:#2c3532;
+    --accent:#4fbfa8; --accent-ink:#08201b; --accent-soft:#1d332e; --neg:#f2867d; color-scheme:dark; } }
+  :root[data-theme="dark"] {
+    --bg:#121615; --surface:#1a201e; --ink:#e6ebe9; --muted:#9aa6a2; --line:#2c3532;
+    --accent:#4fbfa8; --accent-ink:#08201b; --accent-soft:#1d332e; --neg:#f2867d; color-scheme:dark; }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; min-height:100vh; min-height:100dvh; display:grid; place-items:center;
+    padding:24px max(16px, env(safe-area-inset-right)) 24px max(16px, env(safe-area-inset-left));
+    background:var(--bg); color:var(--ink); font:14px/1.45 var(--body);
+  }
+  #gate {
+    width:100%; max-width:380px; background:var(--surface); border:1px solid var(--line);
+    border-radius:12px; padding:24px;
+  }
+  .lock {
+    width:40px; height:40px; border-radius:10px; display:grid; place-items:center;
+    background:var(--accent-soft); color:var(--accent); margin-bottom:14px;
+  }
+  .lock svg { width:20px; height:20px; }
+  h1 { font:700 20px/1.2 var(--display); letter-spacing:-.01em; margin:0 0 4px; }
+  .sub { color:var(--muted); font-size:13px; margin:0 0 18px; }
+  label { display:block; font-size:12px; font-weight:600; color:var(--muted); margin-bottom:6px; }
+  input {
+    width:100%; font:16px var(--body); padding:10px 12px; border-radius:8px; margin-bottom:12px;
+    border:1px solid var(--line); background:var(--bg); color:var(--ink);
+  }
+  button {
+    width:100%; font:600 15px var(--body); padding:11px 12px; border-radius:8px; cursor:pointer;
+    border:0; background:var(--accent); color:var(--accent-ink);
+  }
+  button[disabled] { opacity:.6; cursor:default; }
+  input:focus-visible, button:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  .msg { min-height:20px; margin-top:12px; font-size:13px; color:var(--muted); }
+  .msg.err { color:var(--neg); }
+  .foot { margin-top:16px; padding-top:14px; border-top:1px solid var(--line); font-size:12px; color:var(--muted); }
+</style>
+</head>
+<body>
+<main id="gate">
+  <div class="lock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+  <h1>Libros de IVA</h1>
+  <p class="sub">Ventas y compras de Tienda Perfecta y Rambla de los Lobos.</p>
+  <form id="fGate">
+    <label for="pw">Clave del panel</label>
+    <input type="password" id="pw" autocomplete="current-password" autofocus required>
+    <button id="go">Entrar</button>
+  </form>
+  <div class="msg" id="msg" role="status"></div>
+  <div class="foot">El contenido está cifrado: sin la clave no se puede leer.</div>
+</main>
+<script>
+(() => {
+  'use strict';
+  const $ = s => document.querySelector(s);
+  const KEY = 'libros-iva-k';
+  const store = {
+    get: () => { try { return sessionStorage.getItem(KEY); } catch { return null; } },
+    set: v => { try { sessionStorage.setItem(KEY, v); } catch {} },
+    del: () => { try { sessionStorage.removeItem(KEY); } catch {} },
+  };
+  const msg = (t, err) => { $('#msg').textContent = t; $('#msg').className = 'msg' + (err ? ' err' : ''); };
+  const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  async function descifrar(env, clave) {
+    const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(clave), 'PBKDF2', false, ['deriveKey']);
+    const key = await crypto.subtle.deriveKey({name: 'PBKDF2', salt: b64(env.salt), iterations: env.iter, hash: 'SHA-256'},
+      base, {name: 'AES-GCM', length: 256}, false, ['decrypt']);
+    return crypto.subtle.decrypt({name: 'AES-GCM', iv: b64(env.iv)}, key, b64(env.ct));
+  }
+  async function abrir(buf, zip) {
+    if (!zip) return new TextDecoder().decode(buf);
+    const ds = new DecompressionStream(zip);
+    return new Response(new Blob([buf]).stream().pipeThrough(ds)).text();
+  }
+  let ENV;
+  async function entrar(clave) {
+    if (!window.crypto?.subtle || !window.DecompressionStream) { msg('Este navegador es muy viejo para abrir el panel. Actualizalo.', true); return; }
+    $('#go').disabled = true; msg('Descifrando…');
+    try {
+      ENV = ENV || await (await fetch('data.enc.json', {cache: 'no-store'})).json();
+    } catch { msg('No se pudo bajar el panel. Revisá la conexión.', true); $('#go').disabled = false; return; }
+    let buf;
+    try { buf = await descifrar(ENV, clave); }
+    catch { msg('Clave incorrecta.', true); store.del(); $('#go').disabled = false; $('#pw').select(); return; }
+    store.set(clave);
+    msg('Abriendo…');
+    const html = await abrir(buf, ENV.zip);
+    document.open(); document.write(html); document.close();
+  }
+  $('#fGate').onsubmit = e => { e.preventDefault(); entrar($('#pw').value); };
+  const k0 = store.get(); if (k0) entrar(k0);
+})();
+</script>
+</body>
+</html>
