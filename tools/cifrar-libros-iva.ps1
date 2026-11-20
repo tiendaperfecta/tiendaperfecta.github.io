@@ -1,7 +1,9 @@
 # Copia la web de Libros de IVA de Mariano (marianozeballos-tp/libros-iva) al
 # panel libros-iva/ de la central, cifrada con clave.
 # Pide la clave sin mostrarla en pantalla; no queda escrita en ningún archivo.
-# Correr de nuevo cada vez que Mariano publique datos nuevos.
+# La copia diaria la hace sola .github/workflows/libros-iva-data.yml; esto queda
+# para correrlo a mano o para CAMBIAR la clave. Si se cambia la clave acá, hay que
+# cargar la misma en el secret LIBROS_IVA_CLAVE o el workflow va a fallar avisando.
 $ErrorActionPreference = 'Stop'
 $repo   = Split-Path -Parent $PSScriptRoot
 $salida = Join-Path $repo 'libros-iva'
@@ -25,4 +27,4 @@ try {
   $a = $null; $b = $null
   Remove-Item $tmp -ErrorAction SilentlyContinue
 }
-Write-Host 'Listo: libros-iva/data.enc.json y libros-iva/fecha.txt actualizados.' -ForegroundColor Green
+Write-Host 'Listo: libros-iva/data.enc.json, fecha.txt y origen.txt actualizados.' -ForegroundColor Green

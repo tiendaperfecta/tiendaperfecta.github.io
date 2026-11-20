@@ -13,6 +13,7 @@ repo. Cada panel es una carpeta con su propio `index.html`.
 | `flujo/` | Flujo de caja | `flujo-vivo.yml` + tarea de Windows 09:00 |
 | `disponibilidad/` | Disponibilidad | en vivo, no guarda datos |
 | `auditoria-2026/` | Auditoría | — |
+| `libros-iva/` | Libros de IVA | `libros-iva-data.yml` (cada 2 h, lun–sáb): copia cifrada de la web de Mariano (`marianozeballos-tp/libros-iva`) con el secret `LIBROS_IVA_CLAVE`. A mano o para cambiar la clave: `tools/cifrar-libros-iva.ps1` |
 
 El panel de **Fleteros no está acá**: vive en el repo `tiendaperfecta/fleteros`
 (carpeta `Documents\Panel-Fleteros`).

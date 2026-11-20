@@ -1,0 +1,82 @@
+name: Libros de IVA copia cifrada
+
+# Copia la web de Libros de IVA de Mariano (repo publico marianozeballos-tp/libros-iva)
+# a libros-iva/, cifrada con el secret LIBROS_IVA_CLAVE (misma clave del panel).
+# Solo cifra y commitea si Mariano publico algo nuevo: compara el sha de su
+# index.html con libros-iva/origen.txt, asi las corridas sin cambios duran segundos.
+on:
+  schedule:
+    # Cada 2 horas de 09:40 a 19:40 hora argentina, lunes a sabado
+    - cron: "40 12-22/2 * * 1-6"
+  workflow_dispatch: {}   # permite correrlo a mano desde la pestaña Actions
+
+permissions:
+  contents: write
+
+concurrency:
+  group: libros-iva-data
+  cancel-in-progress: false
+
+jobs:
+  copiar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Ver si Mariano publico una version nueva
+        id: origen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          sha=$(gh api repos/marianozeballos-tp/libros-iva/git/trees/main --jq '.tree[] | select(.path=="index.html") | .sha')
+          if [ -z "$sha" ]; then
+            echo "::error title=Libros de IVA::No se encontro index.html en marianozeballos-tp/libros-iva."
+            exit 1
+          fi
+          actual=$(cat libros-iva/origen.txt 2>/dev/null || true)
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          if [ "$sha" = "$actual" ]; then
+            echo "Sin cambios: el panel ya tiene la version $sha."
+            echo "nuevo=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Version nueva: $sha (antes: ${actual:-ninguna})."
+            echo "nuevo=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Bajar y cifrar
+        if: steps.origen.outputs.nuevo == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LIBROS_IVA_CLAVE: ${{ secrets.LIBROS_IVA_CLAVE }}
+        run: |
+          gh api "repos/marianozeballos-tp/libros-iva/git/blobs/${{ steps.origen.outputs.sha }}" \
+            -H "Accept: application/vnd.github.raw" > "$RUNNER_TEMP/libros-iva.html"
+          node tools/cifrar-libros-iva.mjs "$RUNNER_TEMP/libros-iva.html" libros-iva --misma-clave
+          if [ "$(cat libros-iva/origen.txt)" != "${{ steps.origen.outputs.sha }}" ]; then
+            echo "::error title=Libros de IVA::El archivo bajado no coincide con el sha esperado."
+            exit 1
+          fi
+
+      - name: Commit si cambio
+        if: steps.origen.outputs.nuevo == 'true'
+        run: |
+          git config user.name  "libros-iva-bot"
+          git config user.email "libros-iva-bot@users.noreply.github.com"
+          git add libros-iva/data.enc.json libros-iva/fecha.txt libros-iva/origen.txt
+          if git diff --cached --quiet; then
+            echo "Sin cambios en los datos."
+            exit 0
+          fi
+          git commit -m "chore(libros-iva): refresh data $(date -u +%FT%TZ)"
+          # Los otros robots commitean seguido: si llegan antes, rebasamos.
+          for i in 1 2 3; do
+            if git push; then
+              exit 0
+            fi
+            echo "Push rechazado, reintento $i tras rebase..."
+            git pull --rebase origin "${GITHUB_REF_NAME}" || exit 1
+            sleep 5
+          done
+          echo "::error title=Libros de IVA::No se pudo pushear los datos tras 3 intentos."
+          exit 1
