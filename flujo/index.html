@@ -475,7 +475,13 @@ function recaudacion(f){
   const aj = (E.ajustes[f]||[]).reduce((a,x)=>a+x.monto,0);
   const est = E.estimado[f]||0;
   const cubreCaja = dentro(cob.cajaW, f) || dentro(cob.cajaV, f);
-  const transfPendiente = enControl && !rendDelDia && cj.items.length>0;
+  // repartos de ese día [total, abiertos]: mientras quede alguno sin cerrar (hasta 7 días), sus
+  // transferencias no están y se usa la estimada. Un día SIN repartos no espera nada: lo real es
+  // la caja (el 17/11/2026 los repartos del martes salieron fechados el miércoles).
+  const rd = VIVO && VIVO.repartosDia ? (VIVO.repartosDia[f] || [0,0]) : null;
+  const abiertos = rd ? rd[1] : 0;
+  const reciente = f >= iso(new Date(new Date(HOY+'T12:00:00').getTime()-7*864e5));
+  const transfPendiente = enControl && (rd ? (abiertos>0 && reciente) : (!rendDelDia && cj.items.length>0));
   const cubreTransf = (enControl && !transfPendiente) || usaBanco;
   const hayCaja = cj.items.length>0, hayTransf = transf>0;
   const real = caja+transf;
@@ -498,8 +504,10 @@ function recaudacion(f){
     else if (fuente==='e' && (hayCaja||hayTransf)) avisos.push(`Real parcial: caja $${f0(caja)||0} + transferencias $${f0(transf)||0}. Se usa la estimada hasta tener las dos fuentes de ese período`);
     if (pasado && !cubreCaja) avisos.push('No hay datos de caja de ese período');
     if (pasado && !cubreTransf && !transfPendiente) avisos.push(`No hay transferencias de ese período${cob.control?' (el Control de Transferencias arranca el '+cob.control[0].split('-').reverse().join('/')+')':''}`);
-    if (transfPendiente) avisos.push('El Control de Transferencias todavía no tiene rendiciones de ese día: se usa la estimada hasta que lleguen');
-    if (sinRend) avisos.push(`Control de Transferencias: ${sinRend===1?'falta 1 rendición':'faltan '+sinRend+' rendiciones'}`);
+    if (transfPendiente) avisos.push(rd ? `${abiertos===1?'Queda 1 reparto':'Quedan '+abiertos+' repartos'} de ese día sin rendir: se usa la estimada hasta que se rindan` : 'El Control de Transferencias todavía no tiene rendiciones de ese día: se usa la estimada hasta que lleguen');
+    else if (rd && abiertos>0 && pasado) avisos.push(`${abiertos===1?'1 reparto':abiertos+' repartos'} de ese día siguen sin cerrar en Gescom`);
+    if (rd && !rd[0] && pasado && hayCaja) avisos.push('Ese día no hubo repartos: las transferencias son $0 y lo real es la caja');
+    if (sinRend) avisos.push(`${sinRend===1?'1 reparto cerrado':sinRend+' repartos cerrados'} con la rendición vacía en Gescom (sin ejecutar): sus transferencias no figuran en el Control`);
     if (usaBanco && banco) avisos.push('Transferencias tomadas de los extractos (el Control no tiene ese día)');
   }
   return {caja,cajaVivo:cj.vivo,cajaItems:cj.items,transf,transfControl,tItems,conControl,sinRend,usaBanco,banco,bancoExcl,aj,est,real,usada,fuente,hayCaja,hayTransf,avisos};

@@ -109,8 +109,12 @@ def transferencias(s, clave, desde, hasta):
             por_reparto[k][2] += imp
             por_reparto[k][3] += 1
 
-    # repartos rendidos/cerrados que la base todavia no tiene: el panel lo avisa
+    # repartos rendidos/cerrados que la base todavia no tiene: el panel lo avisa.
+    # Por dia tambien [repartos, abiertos]: mientras quede alguno sin cerrar, sus transferencias
+    # todavia no estan; un dia sin repartos no tiene transferencias que esperar (17/11/2026: los
+    # repartos del martes salieron fechados el miercoles y el panel esperaba rendiciones del martes).
     sin = defaultdict(int)
+    rep_dia = defaultdict(lambda: [0, 0])
     total_rep = 0
     for a, b in tramos(desde, hasta):
         for r in base_get(s, "/api/repartos", clave, desde=a.isoformat(), hasta=b.isoformat()):
@@ -118,8 +122,13 @@ def transferencias(s, clave, desde, hasta):
                 continue
             total_rep += 1
             etapa = str(r.get("etapa") or "")
-            if (r.get("cerrado") or "rendicion" in etapa.lower()) and r.get("id") not in con_rendicion:
-                sin[(r.get("fecha") or "")[:10]] += 1
+            fecha = (r.get("fecha") or "")[:10]
+            cerrado = bool(r.get("cerrado") or "rendicion" in etapa.lower())
+            rep_dia[fecha][0] += 1
+            if not cerrado:
+                rep_dia[fecha][1] += 1
+            if cerrado and r.get("id") not in con_rendicion:
+                sin[fecha] += 1
 
     out = defaultdict(list)
     for (fecha, _rid), (ruta, fletero, imp, n) in sorted(por_reparto.items()):
@@ -130,7 +139,8 @@ def transferencias(s, clave, desde, hasta):
     print("tipos de valor vistos:", sorted({t for d in tipos.values() for t in d}))
     return (dict(out),
             {f: {t: round(x, 2) for t, x in d.items()} for f, d in tipos.items()},
-            dict(sin))
+            dict(sin),
+            {f: v for f, v in rep_dia.items() if f})
 
 
 def facturas(s, clave):
@@ -215,7 +225,7 @@ def main():
     hoy = dt.datetime.now(ART).date()
     desde = dt.date.fromisoformat(os.environ.get("FLUJO_DESDE", "2026-08-01"))
     s = requests.Session()
-    transf, tipos, sin = transferencias(s, clave_base, desde, hoy)
+    transf, tipos, sin, rep_dia = transferencias(s, clave_base, desde, hoy)
     if not transf:
         # mejor dejar el archivo anterior que publicar uno vacio
         raise SystemExit("La base no devolvio ninguna transferencia: se deja el archivo anterior.")
@@ -226,6 +236,7 @@ def main():
         "transferencias": transf,
         "valoresPorTipo": tipos,
         "sinRendicion": sin,
+        "repartosDia": rep_dia,
     }
     try:
         datos["facturas"] = facturas(s, clave_base)
