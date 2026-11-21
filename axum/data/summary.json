@@ -1,9 +1,15 @@
 {
  "date": "2026-11-20",
- "totalNet": 39811790.65,
- "totalGross": 48069333.23,
- "orders": 356,
+ "totalNet": 54927238.03,
+ "totalGross": 66359024.56,
+ "orders": 358,
  "bySeller": [
+  {
+   "sellerId": "1176",
+   "name": "Vendedor",
+   "orders": 1,
+   "total": 18152619.83
+  },
   {
    "sellerId": "9",
    "name": "Ludmila Aylen Martinez",
@@ -19,8 +25,8 @@
   {
    "sellerId": "4",
    "name": "Lucas Giayetto",
-   "orders": 37,
-   "total": 5288223.93
+   "orders": 38,
+   "total": 5325652.5
   },
   {
    "sellerId": "12",
@@ -37,14 +43,8 @@
   {
    "sellerId": "7",
    "name": "Ramiro Rando",
-   "orders": 24,
-   "total": 3298559.3
-  },
-  {
-   "sellerId": "20",
-   "name": "Deposito",
-   "orders": 54,
-   "total": 2834251.66
+   "orders": 25,
+   "total": 3435630.8
   },
   {
    "sellerId": "1",
@@ -53,10 +53,16 @@
    "total": 2795886.05
   },
   {
+   "sellerId": "20",
+   "name": "Deposito",
+   "orders": 50,
+   "total": 2577608.76
+  },
+  {
    "sellerId": "11",
    "name": "Melanie Larrama",
-   "orders": 25,
-   "total": 2073538.83
+   "orders": 26,
+   "total": 2145681.68
   },
   {
    "sellerId": "8",
@@ -65,16 +71,16 @@
    "total": 1909261.96
   },
   {
+   "sellerId": "2",
+   "name": "Julian Nuñez",
+   "orders": 24,
+   "total": 1711295.61
+  },
+  {
    "sellerId": "3",
    "name": "Ezequiel Hack",
    "orders": 17,
    "total": 1677178.05
-  },
-  {
-   "sellerId": "2",
-   "name": "Julian Nuñez",
-   "orders": 22,
-   "total": 1564224.13
   },
   {
    "sellerId": "6",
@@ -90,9 +96,14 @@
    "total": 25894722.19
   },
   {
+   "channel": "s/canal",
+   "orders": 24,
+   "total": 18152619.83
+  },
+  {
    "channel": "TRADITIONAL TRADE_C",
-   "orders": 90,
-   "total": 7548744.53
+   "orders": 91,
+   "total": 7685816.03
   },
   {
    "channel": "TRADITIONAL TRADE_D",
@@ -138,14 +149,15 @@
    "channel": "AWAY FROM HOME_C",
    "orders": 1,
    "total": 61642.91
-  },
-  {
-   "channel": "s/canal",
-   "orders": 23,
-   "total": 0.0
   }
  ],
  "topClients": [
+  {
+   "clientId": "3155",
+   "name": "",
+   "orders": 1,
+   "total": 18152619.83
+  },
   {
    "clientId": "2551",
    "name": "ROJOLUEM S.A (Autoservicio Tradicional_A)",
@@ -259,12 +271,6 @@
    "name": "ELIDA NOEMI LASTRA (Autoservicio Tradicional_D)",
    "orders": 3,
    "total": 424454.28
-  },
-  {
-   "clientId": "714",
-   "name": "XUEHE CHEN (Autoservicio Tradicional_A)",
-   "orders": 2,
-   "total": 421785.86
   }
  ]
 }
