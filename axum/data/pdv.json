@@ -3993,6 +3993,25 @@
   },
   {
    "fecha": "2026-11-21",
+   "sellerId": "3",
+   "vendedor": "Ezequiel Hack",
+   "clientId": "1137",
+   "nombre": "COPPOLA ANTONIO Y VICTORIO",
+   "localidad": "MAR DEL PLATA",
+   "taxonomia": "Autoservicio Tradicional_D",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 2,
+   "monto": 199571.63,
+   "fechaVenta": "2026-11-21",
+   "horaVenta": "17:57",
+   "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-11-21",
    "sellerId": "4",
    "vendedor": "Lucas Giayetto",
    "clientId": "1988",
@@ -6436,11 +6455,11 @@
    "minutos": 4.7,
    "visito": true,
    "hora": "11:16",
-   "pedidos": 0,
-   "monto": 0,
-   "fechaVenta": null,
-   "horaVenta": null,
-   "estado": "paso_sin_vender"
+   "pedidos": 1,
+   "monto": 27714.35,
+   "fechaVenta": "2026-11-21",
+   "horaVenta": "19:24",
+   "estado": "vendio"
   },
   {
    "fecha": "2026-11-21",
@@ -7372,12 +7391,31 @@
    "fechaVenta": "2026-11-21",
    "horaVenta": "12:43",
    "estado": "vendio_sin_pasar"
+  },
+  {
+   "fecha": "2026-11-21",
+   "sellerId": "9",
+   "vendedor": "Ludmila Aylen Martinez",
+   "clientId": "375",
+   "nombre": "MATIAS LEONARDO HERRERA",
+   "localidad": "MIRAMAR",
+   "taxonomia": "Autoservicio Tradicional_A",
+   "canal": "TRADITIONAL TRADE",
+   "enRuta": false,
+   "minutos": 0.0,
+   "visito": false,
+   "hora": null,
+   "pedidos": 1,
+   "monto": 376714.69,
+   "fechaVenta": "2026-11-21",
+   "horaVenta": "18:28",
+   "estado": "vendio_sin_pasar"
   }
  ],
  "resumen": {
-  "paso_sin_vender": 222,
-  "vendio": 63,
+  "paso_sin_vender": 221,
+  "vendio": 64,
   "sin_visita": 48,
-  "vendio_sin_pasar": 55
+  "vendio_sin_pasar": 57
  }
 }
