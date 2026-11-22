@@ -1,21 +1,38 @@
 {
  "date": "2026-11-22",
- "totalNet": 40023.65,
- "totalGross": 48428.62,
- "orders": 1,
+ "totalNet": 75737.96,
+ "totalGross": 91642.94,
+ "orders": 3,
  "bySeller": [
   {
    "sellerId": "6",
    "name": "Camila Martinez",
    "orders": 1,
    "total": 48428.62
+  },
+  {
+   "sellerId": "9",
+   "name": "Ludmila Aylen Martinez",
+   "orders": 1,
+   "total": 27571.45
+  },
+  {
+   "sellerId": "20",
+   "name": "Deposito",
+   "orders": 1,
+   "total": 15642.87
   }
  ],
  "byChannel": [
   {
    "channel": "TRADITIONAL TRADE_D",
+   "orders": 2,
+   "total": 76000.07
+  },
+  {
+   "channel": "TRADITIONAL TRADE_C",
    "orders": 1,
-   "total": 48428.62
+   "total": 15642.87
   }
  ],
  "topClients": [
@@ -24,6 +41,18 @@
    "name": "LEONE MARCELO URIEL (Almacen/Despensa_D)",
    "orders": 1,
    "total": 48428.62
+  },
+  {
+   "clientId": "4799",
+   "name": "ANGEL OMAR MARQUEZ (Almacen/Despensa_D)",
+   "orders": 1,
+   "total": 27571.45
+  },
+  {
+   "clientId": "1131",
+   "name": "TOMATTIS EDUARDO ADRIAN (Almacen/Despensa_C)",
+   "orders": 1,
+   "total": 15642.87
   }
  ]
 }
