@@ -1577,7 +1577,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-11-23-a';
+const BUILD = '2026-11-23-b';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -3476,7 +3476,7 @@ function pintarObjetivosMn(tot, shareTot) {
   el.style.display = 'block';
   el.innerHTML = `<h3 class="subsection-title">Objetivos de Mi Negocio+ del mes</h3>
     <p class="section-note">Se prorratean por vendedor según su universo (columna "/ objetivo" de la tabla de abajo).
-    Registrados, activos y Fully Digital son del Power BI de noviembre al 22/11 (mes en curso); el sell out digital sale de Gescom.</p>
+    Registrados, activos y Fully Digital son del Power BI de noviembre con datos hasta el 14/11 (la tabla de Power BI no trae datos posteriores); el sell out digital sale de Gescom.</p>
     <div class="ficha-grid">
       ${tarjeta('Clientes registrados', tot.registrado, to.registrados)}
       ${tarjeta('Clientes activos', tot.activos, to.activos)}
