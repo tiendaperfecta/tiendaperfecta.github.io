@@ -1,98 +1,83 @@
 {
- "date": "2026-11-21",
+ "date": "2026-11-23",
  "camiones": [
   {
-   "id": "3",
-   "lat": -37.9976163,
-   "lng": -57.5431769,
-   "hora": "2:59 PM",
-   "etiqueta": "nnn"
-  },
-  {
    "id": "2",
-   "lat": -38.0923686,
-   "lng": -57.5640764,
-   "hora": "2:59 PM",
-   "etiqueta": "nnn"
+   "lat": -38.0110764,
+   "lng": -57.5436745,
+   "hora": "9:21 AM",
+   "etiqueta": "6"
   },
   {
    "id": "6",
-   "lat": -38.0923513,
-   "lng": -57.5640904,
-   "hora": "2:59 PM",
-   "etiqueta": "nnn"
+   "lat": -38.0092185,
+   "lng": -57.5630482,
+   "hora": "9:20 AM",
+   "etiqueta": "98"
   },
   {
-   "id": "7",
-   "lat": -38.0113029,
-   "lng": -57.5406663,
-   "hora": "2:59 PM",
-   "etiqueta": "nnn"
-  },
-  {
-   "id": "4",
-   "lat": -37.9998124,
-   "lng": -57.5468692,
-   "hora": "2:59 PM",
-   "etiqueta": "nnn"
-  },
-  {
-   "id": "5",
-   "lat": -38.0346666,
-   "lng": -57.5882183,
-   "hora": "2:59 PM",
-   "etiqueta": "nnn"
-  },
-  {
-   "id": "10",
-   "lat": -38.0010069,
-   "lng": -57.6069285,
-   "hora": "2:59 PM",
-   "etiqueta": "nnn"
+   "id": "12",
+   "lat": -37.9775295,
+   "lng": -57.5744593,
+   "hora": "9:21 AM",
+   "etiqueta": "5"
   },
   {
    "id": "1",
-   "lat": -38.1941077,
-   "lng": -57.6929655,
-   "hora": "2:58 PM",
-   "etiqueta": "nnn"
+   "lat": -38.0021962,
+   "lng": -57.5418936,
+   "hora": "9:21 AM",
+   "etiqueta": "10"
+  },
+  {
+   "id": "7",
+   "lat": -38.0291874,
+   "lng": -57.5918469,
+   "hora": "9:21 AM",
+   "etiqueta": "8"
+  },
+  {
+   "id": "5",
+   "lat": -37.9501146,
+   "lng": -57.574725,
+   "hora": "9:22 AM",
+   "etiqueta": "4"
+  },
+  {
+   "id": "4",
+   "lat": -37.997236,
+   "lng": -57.606861,
+   "hora": "9:21 AM",
+   "etiqueta": "15"
+  },
+  {
+   "id": "10",
+   "lat": -37.9671693,
+   "lng": -57.5507396,
+   "hora": "9:21 AM",
+   "etiqueta": "8"
+  },
+  {
+   "id": "3",
+   "lat": -38.0327393,
+   "lng": -57.5873217,
+   "hora": "9:21 AM",
+   "etiqueta": "16"
   }
  ],
  "fuente": "Panel de Fleteros (API GesCom) + posiciones de Axum GPS",
  "nota": "Axum solo expone la posición de los camiones: sus reportes de reparto, km y eventos por camión responden vacío o error. Las estadísticas de choferes salen del Panel de Fleteros.",
  "fleteros": {
-  "fecha": "2026-11-20",
+  "fecha": "2026-11-21",
   "esDeHoy": false,
   "cartonesCargados": false,
   "rows": [
    {
-    "fletero": "Alejandro Fabian Maiorano",
-    "zona": "",
-    "repartos": 1,
-    "asignadas": 28,
-    "realizadas": 28,
-    "efectividad": 100.0,
-    "cartonesARetornar": 0,
-    "cartonesRetornados": 0,
-    "efCartones": null
-   },
-   {
     "fletero": "Algañaraz German Marcelo",
     "zona": "",
     "repartos": 1,
-    "asignadas": 25,
-    "realizadas": 25,
-    "efectividad": 100.0,
-    "cartonesARetornar": 0,
-    "cartonesRetornados": 0,
-    "efCartones": null
-   },
-   {
-    "fletero": "Diego Andrés Martorello",
-    "zona": "",
-    "repartos": 3,
-    "asignadas": 59,
-    "realizadas": 59,
+    "asignadas": 15,
+    "realizadas": 15,
     "efectividad": 100.0,
     "cartonesARetornar": 0,
     "cartonesRetornados": 0,
@@ -101,9 +86,9 @@
    {
     "fletero": "Edgardo Jacinto Gomez",
     "zona": "",
-    "repartos": 2,
-    "asignadas": 24,
-    "realizadas": 24,
+    "repartos": 1,
+    "asignadas": 4,
+    "realizadas": 4,
     "efectividad": 100.0,
     "cartonesARetornar": 0,
     "cartonesRetornados": 0,
@@ -113,8 +98,8 @@
     "fletero": "Emanuel Valentino Cossu",
     "zona": "",
     "repartos": 1,
-    "asignadas": 48,
-    "realizadas": 48,
+    "asignadas": 13,
+    "realizadas": 13,
     "efectividad": 100.0,
     "cartonesARetornar": 0,
     "cartonesRetornados": 0,
@@ -124,41 +109,8 @@
     "fletero": "Ezequiel Dario Gargan",
     "zona": "",
     "repartos": 1,
-    "asignadas": 44,
-    "realizadas": 44,
-    "efectividad": 100.0,
-    "cartonesARetornar": 0,
-    "cartonesRetornados": 0,
-    "efCartones": null
-   },
-   {
-    "fletero": "Leandro Martín Cossu",
-    "zona": "",
-    "repartos": 1,
-    "asignadas": 51,
-    "realizadas": 51,
-    "efectividad": 100.0,
-    "cartonesARetornar": 0,
-    "cartonesRetornados": 0,
-    "efCartones": null
-   },
-   {
-    "fletero": "Leo Damian Moncada",
-    "zona": "",
-    "repartos": 1,
-    "asignadas": 30,
-    "realizadas": 30,
-    "efectividad": 100.0,
-    "cartonesARetornar": 0,
-    "cartonesRetornados": 0,
-    "efCartones": null
-   },
-   {
-    "fletero": "Marcelo Javier Acuña",
-    "zona": "",
-    "repartos": 1,
-    "asignadas": 30,
-    "realizadas": 30,
+    "asignadas": 15,
+    "realizadas": 15,
     "efectividad": 100.0,
     "cartonesARetornar": 0,
     "cartonesRetornados": 0,
@@ -168,19 +120,8 @@
     "fletero": "Mario Luis Gastiarena",
     "zona": "",
     "repartos": 1,
-    "asignadas": 26,
-    "realizadas": 26,
-    "efectividad": 100.0,
-    "cartonesARetornar": 0,
-    "cartonesRetornados": 0,
-    "efCartones": null
-   },
-   {
-    "fletero": "Rodrigo Martin Soto",
-    "zona": "",
-    "repartos": 2,
-    "asignadas": 33,
-    "realizadas": 33,
+    "asignadas": 8,
+    "realizadas": 8,
     "efectividad": 100.0,
     "cartonesARetornar": 0,
     "cartonesRetornados": 0,
@@ -188,10 +129,10 @@
    }
   ],
   "totales": {
-   "choferes": 11,
-   "repartos": 15,
-   "asignadas": 398,
-   "realizadas": 398,
+   "choferes": 5,
+   "repartos": 5,
+   "asignadas": 55,
+   "realizadas": 55,
    "efectividad": 100.0
   }
  },
@@ -199,141 +140,141 @@
   "clave": "2026-11",
   "efGeneral": 95.8,
   "cartonGeneral": 74.9,
-  "repartos": 181,
-  "entregadas": 6548,
-  "boletas": 6836,
-  "actualizado": "2026-11-20",
+  "repartos": 195,
+  "entregadas": 6842,
+  "boletas": 7144,
+  "actualizado": "2026-11-23",
   "ranking": [
    {
     "nombre": "Mario Luis Gastiarena",
-    "repartos": 3,
-    "asist": 14,
-    "efE": 99,
+    "repartos": 4,
+    "asist": 19,
+    "efE": 99.1,
     "efC": 0,
     "premio": 0,
     "recBol": 1,
-    "compSac": 102,
+    "compSac": 121,
     "impRech": 50280
    },
    {
     "nombre": "Leo Damian Moncada",
-    "repartos": 15,
-    "asist": 71,
+    "repartos": 16,
+    "asist": 76,
     "efE": 98.4,
     "efC": 76.8,
     "premio": 0,
     "recBol": 9,
-    "compSac": 495,
+    "compSac": 510,
     "impRech": 406923
    },
    {
     "nombre": "Marcelo Javier Acuña",
-    "repartos": 15,
-    "asist": 71,
-    "efE": 98,
+    "repartos": 16,
+    "asist": 76,
+    "efE": 97.9,
     "efC": 73.4,
     "premio": 0,
-    "recBol": 6,
-    "compSac": 447,
-    "impRech": 359942
+    "recBol": 7,
+    "compSac": 468,
+    "impRech": 365002
    },
    {
     "nombre": "Diego Andrés Martorello",
-    "repartos": 29,
+    "repartos": 30,
     "asist": 100,
-    "efE": 97.2,
+    "efE": 97.3,
     "efC": 86.8,
     "premio": 0,
     "recBol": 21,
-    "compSac": 1066,
+    "compSac": 1093,
     "impRech": 1588986
    },
    {
     "nombre": "Ezequiel Dario Gargan",
-    "repartos": 15,
-    "asist": 71,
-    "efE": 96.8,
+    "repartos": 17,
+    "asist": 81,
+    "efE": 96.6,
     "efC": 78.5,
     "premio": 0,
-    "recBol": 11,
-    "compSac": 649,
-    "impRech": 678972
+    "recBol": 12,
+    "compSac": 678,
+    "impRech": 788488
    },
    {
     "nombre": "Leandro Martín Cossu",
-    "repartos": 16,
-    "asist": 76,
-    "efE": 96,
+    "repartos": 17,
+    "asist": 81,
+    "efE": 95.9,
     "efC": 73.3,
     "premio": 0,
     "recBol": 19,
-    "compSac": 603,
-    "impRech": 1492504
-   },
-   {
-    "nombre": "Alejandro Fabian Maiorano",
-    "repartos": 14,
-    "asist": 67,
-    "efE": 95.4,
-    "efC": 79.1,
-    "premio": 0,
-    "recBol": 12,
-    "compSac": 445,
-    "impRech": 2316856
+    "compSac": 627,
+    "impRech": 1601348
    },
    {
     "nombre": "Emanuel Valentino Cossu",
-    "repartos": 15,
-    "asist": 71,
-    "efE": 95.4,
+    "repartos": 17,
+    "asist": 81,
+    "efE": 95.5,
     "efC": 70.9,
     "premio": 0,
     "recBol": 21,
-    "compSac": 600,
-    "impRech": 1581529
+    "compSac": 638,
+    "impRech": 1583495
+   },
+   {
+    "nombre": "Alejandro Fabian Maiorano",
+    "repartos": 15,
+    "asist": 71,
+    "efE": 95.2,
+    "efC": 79.1,
+    "premio": 0,
+    "recBol": 13,
+    "compSac": 465,
+    "impRech": 2536642
    },
    {
     "nombre": "Algañaraz German Marcelo",
-    "repartos": 15,
-    "asist": 71,
-    "efE": 94.9,
+    "repartos": 17,
+    "asist": 81,
+    "efE": 94.5,
     "efC": 70.9,
     "premio": 0,
-    "recBol": 23,
-    "compSac": 541,
-    "impRech": 1295909
+    "recBol": 25,
+    "compSac": 556,
+    "impRech": 1489664
    },
    {
     "nombre": "Edgardo Jacinto Gomez",
-    "repartos": 19,
-    "asist": 90,
-    "efE": 93.2,
+    "repartos": 20,
+    "asist": 95,
+    "efE": 93.5,
     "efC": 57.1,
     "premio": 0,
     "recBol": 23,
-    "compSac": 636,
+    "compSac": 666,
     "impRech": 2129498
    },
    {
     "nombre": "Enzo Julián Rizzoni",
-    "repartos": 9,
-    "asist": 43,
-    "efE": 92.3,
+    "repartos": 10,
+    "asist": 48,
+    "efE": 92.5,
     "efC": 85.7,
     "premio": 0,
     "recBol": 14,
-    "compSac": 252,
-    "impRech": 1165223
+    "compSac": 253,
+    "impRech": 1655281
    },
    {
     "nombre": "Rodrigo Martin Soto",
     "repartos": 16,
     "asist": 76,
-    "efE": 92.1,
+    "efE": 92.4,
     "efC": 77.7,
     "premio": 0,
     "recBol": 20,
-    "compSac": 413,
+    "compSac": 431,
     "impRech": 2083363
    }
   ]
