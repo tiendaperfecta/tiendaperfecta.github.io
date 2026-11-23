@@ -1,8 +1,8 @@
 {
  "_nota": "Pep Vouchers de Tienda Perfecta sacados de Gescom (renglones con descuento 100% marcados PV_, por fecha de entrega; monto a costo). Agosto y septiembre de la base propia, octubre y noviembre del export extendido de Gescom. Un cliente puede usar varios combos, por eso la suma por combo supera el total.",
  "fuente": "Gescom - Detallado de ventas extendido (dealIds PV_)",
- "hasta": "2026-11-14",
- "extraido": "2026-11-14 09:21",
+ "hasta": "2026-11-23",
+ "extraido": "2026-11-23 08:43",
  "meses": [
   {
    "mes": "2026-08",
@@ -27,13 +27,21 @@
   },
   {
    "mes": "2026-11",
-   "clientes": 84,
-   "kg": 33.4,
-   "monto": 733790,
+   "clientes": 150,
+   "kg": 78.0,
+   "monto": 1619624,
    "parcial": true
   }
  ],
  "vendedores": [
+  {
+   "n": "Agustin Pogorzelski",
+   "2026-11": {
+    "clientes": 4,
+    "kg": 4.4,
+    "monto": 93701
+   }
+  },
   {
    "n": "Camila Martinez",
    "2026-08": {
@@ -47,9 +55,9 @@
     "monto": 67739
    },
    "2026-11": {
-    "clientes": 2,
-    "kg": 0.8,
-    "monto": 18301
+    "clientes": 6,
+    "kg": 4.2,
+    "monto": 79449
    },
    "2026-10": {
     "clientes": 6,
@@ -65,9 +73,9 @@
     "monto": 170347
    },
    "2026-11": {
-    "clientes": 3,
-    "kg": 0.4,
-    "monto": 11355
+    "clientes": 4,
+    "kg": 0.7,
+    "monto": 17529
    },
    "2026-10": {
     "clientes": 24,
@@ -88,9 +96,9 @@
     "monto": 142695
    },
    "2026-11": {
-    "clientes": 5,
-    "kg": 1.1,
-    "monto": 24503
+    "clientes": 8,
+    "kg": 3.1,
+    "monto": 67077
    },
    "2026-10": {
     "clientes": 18,
@@ -106,9 +114,9 @@
     "monto": 119488
    },
    "2026-11": {
-    "clientes": 5,
-    "kg": 3.1,
-    "monto": 69565
+    "clientes": 7,
+    "kg": 6.2,
+    "monto": 136468
    },
    "2026-10": {
     "clientes": 6,
@@ -129,9 +137,9 @@
     "monto": 445998
    },
    "2026-11": {
-    "clientes": 28,
-    "kg": 10.2,
-    "monto": 211057
+    "clientes": 60,
+    "kg": 27.3,
+    "monto": 538319
    },
    "2026-10": {
     "clientes": 38,
@@ -170,9 +178,9 @@
     "monto": 46142
    },
    "2026-11": {
-    "clientes": 16,
-    "kg": 7.4,
-    "monto": 168478
+    "clientes": 20,
+    "kg": 9.7,
+    "monto": 223053
    },
    "2026-10": {
     "clientes": 26,
@@ -201,9 +209,9 @@
     "monto": 46528
    },
    "2026-11": {
-    "clientes": 1,
-    "kg": 0.1,
-    "monto": 2260
+    "clientes": 4,
+    "kg": 3.7,
+    "monto": 61024
    },
    "2026-10": {
     "clientes": 13,
@@ -224,9 +232,9 @@
     "monto": 251272
    },
    "2026-11": {
-    "clientes": 11,
-    "kg": 3.9,
-    "monto": 91137
+    "clientes": 15,
+    "kg": 6.3,
+    "monto": 130573
    },
    "2026-10": {
     "clientes": 31,
@@ -247,9 +255,9 @@
     "monto": 86786
    },
    "2026-11": {
-    "clientes": 11,
-    "kg": 5.9,
-    "monto": 129468
+    "clientes": 20,
+    "kg": 12.1,
+    "monto": 264765
    },
    "2026-10": {
     "clientes": 17,
@@ -264,7 +272,7 @@
    "nombre": "Lays Clásicas 85g x25",
    "2026-08": 48,
    "2026-09": 45,
-   "2026-11": 10,
+   "2026-11": 37,
    "2026-10": 42
   },
   {
@@ -272,7 +280,7 @@
    "nombre": "Lays Clásicas 40g x68",
    "2026-08": 21,
    "2026-09": 22,
-   "2026-11": 17,
+   "2026-11": 23,
    "2026-10": 19
   },
   {
@@ -280,14 +288,14 @@
    "nombre": "Doritos Queso 40g x70",
    "2026-08": 45,
    "2026-09": 44,
-   "2026-11": 19,
+   "2026-11": 31,
    "2026-10": 40
   },
   {
    "codigo": "PV_55658561",
    "nombre": "Doritos Queso 77g x26",
    "2026-09": 45,
-   "2026-11": 34,
+   "2026-11": 62,
    "2026-08": 0,
    "2026-10": 91
   },
@@ -311,7 +319,7 @@
    "codigo": "PV_55620001",
    "nombre": "Lays Jamón Serrano 77g x25",
    "2026-09": 6,
-   "2026-11": 2,
+   "2026-11": 4,
    "2026-08": 0,
    "2026-10": 4
   },
@@ -319,7 +327,7 @@
    "codigo": "PV_55620118",
    "nombre": "Lays Barbacoa 77g x25",
    "2026-09": 2,
-   "2026-11": 1,
+   "2026-11": 2,
    "2026-08": 0,
    "2026-10": 1
   },
@@ -327,7 +335,7 @@
    "codigo": "PV_55620177",
    "nombre": "Pehuamar Acanalada Chimichurri 80g x25",
    "2026-09": 1,
-   "2026-11": 3,
+   "2026-11": 5,
    "2026-08": 0,
    "2026-10": 3
   },
@@ -335,7 +343,7 @@
    "codigo": "PV_55620359",
    "nombre": "Pehuamar Acanalada Matambrito 80g x25",
    "2026-09": 1,
-   "2026-11": 3,
+   "2026-11": 6,
    "2026-08": 0,
    "2026-10": 5
   },
@@ -343,7 +351,7 @@
    "codigo": "PV_55620716",
    "nombre": "Pehuamar Papa Acanalada 90g x22",
    "2026-09": 3,
-   "2026-11": 6,
+   "2026-11": 12,
    "2026-08": 0,
    "2026-10": 7
   },
@@ -351,7 +359,7 @@
    "codigo": "PV_55620738",
    "nombre": "Pehuamar Papa Lisa 90g x22",
    "2026-09": 4,
-   "2026-11": 3,
+   "2026-11": 9,
    "2026-08": 0,
    "2026-10": 9
   },
@@ -359,14 +367,14 @@
    "codigo": "PV_55620940",
    "nombre": "Doritos Queso 20g x88",
    "2026-09": 1,
-   "2026-11": 4,
+   "2026-11": 5,
    "2026-08": 0,
    "2026-10": 3
   },
   {
    "codigo": "PV_55621035",
    "nombre": "Lays Clasicas 20Grx76",
-   "2026-11": 2,
+   "2026-11": 3,
    "2026-08": 0,
    "2026-09": 0,
    "2026-10": 1
@@ -374,7 +382,7 @@
   {
    "codigo": "PV_60840963",
    "nombre": "Lays Clasicas 20Grx76",
-   "2026-11": 4,
+   "2026-11": 5,
    "2026-08": 0,
    "2026-09": 0,
    "2026-10": 0
@@ -390,7 +398,23 @@
   {
    "codigo": "PV_60841407",
    "nombre": "Pehuamar Maicitos 265Gx10X1",
+   "2026-11": 4,
+   "2026-08": 0,
+   "2026-09": 0,
+   "2026-10": 0
+  },
+  {
+   "codigo": "PV_60841451",
+   "nombre": "Pehuamar Papa Lisa 420Gx9X1 Rm",
    "2026-11": 1,
+   "2026-08": 0,
+   "2026-09": 0,
+   "2026-10": 0
+  },
+  {
+   "codigo": "PV_60841538",
+   "nombre": "Pehuamar Acanalada 420X9X1 Rm",
+   "2026-11": 4,
    "2026-08": 0,
    "2026-09": 0,
    "2026-10": 0
@@ -398,7 +422,7 @@
   {
    "codigo": "PV_60841671",
    "nombre": "Twistos Minit Jamon 95Gx30X1",
-   "2026-11": 1,
+   "2026-11": 2,
    "2026-08": 0,
    "2026-09": 0,
    "2026-10": 0
@@ -406,7 +430,7 @@
   {
    "codigo": "PV_60841712",
    "nombre": "Twistos Minit Queso 95Gx30X1",
-   "2026-11": 2,
+   "2026-11": 3,
    "2026-08": 0,
    "2026-09": 0,
    "2026-10": 0
