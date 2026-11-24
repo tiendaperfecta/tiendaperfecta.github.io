@@ -947,19 +947,18 @@ td.ip-base.clickable{cursor:pointer}
     es un prorrateo oficial y no tiene por qué coincidir con el universo real con ruta asignada (el total de la fila de arriba).
   </p>
 
-  <h3 class="subsection-title">Altas de clientes <span id="altas-nt-desde">desde julio</span> — Away From Home y no tradicionales</h3>
+  <h3 class="subsection-title">Altas de clientes Away From Home <span id="altas-nt-desde">desde julio</span></h3>
   <p class="section-note">
-    Clientes dados de alta en Gescom (<b>fecha de creación</b>) con canal <b>Away From Home</b> u otro canal no tradicional
-    (Proximity, Cash&amp;Carry, Mayorista, etc.), por vendedor. Los de canal Traditional Trade no se cuentan acá; la última columna
-    muestra todas las altas del vendedor para comparar. Click en "Ver el listado" para ver cada cliente.
+    Clientes dados de alta en Gescom (<b>fecha de creación</b>) con canal <b>Away From Home</b>, por vendedor y por mes desde julio.
+    El listado de abajo trae además los clientes de otros canales no tradicionales (Proximity, Cash&amp;Carry, Mayorista, etc.).
+    Click en "Ver el listado" para ver cada cliente.
   </p>
 
   <div class="table-scroll">
     <table>
       <thead>
-        <tr class="cols">
-          <th class="name-col">Vendedor</th>
-          <th>Away From Home</th><th>Otros no tradicionales</th><th>Total no tradicionales</th><th>Altas totales (todos los canales)</th>
+        <tr class="cols" id="cols-altas-nt">
+          <th class="name-col">Vendedor</th><th>Away From Home</th>
         </tr>
       </thead>
       <tbody id="tbody-altas-nt"></tbody>
@@ -968,7 +967,7 @@ td.ip-base.clickable{cursor:pointer}
   </div>
 
   <details class="altas-nt-detalle" style="margin:10px 0 4px">
-    <summary style="cursor:pointer;font-weight:600">Ver el listado de clientes dados de alta</summary>
+    <summary style="cursor:pointer;font-weight:600">Ver el listado de clientes dados de alta (Away From Home y otros no tradicionales)</summary>
     <div class="table-scroll">
       <table>
         <thead>
@@ -1632,7 +1631,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-11-23-f';
+const BUILD = '2026-11-23-g';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -3428,22 +3427,37 @@ function renderCcc2Section(){
 }
 
 let noCompraRows = [];
-// Altas de clientes Away From Home / no tradicionales desde julio (Gescom: Creacion-Altas-Bajas-Modificaciones Clientes)
+// Altas de clientes Away From Home por vendedor y por mes desde julio (Gescom: Creacion-Altas-Bajas-Modificaciones Clientes)
 fetch('altas_no_tradicionales.json' + CACHE_BUST).then(r => r.ok ? r.json() : null).then(d => {
   const tb = document.getElementById('tbody-altas-nt');
   if (!d || !tb) return;
   const fd = iso => iso ? iso.slice(8, 10) + '/' + iso.slice(5, 7) + '/' + iso.slice(0, 4) : '';
-  const filas = d.vendedores.concat(d.sinVendedor && d.sinVendedor.altas ? [d.sinVendedor] : []);
-  tb.innerHTML = filas.map(f => `<tr><td class="name">${escHtml(f.n)}</td><td>${fmt(f.afh)}</td><td>${fmt(f.otros)}</td><td><b>${fmt(f.total)}</b></td><td>${fmt(f.altas)}</td></tr>`).join('');
-  const sum = k => filas.reduce((a, f) => a + (f[k] || 0), 0);
-  document.getElementById('tfoot-altas-nt').innerHTML = `<tr><td class="name">Total PepsiCo</td><td>${fmt(sum('afh'))}</td><td>${fmt(sum('otros'))}</td><td>${fmt(sum('total'))}</td><td>${fmt(sum('altas'))}</td></tr>`;
+  // meses desde la fecha inicial hasta la final
+  const meses = [];
+  let [y, m] = d.desde.slice(0, 7).split('-').map(Number);
+  const [yf, mf] = d.hasta.slice(0, 7).split('-').map(Number);
+  while (y < yf || (y === yf && m <= mf)) { meses.push(y + '-' + String(m).padStart(2, '0')); m++; if (m > 12) { m = 1; y++; } }
+  const afh = d.detalle.filter(c => c.canal === 'AWAY FROM HOME');
+  const porV = {};
+  d.vendedores.forEach(v => { porV[v.n] = {n: v.n, total: 0, meses: {}}; });
+  afh.forEach(c => {
+    const o = porV[c.v] || (porV[c.v] = {n: c.v, total: 0, meses: {}});
+    o.total++; const k = c.fecha.slice(0, 7); o.meses[k] = (o.meses[k] || 0) + 1;
+  });
+  const filas = Object.values(porV).filter(o => o.total || o.n !== 'Sin vendedor')
+    .sort((a, b) => (a.n === 'Sin vendedor') - (b.n === 'Sin vendedor') || b.total - a.total || a.n.localeCompare(b.n));
+  const etiqueta = k => NOMBRES_MES[+k.slice(5)] + (k === meses[meses.length - 1] ? ' (al ' + d.hasta.slice(8, 10) + '/' + d.hasta.slice(5, 7) + ')' : '');
+  document.getElementById('cols-altas-nt').innerHTML = '<th class="name-col">Vendedor</th><th>Away From Home</th>' + meses.map(k => '<th>' + etiqueta(k) + '</th>').join('');
+  tb.innerHTML = filas.map(o => `<tr><td class="name">${escHtml(o.n)}</td><td><b>${fmt(o.total)}</b></td>${meses.map(k => '<td>' + fmt(o.meses[k] || 0) + '</td>').join('')}</tr>`).join('');
+  document.getElementById('tfoot-altas-nt').innerHTML = `<tr><td class="name">Total PepsiCo</td><td>${fmt(afh.length)}</td>${meses.map(k => '<td>' + fmt(afh.filter(c => c.fecha.slice(0, 7) === k).length) + '</td>').join('')}</tr>`;
   setTextoSiExiste('altas-nt-desde', `del ${fd(d.desde)} al ${fd(d.hasta)}`);
   const det = document.getElementById('tbody-altas-nt-detalle');
   if (det) det.innerHTML = d.detalle.map(c => `<tr><td class="name">${escHtml(c.v)}</td><td>${escHtml(c.codigo)}</td><td>${escHtml(c.razon)}</td><td>${escHtml(c.canal)}</td><td>${escHtml(c.subcanal)}</td><td>${escHtml(c.localidad)}</td><td>${fd(c.fecha)}</td><td>${escHtml(c.estado)}</td></tr>`).join('');
-  const pc = Object.keys(d.porCanal || {}).sort((a, b) => d.porCanal[b] - d.porCanal[a]).map(k => `${escHtml(k)}: ${d.porCanal[k]}`).join(' · ');
+  const sinAct = afh.filter(c => c.estado !== 'Activo').length;
+  const otros = d.detalle.length - afh.length;
   const ft = document.getElementById('foot-altas-nt');
-  if (ft) ft.innerHTML += ` Por canal: ${pc}.` + (d.inactivos ? ` ${d.inactivos} de los ${sum('total')} hoy figuran sin actividad (cierre definitivo o no activo por temporada).` : '') +
-    ` Los clientes sin vendedor asignado figuran en su propia fila. Actualizado ${escHtml(d.extraido || '')}.`;
+  if (ft) ft.innerHTML += ` Away From Home: ${afh.length} altas` + (sinAct ? ` (${sinAct} hoy figuran sin actividad: cierre definitivo o no activo por temporada)` : '') +
+    `; el listado incluye ${otros} clientes más de otros canales no tradicionales. Los clientes sin vendedor asignado figuran en su propia fila. Actualizado ${escHtml(d.extraido || '')}.`;
 }).catch(() => {});
 
 const noCompraReadyPromise = fetch(BASE + 'no_compradores_por_dia.json' + CACHE_BUST).then(r => r.json()).then(data => {
