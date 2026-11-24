@@ -393,7 +393,7 @@ td.ip-base.clickable{cursor:pointer}
 <div class="wrap">
   <div id="aviso-version" style="display:none; margin:0 0 12px; padding:10px 14px; border:1px solid var(--accent); background:var(--accent-soft); border-radius:10px; font-size:13.5px; cursor:pointer" onclick="location.reload()">Hay una versión nueva del tablero. <b>Tocá acá para actualizar</b> (si estás escribiendo, primero terminá de cargar).</div>
   <img src="../assets/img/logo-tiendaperfecta.jpeg" alt="Tienda Perfecta" class="tp-logo-hero">
-  <p class="eyebrow" id="eyebrow-label">PepsiCo · Tienda Perfecta · Objetivo TN Septiembre 2026</p>
+  <p class="eyebrow" id="eyebrow-label">PepsiCo · Tienda Perfecta · Objetivo TN Noviembre 2026</p>
   <h1>Avance de venta diario</h1>
   <div class="mes-selector-wrap">
     <div class="mes-presets">
@@ -546,7 +546,7 @@ td.ip-base.clickable{cursor:pointer}
           <th></th>
           <th>Objetivo</th><th>Acum.</th><th>Avance</th><th>Media Nec.</th>
           <th></th>
-          <th>Objetivo</th><th>Acumulado</th><th>Avance</th><th>Promedio</th><th>Media Nec.</th><th>Tendencia cierre</th><th class="col-sec">Penúlt. Vis.</th><th class="col-sec">Últ. Vis.</th><th>Real hoy</th><th>Venta $</th>
+          <th>Objetivo</th><th>Acumulado</th><th>Avance</th><th>Promedio</th><th>Media Nec.</th><th>Tendencia cierre</th><th class="col-sec">Penúlt. Vis.</th><th class="col-sec">Últ. Vis.</th><th>Real hoy</th><th>Venta $ (sin IVA)</th>
           <th></th>
           <th>Platino+Gold</th><th>Silver&amp;Bronze</th><th>Total</th>
         </tr>
@@ -794,9 +794,9 @@ td.ip-base.clickable{cursor:pointer}
     </table>
   </div>
 
-  <h3 class="subsection-title">Objetivo de cobertura — <span id="cobertura-obj-mes">Octubre 2026</span></h3>
+  <h3 class="subsection-title">Objetivo de cobertura — <span id="cobertura-obj-mes">Noviembre 2026</span></h3>
   <p class="section-note">
-    Cobertura total PepsiCo (todos los vendedores) contra el objetivo de Septiembre por marca. Cump. % = Cobertura ÷ Objetivo.
+    Cobertura total PepsiCo (todos los vendedores) contra el objetivo del mes por marca. Cump. % = Cobertura ÷ Objetivo.
   </p>
 
   <div class="table-scroll">
@@ -815,11 +815,10 @@ td.ip-base.clickable{cursor:pointer}
     Fuente: GesCom API — marca detectada por coincidencia de texto contra la descripción del artículo (la API no
     trae un campo de marca legible, así que es una aproximación, no un campo estructurado). Universo = clientes
     con ruta asignada y vendedor entre los 12 de calle. Actualizado automáticamente dos veces por día. La columna
-    <b>Venta $</b> de la tabla "Por vendedor" sale de una exportación manual más reciente de
-    <code>Detallado de ventas extendido Pepsico</code> (22/09), filtrado por <code>FechaCarga</code> entre el
-    <b>01/09 y el 22/09</b>, sumando <code>ImporteItem</code> tal cual viene en el archivo (los tipos de venta que
-    restan, como devoluciones, ya vienen en negativo). Es el importe facturado, no está prorrateado contra ningún
-    objetivo en $.
+    <b>Venta $</b> de la tabla "Por vendedor" es el importe neto <b>sin IVA</b>: suma <code>ImporteNetoItem</code> de las filas
+    <code>TipoDeVenta = Venta</code> del mes en curso, del mismo <code>Detallado de ventas extendido Pepsico</code> que usan
+    Invendible y Rechazos. No resta devoluciones ni canjes (esos se ven en sus solapas) y no está prorrateado contra
+    ningún objetivo en $.
   </p>
 
   <h3 class="subsection-title">Cobertura de Pehuamar</h3>
@@ -1139,7 +1138,7 @@ td.ip-base.clickable{cursor:pointer}
 
   <h2 class="section-title">Invendible / Vencidos por Canje</h2>
   <p class="section-note">
-    Productos vencidos o dañados retirados de los clientes este mes. <b>Venta $</b> = filas con
+    Productos vencidos o dañados retirados de los clientes este mes. <b>Venta $</b> (importe neto, sin IVA) = filas con
     <code>TipoDeVenta = Venta</code>. <b>Retirado por Canje</b> = filas con
     <code>TipoDeVenta = Devolución por Canje</code> (viene en negativo, es lo que se retiró sin cobrar).
     <b>% Invendible</b> = Retirado por Canje ÷ Venta $ (no cuentan los canjes de las innovaciones: Lays Rústicas y Tostitos Hierbas y Limón, que tienen su propia fecha límite de levantamiento, tabla de abajo). Período <b id="invendible-periodo-inicio">01/09</b> hasta hoy vía GesCom API, actualizado
@@ -1152,7 +1151,7 @@ td.ip-base.clickable{cursor:pointer}
       <thead>
         <tr class="cols">
           <th class="name-col">Vendedor</th>
-          <th>Venta $</th><th>Retirado por Canje</th><th>% Invendible</th>
+          <th>Venta $ (sin IVA)</th><th>Retirado por Canje</th><th>% Invendible</th>
         </tr>
       </thead>
       <tbody id="tbody-invendible"></tbody>
@@ -1191,7 +1190,7 @@ td.ip-base.clickable{cursor:pointer}
 
   <h2 class="section-title">Rechazos</h2>
   <p class="section-note">
-    Pedidos rechazados o no entregados este mes. <b>Venta $</b> = filas con <code>TipoDeVenta = Venta</code>.
+    Pedidos rechazados o no entregados este mes. <b>Venta $</b> (importe neto, sin IVA) = filas con <code>TipoDeVenta = Venta</code>.
     <b>Devolución por Rechazo</b> = filas con <code>TipoDeVenta = Devolución por Rechazo</code> (viene en
     negativo, es lo que se rechazó sin cobrar). <b>% Rechazo</b> = Devolución por Rechazo ÷ Venta $. Período
     <b id="rechazos-periodo-inicio">01/09</b> hasta hoy vía GesCom API, actualizado automáticamente dos veces por día. Ordenado de mayor
@@ -1203,7 +1202,7 @@ td.ip-base.clickable{cursor:pointer}
       <thead>
         <tr class="cols">
           <th class="name-col">Vendedor</th>
-          <th>Venta $</th><th>Devolución por Rechazo</th><th>% Rechazo</th>
+          <th>Venta $ (sin IVA)</th><th>Devolución por Rechazo</th><th>% Rechazo</th>
         </tr>
       </thead>
       <tbody id="tbody-rechazos"></tbody>
@@ -1350,7 +1349,7 @@ td.ip-base.clickable{cursor:pointer}
 
   <p class="foot-note">
     Fuente: Gescom <code>Ventas / Reportes / Combos</code> (hojas DetalleVendedor, TotalesVendedor y Totales),
-    export manual del 24/09.
+    export manual de Gescom, que se renueva con cada actualización del panel (el período figura arriba).
   </p>
 
   </div>
@@ -1405,7 +1404,7 @@ td.ip-base.clickable{cursor:pointer}
 
   <p class="foot-note">
     Fuente: Gescom <code>Ventas / Reportes / Combos</code> (versión Mi Negocio+, hojas DetalleVendedor,
-    TotalesVendedor y Totales), export manual del 22/09.
+    TotalesVendedor y Totales), export manual de Gescom, que se renueva con cada actualización del panel (el período figura arriba).
   </p>
 
   </div>
@@ -1597,7 +1596,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-11-23-d';
+const BUILD = '2026-11-23-e';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
