@@ -841,6 +841,26 @@ td.ip-base.clickable{cursor:pointer}
     restan). Actualizado automáticamente por API dos veces por día.
   </p>
 
+  <h3 class="subsection-title">Fecha límite de levantamiento en calle</h3>
+  <p class="section-note">
+    Hasta esa fecha se puede retirar de la calle el producto que se vence. <b>Vencimiento</b> = lanzamiento + VU (vida útil en días) y
+    <b>fecha límite</b> = vencimiento + GAP de devolución (en días). <b>Estos productos no impactan en el porcentaje de invendibles</b>:
+    sus canjes no se cuentan en la solapa Invendible.
+  </p>
+  <div class="table-scroll">
+    <table id="innov-levantamiento">
+      <thead>
+        <tr><th>SKU</th><th>Descripción</th><th>Lanzamiento</th><th style="text-align:right">VU (días)</th><th>Vencimiento</th><th style="text-align:right">GAP devolución (días)</th><th>Fecha límite de levantamiento en calle</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>300067373</td><td>Lays Rústicas Sal Marina 85 g</td><td>lunes 7/09/2026</td><td style="text-align:right">140</td><td>lunes 25/01/2027</td><td style="text-align:right">50</td><td><span class="pill cob-verde">martes 16/03/2027</span></td></tr>
+        <tr><td>300067372</td><td>Lays Rústicas Caprese 77 g</td><td>lunes 7/09/2026</td><td style="text-align:right">140</td><td>lunes 25/01/2027</td><td style="text-align:right">50</td><td><span class="pill cob-verde">martes 16/03/2027</span></td></tr>
+        <tr><td>300067374</td><td>Lays Rústicas Limón y Hierbas 77 g</td><td>lunes 7/09/2026</td><td style="text-align:right">140</td><td>lunes 25/01/2027</td><td style="text-align:right">50</td><td><span class="pill cob-verde">martes 16/03/2027</span></td></tr>
+        <tr><td>300067590</td><td>Tostitos Round Hierbas y Limón 90 g x26</td><td>martes 8/09/2026</td><td style="text-align:right">112</td><td>martes 29/12/2026</td><td style="text-align:right">50</td><td><span class="pill cob-verde">miércoles 17/02/2027</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
   <div class="table-scroll" id="innovaciones-content"></div>
 
   </div>
@@ -1142,7 +1162,7 @@ td.ip-base.clickable{cursor:pointer}
     Productos vencidos o dañados retirados de los clientes este mes. <b>Venta $</b> = filas con
     <code>TipoDeVenta = Venta</code>. <b>Retirado por Canje</b> = filas con
     <code>TipoDeVenta = Devolución por Canje</code> (viene en negativo, es lo que se retiró sin cobrar).
-    <b>% Invendible</b> = Retirado por Canje ÷ Venta $. Período <b id="invendible-periodo-inicio">01/09</b> hasta hoy vía GesCom API, actualizado
+    <b>% Invendible</b> = Retirado por Canje ÷ Venta $ (no cuentan los canjes de las innovaciones: Lays Rústicas y Tostitos Hierbas y Limón, que tienen su propia fecha límite de levantamiento en la solapa Innovaciones). Período <b id="invendible-periodo-inicio">01/09</b> hasta hoy vía GesCom API, actualizado
     automáticamente dos veces por día. Ordenado de mayor a menor % (peor primero). Click en el
     vendedor para ver el detalle de productos y cantidades retiradas.
   </p>
@@ -1577,7 +1597,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-11-23-b';
+const BUILD = '2026-11-23-c';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -1910,7 +1930,7 @@ async function cargarFichaDatos(){
   const [cob, ccc, tp, venta, inv, rech, nc, combos, sub] = await Promise.all(
     ['cobertura_marca_vendedor.json', 'ccc_segmento.json', 'tienda_perfecta.json', 'venta_vendedor.json', 'invendible_detalle.json',
      'rechazos_detalle.json', 'no_compradores_por_dia.json', 'combos_datos.json', 'subproductos_vendedor.json'].map(get));
-  fichaDatos = {cob, ccc, tp, venta, inv, rech, nc, combos, sub};
+  fichaDatos = {cob, ccc, tp, venta, inv: sinInnovaciones(inv), rech, nc, combos, sub};
   return fichaDatos;
 }
 function fichaPill(valor, obj){
@@ -2040,11 +2060,11 @@ async function cargarMesComparacion(mes, esActual, alCorte){
     const meta = await get0('comparacion/')('meta.json');
     if (meta && meta.mes === mes) {
       const [av, venta, cob, ccc, tp, rech, inv] = await Promise.all(archivos.map(get0('comparacion/')));
-      if (av) return {mes, av, venta, cob, ccc, tp, rech, inv, corte: meta.corte};
+      if (av) return {mes, av, venta, cob, ccc, tp, rech, inv: sinInnovaciones(inv), corte: meta.corte};
     }
   }
   const [av, venta, cob, ccc, tp, rech, inv] = await Promise.all(archivos.map(get0(esActual ? '' : `archive/${mes}/`)));
-  return {mes, av, venta, cob, ccc, tp, rech, inv};
+  return {mes, av, venta, cob, ccc, tp, rech, inv: sinInnovaciones(inv)};
 }
 const fechaDM = iso => iso ? `${iso.slice(8, 10)}/${iso.slice(5, 7)}` : '';
 function resumenMes(d){
@@ -2378,9 +2398,17 @@ function initSelectorDia(){
 let noCompradoresDetalle = [];
 fetch(BASE + 'no_compradores_detalle.json' + CACHE_BUST).then(r => r.json()).then(data => { noCompradoresDetalle = data; }).catch(() => {});
 
+// Innovaciones (Lays Rústicas y Tostitos Hierbas y Limón): sus canjes no impactan en el % de invendibles
+const INNOV_SIN_INVENDIBLE = /RUSTICA|ROUND HIERB/i;
+function sinInnovaciones(inv) {
+  if (!inv) return inv;
+  const o = {};
+  Object.keys(inv).forEach(v => { o[v] = (inv[v] || []).filter(x => !INNOV_SIN_INVENDIBLE.test(x.articulo || '')); });
+  return o;
+}
 let invendibleDetalle = {};
 const invendibleDetallePromise = fetch(BASE + 'invendible_detalle.json' + CACHE_BUST).then(r => r.json())
-  .then(data => { invendibleDetalle = data; return data; }).catch(() => ({}));
+  .then(data => { invendibleDetalle = sinInnovaciones(data); return invendibleDetalle; }).catch(() => ({}));
 
 let combosDetalle = {};
 fetch(BASE + 'combos_detalle.json' + CACHE_BUST).then(r => r.json()).then(data => { combosDetalle = data; }).catch(() => {});
