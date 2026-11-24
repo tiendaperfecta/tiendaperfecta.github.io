@@ -1,193 +1,41 @@
 {
- "date": "2026-11-23",
+ "date": "2026-11-24",
  "camiones": [
   {
-   "id": "6",
-   "lat": -38.0923344,
-   "lng": -57.5641176,
-   "hora": "3:45 PM",
+   "id": "3",
+   "lat": -37.9976186,
+   "lng": -57.5431789,
+   "hora": "7:26 PM",
    "etiqueta": "nnn"
   },
   {
-   "id": "2",
-   "lat": -38.0921001,
-   "lng": -57.5638243,
-   "hora": "4:59 PM",
-   "etiqueta": "8369"
-  },
-  {
-   "id": "3",
-   "lat": -37.9976235,
-   "lng": -57.543167,
-   "hora": "7:19 PM",
-   "etiqueta": "0"
-  },
-  {
-   "id": "12",
-   "lat": -38.1113519,
-   "lng": -57.6185782,
-   "hora": "4:59 PM",
-   "etiqueta": "8369"
-  },
-  {
    "id": "4",
-   "lat": -37.9934539,
-   "lng": -57.5434153,
-   "hora": "4:59 PM",
-   "etiqueta": "8371"
+   "lat": -37.9998086,
+   "lng": -57.5468626,
+   "hora": "8:56 PM",
+   "etiqueta": "nnn"
   },
   {
    "id": "7",
-   "lat": -38.0112915,
-   "lng": -57.5406033,
-   "hora": "4:59 PM",
-   "etiqueta": "8369"
-  },
-  {
-   "id": "1",
-   "lat": -37.9563335,
-   "lng": -57.549451,
-   "hora": "4:59 PM",
-   "etiqueta": "8375"
-  },
-  {
-   "id": "5",
-   "lat": -38.0346602,
-   "lng": -57.5882102,
-   "hora": "4:59 PM",
-   "etiqueta": "8371"
-  },
-  {
-   "id": "10",
-   "lat": -38.0010434,
-   "lng": -57.6069291,
-   "hora": "4:59 PM",
-   "etiqueta": "8368"
+   "lat": -38.0112719,
+   "lng": -57.540622,
+   "hora": "11:26 PM",
+   "etiqueta": "nnn"
   }
  ],
  "fuente": "Panel de Fleteros (API GesCom) + posiciones de Axum GPS",
  "nota": "Axum solo expone la posición de los camiones: sus reportes de reparto, km y eventos por camión responden vacío o error. Las estadísticas de choferes salen del Panel de Fleteros.",
  "fleteros": {
-  "fecha": "2026-11-23",
+  "fecha": "2026-11-24",
   "esDeHoy": true,
   "cartonesCargados": false,
   "rows": [
    {
-    "fletero": "Alejandro Fabian Maiorano",
-    "zona": "",
-    "repartos": 2,
-    "asignadas": 33,
-    "realizadas": 33,
-    "efectividad": 100.0,
-    "cartonesARetornar": 0,
-    "cartonesRetornados": 0,
-    "efCartones": null
-   },
-   {
-    "fletero": "Algañaraz German Marcelo",
-    "zona": "",
-    "repartos": 2,
-    "asignadas": 52,
-    "realizadas": 52,
-    "efectividad": 100.0,
-    "cartonesARetornar": 0,
-    "cartonesRetornados": 0,
-    "efCartones": null
-   },
-   {
-    "fletero": "Diego Andrés Martorello",
-    "zona": "",
-    "repartos": 3,
-    "asignadas": 75,
-    "realizadas": 75,
-    "efectividad": 100.0,
-    "cartonesARetornar": 0,
-    "cartonesRetornados": 0,
-    "efCartones": null
-   },
-   {
-    "fletero": "Edgardo Jacinto Gomez",
-    "zona": "",
-    "repartos": 2,
-    "asignadas": 39,
-    "realizadas": 39,
-    "efectividad": 100.0,
-    "cartonesARetornar": 0,
-    "cartonesRetornados": 0,
-    "efCartones": null
-   },
-   {
     "fletero": "Emanuel Valentino Cossu",
     "zona": "",
-    "repartos": 2,
-    "asignadas": 42,
-    "realizadas": 42,
-    "efectividad": 100.0,
-    "cartonesARetornar": 0,
-    "cartonesRetornados": 0,
-    "efCartones": null
-   },
-   {
-    "fletero": "Enzo Julián Rizzoni",
-    "zona": "",
-    "repartos": 2,
-    "asignadas": 48,
-    "realizadas": 48,
-    "efectividad": 100.0,
-    "cartonesARetornar": 0,
-    "cartonesRetornados": 0,
-    "efCartones": null
-   },
-   {
-    "fletero": "Ezequiel Dario Gargan",
-    "zona": "",
-    "repartos": 2,
-    "asignadas": 50,
-    "realizadas": 50,
-    "efectividad": 100.0,
-    "cartonesARetornar": 0,
-    "cartonesRetornados": 0,
-    "efCartones": null
-   },
-   {
-    "fletero": "Leandro Martín Cossu",
-    "zona": "",
-    "repartos": 2,
-    "asignadas": 45,
-    "realizadas": 45,
-    "efectividad": 100.0,
-    "cartonesARetornar": 0,
-    "cartonesRetornados": 0,
-    "efCartones": null
-   },
-   {
-    "fletero": "Leo Damian Moncada",
-    "zona": "",
     "repartos": 1,
-    "asignadas": 44,
-    "realizadas": 44,
-    "efectividad": 100.0,
-    "cartonesARetornar": 0,
-    "cartonesRetornados": 0,
-    "efCartones": null
-   },
-   {
-    "fletero": "Marcelo Javier Acuña",
-    "zona": "",
-    "repartos": 1,
-    "asignadas": 35,
-    "realizadas": 35,
-    "efectividad": 100.0,
-    "cartonesARetornar": 0,
-    "cartonesRetornados": 0,
-    "efCartones": null
-   },
-   {
-    "fletero": "Rodrigo Martin Soto",
-    "zona": "",
-    "repartos": 1,
-    "asignadas": 31,
-    "realizadas": 31,
+    "asignadas": 10,
+    "realizadas": 10,
     "efectividad": 100.0,
     "cartonesARetornar": 0,
     "cartonesRetornados": 0,
@@ -195,21 +43,21 @@
    }
   ],
   "totales": {
-   "choferes": 11,
-   "repartos": 20,
-   "asignadas": 494,
-   "realizadas": 494,
+   "choferes": 1,
+   "repartos": 1,
+   "asignadas": 10,
+   "realizadas": 10,
    "efectividad": 100.0
   }
  },
  "mes": {
   "clave": "2026-11",
-  "efGeneral": 95.9,
+  "efGeneral": 95.8,
   "cartonGeneral": 75.1,
-  "repartos": 198,
-  "entregadas": 7031,
-  "boletas": 7332,
-  "actualizado": "2026-11-23",
+  "repartos": 203,
+  "entregadas": 7245,
+  "boletas": 7566,
+  "actualizado": "2026-11-24",
   "ranking": [
    {
     "nombre": "Mario Luis Gastiarena",
@@ -219,52 +67,52 @@
     "efC": 0,
     "premio": 0,
     "recBol": 1,
-    "compSac": 102,
+    "compSac": 111,
     "impRech": 50280
    },
    {
     "nombre": "Leo Damian Moncada",
-    "repartos": 16,
-    "asist": 76,
-    "efE": 98.5,
+    "repartos": 17,
+    "asist": 81,
+    "efE": 98.2,
     "efC": 77.2,
     "premio": 0,
-    "recBol": 9,
-    "compSac": 539,
-    "impRech": 406923
+    "recBol": 11,
+    "compSac": 561,
+    "impRech": 673488
    },
    {
     "nombre": "Marcelo Javier Acuña",
-    "repartos": 16,
-    "asist": 76,
+    "repartos": 17,
+    "asist": 81,
     "efE": 98,
     "efC": 74.8,
     "premio": 0,
     "recBol": 7,
-    "compSac": 482,
+    "compSac": 494,
     "impRech": 365002
    },
    {
     "nombre": "Diego Andrés Martorello",
-    "repartos": 31,
+    "repartos": 32,
     "asist": 100,
     "efE": 97.4,
     "efC": 86.7,
     "premio": 0,
     "recBol": 21,
-    "compSac": 1140,
-    "impRech": 1588986
+    "compSac": 1185,
+    "impRech": 1612918
    },
    {
     "nombre": "Ezequiel Dario Gargan",
     "repartos": 17,
     "asist": 81,
-    "efE": 96.8,
+    "efE": 96.7,
     "efC": 79.6,
     "premio": 0,
     "recBol": 12,
-    "compSac": 695,
-    "impRech": 788488
+    "compSac": 712,
+    "impRech": 795017
    },
    {
     "nombre": "Leandro Martín Cossu",
@@ -274,74 +122,74 @@
     "efC": 68.7,
     "premio": 0,
     "recBol": 19,
-    "compSac": 647,
-    "impRech": 1601348
+    "compSac": 660,
+    "impRech": 1606634
    },
    {
     "nombre": "Emanuel Valentino Cossu",
-    "repartos": 17,
-    "asist": 81,
-    "efE": 95.5,
+    "repartos": 18,
+    "asist": 86,
+    "efE": 95.3,
     "efC": 67.7,
     "premio": 0,
-    "recBol": 21,
-    "compSac": 648,
-    "impRech": 1583495
-   },
-   {
-    "nombre": "Alejandro Fabian Maiorano",
-    "repartos": 16,
-    "asist": 76,
-    "efE": 95.3,
-    "efC": 79.8,
-    "premio": 0,
-    "recBol": 13,
-    "compSac": 476,
-    "impRech": 2536642
+    "recBol": 22,
+    "compSac": 661,
+    "impRech": 1607181
    },
    {
     "nombre": "Algañaraz German Marcelo",
     "repartos": 17,
     "asist": 81,
-    "efE": 94.7,
+    "efE": 94.8,
     "efC": 72,
     "premio": 0,
     "recBol": 25,
-    "compSac": 586,
+    "compSac": 597,
     "impRech": 1489664
+   },
+   {
+    "nombre": "Alejandro Fabian Maiorano",
+    "repartos": 16,
+    "asist": 76,
+    "efE": 94.5,
+    "efC": 79.8,
+    "premio": 0,
+    "recBol": 18,
+    "compSac": 495,
+    "impRech": 2740271
    },
    {
     "nombre": "Edgardo Jacinto Gomez",
     "repartos": 20,
     "asist": 95,
-    "efE": 93.6,
+    "efE": 93.4,
     "efC": 62.9,
     "premio": 0,
-    "recBol": 23,
-    "compSac": 672,
-    "impRech": 2129498
+    "recBol": 24,
+    "compSac": 678,
+    "impRech": 2216675
    },
    {
     "nombre": "Enzo Julián Rizzoni",
     "repartos": 11,
     "asist": 52,
-    "efE": 93.2,
+    "efE": 93.4,
     "efC": 85.7,
     "premio": 0,
     "recBol": 14,
-    "compSac": 298,
+    "compSac": 299,
     "impRech": 1655281
    },
    {
     "nombre": "Rodrigo Martin Soto",
-    "repartos": 16,
-    "asist": 76,
-    "efE": 92.6,
+    "repartos": 17,
+    "asist": 81,
+    "efE": 92,
     "efC": 78.3,
     "premio": 0,
-    "recBol": 20,
-    "compSac": 444,
-    "impRech": 2083363
+    "recBol": 22,
+    "compSac": 455,
+    "impRech": 2172314
    }
   ]
  }
