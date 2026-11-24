@@ -950,7 +950,6 @@ td.ip-base.clickable{cursor:pointer}
   <h3 class="subsection-title">Altas de clientes Away From Home <span id="altas-nt-desde">desde julio</span></h3>
   <p class="section-note">
     Clientes dados de alta en Gescom (<b>fecha de creación</b>) con canal <b>Away From Home</b>, por vendedor y por mes desde julio.
-    El listado de abajo trae además los clientes de otros canales no tradicionales (Proximity, Cash&amp;Carry, Mayorista, etc.).
     Click en "Ver el listado" para ver cada cliente.
   </p>
 
@@ -967,7 +966,7 @@ td.ip-base.clickable{cursor:pointer}
   </div>
 
   <details class="altas-nt-detalle" style="margin:10px 0 4px">
-    <summary style="cursor:pointer;font-weight:600">Ver el listado de clientes dados de alta (Away From Home y otros no tradicionales)</summary>
+    <summary style="cursor:pointer;font-weight:600">Ver el listado de clientes Away From Home dados de alta</summary>
     <div class="table-scroll">
       <table>
         <thead>
@@ -1631,7 +1630,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-11-23-g';
+const BUILD = '2026-11-23-h';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -3452,12 +3451,11 @@ fetch('altas_no_tradicionales.json' + CACHE_BUST).then(r => r.ok ? r.json() : nu
   document.getElementById('tfoot-altas-nt').innerHTML = `<tr><td class="name">Total PepsiCo</td><td>${fmt(afh.length)}</td>${meses.map(k => '<td>' + fmt(afh.filter(c => c.fecha.slice(0, 7) === k).length) + '</td>').join('')}</tr>`;
   setTextoSiExiste('altas-nt-desde', `del ${fd(d.desde)} al ${fd(d.hasta)}`);
   const det = document.getElementById('tbody-altas-nt-detalle');
-  if (det) det.innerHTML = d.detalle.map(c => `<tr><td class="name">${escHtml(c.v)}</td><td>${escHtml(c.codigo)}</td><td>${escHtml(c.razon)}</td><td>${escHtml(c.canal)}</td><td>${escHtml(c.subcanal)}</td><td>${escHtml(c.localidad)}</td><td>${fd(c.fecha)}</td><td>${escHtml(c.estado)}</td></tr>`).join('');
+  if (det) det.innerHTML = afh.map(c => `<tr><td class="name">${escHtml(c.v)}</td><td>${escHtml(c.codigo)}</td><td>${escHtml(c.razon)}</td><td>${escHtml(c.canal)}</td><td>${escHtml(c.subcanal)}</td><td>${escHtml(c.localidad)}</td><td>${fd(c.fecha)}</td><td>${escHtml(c.estado)}</td></tr>`).join('');
   const sinAct = afh.filter(c => c.estado !== 'Activo').length;
-  const otros = d.detalle.length - afh.length;
   const ft = document.getElementById('foot-altas-nt');
   if (ft) ft.innerHTML += ` Away From Home: ${afh.length} altas` + (sinAct ? ` (${sinAct} hoy figuran sin actividad: cierre definitivo o no activo por temporada)` : '') +
-    `; el listado incluye ${otros} clientes más de otros canales no tradicionales. Los clientes sin vendedor asignado figuran en su propia fila. Actualizado ${escHtml(d.extraido || '')}.`;
+    `. Los clientes sin vendedor asignado figuran en su propia fila. Actualizado ${escHtml(d.extraido || '')}.`;
 }).catch(() => {});
 
 const noCompraReadyPromise = fetch(BASE + 'no_compradores_por_dia.json' + CACHE_BUST).then(r => r.json()).then(data => {
