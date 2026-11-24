@@ -705,7 +705,7 @@ def aplicar_override_gescom(avance, hoy, dias_habiles, dias_trabajados):
             "real": round(o["real"], 2), "ultima": round(o["ultima"], 2), "penult": round(o["penult"], 2),
             "acumuladoMN": round(o["mn"], 2),
         })
-    avance["fuente"] = "Gescom (reporte Avance de Ventas Pepsico, extraido %s) mientras la base no sincroniza; objetivos de octubre" % ov.get("extraido", "")
+    avance["fuente"] = "Gescom (reporte Avance de Ventas Pepsico, extraido %s) mientras la base no sincroniza; objetivos de %s" % (ov.get("extraido", ""), hoy.strftime("%Y-%m"))
     try:
         hist = json.loads((DIR / "historial_diario.json").read_text(encoding="utf-8"))
         hoy_iso = hoy.isoformat()
