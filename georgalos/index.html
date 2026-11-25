@@ -47,7 +47,8 @@ h1{font-family:"Fraunces", Georgia, serif; font-weight:600; font-size:clamp(26px
 .sub b{color:var(--text); font-weight:600}
 
 .kpis{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:28px}
-@media (max-width:860px){ .kpis{grid-template-columns:repeat(2,1fr)} }
+.kpis.seis{grid-template-columns:repeat(6,1fr)}
+@media (max-width:860px){ .kpis, .kpis.seis{grid-template-columns:repeat(2,1fr)} }
 .kpi{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:16px 16px 14px; box-shadow:var(--shadow); min-width:0}
 .kpi .label{font:600 11px/1 "IBM Plex Mono",monospace; letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
 .kpi .value{font-family:"Fraunces",serif; font-weight:600; font-size:25px; margin-top:8px; font-variant-numeric:tabular-nums; white-space:nowrap}
@@ -297,6 +298,8 @@ function heat(v, min, max, invert){
   return `<td class="heat" style="background:hsl(${Math.round(t*120)} 62% var(--heat-l) / var(--heat-a))">`;
 }
 
+// Objetivo de CCC del equipo (clientes de las rutas que compraron Georgalos)
+const OBJ_CCC = 1195;
 function render(){
   const T = D.total, V = D.vendedores;
   $("eyebrow").textContent = `Georgalos · Tienda Perfecta · ${rangoNombre(D.desde, D.corte)}` +
@@ -311,7 +314,10 @@ function render(){
     <div class="kpi"><div class="label">Descuento</div><div class="value">${fmt(pct(desc(T),T.bruta),1)}<span class="unit">%</span></div><div class="foot">${money(desc(T))}</div></div>
     <div class="kpi"><div class="label">Margen</div><div class="value">${fmt(pct(marg(T),T.neta),1)}<span class="unit">%</span></div><div class="foot">${money(marg(T))}</div></div>
     <div class="kpi"><div class="label">Cobertura</div><div class="value">${fmt(pct(T.compradores,T.universo),1)}<span class="unit">%</span></div><div class="foot">${fmt(T.compradores)} de ${fmt(T.universo)} clientes</div></div>
-    <div class="kpi"><div class="label">Sin compra</div><div class="value">${fmt(T.universo-T.compradores)}<span class="unit">clientes</span></div><div class="foot">${fmt(pct(T.universo-T.compradores,T.universo),1)}% del universo</div></div>`;
+    <div class="kpi"><div class="label">Sin compra</div><div class="value">${fmt(T.universo-T.compradores)}<span class="unit">clientes</span></div><div class="foot">${fmt(pct(T.universo-T.compradores,T.universo),1)}% del universo</div></div>` +
+    (D.vend ? "" : `
+    <div class="kpi"><div class="label">Objetivo CCC</div><div class="value">${fmt(pct(T.compradores,OBJ_CCC),1)}<span class="unit">%</span></div><div class="foot">${fmt(T.compradores)} de ${fmt(OBJ_CCC)}${T.compradores < OBJ_CCC ? ` · faltan ${fmt(OBJ_CCC-T.compradores)}` : ""}</div></div>`);
+  $("kpis").classList.toggle("seis", !D.vend);
 
   // ---- Resumen
   $("tb-resumen").innerHTML = V.map(r => {
