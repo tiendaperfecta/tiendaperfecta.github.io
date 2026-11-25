@@ -159,7 +159,7 @@ tfoot td{padding:12px 10px; font-weight:700; border-top:2px solid var(--border);
     <p class="block-note">Venta por marcas, descuento, margen y cobertura de cada vendedor en el período elegido.</p>
 
     <h3 class="section-title">Resumen por vendedor</h3>
-    <p class="section-note">Ordenado de mayor a menor venta. Cobertura = clientes de la ruta del vendedor que compraron algo de Georgalos en el período ÷ clientes de su ruta.</p>
+    <p class="section-note">Ordenado de mayor a menor venta. Cobertura = clientes de la ruta del vendedor que compraron algo de Georgalos en el período ÷ clientes de su ruta. Obj. CCC: el objetivo de 1.195 clientes del equipo, repartido según los clientes de la ruta de cada vendedor.</p>
     <div class="table-scroll">
       <table class="wide">
         <thead>
@@ -172,6 +172,8 @@ tfoot td{padding:12px 10px; font-weight:700; border-top:2px solid var(--border);
             <th>Margen $</th><th>Margen %</th>
             <th class="sep"></th>
             <th>Compradores</th><th>Cobertura</th>
+            <th class="sep"></th>
+            <th>Obj. CCC</th><th>Cumplimiento</th>
           </tr>
         </thead>
         <tbody id="tb-resumen"></tbody>
@@ -284,6 +286,7 @@ const fechaAR = iso => iso.slice(8,10) + "/" + iso.slice(5,7) + "/" + iso.slice(
 
 function tierMargen(p){ return p == null ? "" : p >= 18 ? "good" : p >= 14 ? "warn" : "bad"; }
 function tierDesc(p){ return p == null ? "" : p <= 7 ? "good" : p <= 10 ? "warn" : "bad"; }
+function tierObj(p){ return p == null ? "" : p >= 100 ? "good" : p >= 75 ? "warn" : "bad"; }
 function tierCob(p){ return p == null ? "" : p >= 40 ? "good" : p >= 28 ? "warn" : "bad"; }
 function pill(v, tier, d=1){ return v == null ? '<span class="muted">—</span>' : `<span class="pill ${tier}">${fmt(v,d)}%</span>`; }
 function bar(v, tier){
@@ -300,6 +303,21 @@ function heat(v, min, max, invert){
 
 // Objetivo de CCC del equipo (clientes de las rutas que compraron Georgalos)
 const OBJ_CCC = 1195;
+// Prorrateado por vendedor segun los clientes de su ruta (resto mayor, suma exacta 1195)
+let OBJ_VEN = null;
+function objVen(v){
+  if (!OBJ_VEN) {
+    const noV = new Set(MAESTRO.noVendedores);
+    const vs = Object.keys(MAESTRO.rutas).filter(x => !noV.has(x));
+    const u = Object.fromEntries(vs.map(x => [x, Object.keys(MAESTRO.rutas[x] || {}).length]));
+    const tot = vs.reduce((a, x) => a + u[x], 0) || 1;
+    const ex = vs.map(x => [x, OBJ_CCC * u[x] / tot]);
+    OBJ_VEN = Object.fromEntries(ex.map(([x, e]) => [x, Math.floor(e)]));
+    let resto = OBJ_CCC - Object.values(OBJ_VEN).reduce((a, b) => a + b, 0);
+    ex.sort((a, b) => (b[1] % 1) - (a[1] % 1)).forEach(([x]) => { if (resto > 0) { OBJ_VEN[x]++; resto--; } });
+  }
+  return OBJ_VEN[v] || 0;
+}
 function render(){
   const T = D.total, V = D.vendedores;
   $("eyebrow").textContent = `Georgalos · Tienda Perfecta · ${rangoNombre(D.desde, D.corte)}` +
@@ -315,9 +333,9 @@ function render(){
     <div class="kpi"><div class="label">Margen</div><div class="value">${fmt(pct(marg(T),T.neta),1)}<span class="unit">%</span></div><div class="foot">${money(marg(T))}</div></div>
     <div class="kpi"><div class="label">Cobertura</div><div class="value">${fmt(pct(T.compradores,T.universo),1)}<span class="unit">%</span></div><div class="foot">${fmt(T.compradores)} de ${fmt(T.universo)} clientes</div></div>
     <div class="kpi"><div class="label">Sin compra</div><div class="value">${fmt(T.universo-T.compradores)}<span class="unit">clientes</span></div><div class="foot">${fmt(pct(T.universo-T.compradores,T.universo),1)}% del universo</div></div>` +
-    (D.vend ? "" : `
-    <div class="kpi"><div class="label">Objetivo CCC</div><div class="value">${fmt(pct(T.compradores,OBJ_CCC),1)}<span class="unit">%</span></div><div class="foot">${fmt(T.compradores)} de ${fmt(OBJ_CCC)}${T.compradores < OBJ_CCC ? ` · faltan ${fmt(OBJ_CCC-T.compradores)}` : ""}</div></div>`);
-  $("kpis").classList.toggle("seis", !D.vend);
+    (() => { const o = D.vend ? objVen(D.vend) : OBJ_CCC; return `
+    <div class="kpi"><div class="label">Objetivo CCC</div><div class="value">${fp(pct(T.compradores,o))}</div><div class="foot">${fmt(T.compradores)} de ${fmt(o)}${T.compradores < o ? ` · faltan ${fmt(o-T.compradores)}` : ""}</div></div>`; })();
+  $("kpis").classList.add("seis");
 
   // ---- Resumen
   $("tb-resumen").innerHTML = V.map(r => {
@@ -327,14 +345,17 @@ function render(){
       <td>${money(r.neta)}</td><td>${fp(pct(r.neta, T.neta))}</td><td class="sep"></td>
       <td>${money(desc(r))}</td><td>${pill(dp, tierDesc(dp))}</td><td class="sep"></td>
       <td>${money(marg(r))}</td><td>${pill(mp, tierMargen(mp))}</td><td class="sep"></td>
-      <td>${fmt(r.compradores)}/${fmt(r.universo)}</td><td>${bar(cp, tierCob(cp))}</td>
+      <td>${fmt(r.compradores)}/${fmt(r.universo)}</td><td>${bar(cp, tierCob(cp))}</td><td class="sep"></td>
+      <td>${fmt(objVen(r.cod))}</td><td>${pill(pct(r.compradores, objVen(r.cod)), tierObj(pct(r.compradores, objVen(r.cod))))}</td>
     </tr>`;}).join("");
+  const oT = D.vend ? objVen(D.vend) : OBJ_CCC;
   const dpt = pct(desc(T),T.bruta), mpt = pct(marg(T),T.neta), cpt = pct(T.compradores,T.universo);
   $("tf-resumen").innerHTML = `<tr><td class="name">${D.vend ? "Total del vendedor" : "Total Georgalos"}</td>
     <td>${money(T.neta)}</td><td>100,0%</td><td></td>
     <td>${money(desc(T))}</td><td>${fp(dpt)}</td><td></td>
     <td>${money(marg(T))}</td><td>${fp(mpt)}</td><td></td>
-    <td>${fmt(T.compradores)}/${fmt(T.universo)}</td><td>${fp(cpt)}</td></tr>`;
+    <td>${fmt(T.compradores)}/${fmt(T.universo)}</td><td>${fp(cpt)}</td><td></td>
+    <td>${fmt(oT)}</td><td>${fp(pct(T.compradores, oT))}</td></tr>`;
 
   renderMarca();
   renderTaxo();
