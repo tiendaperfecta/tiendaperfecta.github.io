@@ -21,7 +21,47 @@ from pathlib import Path
 URL = "https://frescura.tienda-perfecta.workers.dev/"
 OUT = Path(__file__).resolve().parent.parent / "pepsico" / "frescura_data.json"
 OVERRIDE = Path(__file__).resolve().parent.parent / "pepsico" / "override_frescura_vendido.json"
+FOTO = Path(__file__).resolve().parent.parent / "pepsico" / "override_frescura_foto.json"
 TZ_AR = timezone(timedelta(hours=-3))
+
+
+def aplicar_foto(data):
+    """Parche mientras el tablero de Frescura no publica una foto del deposito mas nueva.
+
+    Si existe pepsico/override_frescura_foto.json (foto tomada de Digip, 'Stock por articulo / lote / vencimiento') y su
+    "tomada" es POSTERIOR a la del tablero, se usa esa foto: los articulos de la foto con su cuota repartida en partes
+    iguales entre los vendedores del tablero. Apenas el tablero publica una foto igual o mas nueva, se deja la suya."""
+    try:
+        f = json.loads(FOTO.read_text(encoding="utf-8"))
+    except Exception:
+        return
+    if not f.get("tomada") or f["tomada"] <= (data.get("tomada") or ""):
+        return
+    vendedores = []
+    for a in data.get("articulos") or []:
+        if a.get("porVendedor"):
+            vendedores = [{"codigo": v.get("codigo"), "nombre": v.get("nombre"), "equipo": v.get("equipo")} for v in a["porVendedor"]]
+            break
+    if not vendedores:
+        print("AVISO: no se pudo aplicar la foto %s: sin lista de vendedores" % f["tomada"])
+        return
+    hoy = datetime.now(TZ_AR).date()
+    arts = []
+    for x in f.get("articulos") or []:
+        total = x["unidadesAVencer"]
+        cuota = round(total / len(vendedores))
+        venc = datetime.strptime(x["fechaVencimiento"], "%Y-%m-%d").date()
+        arts.append({
+            "codigo": str(x["codigo"]), "descripcion": x["descripcion"], "origen": x.get("origen", "Pepsico"),
+            "fechaVencimiento": x["fechaVencimiento"], "diasAlVencimiento": max((venc - hoy).days, 0),
+            "contenedores": x.get("contenedores", 1), "unidadesAVencer": total, "cuotaTotal": total, "vendidoCodigo": 0,
+            "porVendedor": [{**v, "cuota": cuota, "vendido": 0, "pct": 0.0, "falta": cuota} for v in vendedores],
+        })
+    arts.sort(key=lambda a: (a["fechaVencimiento"], a["descripcion"]))
+    print("AVISO: foto del deposito del %s tomada de Digip (%d articulos); el tablero de Frescura tiene la del %s" %
+          (f["tomada"], len(arts), data.get("tomada")))
+    data["tomada"] = f["tomada"]
+    data["articulos"] = arts
 
 
 def aplicar_override(data):
@@ -80,6 +120,7 @@ def main():
         return 1
 
     data = {"tomada": pepsico.get("tomada"), "articulos": pepsico.get("articulos") or []}
+    aplicar_foto(data)
     aplicar_override(data)
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
