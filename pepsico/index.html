@@ -1121,11 +1121,17 @@ td.ip-base.clickable{cursor:pointer}
     </div>
   </div>
 
-  <h3 class="subsection-title">Oportunidad de portafolio por día de visita</h3>
+  <h3 class="subsection-title">Oportunidad de portafolio por taxonomía y día de visita</h3>
   <p class="section-note">
-    Formato de celda: clientes con oportunidad de portafolio / universo de ese día. Ordenado de mayor a menor
-    cantidad de clientes con oportunidad. Solo cuentan los clientes a los que les toca visita esta semana, según la
-    frecuencia de su ruta (semanal, cada 2 semanas o cada 4 semanas).
+    Formato de celda: clientes con oportunidad de portafolio / universo de ese día. Elegí la taxonomía (A, B, C o D) para ver
+    solo esos clientes, o "Todas" para el total. Ordenado de mayor a menor cantidad de clientes con oportunidad. Solo cuentan los
+    clientes a los que les toca visita esta semana, según la frecuencia de su ruta (semanal, cada 2 semanas o cada 4 semanas).
+  </p>
+  <p class="section-note" style="margin-top:-4px">
+    <label for="port-tax-sel"><b>Taxonomía:</b></label>
+    <select id="port-tax-sel" onchange="portTaxSel=this.value; renderPortTaxDia()" style="margin-left:6px;padding:3px 8px">
+      <option value="Todas">Todas</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+    </select>
   </p>
 
   <div class="table-scroll">
@@ -1136,27 +1142,8 @@ td.ip-base.clickable{cursor:pointer}
           <th>Lunes</th><th>Martes</th><th>Miércoles</th><th>Jueves</th><th>Viernes</th><th>Sábado</th><th>Total</th>
         </tr>
       </thead>
-      <tbody id="tbody-portdia"></tbody>
-      <tfoot id="tfoot-portdia"></tfoot>
-    </table>
-  </div>
-
-  <h3 class="subsection-title">Oportunidad de portafolio por segmento / taxonomía</h3>
-  <p class="section-note">
-    Formato de celda: clientes con oportunidad de portafolio / universo de ese segmento. Ordenado de mayor a menor
-    cantidad de clientes con oportunidad.
-  </p>
-
-  <div class="table-scroll">
-    <table>
-      <thead>
-        <tr class="cols">
-          <th class="name-col">Vendedor</th>
-          <th>Segmento A</th><th>Segmento B</th><th>Segmento C</th><th>Segmento D</th><th>Total</th>
-        </tr>
-      </thead>
-      <tbody id="tbody-portseg"></tbody>
-      <tfoot id="tfoot-portseg"></tfoot>
+      <tbody id="tbody-porttax"></tbody>
+      <tfoot id="tfoot-porttax"></tfoot>
     </table>
   </div>
 
@@ -1630,7 +1617,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-11-23-h';
+const BUILD = '2026-11-25-a';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -2896,34 +2883,6 @@ function renderPortDiaSection(){
   });
   portDiaRows.sort((a,b) => b.totOp - a.totOp);
 
-  const tbodyPortDia = document.getElementById('tbody-portdia');
-  tbodyPortDia.innerHTML = portDiaRows.map(r => {
-    const pct = r.totU ? r.totOp/r.totU*100 : 0;
-    return `
-  <tr>
-    <td class="name">${r.n}</td>
-    <td class="clickable" onclick="drillPortDia('${r.n}','Lunes')">${fmtCellOp(r.Lunes)}</td>
-    <td class="clickable" onclick="drillPortDia('${r.n}','Martes')">${fmtCellOp(r.Martes)}</td>
-    <td class="clickable" onclick="drillPortDia('${r.n}','Miercoles')">${fmtCellOp(r.Miercoles)}</td>
-    <td class="clickable" onclick="drillPortDia('${r.n}','Jueves')">${fmtCellOp(r.Jueves)}</td>
-    <td class="clickable" onclick="drillPortDia('${r.n}','Viernes')">${fmtCellOp(r.Viernes)}</td>
-    <td class="clickable" onclick="drillPortDia('${r.n}','Sabado')">${fmtCellOp(r.Sabado)}</td>
-    <td class="clickable" onclick="drillPortDia('${r.n}','Total')"><span class="pill ${tierOportunidad(pct)}">${r.totOp}/${r.totU}</span></td>
-  </tr>
-`;}).join('');
-  const totPortDia = {Lunes:[0,0],Martes:[0,0],Miercoles:[0,0],Jueves:[0,0],Viernes:[0,0],Sabado:[0,0],totOp:0,totU:0};
-  portDiaRows.forEach(r => {
-    DIAS_PORT.forEach(d => { totPortDia[d][0]+=r[d][0]; totPortDia[d][1]+=r[d][1]; });
-    totPortDia.totOp += r.totOp; totPortDia.totU += r.totU;
-  });
-  document.getElementById('tfoot-portdia').innerHTML = `
-  <tr>
-    <td class="name">Total PepsiCo</td>
-    <td>${fmtCellOp(totPortDia.Lunes)}</td><td>${fmtCellOp(totPortDia.Martes)}</td><td>${fmtCellOp(totPortDia.Miercoles)}</td>
-    <td>${fmtCellOp(totPortDia.Jueves)}</td><td>${fmtCellOp(totPortDia.Viernes)}</td><td>${fmtCellOp(totPortDia.Sabado)}</td>
-    <td>${fmt(totPortDia.totOp)}/${fmt(totPortDia.totU)}</td>
-  </tr>
-`;
 }
 
 let portSegRows = [];
@@ -2934,48 +2893,55 @@ function fmtCellOp([op,u]){ return `${op}/${u}`; }
 // (censo_clientes.json, campo "toca"); oportunidad = clientes de oportunidad_portafolio.json (ya filtrados por "toca").
 const VEND_POR_CODIGO = {"1":"Maria Noelia Madia","2":"Julian Nuñez","3":"Ezequiel Hack","4":"Lucas Giayetto","5":"Nicolas Martinez","6":"Camila Martinez",
   "7":"Ramiro Rando","8":"Martinica Rodriguez","9":"Ludmila Aylen Martinez","10":"Matias Parada","11":"Melanie Larrama","12":"Agustin Pogorzelski"};
-function renderPortSegSection(){
-  if (!censoClientes.length) return;
-  const SEGS = ['A','B','C','D'];
+let portTaxSel = 'Todas';
+function renderPortTaxDia(){
+  const tb = document.getElementById('tbody-porttax');
+  if (!tb || !censoClientes.length) return;
+  const okSeg = seg => portTaxSel === 'Todas' || seg === portTaxSel;
   const acc = {};
-  Object.values(VEND_POR_CODIGO).forEach(n => { acc[n] = {n, A:[0,0], B:[0,0], C:[0,0], D:[0,0], totOp:0, totU:0}; });
+  Object.values(VEND_POR_CODIGO).forEach(n => { acc[n] = {n, totOp:0, totU:0}; DIAS_PORT.forEach(d => { acc[n][d] = [0,0]; }); });
   censoClientes.forEach(c => {
     const n = VEND_POR_CODIGO[String(c.codven)];
-    if (!n || c.toca === false || !c.dia || SEGS.indexOf(c.seg) < 0) return;
-    acc[n][c.seg][1]++; acc[n].totU++;
+    if (!n || c.toca === false || DIAS_PORT.indexOf(c.dia) < 0 || !okSeg(c.seg)) return;
+    acc[n][c.dia][1]++; acc[n].totU++;
   });
   portafolioDetalle.forEach(c => {
     const a = acc[c.vendedor];
-    if (!a || SEGS.indexOf(c.seg) < 0) return;
-    a[c.seg][0]++; a.totOp++;
+    if (!a || DIAS_PORT.indexOf(c.dia) < 0 || !okSeg(c.seg)) return;
+    a[c.dia][0]++; a.totOp++;
   });
   portSegRows = Object.values(acc).sort((a, b) => b.totOp - a.totOp);
-  document.getElementById('tbody-portseg').innerHTML = portSegRows.map(r => {
+  tb.innerHTML = portSegRows.map(r => {
     const pct = r.totU ? r.totOp/r.totU*100 : 0;
     return `
   <tr>
     <td class="name">${r.n}</td>
-    <td class="clickable" onclick="drillPortSeg('${r.n}','A')">${fmtCellOp(r.A)}</td>
-    <td class="clickable" onclick="drillPortSeg('${r.n}','B')">${fmtCellOp(r.B)}</td>
-    <td class="clickable" onclick="drillPortSeg('${r.n}','C')">${fmtCellOp(r.C)}</td>
-    <td class="clickable" onclick="drillPortSeg('${r.n}','D')">${fmtCellOp(r.D)}</td>
-    <td class="clickable" onclick="drillPortSeg('${r.n}','Total')"><span class="pill ${tierOportunidad(pct)}">${r.totOp}/${r.totU}</span></td>
+    ${DIAS_PORT.map(d => `<td class="clickable" onclick="drillPortTaxDia('${r.n}','${d}')">${fmtCellOp(r[d])}</td>`).join('')}
+    <td class="clickable" onclick="drillPortTaxDia('${r.n}','Total')"><span class="pill ${tierOportunidad(pct)}">${r.totOp}/${r.totU}</span></td>
   </tr>
 `;}).join('');
-  const totPortSeg = {A:[0,0],B:[0,0],C:[0,0],D:[0,0],totOp:0,totU:0};
+  const tot = {totOp:0, totU:0};
+  DIAS_PORT.forEach(d => { tot[d] = [0,0]; });
   portSegRows.forEach(r => {
-    SEGS.forEach(s => { totPortSeg[s][0]+=r[s][0]; totPortSeg[s][1]+=r[s][1]; });
-    totPortSeg.totOp += r.totOp; totPortSeg.totU += r.totU;
+    DIAS_PORT.forEach(d => { tot[d][0] += r[d][0]; tot[d][1] += r[d][1]; });
+    tot.totOp += r.totOp; tot.totU += r.totU;
   });
-  document.getElementById('tfoot-portseg').innerHTML = `
+  document.getElementById('tfoot-porttax').innerHTML = `
   <tr>
     <td class="name">Total PepsiCo</td>
-    <td>${fmtCellOp(totPortSeg.A)}</td><td>${fmtCellOp(totPortSeg.B)}</td><td>${fmtCellOp(totPortSeg.C)}</td><td>${fmtCellOp(totPortSeg.D)}</td>
-    <td>${fmt(totPortSeg.totOp)}/${fmt(totPortSeg.totU)}</td>
+    ${DIAS_PORT.map(d => `<td>${fmtCellOp(tot[d])}</td>`).join('')}
+    <td>${fmt(tot.totOp)}/${fmt(tot.totU)}</td>
   </tr>
 `;
 }
-portafolioDetallePromise.then(() => renderPortSegSection());
+function drillPortTaxDia(vendedor, dia) {
+  const okSeg = c => portTaxSel === 'Todas' || c.seg === portTaxSel;
+  const list = portafolioDetalle.filter(c => c.vendedor === vendedor && (dia === 'Total' || c.dia === dia) && okSeg(c));
+  const sub = (dia === 'Total' ? 'Todos los días' : `Ruta de ${dia}`) + (portTaxSel === 'Todas' ? ' — todas las taxonomías' : ` — Taxonomía ${portTaxSel}`) +
+    ' — Oportunidad de Portafolio (60%-79%)';
+  openDrillPortafolio(vendedor, sub, list);
+}
+portafolioDetallePromise.then(() => renderPortTaxDia());
 
 function fmt(n, d=0){ return n.toLocaleString('es-AR', {minimumFractionDigits:d, maximumFractionDigits:d}); }
 function tier(p){ return p>=100 ? 'good' : p>=90 ? 'warn' : 'bad'; }
