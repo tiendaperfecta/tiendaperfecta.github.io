@@ -1349,8 +1349,13 @@ def main():
         ccc_vendedores.append(fila)
     objetivo_oficial = dict(CCC_OBJETIVO_SEG)
     objetivo_oficial["total"] = sum(CCC_OBJETIVO_SEG.values())
-    escribir("ccc_segmento.json", {"vendedores": ccc_vendedores, "objetivoOficial": objetivo_oficial})
-    print("CCC por segmento: %d vendedores" % len(ccc_vendedores))
+    # Clientes que cumplen (3 o mas unidades) sin taxonomia A-D (Z) o sin ruta: no entran en las columnas por segmento, pero
+    # si en el CCC total de Gescom (reporte Avance), asi el total del panel coincide con el de Gescom.
+    cumple_ad = sum(sd[s]["cumple"] for sd in seg_por_vend.values() for s in SEGMENTOS)
+    cumple_total = sum(1 for q in compra_cliente.values() if q >= 3)
+    escribir("ccc_segmento.json", {"vendedores": ccc_vendedores, "objetivoOficial": objetivo_oficial,
+                                   "otrosCumple": cumple_total - cumple_ad, "totalCumple": cumple_total})
+    print("CCC por segmento: %d vendedores | cumplen %d (A-D %d, otros %d)" % (len(ccc_vendedores), cumple_total, cumple_ad, cumple_total - cumple_ad))
 
     dias_habiles = dias_habiles_mes(hoy.year, hoy.month)
     # Dias trabajados = dias COMPLETOS (hasta ayer). El dia en curso no cuenta hasta que termina: asi el "avance a la
