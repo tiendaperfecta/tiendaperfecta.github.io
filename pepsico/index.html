@@ -1617,7 +1617,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-11-25-a';
+const BUILD = '2026-11-25-b';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -2736,18 +2736,18 @@ const rowsReadyPromise = Promise.all([
 }).catch(() => {});
 
 const mnRows = [
-  {n:"Matias Parada",           mn:1089.88, acum:1794.87, share:60.72, universo:211, registrado:165, activos:62, fullyDigital:45},
-  {n:"Ezequiel Hack",           mn:1253.04, acum:1998.07, share:62.71, universo:219, registrado:193, activos:87, fullyDigital:77},
-  {n:"Melanie Larrama",         mn:1359.23, acum:1816.12, share:74.84, universo:192, registrado:176, activos:108, fullyDigital:100},
-  {n:"Agustin Pogorzelski",     mn:1340.17, acum:1789.69, share:74.88, universo:198, registrado:178, activos:114, fullyDigital:109},
-  {n:"Ludmila Aylen Martinez",  mn:1988.60, acum:2638.01, share:75.38, universo:203, registrado:182, activos:133, fullyDigital:119},
-  {n:"Lucas Giayetto",          mn:2114.91, acum:2803.40, share:75.44, universo:237, registrado:189, activos:104, fullyDigital:89},
-  {n:"Ramiro Rando",            mn:1882.44, acum:2427.44, share:77.55, universo:228, registrado:195, activos:110, fullyDigital:102},
-  {n:"Camila Martinez",         mn:1485.42, acum:1908.17, share:77.85, universo:216, registrado:198, activos:122, fullyDigital:100},
-  {n:"Nicolas Martinez",        mn:1848.89, acum:2314.73, share:79.87, universo:205, registrado:200, activos:117, fullyDigital:106},
-  {n:"Maria Noelia Madia",      mn:1312.85, acum:1615.02, share:81.29, universo:175, registrado:168, activos:94, fullyDigital:86},
-  {n:"Martinica Rodriguez",     mn:2018.54, acum:2417.81, share:83.49, universo:252, registrado:218, activos:138, fullyDigital:134},
-  {n:"Julian Nuñez",            mn:2126.51, acum:2475.88, share:85.89, universo:187, registrado:173, activos:129, fullyDigital:120},
+  {n:"Matias Parada",           mn:1089.88, acum:1794.87, share:60.72, universo:211, registrado:165, activos:73, fullyDigital:50},
+  {n:"Ezequiel Hack",           mn:1253.04, acum:1998.07, share:62.71, universo:219, registrado:193, activos:102, fullyDigital:89},
+  {n:"Melanie Larrama",         mn:1359.23, acum:1816.12, share:74.84, universo:192, registrado:177, activos:126, fullyDigital:116},
+  {n:"Agustin Pogorzelski",     mn:1340.17, acum:1789.69, share:74.88, universo:198, registrado:178, activos:121, fullyDigital:114},
+  {n:"Ludmila Aylen Martinez",  mn:1988.60, acum:2638.01, share:75.38, universo:203, registrado:183, activos:149, fullyDigital:125},
+  {n:"Lucas Giayetto",          mn:2114.91, acum:2803.40, share:75.44, universo:237, registrado:190, activos:113, fullyDigital:102},
+  {n:"Ramiro Rando",            mn:1882.44, acum:2427.44, share:77.55, universo:228, registrado:195, activos:123, fullyDigital:112},
+  {n:"Camila Martinez",         mn:1485.42, acum:1908.17, share:77.85, universo:216, registrado:198, activos:137, fullyDigital:109},
+  {n:"Nicolas Martinez",        mn:1848.89, acum:2314.73, share:79.87, universo:204, registrado:199, activos:131, fullyDigital:115},
+  {n:"Maria Noelia Madia",      mn:1312.85, acum:1615.02, share:81.29, universo:175, registrado:168, activos:103, fullyDigital:89},
+  {n:"Martinica Rodriguez",     mn:2018.54, acum:2417.81, share:83.49, universo:251, registrado:219, activos:157, fullyDigital:154},
+  {n:"Julian Nuñez",            mn:2126.51, acum:2475.88, share:85.89, universo:187, registrado:173, activos:138, fullyDigital:129},
 ];
 
 let marcaVendRows = [];
@@ -3535,7 +3535,7 @@ function pintarObjetivosMn(tot, shareTot) {
   el.style.display = 'block';
   el.innerHTML = `<h3 class="subsection-title">Objetivos de Mi Negocio+ del mes</h3>
     <p class="section-note">Se prorratean por vendedor según su universo (columna "/ objetivo" de la tabla de abajo).
-    Registrados, activos y Fully Digital son del Power BI de noviembre con datos hasta el 14/11 (la tabla de Power BI no trae datos posteriores); el sell out digital sale de Gescom.</p>
+    Registrados, activos y Fully Digital son del Power BI de noviembre (página Detalle de Mi Negocio+, datos hasta el 24/11); el sell out digital sale de Gescom.</p>
     <div class="ficha-grid">
       ${tarjeta('Clientes registrados', tot.registrado, to.registrados)}
       ${tarjeta('Clientes activos', tot.activos, to.activos)}
@@ -3842,7 +3842,7 @@ if (kgAvanceMeta) {
         if (!a || typeof a.acumuladoMN !== 'number') return m;
         return {...m, mn: a.acumuladoMN, acum: a.ta, share: a.ta ? a.acumuladoMN / a.ta * 100 : 0};
       });
-      pintarTablaMn(filas, {universo:2523, registrado:2235, activos:1318, fullyDigital:1187});
+      pintarTablaMn(filas, {universo:2522, registrado:2238, activos:1473, fullyDigital:1304});
     }
   }
 }
