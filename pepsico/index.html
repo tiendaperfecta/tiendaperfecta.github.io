@@ -911,7 +911,8 @@ td.ip-base.clickable{cursor:pointer}
     Fuente: GesCom API (segmento y vendedor del cliente, unidades vendidas del mes en curso). El objetivo
     global del mes (el de la fila Total) es el que confirmaste; el reparto por vendedor es una estimación proporcional según
     la composición real de clientes por segmento, no un objetivo oficial cargado en Gescom. Actualizado
-    automáticamente dos veces por día.
+    automáticamente dos veces por día. El Total suma además los clientes que cumplen sin taxonomía A–D (clientes Z o sin ruta, fila
+    aparte), para coincidir con el CCC total del reporte de Avance de Gescom.
   </p>
 
   <h3 class="subsection-title">No compradores por día de visita</h3>
@@ -1617,7 +1618,7 @@ td.ip-base.clickable{cursor:pointer}
 })();
 
 // Version de la pagina: se muestra abajo de todo y se compara con la publicada para avisar si el celular tiene una vieja.
-const BUILD = '2026-11-25-b';
+const BUILD = '2026-11-25-c';
 (function chequearVersion(){
   const tag = document.getElementById('build-tag');
   if (tag) tag.textContent = 'Versión del tablero: ' + BUILD;
@@ -3337,10 +3338,11 @@ function renderMarcaSection(){
 
 let ccc2Rows = [];
 function segAvance(o,c){ return o ? c/o*100 : 0; }
-let ccc2ObjetivoOficial = null;
+let ccc2ObjetivoOficial = null, ccc2Otros = null;
 fetch(BASE + 'ccc_segmento.json' + CACHE_BUST).then(r => r.json()).then(data => {
   ccc2Rows = data.vendedores;
   ccc2ObjetivoOficial = data.objetivoOficial || null;
+  ccc2Otros = typeof data.otrosCumple === 'number' ? data.otrosCumple : null;
   renderCcc2Section();
 }).catch(() => {});
 
@@ -3357,7 +3359,9 @@ function renderCcc2Section(){
     acc.co+=r.co; acc.cc+=r.cc; acc.do_+=r.do_; acc.dc+=r.dc;
     return acc;
   }, {ao:0,ac:0,bo:0,bc:0,co:0,cc:0,do_:0,dc:0});
-  const ccc2TotCumple = ccc2Tot.ac+ccc2Tot.bc+ccc2Tot.cc+ccc2Tot.dc;
+  const ccc2TotCumpleAD = ccc2Tot.ac+ccc2Tot.bc+ccc2Tot.cc+ccc2Tot.dc;
+  // el total suma tambien a los clientes que cumplen sin taxonomia A-D (Z, sin ruta): asi coincide con el CCC total de Gescom
+  const ccc2TotCumple = ccc2TotCumpleAD + (ccc2Otros || 0);
   // El reparto por vendedor es una estimacion redondeada por vendedor; el
   // Objetivo del total SIEMPRE muestra el oficial fijo, no la suma de las
   // filas redondeadas (que puede arrastrar un par de unidades de diferencia).
@@ -3378,7 +3382,12 @@ function renderCcc2Section(){
     <td></td>
     <td>${fmt(r.totObj)}</td><td>${fmt(r.totCumple)}</td><td><span class="pill ${tier(r.totAv)}">${fmt(r.totAv,1)}%</span></td>
   </tr>
-`).join('');
+`).join('') + (ccc2Otros ? `
+  <tr>
+    <td class="name">Sin taxonomía A–D (Z / sin ruta)</td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+    <td></td><td>${fmt(ccc2Otros)}</td><td></td>
+  </tr>` : '');
   document.querySelector('#tbody-ccc2').closest('table').querySelector('tfoot').innerHTML = `
   <tr>
     <td class="name">Total PepsiCo</td>
