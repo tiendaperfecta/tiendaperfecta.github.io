@@ -1175,6 +1175,9 @@ def main():
             acc[1] += importe
 
     # Cobertura por fecha de entrega y neta de devoluciones (ver arriba): reemplaza lo acumulado por pedido.
+    # El CCC (clientes con compra) tambien se cuenta por fecha de entrega del mes completo, igual que el reporte de Avance de
+    # Gescom (entran los pedidos de fin del mes anterior que se entregan este mes y los programados para el resto del mes).
+    compra_cliente_ent = {}
     compra_cliente_marca = {}
     compra_cliente_subgrupo = {}
     pehuamar_compra = {}
@@ -1186,6 +1189,8 @@ def main():
         cli = cod(fila.get("Cliente"))
         articulo = (fila.get("Articulo") or "").strip()
         q = num_ar(fila.get("CantBase"))     # las devoluciones ya vienen negativas
+        if fila.get("TipoDeVenta") == TIPO_VENTA:
+            compra_cliente_ent[cli] = compra_cliente_ent.get(cli, 0) + q
         marca = MARCA_LABEL.get((fila.get("Marca") or "").strip().upper())
         if marca:
             porcli = compra_cliente_marca.setdefault(cli, {})
@@ -1197,6 +1202,9 @@ def main():
             porcli_sub = compra_cliente_subgrupo.setdefault(cli, {})
             porcli_sub[sub] = porcli_sub.get(sub, 0) + q
 
+    if filas_entrega:
+        print("CCC por fecha de entrega: %d clientes con compra (por pedido eran %d)" % (len(compra_cliente_ent), len(compra_cliente)))
+        compra_cliente = compra_cliente_ent
     print("DIAG items de venta Pepsico contados:", items_pepsico_vistos,
           "| clientes con al menos 1 unidad:", len(compra_cliente))
 
